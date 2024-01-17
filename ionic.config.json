@@ -1,7 +1,8 @@
 {
-  "name": "ionic-conference-app",
+  "name": "FCM-App",
   "type": "angular",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   }
 }

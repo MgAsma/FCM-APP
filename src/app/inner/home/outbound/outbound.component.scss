@@ -1,0 +1,44 @@
+.scroll-items {
+    flex-wrap: nowrap;
+    overflow-x: scroll !important;
+    overflow-y: hidden;
+  }
+  
+  .scroll-items ion-col {
+    display: flex;
+  }
+  .activeColor{
+    background-color: transparent;
+    color: #333333;
+    border: none;
+    box-shadow: 
+            rgb(0 0 0 / 20%) 0px 3px 1px -2px, 
+            rgb(0 0 0 / 14%) 0px 2px 2px 0px, 
+            rgb(0 0 0 / 12%) 0px 1px 5px 0px,
+            rgb(0 0 0 / 20%) 0px -3px 1px -2px, 
+            rgb(0 0 0 / 14%) 0px -2px 2px 0px, 
+            rgb(0 0 0 / 12%) 0px -1px 5px 0px;
+    border-radius: 5px;
+    font-size: 8px;
+    font-weight: bold;
+    padding: 5px;
+    margin: 0px 0px 10px 0px;
+    width: 100%;
+    position: relative;
+    min-width: 70px
+}
+.align{
+    justify-content: center;
+    padding: 2px;
+}
+.pad{
+    padding: 0 5px;
+}
+p{
+    color: gray;
+    font-size: 12px;
+    margin-left: 4px;
+}
+ion-icon{
+    font-size: 14px;
+}

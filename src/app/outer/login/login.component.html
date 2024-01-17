@@ -1,0 +1,65 @@
+<div class="container-fluid">
+  <ion-card>
+    <ion-card-content>
+      <div class="login-form">
+        <ion-row class="justify-content-center m-2">
+          <img class="logo" src="assets/images/logo.png" alt="">
+        </ion-row>
+  
+        <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+          <div class="my-1" >Phone Number</div>
+          <ion-item>
+           
+            <ion-input
+              formControlName="mobile_number"
+              maxlength="10"
+              type="tel"
+              name="username"
+              spellcheck="false"
+              autocapitalize="off"
+              placeholder="Enter Your Phone Number"
+              required>
+            </ion-input>
+            <ion-icon name="call" slot="end" ></ion-icon>
+          </ion-item>
+  
+          <div class="error-msg mb-3" *ngIf="f['mobile_number'].invalid && f['mobile_number'].touched">
+            <div *ngIf="f['mobile_number'].errors && f['mobile_number'].errors['required']">
+              Phone Number Is Required
+            </div>
+            <div *ngIf="f['mobile_number'].errors && f['mobile_number'].errors['pattern']">
+              Please Enter 10-Digit Phone Number
+            </div>
+          </div>
+          <div class="mt-3 mb-1" >Password</div>
+          <ion-item >
+            
+            <ion-input
+              formControlName="password"
+              name="password"
+              [type]="hidePassword ? 'password' : 'text' "
+              placeholder="Enter Your Password"
+              required>
+            </ion-input>
+            <ion-icon [name]="hidePassword ? 'eye-off' : 'eye'" slot="end"  (click)="togglePasswordVisibility()"></ion-icon>
+          </ion-item>
+  
+          <div class="error-msg mb-3" *ngIf="f['password'].invalid && f['password'].touched">
+            <div *ngIf="f['password'].errors && f['password'].errors['required']">
+              Password Is Required
+            </div>
+            <div *ngIf="f['password'].errors && f['password'].errors['pattern']">
+              Password Must Be At Least 8 Characters Long, One Uppercase Letter, One Special Character, One Number
+            </div>
+          </div>
+  
+        
+              <ion-button type="submit"expand="block" >Login <ion-icon name="log-in" class="mx-1"></ion-icon></ion-button>
+           
+  
+        </form>
+      </div>
+    </ion-card-content>
+  </ion-card>
+  
+</div>

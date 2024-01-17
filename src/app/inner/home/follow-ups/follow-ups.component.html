@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar *ngIf="!searchBar" color="primary">
+    <ion-buttons (click)="goBack()" slot="start">
+      <ion-icon class="back"  name="arrow-back-outline"></ion-icon>
+    </ion-buttons>
+    <ion-row>
+      <ion-col size="6">
+        <h6 class="mt-2">Follow-ups</h6>
+      </ion-col>
+      <ion-col size="6">
+        <app-toolbar-top [data]="counselor" (people)="onEmit($event)"></app-toolbar-top>
+      </ion-col>
+    </ion-row>
+    
+  </ion-toolbar>
+  <ion-toolbar *ngIf="searchBar" color="primary">
+    <ion-row >
+      <ion-col>
+        <app-search-bar [placeholder]="placeholderText" (search)="searchTermChanged($event)"></app-search-bar>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<app-nodata *ngIf="data?.data.length === 0"></app-nodata>
+
+<ion-content [fullscreen]="true">
+    <ion-row class="pt-1">
+      <ion-col>
+        <ion-card-subtitle>Total - {{data.data?.length}}</ion-card-subtitle>
+      </ion-col>
+    </ion-row>
+    <!-- <ion-button shape="round" (click)="openAddLeadModal()">Add More</ion-button> -->
+    <ion-row class="pb-5">
+      <ion-col size="12" *ngFor="let item of data.data">
+        <ion-card class="allocate-card" >
+          <ion-card-content       >
+            <!-- [ngStyle]="allocate.color ? {'border-left': '3px solid ' + allocate.color} : {'border-left':''}"   -->
+            <ion-row>
+              <ion-col>
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-card-subtitle>{{item.follow_up_type}}</ion-card-subtitle>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-card-title>{{item.lead}}</ion-card-title>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+
+              <ion-col>
+                <ion-row>
+                  <ion-col size="12">
+                    <p>{{item?.action_date_time| date:'dd/MM/yyyy'}}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12">
+                    <p>By: {{item.created_by}}</p>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+              <ion-col size="1" class="phone-col">
+                <ion-icon name="call" class="phone-icon"></ion-icon>
+              </ion-col>
+            </ion-row>
+           
+          </ion-card-content>
+        
+         
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <!-- <mat-paginator class="mb-5" *ngIf="data.data?.length > 0" [length]="totalNumberOfRecords" [pageSizeOptions]="[10, 20,50]" (page)="onPageChange($event, data,'All')" #allPaginator></mat-paginator> -->
+ 
+  
+</ion-content>

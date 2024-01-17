@@ -1,0 +1,14 @@
+<ion-row class="my-3" routerLink="./follow-ups">
+  <ion-col>
+    <p>OPEN FOLLOWUPS</p>
+  </ion-col>
+  <ion-col class="text-end">
+    <p>TOTAL- {{followupDetails.total_count}}</p>
+  </ion-col>
+</ion-row>
+<ion-list lines="full">
+  <ion-item *ngFor="let item of followupDetails.data">
+    <ion-label>{{item.status}}</ion-label>
+    <ion-label  class="text-end">{{item.count}}</ion-label>
+  </ion-item>
+</ion-list>

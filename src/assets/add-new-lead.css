@@ -1,0 +1,57 @@
+.lead-bottom-sheet{
+    position: absolute !important;
+    right: 0 !important;
+    transition-duration: 15s !important;
+    transition-delay: 15s !important;
+}
+
+.lead-bottom-sheet .mat-bottom-sheet-container {
+    padding: 0px !important;
+    min-height: 92vh !important;
+    height: 92vh !important;
+    
+    
+}
+@media(min-width:1023px){
+    .mat-bottom-sheet-container-large {
+        min-width: 400px !important;
+        max-width: 400px !important;
+    }
+ 
+}
+
+.lead-bottom-sheet .mat-dialog-content { 
+    display: flex;
+    padding: 10px 0 !important;
+    max-height: 68vh !important;
+    overflow-y: auto !important;
+}
+.lead-bottom-sheet .mat-dialog-actions {
+    justify-content:center !important;
+}
+.open-sheet {
+    animation: openSheetAnimation 0.3s ease-in-out forwards;
+  }
+  
+  @keyframes openSheetAnimation {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  
+  .close-sheet {
+    animation: closeSheetAnimation 0.3s ease-in-out forwards;
+  }
+  
+  @keyframes closeSheetAnimation {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(100%);
+    }
+  }
+  

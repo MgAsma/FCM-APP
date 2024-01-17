@@ -1,0 +1,50 @@
+.bg{
+    background-color: white;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+}
+h1{
+    color: #333333;
+    font-size: 25px;
+    font-weight: 600;
+    margin: 0px;
+}
+p{
+    color: black;
+    font-size: 10px;
+    margin: 0px;
+}
+a{
+    font-size:  10px;
+    color: #f17e33;
+    font-weight: 600;
+    text-decoration: none;
+} 
+.btn{
+    background-color: #f17e33;
+    border: solid 1px #f17e33;
+    color: black;
+    padding: 5px;
+    border-radius: 8px;
+    width: 90%;
+    margin-top: 15px;
+}
+.x{
+    display:inline-block;
+    width:30px;
+    height:30px;
+    margin:10px;
+    border: solid 1px #333333;
+    border-radius: 5px;
+    --background:white;
+    --padding-start:7px;
+}
+ion-input{
+    color: black;
+    padding: 10px;
+}
+ion-input:focus {
+    border-bottom: solid 1px blue;
+  }

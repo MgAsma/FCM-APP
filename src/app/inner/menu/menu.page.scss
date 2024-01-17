@@ -1,0 +1,31 @@
+.activeColor{
+    background-color: transparent;
+    color: #333333;
+    border: none;
+    box-shadow: 
+            rgb(0 0 0 / 20%) 0px 3px 1px -2px, 
+            rgb(0 0 0 / 14%) 0px 2px 2px 0px, 
+            rgb(0 0 0 / 12%) 0px 1px 5px 0px,
+            rgb(0 0 0 / 20%) 0px -3px 1px -2px, 
+            rgb(0 0 0 / 14%) 0px -2px 2px 0px, 
+            rgb(0 0 0 / 12%) 0px -1px 5px 0px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+    margin: 0px 0px 10px 0px;
+    width: 90%;
+    position: relative;
+    min-width: 70px;   
+    min-height: 80px;
+}
+.align{
+    justify-content: center;
+    padding: 2px;
+}
+ion-icon{
+    font-size: 20px;
+}
+p{
+    font-size: 10px;
+}

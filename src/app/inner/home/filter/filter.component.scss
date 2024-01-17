@@ -1,0 +1,18 @@
+.scroll-items {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll !important;
+    overflow-y: hidden;
+    gap: 10px; 
+}
+
+.chip {
+    border: solid 1px #f17e33;
+    border-radius: 12px;
+    padding: 0px 8px;
+    font-size: 12px;
+    white-space: nowrap; 
+}
+.scroll-items::-webkit-scrollbar {
+    display: none; 
+}

@@ -10,6 +10,7 @@
  */
 
 /* Core CSS required for Ionic components to work properly */
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "~@ionic/angular/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
@@ -24,6 +25,11 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+@import "assets/ion-inputs.scss";
+@import "assets/accordian.scss";
+@import "assets/mat-form.css";
+@import "assets/pagination.scss";
+@import "assets/searchbar.scss";
 
 /*
  * App CSS
@@ -33,3 +39,112 @@
  */
 
 @import "./app/app";
+
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+// html {
+//     --ion-font-family: 'Poppins', sans-serif !important;
+// }
+html {
+    *{
+        --ion-font-family: 'Roboto' !important;
+    }
+    --ion-font-family: 'Roboto' !important;
+}
+*{
+  font-family: 'Roboto' !important;
+}
+.popover{
+    margin: 15px;
+  }
+     .mat-form-field-appearance-legacy .mat-form-field-prefix .mat-datepicker-toggle-default-icon, .mat-form-field-appearance-legacy .mat-form-field-suffix .mat-datepicker-toggle-default-icon {
+      width: 1.5em !important;
+     }
+     .border-bottom{
+      border-bottom:1px solid #eae9e9;
+     }
+      
+     
+    input#mat-input-1 {
+      margin-top: 2px;
+     }
+     input#mat-input-1:hover {
+      outline: none;
+     }
+     
+    .custom-mat-form-field .mat-form-field-infix {
+      padding: 9px 8px 13px;  /* Adjust the padding value as per your requirement */
+      font-size: 12px;
+    }
+    
+    .custom-mat-form-field .mat-form-field-label {
+      font-size: 12px; /* Adjust the font size value as per your requirement */
+      margin-bottom: 0px; /* Adjust the margin bottom value as per your requirement */
+    }
+    
+    .mat-form-field-wrapper {
+      padding-bottom: 15px;
+    }
+    .mat-form-field-appearance-outline .mat-form-field-wrapper {
+      margin: 15px 0 0 !important;
+  }
+  
+  .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: #eae9e9;
+  }
+  .mat-form-field-infix {
+    border-top: 0.5em solid transparent !important;
+  }
+  .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 5px;
+  }
+  .mat-select-trigger {
+    line-height: 13px;
+  }
+  .mat-select-arrow-wrapper {
+    height: 0 !important;
+  }
+  
+  .searchbar-input.sc-ion-searchbar-ios {
+    border:0 !important;
+  }
+  ion-toolbar.sc-ion-searchbar-ios-h, ion-toolbar .sc-ion-searchbar-ios-h {
+    padding-top: 10px;
+    padding-bottom: 15px;
+    min-height: 52px;
+  }
+  
+  .mat-mdc-form-field-subscript-wrapper{
+    display: none;
+  }
+  .mat-mdc-form-field-error{
+    display: flex!important;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  ion-loading.custom-loading {
+    --background: #e3edff;
+    --spinner-color: #f17e33;
+    color: #f17e33;
+  }
+  .toaster{
+    color: #024AAD;
+    --background:#F2F2F2;
+  }
+  ion-col{
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+  p{
+    margin-bottom: 0px!important;
+  }
+  .refresh-text{
+    font-size: 10px;
+    text-align: center;
+    color: orange;
+    margin-bottom: 5px;
+  }
+  #swipe-down{
+    vertical-align: middle;
+    margin-right: 1px !important;
+  }

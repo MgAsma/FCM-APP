@@ -32,6 +32,7 @@
       </ion-segment-button>
       <ion-segment-button value="favorites">
         Favorites
+        
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -79,7 +80,7 @@
   </ion-list>
 
   <ion-list-header [hidden]="shownSessions > 0">
-    No Sessions Found
+    <button ion-button (click)="callNow('18001010101')">Call Now</button>
   </ion-list-header>
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" #fab>

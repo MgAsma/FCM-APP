@@ -39,6 +39,7 @@
                 "input": "src/global.scss",
                 "inject": true
               }
+             
             ],
             "scripts": [],
             "vendorChunk": true,
@@ -206,9 +207,7 @@
   },
   "cli": {
     "schematicCollections": [
-      "@cypress/schematic",
-      "@angular-eslint/schematics",
-      "@schematics/angular"
+      "@ionic/angular-toolkit"
     ],
     "analytics": false
   },

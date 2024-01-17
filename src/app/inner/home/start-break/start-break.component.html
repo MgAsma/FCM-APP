@@ -1,0 +1,28 @@
+<ion-content >
+  <ion-row class="bg">
+   <ion-col>
+     <ion-row>
+       <ion-col style="text-align: end;">
+        <ion-icon (click)="close()" name="close-circle-outline" style="color: black;"></ion-icon>
+       </ion-col>
+     </ion-row>
+    <ion-row>
+      <ion-col style="text-align: center;">
+        <ion-icon style="background-color:#F4AF3E;font-size: 30px;color: white;border-radius: 50%;padding: 10px;" name="cafe"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col style="text-align: center;">
+        <p>Are you sure want to start the break?</p>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col size="8" >
+      <button class="btn" (click)="break()" >YES</button>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+   </ion-col>  
+  </ion-row>
+</ion-content>

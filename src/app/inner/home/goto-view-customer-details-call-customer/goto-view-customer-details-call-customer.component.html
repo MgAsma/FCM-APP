@@ -1,0 +1,30 @@
+<ion-content >
+  <ion-row class="bg">
+   <ion-col>
+     <ion-row>
+       <ion-col style="text-align: end;">
+        <ion-icon (click)="close()" name="close-circle-outline" style="color: black;"></ion-icon>
+       </ion-col>
+     </ion-row>
+    <ion-row>
+      <ion-col style="text-align: center;">
+        <h6>Ajay Kumar</h6>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col size="8" >
+      <button class="btn" ><ion-icon name="call-outline"></ion-icon> Call</button>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col size="8" >
+      <button class="btn" (click)="goToDetails()"><ion-icon name="people-outline"></ion-icon> Details</button>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+   </ion-col>  
+  </ion-row>
+</ion-content>

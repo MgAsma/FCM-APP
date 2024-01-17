@@ -1,0 +1,112 @@
+<ion-header [translucent]="true">
+  <ion-header>
+    <ion-toolbar *ngIf="!searchBar" color="primary">
+      <!-- <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons> -->
+      <ion-row class="d-flex align-items-center justify-content-center">
+        <ion-col size="6">
+          <ion-title>Lead list</ion-title>
+        </ion-col>
+        <ion-col size="6">
+          <app-toolbar-top
+            [data]="counselor"
+            [statusList]="filterByStatus"
+            (people)="onEmit($event)"
+          ></app-toolbar-top>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+    <ion-toolbar *ngIf="searchBar" color="primary">
+      <ion-row>
+        <ion-col>
+          <app-search-bar
+            [placeholder]="placeholderText"
+            (search)="searchTermChanged($event)"
+          ></app-search-bar>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+  </ion-header>
+</ion-header>
+<ion-content *ngIf="data.data?.length === 0">
+  <app-nodata ></app-nodata>
+</ion-content>
+
+<ion-content
+  [fullscreen]="true"
+  class="ion-padding"
+  *ngIf="data.data?.length > 0"
+>
+
+
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <p class="refresh-text">
+    <ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to
+    refresh.
+  </p>
+  <ion-row>
+    <ion-col size="12" *ngFor="let allocate of data.data">
+      <ion-card class="allocate-card">
+        <ion-card-content
+          [ngStyle]="allocate.color ? {'border-left': '3px solid ' + allocate.color} : {'border-left':'3px solid black'}"
+        >
+          <ion-row>
+            <ion-col>
+              <ion-row>
+                <ion-col size="12">
+                  <ion-card-subtitle
+                    >{{allocate.lead_list_status_name ||
+                    'NA'}}</ion-card-subtitle
+                  >
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="12">
+                  <ion-card-title
+                    >{{(allocate.user_data.first_name | titlecase ) ||
+                    'NA'}}</ion-card-title
+                  >
+                </ion-col>
+              </ion-row>
+            </ion-col>
+
+            <ion-col>
+              <ion-row>
+                <ion-col size="12">
+                  <p>
+                    {{(allocate?.user_data.created_date_time | date) || 'NA'}}
+                  </p>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="12">
+                  <p>By: {{(allocate?.created_by_name | titlecase) || 'NA'}}</p>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col size="1" class="phone-col">
+              <ion-icon
+                name="call"
+                class="phone-icon"
+                (click)="callContact(allocate?.user_data.mobile_number,allocate?.user_data.id)"
+              ></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+
+  <mat-paginator
+    class="mb-5"
+    *ngIf="data?.data.length > 0"
+    [length]="totalNumberOfRecords"
+    [pageSizeOptions]="[10, 20,50]"
+    (page)="onPageChange($event, data,'All')"
+    #allPaginator
+  ></mat-paginator>
+</ion-content>

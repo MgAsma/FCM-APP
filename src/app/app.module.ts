@@ -1,8 +1,8 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,6 +10,11 @@ import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './shared-modules/material/material/material.module';
+import { BasicAuthInterceptor } from './service/Auth-interceptor/auth-interceptor';
+import { DatePipe } from '@angular/common';
+import { RouteReuseStrategy } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -19,12 +24,17 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
+    MaterialModule,
+    BrowserAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production
-    })
+    }),
+    
+  ],exports:[
+    MaterialModule
   ],
   declarations: [AppComponent],
-  providers: [InAppBrowser],
+  providers: [InAppBrowser,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },{provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

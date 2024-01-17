@@ -1,0 +1,46 @@
+
+.close{
+    font-size: 20px;
+    vertical-align: middle;
+}
+p{
+    font-size: 15px;
+    color: #101010;
+    margin: 15px 0px 8px !important;
+    font-weight: 500;
+}
+ion-text{
+    display: block;
+    font-size: 12px;
+    height: 13px;
+}
+#custom-height{
+   height: 100vh;
+   overflow-y: auto;
+}
+ion-card{
+    box-shadow: none !important;
+ion-card-content{
+    padding: 0 !important;
+}
+    ion-text{
+        line-height: 7px;
+    }
+}
+ion-item{
+    --background:#f3f3f3 ;
+    font-size: 14px !important;
+}
+ion-error{
+    display: block !important;
+    font-size: 14px !important;
+}
+ion-label{
+    font-size: 14px !important;
+}
+ion-select{
+    width: 100%;
+}
+.star-symbol{
+    color:red;
+}

@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'ionic.conference.app',
-  appName: 'ionic-conference-app',
+  appId: 'com.FCM.app',
+  appName: 'FCM-App',
   webDir: 'www',
   bundledWebRuntime: false,
   plugins: {

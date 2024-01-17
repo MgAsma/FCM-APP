@@ -1,0 +1,16 @@
+.mat-mdc-paginator-container {
+    display: flex;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 8px !important;
+    flex-wrap: wrap-reverse;
+    width: 100%;
+    min-height: var(--mat-paginator-container-size);
+    font-size: 13px !important;
+    margin: 5px;
+    background: #f5f5f5 !important;
+    border-radius: 10px !important;
+  }
+  .mat-mdc-paginator-range-actions {
+    padding-right: 21px !important;
+  }

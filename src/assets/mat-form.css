@@ -1,0 +1,17 @@
+
+mat-form-field{
+    margin: 15px 0;
+}
+.mat-mdc-form-field-flex{
+  width: 100%!important;
+  height: 40px;
+  font-size:14px;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 9px !important;
+}
+.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
+  top:50%;
+  font-size:14px;
+}

@@ -5,7 +5,7 @@ import { AlertController, IonList, IonRouterOutlet, LoadingController, ModalCont
 import { ScheduleFilterPage } from '../schedule-filter/schedule-filter';
 import { ConferenceData } from '../../providers/conference-data';
 import { UserData } from '../../providers/user-data';
-
+import { CallNumber } from '@ionic-native/call-number/ngx';
 @Component({
   selector: 'page-schedule',
   templateUrl: 'schedule.html',
@@ -34,9 +34,14 @@ export class SchedulePage implements OnInit {
     public routerOutlet: IonRouterOutlet,
     public toastCtrl: ToastController,
     public user: UserData,
-    public config: Config
+    public config: Config,
+    private callNumber: CallNumber
   ) { }
-
+  callNow(number) {
+    this.callNumber.callNumber(number, true)
+      .then(res => console.log('Launched dialer!', res))
+      .catch(err => console.log('Error launching dialer', err));
+  }
   ngOnInit() {
     this.updateSchedule();
 

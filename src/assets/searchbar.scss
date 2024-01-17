@@ -1,0 +1,19 @@
+ion-searchbar {
+    .searchbar-clear-icon {
+      position: relative;
+      right: 1.7rem !important;
+      left: auto !important;
+    }
+    ion-icon {
+      right: 0.3rem !important;
+      left: auto !important;
+    }
+  }
+   .searchbar-input.sc-ion-searchbar-md,.searchbar-input.sc-ion-searchbar-ios {
+    padding-inline-start: 1.4375rem;
+    --box-shadow:none !important;
+  }
+  .mdc-list-item.mdc-list-item--with-one-line {
+    border-bottom: 1px solid #e0e0e0;
+}
+  

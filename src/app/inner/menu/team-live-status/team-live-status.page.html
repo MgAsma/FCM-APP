@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar *ngIf="!searchBar" color="primary">
+    <ion-buttons (click)="goBack()" slot="start">
+      <ion-icon class="back" name="arrow-back-outline"></ion-icon>
+    </ion-buttons>
+    <ion-row class="d-flex align-items-center justify-content-center">
+      <ion-col size="6">
+        <h6 class="mt-2">Team Live Status</h6>
+      </ion-col>
+      <ion-col size="6">
+        <app-toolbar-top [data]="counselor" [statusList]="filterByStatus" (people)="onEmit($event)"></app-toolbar-top>
+      </ion-col>
+    </ion-row>
+    
+  </ion-toolbar>
+  <ion-toolbar *ngIf="searchBar" color="primary">
+    <ion-row >
+      <ion-col>
+        <app-search-bar [placeholder]="placeholderText" (search)="searchTermChanged($event)"></app-search-bar>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="data.data?.length === 0">
+  <app-nodata></app-nodata>
+</ion-content>
+
+<ion-content [fullscreen]="true" *ngIf="data.data?.length > 0" class="ion-padding">
+  
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <p class="refresh-text">
+    <ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to
+    refresh.
+  </p>
+    <ion-row class="pt-1">
+      <ion-col>
+        <ion-card-subtitle>Total - {{data.data?.length}}</ion-card-subtitle>
+      </ion-col>
+    </ion-row>
+    <!-- <ion-button shape="round" (click)="openAddLeadModal()">Add More</ion-button> -->
+    <ion-row class="pb-5">
+      <ion-col size="12" *ngFor="let item of data.data">
+        <ion-card class="tls-card" >
+          <ion-card-content>
+            <!-- [ngStyle]="allocate.color ? {'border-left': '3px solid ' + allocate.color} : {'border-left':''}"  -->
+            <ion-row class="align-items-center">
+              <ion-col class="text-start" size="1"><ion-icon    [name]="arr[0].icon1"></ion-icon></ion-col>
+              <ion-col class="text-start" > <ion-card-title>{{item.user__first_name | titlecase}} {{item.user__last_name | titlecase}}</ion-card-title></ion-col>
+              <ion-col class="text-end" ><ion-card-subtitle>{{item.user__role__name | titlecase}}</ion-card-subtitle></ion-col>
+            </ion-row>
+            <ion-row class="align-items-center">
+              <ion-col class="text-start" size="1"><ion-icon  [name]="arr[0].icon2"></ion-icon></ion-col>
+              <ion-col class="text-start" ><ion-card-subtitle>{{item.latest_status | titlecase}}</ion-card-subtitle></ion-col>
+              <ion-col class="text-end" ><ion-card-subtitle>Since : {{item.latest_start_time | date : 'h:mm a'}}</ion-card-subtitle></ion-col>
+            </ion-row>
+           
+          </ion-card-content>
+        
+         
+        </ion-card>
+      </ion-col>
+    </ion-row>
+ 
+  
+</ion-content>
+
