@@ -148,3 +148,6 @@ html {
     vertical-align: middle;
     margin-right: 1px !important;
   }
+  ion-modal.modal-default.show-modal ~ ion-modal.modal-default {
+    --backdrop-opacity: 0.4 !important; 
+}

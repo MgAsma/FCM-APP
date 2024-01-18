@@ -18,18 +18,19 @@ ion-text{
    height: 100vh;
    overflow-y: auto;
 }
-ion-card{
-    box-shadow: none !important;
-ion-card-content{
-    padding: 0 !important;
-}
-    ion-text{
-        line-height: 7px;
-    }
-}
+// ion-card{
+//     box-shadow: none !important;
+// ion-card-content{
+//     padding: 0 !important;
+// }
+//     ion-text{
+//         line-height: 7px;
+//     }
+// }
 ion-item{
     --background:#f3f3f3 ;
     font-size: 14px !important;
+    margin-bottom: 4px;
 }
 ion-error{
     display: block !important;
@@ -37,6 +38,7 @@ ion-error{
 }
 ion-label{
     font-size: 14px !important;
+    color:#494949;
 }
 ion-select{
     width: 100%;
@@ -44,3 +46,12 @@ ion-select{
 .star-symbol{
     color:red;
 }
+#datetime {
+    font-size: 13px;
+    padding: 0;
+    position: absolute;
+    top: 12px;
+    left: -13px; 
+  }
+
+  

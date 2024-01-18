@@ -66,5 +66,6 @@ export class ToolbarTopComponent  implements OnInit {
       }
     });
     return await modal.present();
+   
   }
 }

@@ -13,8 +13,6 @@ p{
 }
 
 ion-card{
-    background: #faf2ef;
-    border-radius: 15px; 
     ion-text{
         font-size: 12px;
         color:#000000ba;
@@ -39,4 +37,9 @@ ion-card{
 ion-content{
     --padding-start: 8px;
     --padding-end: 8px;
+}
+.set-border{
+    border-top: 1px solid #f3f3f3;
+    padding-top: 5px;
+    margin-top: 5px;
 }

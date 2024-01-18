@@ -70,13 +70,15 @@ export class TeamLiveStatusPage implements OnInit {
     let query:any;
     this.allocate.filterStatus.subscribe((res:any)=>{
       if(res){
-        query = `page=1&page_size=10&status_id=${res}`
+        query = `status_id=${res}`
+        //query = `page=1&page_size=10&status_id=${res}`
         this.getLiveStatus(query)
       }
     },((error:any)=>{
       this.api.showToast(error.error.error.message)
     }))
-    query = `page=1&page_size=10`
+    // query = `page=1&page_size=10`
+    query = ``
     this.getLiveStatus(query)
     this.getCounselor()
    
@@ -128,8 +130,9 @@ export class TeamLiveStatusPage implements OnInit {
     if(this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER_ADMIN' || this.user_role == 'ADMIN' ){
       this.api.getTeamLiveStatus(`?${query}`).subscribe(
         (resp:any)=>{
-          this.followupDetails=resp.counsellors_statuses
+          this.followupDetails=resp.results
           this.data = new MatTableDataSource<any>(this.followupDetails);
+          console.log(this.data.data,"DATA")
           this.totalNumberOfRecords = resp.total_no_of_record
         },
         (error:any)=>{
@@ -139,8 +142,9 @@ export class TeamLiveStatusPage implements OnInit {
     }else{
       this.api.getTeamLiveStatus(`?counsellor_id=${this.id}&${query}`).subscribe(
         (resp:any)=>{
-          this.followupDetails=resp.counsellors_statuses
+          this.followupDetails=resp.results
           this.data = new MatTableDataSource<any>(this.followupDetails);
+          console.log(this.data.data,"DATA")
           this.totalNumberOfRecords = resp.total_no_of_record
         },
         (error:any)=>{

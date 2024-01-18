@@ -15,6 +15,7 @@ import { MaterialModule } from './shared-modules/material/material/material.modu
 import { BasicAuthInterceptor } from './service/Auth-interceptor/auth-interceptor';
 import { DatePipe } from '@angular/common';
 import { RouteReuseStrategy } from '@angular/router';
+import { RecFollowupListPage } from './shared-modules/rec-followup-list/rec-followup-list.page';
 
 @NgModule({
   imports: [

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { InnerPage } from './inner.page';
-//import { CustomerDetailsComponent } from '../shared-modules/customer-details/customer-details.component';
+import { CustomerDetailsComponent } from '../shared-modules/customer-details/customer-details.component';
 
 const routes: Routes = [
   {
@@ -32,9 +32,9 @@ const routes: Routes = [
     path: 'add-lead',
     loadChildren: () => import('./add-lead/add-lead.module').then( m => m.AddLeadPageModule)
   },
-  // {
-  //   path:'customer-details', component:CustomerDetailsComponent
-  // }
+  {
+    path:'customer-details', component:CustomerDetailsComponent
+  }
   
     ]
   },

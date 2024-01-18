@@ -36,105 +36,23 @@ export class AllocationsPage implements OnInit {
   pageSize: any = 10;
   counsellor_ids: any;
   user_id: string;
+  superadmin_or_admin: string;
 
   constructor(
     private allocate: AllocationEmittersService,
-    private modalController: ModalController,
     private api: ApiService,
     private _baseService: BaseServiceService,
     private callNumber: CallNumber,
-    private platform: Platform,
-    private zone: NgZone,
-    private callLog: CallLog, 
-  ) {
-   
-    
-  }
+    ) {
+      this.superadmin_or_admin = localStorage.getItem('superadmin_or_admin')
+      console.log(this.superadmin_or_admin,"ADMIN")
+    }
 
- // ... existing code ...
 
- @HostListener('document:onCallStateChanged', ['$event'])
- handleCallStateChanged(event: any) {
-   this.zone.run(() => {
-      this.callState = event.state;
-
-     if (this.callState === 'RINGING') {
-       // Incoming call - You may choose to start recording here if needed
-       alert(this.callState)
-     } else if (this.callState === 'OFFHOOK') {
-       // Call connected - Start recording
-       alert(this.callState)
-     } else if (this.callState === 'IDLE') {
-       // Call ended - Stop recording
-       alert(this.callState)
-     }
-   });
- }
- 
- //getContacts() {
-//   this.platform.ready().then(() => {
-//     this.callLog.hasReadPermission().then(hasPermission => {
-//       if (!hasPermission) {
-//        //Getting Yesterday Time
-//     var today = new Date();
-//     var yesterday = new Date(today);
-//     //  yesterday.setDate(today.getMinutes());
-//     var fromTime = yesterday.getTime();
-
-//     this.filters = [{
-//       name: 'type',
-//       value: '2',
-//       operator: '==',
-//     }, {
-//       name: "date",
-//       value: fromTime.toString(),
-//       operator: ">=",
-//     }];
-    
-//  this.callLog.getCallLog(this.filters)
-//    .then(results => {
-//      this.recordsFoundText = JSON.stringify(results);
-//      this.recordsFound = results;
-//      this.api.showToast(" LOG " + JSON.stringify(this.recordsFound))
-//    })
-//    .catch(e => alert(" LOG " + JSON.stringify(e)));
-          
-//       }else{
-//          //Getting Yesterday Time
-//     var today = new Date();
-//     var yesterday = new Date(today);
-//     //  yesterday.setDate(today.getMinutes());
-//     var fromTime = yesterday.getTime();
-
-//     this.filters = [{
-//       name: 'type',
-//       value: '2',
-//       operator: '==',
-//     }, {
-//       name: "date",
-//       value: fromTime.toString(),
-//       operator: ">=",
-//     }];
-    
-//  this.callLog.getCallLog(this.filters)
-//    .then(results => {
-//      this.recordsFoundText = JSON.stringify(results);
-//      this.recordsFound = results;
-//      this.api.showToast(" LOG " + JSON.stringify(this.recordsFound))
-//    })
-//    .catch(e => alert(" LOG " + JSON.stringify(e)));
-//       }
-//     })
-//       .catch(e => alert(" hasReadPermission " + JSON.stringify(e)));
-//   });
-  
-//  }
-  
-   callInitiated:boolean=false;
+  callInitiated:boolean=false;
   callStartTime!: Date;
   callContact(number: string,id:any) {
     this.callStartTime = new Date();
-    console.log(this.callStartTime, 'time');
     this.callNumber.callNumber(number, true).then(() => {
         this.callInitiated=true;
         let data = {
@@ -163,12 +81,15 @@ export class AllocationsPage implements OnInit {
       },((error:any)=>{
         this.api.showToast(error?.error?.message)
       }))
+      let isoString = this.callStartTime.toISOString();
+      let formattedDate = isoString.replace('Z', '+05:30');
+      // console.log(formattedDate);
       let callLogs = {
         lead_id: id,
         phone_number: number,
-        call_status: "Answered",
+        call_status: 3,
         counsellor: this.user_id,
-        call_start_time: this.callStartTime
+        call_start_time: formattedDate
     }
       this.createCallLog(callLogs)
   }
@@ -196,6 +117,7 @@ export class AllocationsPage implements OnInit {
   }
   ngOnInit() {
     this.user_id = localStorage.getItem('user_id')
+   
     this.getStatus();
     this.allocate.searchBar.subscribe((res) => {
       if (res === true) {
@@ -208,16 +130,16 @@ export class AllocationsPage implements OnInit {
     this.allocate.filterStatus.subscribe(
       (res: any) => {
         if (res) {
-          query = `?status=${res}`;
+          query = `&status=${res}`;
           this.getLeadlist(query);
         }
       },
       (error: any) => {
-        this.api.showToast(error.error.error.message);
+        this.api.showToast(error.error.message);
       }
     );
 
-    query = `?page=1&page_size=10`;
+    query = `page=1&page_size=10`;
     this.getLeadlist(query);
     this.getCounselor();
   }
@@ -232,7 +154,7 @@ export class AllocationsPage implements OnInit {
   }
 
   getLeadlist(query:any){  
-   this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
+   this._baseService.getData(`${environment.lead_list}?user_id=${this.user_id}&super_admin=${this.superadmin_or_admin}&${query}`).subscribe((res: any) => {
      if (res.results) {
       this.leadCards = []
       this.data = []
@@ -246,38 +168,36 @@ export class AllocationsPage implements OnInit {
    });
    
   }
+  
   onPageChange(event: any, dataSource: MatTableDataSource<any>, type?: any) {
     if (event) {
       this.currentPage = event.pageIndex + 1;
       this.pageSize = event.pageSize;
-      let query: any;
-      if(this.searchTerm){
-        query = `?page=${this.currentPage}&page_size=${event.pageSize}&key=${this.searchTerm}`;
-        this.getLeadlist(query);
-      }else{
-       if(this.counsellor_ids){
-        this.onEmit(this.counsellor_ids)
-
-       }else{
+  
+      let query: string = `page=${this.currentPage}&page_size=${event.pageSize}`;
+  
+      if (this.searchTerm) {
+        query += `key=${this.searchTerm}`;
+      } else if (this.counsellor_ids) {
+        this.onEmit(this.counsellor_ids);
+        return; // Exit the function after emitting counsellor_ids
+      } else {
         this.allocate.filterStatus.subscribe(
           (res: any) => {
             if (res) {
-              query = `?page=${this.currentPage}&page_size=${event.pageSize}&status=${res}`;
-              this.getLeadlist(query);
+              query += `status=${res}`;
             }
           },
           (error: any) => {
             this.api.showToast(error.error.message);
           }
         );
-       }
-       
       }
-     
+  
+      this.getLeadlist(query);
     }
   }
-
- 
+  
 
   getCounselor() {
     this._baseService
@@ -297,7 +217,7 @@ export class AllocationsPage implements OnInit {
     if (event) {
       let query: any;
       this.counsellor_ids = event;
-      query = `?page=${this.currentPage}&page_size=${this.pageSize}&counsellor_ids=${event}`;
+      query = `page=${this.currentPage}&page_size=${this.pageSize}&counsellor_ids=${event}`;
       this.getLeadlist(query);
     }
   }
@@ -306,9 +226,9 @@ export class AllocationsPage implements OnInit {
     this.searchTerm = event
     let query: any;
     if (event) {
-      query = `?page=1&page_size=10&key=${event}`;
+      query = `page=1&page_size=10&key=${event}`;
     } else {
-      query = `?page=1&page_size=10`;
+      query = `page=1&page_size=10`;
     }
     this.getLeadlist(query);
   }

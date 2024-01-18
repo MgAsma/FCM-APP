@@ -64,7 +64,7 @@ import { RecurringFollowupComponent } from '../../../inner/home/recurring-follow
     FilterComponent,
     CustomerDetailsComponent,
     LeadrecurringFollowupComponent,
-    // RecurringFollowupComponent,
+    RecurringFollowupComponent,
     CommonModule,
     MatInputModule,
     MatExpansionModule,
@@ -76,8 +76,8 @@ import { RecurringFollowupComponent } from '../../../inner/home/recurring-follow
     MatNativeDateModule,
     MatSlideToggleModule,
     MatPaginatorModule,
-   FormsModule,
-   ReactiveFormsModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatListModule
   ],
   

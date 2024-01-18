@@ -33,10 +33,10 @@ const routes: Routes = [
   {
     path:'inner', loadChildren:()=>import('./inner/inner.module').then(m=>m.InnerPageModule)
   },
-  // {
-  //   path: 'rec-followup-list',
-  //   loadChildren: () => import('./shared-modules/rec-followup-list/rec-followup-list.module').then( m => m.RecFollowupListPageModule)
-  // }
+  {
+    path: 'rec-followup-list',
+    loadChildren: () => import('./shared-modules/rec-followup-list/rec-followup-list.module').then( m => m.RecFollowupListPageModule)
+  }
 
 ];
 

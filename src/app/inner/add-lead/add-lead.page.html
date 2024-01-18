@@ -25,8 +25,7 @@
             <p>Step-1 Enter below details.</p>
                 <!-- First Name -->
                 <ion-label position="stacked">First Name</ion-label><b class="star-symbol">*</b>
-                <ion-item>
-                 
+                <ion-item>    
                   <ion-input
                     type="text"
                     placeholder="Enter Your First Name"
@@ -72,7 +71,7 @@
                 </ion-error>
             
                 <!-- Date of Birth -->
-                <ion-label position="stacked">Date Of Birth</ion-label>
+                <!-- <ion-label position="stacked">Date Of Birth</ion-label>
                 <ion-item>
                   
                   <ion-input
@@ -80,8 +79,12 @@
                     type="date"
                     placeholder="MM/DD/YYYY"
                   ></ion-input>
+                </ion-item> -->
+                <ion-label position="stacked">Date Of Birth</ion-label>
+                <ion-item class="px-0">
+                  <ion-datetime-button  datetime="startDate" id="datetime"></ion-datetime-button>
+                  <ion-icon name="calendar-number-outline" slot="end"></ion-icon>
                 </ion-item>
-            
                 <!-- Mobile Number -->
                 <ion-label position="stacked">Mobile Number</ion-label><b class="star-symbol">*</b>
                 <ion-item>
@@ -554,3 +557,8 @@
 </div>
 </form>
 </div>
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime [showDefaultButtons]="true" presentation="date" id="startDate"></ion-datetime>
+  </ng-template>
+</ion-modal>
