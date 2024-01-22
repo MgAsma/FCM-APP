@@ -69,6 +69,7 @@ export class LoginComponent  implements OnInit {
           const decodedToken:any = jwtDecode(resp.token.token);
           localStorage.setItem('user_id',decodedToken.user_id)
           localStorage.setItem('superadmin_or_admin',resp.superadmin_or_admin)
+          localStorage.setItem('username',resp.username)
           this.api.loaderDismiss()
           this.loginForm.reset()
           this.router.navigate(['../inner'])

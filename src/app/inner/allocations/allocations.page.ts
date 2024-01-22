@@ -9,7 +9,7 @@ import { AllocationEmittersService } from '../../service/allocation-emitters.ser
 import { ApiService } from '../../service/api/api.service';
 import { BaseServiceService } from '../../service/base-service.service';
 import { CallLog, CallLogObject } from '@ionic-native/call-log/ngx';
-
+import { AddLeadEmitterService } from '../../service/add-lead-emitter.service';
 @Component({
   selector: 'app-allocations',
   templateUrl: './allocations.page.html',
@@ -27,8 +27,7 @@ export class AllocationsPage implements OnInit {
   filterByStatus: any = [];
   showError: boolean = false;
   searchTerm: any;
-  callState: any;
-
+  
   filters: CallLogObject[];
   recordsFound: any;
   recordsFoundText: string;
@@ -37,72 +36,139 @@ export class AllocationsPage implements OnInit {
   counsellor_ids: any;
   user_id: string;
   superadmin_or_admin: string;
-
-  constructor(
-    private allocate: AllocationEmittersService,
-    private api: ApiService,
-    private _baseService: BaseServiceService,
-    private callNumber: CallNumber,
-    ) {
-      this.superadmin_or_admin = localStorage.getItem('superadmin_or_admin')
-      console.log(this.superadmin_or_admin,"ADMIN")
-    }
-
-
+  // callStatus: number;
+  callDuration: number;
+  leadId: any;
+  leadPhoneNumber: any;
+  counsellor_id: any;
+  
+  currentStatus: any;
   callInitiated:boolean=false;
   callStartTime!: Date;
-  callContact(number: string,id:any) {
-    this.callStartTime = new Date();
-    this.callNumber.callNumber(number, true).then(() => {
-        this.callInitiated=true;
-        let data = {
-          user:this.user_id,
-          status:3
+  
+  
+    constructor(
+      private allocate: AllocationEmittersService,
+      private api: ApiService,
+      private _baseService: BaseServiceService,
+      private callNumber: CallNumber,
+      private callLog: CallLog,
+      private platform: Platform,
+      private _addLeadEmitter:AddLeadEmitterService,
+    ) {
+      this.superadmin_or_admin = localStorage.getItem('superadmin_or_admin')
+     
+      this.counsellor_id = localStorage.getItem('user_id');
+      
+      }
+
+      getContacts(name: any, value: any, operator: any) {
+        if (value == '1') {
+          this.listTyle = 'Incoming Calls from yesterday';
+        } else if (value == '2') {
+          this.listTyle = 'Ougoing Calls from yesterday';
+        } else if (value == '5') {
+          this.listTyle = 'Rejected Calls from yesterday';
         }
-        this._baseService.postData(`${environment.counsellor_status}`,data).subscribe((res:any)=>{
-          if(res){
-            this.api.showToast(res.message)  
+    
+       // Getting Yesterday Time
+        var today = new Date();
+        var yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        var fromTime = yesterday.getTime();
+    
+        this.filters = [
+          {
+            name: name,
+            value: value,
+            operator: operator,
+          },
+          {
+            name: 'date',
+            value: fromTime.toString(),
+            operator: '>=',
+          },
+        ];
+    
+        this.callLog.getCallLog(this.filters).then((results) => {
+            for (const log of results) {
+              this.callDuration = log.duration;
+              console.log('Call Log:', this.callDuration);
+              if (this.callDuration > 0) {
+                this.currentStatus = 2;
+              } else {
+                this.currentStatus = 5;
+              }
+            
+            }
+    
+            // console.log(
+            //   JSON.stringify(results),
+            //   'call log responseeeeeeeeeeeeeeeee'
+            // );
+            this.recordsFoundText = JSON.stringify(results);
+            console.log(this.recordsFoundText, 'this.recordsFoundText');
+            this.recordsFound = results; //JSON.stringify(results);
+          })
+          let data = {
+            user:this.user_id,
+            status:6
           }
-        },((error:any)=>{
-          this.api.showToast(error?.error?.message)
-        }))
-      })
-      .catch(() => {
-        this.api.showToast('Error launching dialer');
-      });
+          this.postTLStatus(data)
+          // .catch((e) => alert(' LOG ' + JSON.stringify(e)));
+      }
+      
+    async callContact(number: string, id: any) {
+      this.leadId = id;
+      this.leadPhoneNumber = number;
+      this.callStartTime = new Date();
+      
+      // console.log(this.callStartTime, 'time');
       let data = {
         user:this.user_id,
-        status:6
+        status:3
       }
-      this._baseService.postData(`${environment.counsellor_status}`,data).subscribe((res:any)=>{
-        if(res){
-          this.api.showToast(res.message)  
-        }
-      },((error:any)=>{
-        this.api.showToast(error?.error?.message)
-      }))
-      let isoString = this.callStartTime.toISOString();
-      let formattedDate = isoString.replace('Z', '+05:30');
-      // console.log(formattedDate);
-      let callLogs = {
-        lead_id: id,
-        phone_number: number,
-        call_status: 3,
-        counsellor: this.user_id,
-        call_start_time: formattedDate
-    }
-      this.createCallLog(callLogs)
+     this.postTLStatus(data);
+     await this.callNumber.callNumber(number, true)
+         this.callInitiated = true;
+          // console.log('Dialer Launched!');
+          // setTimeout(() => {
+          //   this.getContacts('type', '2', '==');
+          //   this.getContacts('type', '5', '==');
+          // }, 10000);
+          // setTimeout(() => {
+          //   this.postCallHistory();
+          // }, 30000);
+          await this.getContacts('type','2','==');
+          await this.getContacts('type','5','==');
+          await this.postCallHistory();  
+      }
+
+  postTLStatus(data){
+    this._baseService.postData(`${environment.counsellor_status}`,data).subscribe((res:any)=>{
+      if(res){
+        this.api.showToast(res.message)  
+      }
+    },((error:any)=>{
+      this.api.showToast(error?.error?.message)
+    }))
   }
 
- createCallLog(callLogs){
-  this._baseService.postData(`${environment.call_logs}`,callLogs).subscribe((res:any)=>{
-   if(res){
-    this.api.showToast(res.message)
-   }
-  },((error:any)=>{
-    this.api.showToast(error.error.message)
-  }))
- }
+  postCallHistory() {
+    let data = {
+      lead_id: this.leadId,
+      phone_number: this.leadPhoneNumber,
+      call_status: this.currentStatus,
+      counsellor: this.counsellor_id,
+      call_start_time: this.callStartTime,
+    };
+    this.api.sendingCallHistory(data).subscribe((res: any) => {
+     // console.log(res, 'sending call history');
+    },(error:any)=>{
+      this.api.showToast(error.error.message);
+    });
+  }
+
   getStatus() {
     this._baseService.getData(environment.lead_status).subscribe(
       (res: any) => {
@@ -138,7 +204,10 @@ export class AllocationsPage implements OnInit {
         this.api.showToast(error.error.message);
       }
     );
-
+    this._addLeadEmitter.triggerGet$.subscribe(() => {
+      query = `page=1&page_size=10`;
+      this.getLeadlist(query);
+    });
     query = `page=1&page_size=10`;
     this.getLeadlist(query);
     this.getCounselor();

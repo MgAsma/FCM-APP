@@ -33,9 +33,9 @@ export class CallLogPage implements OnInit {
   endDate:any;
   startDate:any;
   callLogForm:FormGroup
+  dateFilter: boolean = false;
   constructor(
     private allocate: AllocationEmittersService,
-    private modalController: ModalController,
     private popoverController: PopoverController,
     private baseService:BaseServiceService,
     private api:ApiService,
@@ -69,7 +69,6 @@ export class CallLogPage implements OnInit {
     this.getCounselor()
   }
   onStartDateChange(event: CustomEvent) {
-    console.log(event)
     this.startDate = event.detail.value;
   }
 
@@ -78,7 +77,6 @@ export class CallLogPage implements OnInit {
   }
   onSubmit() {
     let query;
-  
     if (this.startDate && this.endDate) {
       let sdate = this.datepipe.transform(this.startDate, 'yyyy-MM-dd');
       let edate = this.datepipe.transform(this.endDate, 'yyyy-MM-dd');
@@ -94,7 +92,7 @@ export class CallLogPage implements OnInit {
   
       query = `?counsellor_id=${this.user_id}&from_date=${sdate}&to_date=${edate}`;
     }
-  
+    this.dateFilter = true
     this.getCallLogs(query);
   }
   
@@ -159,13 +157,7 @@ export class CallLogPage implements OnInit {
       this.api.showToast(error?.error.message)
     }))
   }
-  // getUniqueCallStatus(results: any[]): string[] {
-  //   const uniqueCallStatus = results
-  //     .map(result => result.call_status)
-  //     .filter((value, index, self) => self.indexOf(value) === index);
-
-  //   return uniqueCallStatus;
-  // }
+  
   onEmit(event:any){
     if(event){
     this.counsellor_ids = event
@@ -179,34 +171,7 @@ export class CallLogPage implements OnInit {
     } 
 
   }
-  // onPageChange(event: any, dataSource: MatTableDataSource<any>, type?: any) {
-  //   let query: any;
-  //   if (event) {
-  //     this.currentPage = event.pageIndex + 1;
-  //     this.pageSize = event.pageSize;
-  //     query = `?page=${this.currentPage}&page_size=${event.pageSize}`;
-  //     this.getCallLogs(query);
-  //   }
-  //    else if(this.searchTerm){
-  //       query = `?page=${this.currentPage}&page_size=${event.pageSize}&key=${this.searchTerm}`;
-  //       this.getCallLogs(query);
-  //     }else if(this.counsellor_ids){
-  //       this.onEmit(this.counsellor_ids)
-  //     }else{
-  //       this.allocate.filterStatus.subscribe(
-  //         (res: any) => {
-  //           if (res) {
-  //             query = `?page=${this.currentPage}&page_size=${event.pageSize}&status=${res}`;
-  //             this.getCallLogs(query);
-  //           }
-  //         },
-  //         (error: any) => {
-  //           this.api.showToast(error.error.message);
-  //         }
-  //       );
-  //      }
-      
-  // }
+  
   onPageChange(event: any, dataSource: MatTableDataSource<any>, type?: any) {
     if (event) {
       this.currentPage = event.pageIndex + 1;
@@ -220,7 +185,10 @@ export class CallLogPage implements OnInit {
     } else if (this.counsellor_ids) {
       this.onEmit(this.counsellor_ids);
       return;
-    } else {
+    }else if(this.dateFilter){
+      this.onSubmit()
+      return;
+    }else {
       this.allocate.filterStatus.subscribe(
         (res: any) => {
           if (res) {

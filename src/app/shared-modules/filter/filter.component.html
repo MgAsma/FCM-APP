@@ -8,8 +8,8 @@
         </ion-row>
             <!--SORT BY--->
             <ion-row class="sorting-section">
-      <ion-col class="p-1">
-        <div>Sort by</div>
+            <ion-col class="p-1">
+              <div>Sort by</div>
               <ion-row class="scroll-x-sort">
                 <ion-col *ngFor="let card of sortingCards" size="3">
                   <ion-card class="sorting-type" [class.selected]="card.selected" (click)="toggleSelection(card)">
@@ -66,8 +66,8 @@
                 <div>Filter by status</div>
               </ion-col>
              </ion-row>
-             <ion-chip *ngFor="let item of data" [class.selected-chip]="item.selected"  (click)="toggleChipSelection(item)">
-              <ion-label [class.selected-chip]="item.selected">{{ item.name }}</ion-label>
+             <ion-chip *ngFor="let item of data" [class.selected-chip]="item.selected && selectedStatus"  (click)="toggleChipSelection(item)">
+              <ion-label [class.selected-chip]="item.selected && selectedStatus">{{ item.name }}</ion-label>
             </ion-chip>
             
              <!--Filter BY--->

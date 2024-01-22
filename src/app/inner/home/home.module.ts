@@ -19,7 +19,9 @@ import { StartBreakComponent } from './start-break/start-break.component';
 import { GotoViewCustomerDetailsCallCustomerComponent } from './goto-view-customer-details-call-customer/goto-view-customer-details-call-customer.component';
 import { FollowUpsComponent } from './follow-ups/follow-ups.component';
 import { MaterialModule } from '../../shared-modules/material/material/material.module';
-
+import { CallLog } from '@ionic-native/call-log/ngx';
+import { Device } from '@ionic-native/device/ngx'
+import { CallNumber } from '@ionic-native/call-number/ngx';
 @NgModule({
   imports: [
     CommonModule,
@@ -30,6 +32,7 @@ import { MaterialModule } from '../../shared-modules/material/material/material.
   ],
   declarations: [HomePage,FilterComponent,InboundComponent,
     OutboundComponent,TimeListComponent,StatusComponent,OpenFollowupsComponent, CheckoutComponent,StartBreakComponent,GotoViewCustomerDetailsCallCustomerComponent,
-  FollowUpsComponent]
+  FollowUpsComponent],
+  providers:[CallLog,Device,CallNumber]
 })
 export class HomePageModule {}

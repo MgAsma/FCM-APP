@@ -9,8 +9,10 @@ import { StartBreakComponent } from './start-break/start-break.component';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-
-  constructor(private popoverController:PopoverController) { }
+userName:any
+  constructor(private popoverController:PopoverController) {
+  this.userName=localStorage.getItem('username')
+  }
 
   ngOnInit() {
   }

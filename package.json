@@ -34,21 +34,26 @@
     "@capacitor/android": "^4.8.1",
     "@capacitor/app": "4.1.1",
     "@capacitor/core": "4.6.3",
-    "@capacitor/device": "4.1.0",
+    "@capacitor/device": "^4.1.0",
     "@capacitor/haptics": "4.1.0",
     "@capacitor/ios": "4.6.3",
     "@capacitor/keyboard": "4.1.1",
     "@capacitor/splash-screen": "4.1.4",
     "@capacitor/status-bar": "4.1.1",
     "@capacitor/storage": "^1.2.5",
+    "@ionic-native/android-permissions": "^5.36.0",
     "@ionic-native/call-log": "^5.36.0",
     "@ionic-native/call-number": "^5.22.0-beta-1",
     "@ionic-native/device": "^5.36.0",
     "@ionic/angular": "^7.0.0",
     "@ionic/storage-angular": "^4.0.0",
     "bootstrap": "^5.3.2",
+    "cordova": "^12.0.0",
+    "cordova-android": "^12.0.1",
     "cordova-plugin-inappbrowser": "5.0.0",
     "core-js": "^3.6.4",
+   
+    "ionic": "^5.4.16",
     "jwt-decode": "^4.0.0",
     "rxjs": "^7.8.0",
     "sw-toolbox": "3.6.0",
@@ -103,7 +108,8 @@
   },
   "cordova": {
     "plugins": {
-      "mx.ferreyra.callnumber": {}
+      "mx.ferreyra.callnumber": {},
+      "cordova-plugin-calllog": {}
     }
   }
 }

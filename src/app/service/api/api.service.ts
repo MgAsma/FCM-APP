@@ -584,8 +584,8 @@ export class ApiService {
 
 //Make Call
 
-call(data:any){
-  
+sendingCallHistory(data){
+  return this.http.post(`${this.baseurl}/api/call-logs/`,data)
 }
 
 }

@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { ApiService } from '../../service/api/api.service';
 import { BaseServiceService } from '../../service/base-service.service';
 import { CommonServiceService } from '../../service/common-service.service';
+import { AddLeadEmitterService } from '../../service/add-lead-emitter.service';
 
 
 @Component({
@@ -42,7 +43,8 @@ export class AddLeadPage implements OnInit {
     private api:ApiService,
     private _commonService:CommonServiceService,
     private _datePipe:DatePipe,
-   private modalController:ModalController
+    private modalController:ModalController,
+    private _addLeadEmitter:AddLeadEmitterService
    ) {
       
     }
@@ -358,6 +360,7 @@ data = JSON.parse(JSON.stringify(data));
         if(res){
           this.addLead.emit('ADD')
           this.api.showToast(res.message)
+          this._addLeadEmitter.triggerGet();
           this.initForm()
         }
         else{
@@ -383,9 +386,11 @@ data = JSON.parse(JSON.stringify(data));
   }
   close(){
     this.modalController.dismiss()
+    this._addLeadEmitter.triggerGet();
   }
   closeModal(){
     this.modalController.dismiss()
+    this._addLeadEmitter.triggerGet();
   }
 }
 

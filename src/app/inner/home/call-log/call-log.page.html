@@ -51,7 +51,7 @@
                 <p>End Date</p>
             </ion-card-header>
             <ion-card-content class="p-2">
-              <ion-datetime-button datetime="endDate"></ion-datetime-button>
+             <ion-datetime-button datetime="endDate"></ion-datetime-button>
             </ion-card-content>
           
           </ion-card>
@@ -63,7 +63,7 @@
     
       <ion-row class="px-3 py-2">
         <ion-col>
-          <div>Total - {{data?.data.length}}</div>
+          <div style="color: #0d0dff;">Total - {{totalNumberOfRecords || 0}}</div>
         </ion-col>
       </ion-row>
       <ion-card class="list-card">
@@ -78,7 +78,7 @@
                   </ion-col>
                   <ion-col  class="ml-4">
                     <ion-row >
-                      <small>{{items?.lead_name}}</small><span></span><p class="label">{{items?.call_status}}</p>
+                      <small>{{items?.lead_name || 'Unknown'}}</small><span></span><p class="label">{{items?.call_status}}</p>
                     </ion-row>
                     <ion-row>
                       <small>{{items?.phone_number}}</small>
