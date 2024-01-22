@@ -115,15 +115,12 @@ export class AllocationsPage implements OnInit {
             status:6
           }
           this.postTLStatus(data)
-          // .catch((e) => alert(' LOG ' + JSON.stringify(e)));
       }
       
     async callContact(number: string, id: any) {
       this.leadId = id;
       this.leadPhoneNumber = number;
       this.callStartTime = new Date();
-      
-      // console.log(this.callStartTime, 'time');
       let data = {
         user:this.user_id,
         status:3
@@ -131,14 +128,6 @@ export class AllocationsPage implements OnInit {
      this.postTLStatus(data);
      await this.callNumber.callNumber(number, true)
          this.callInitiated = true;
-          // console.log('Dialer Launched!');
-          // setTimeout(() => {
-          //   this.getContacts('type', '2', '==');
-          //   this.getContacts('type', '5', '==');
-          // }, 10000);
-          // setTimeout(() => {
-          //   this.postCallHistory();
-          // }, 30000);
           await this.getContacts('type','2','==');
           await this.getContacts('type','5','==');
           await this.postCallHistory();  
