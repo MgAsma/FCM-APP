@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 
-import { MenuController, Platform, ToastController } from '@ionic/angular';
+import { MenuController, NavController, Platform, ToastController } from '@ionic/angular';
 
 import { StatusBar } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -30,8 +30,19 @@ export class AppComponent implements OnInit {
     private userData: UserData,
     private swUpdate: SwUpdate,
     private toastCtrl: ToastController,
+    private navCtrl:NavController
   ) {
     this.initializeApp();
+
+
+    let token = localStorage.getItem('token');
+if(token){
+  this.navCtrl.navigateRoot("/inner")
+}
+else{
+  this.navCtrl.navigateRoot("/outer/login")
+
+}
   }
 
   async ngOnInit() {

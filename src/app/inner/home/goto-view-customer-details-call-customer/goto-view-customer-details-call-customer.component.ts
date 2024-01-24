@@ -36,6 +36,32 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     private platform: Platform
     ) { 
       this.counsellor_id = localStorage.getItem('user_id');
+
+
+      this.platform.ready().then(() => {
+        this.callLog
+          .hasReadPermission()
+          .then((hasPermission) => {
+            if (!hasPermission) {
+              this.callLog
+                .requestReadPermission()
+                .then((results) => {
+                  // this.getContacts("type", "2", "==");
+                })
+                .catch((e) =>{
+                  // alert(" requestReadPermission " + JSON.stringify(e))
+                }
+                  
+                );
+            } else {
+              // this.getContacts("type", "5", "==");
+            }
+          })
+          .catch((e) => {
+            // alert(" hasReadPermission " + JSON.stringify(e))
+
+          });
+      });
       
     }
 
@@ -84,16 +110,17 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        for (const log of results) {
-          this.callDuration = log.duration;
-          console.log('Call Log:', this.callDuration);
-          if (this.callDuration > 0) {
-            this.callStatus = 2;
-          } else {
-            this.callStatus = 3;
-          }
-        }
 
+
+        console.log(JSON.stringify(results[0]),"latest call log")
+        this.callDuration=results[0].duration;
+        console.log(JSON.stringify(this.callDuration),"latest call duration")
+        if (this.callDuration > 0) {
+              this.callStatus = 2;
+            } else {
+              this.callStatus = 3;
+            }
+       
         console.log(
           JSON.stringify(results),
           'call log responseeeeeeeeeeeeeeeee'
@@ -102,7 +129,9 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
         console.log(this.recordsFoundText, 'this.recordsFoundText');
         this.recordsFound = results; //JSON.stringify(results);
       })
-      .catch((e) => alert(' LOG ' + JSON.stringify(e)));
+      .catch((e) => {
+        // alert(' LOG ' + JSON.stringify(e))
+      });
   }
   callInitiated:boolean=false;
   callStartTime!: Date;
@@ -130,13 +159,21 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
       .then(() => {
         this.callInitiated = true;
         //console.log('Dialer Launched!');
+        // setTimeout(() => {
+        //   this.getContacts('type', '2', '==');
+        //   // this.getContacts('type', '5', '==');
+        // }, 10000);
+        // setTimeout(() => {
+        //   this.postCallHistory();
+        // }, 40000);
+
         setTimeout(() => {
-          this.getContacts('type', '2', '==');
-          this.getContacts('type', '5', '==');
-        }, 10000);
+          this.getContacts("type", "2", "==");
+          // this.getContacts("type", "5", "==");
+        }, 70000);
         setTimeout(() => {
           this.postCallHistory();
-        }, 30000);
+        }, 90000);
       })
       .catch(() => {
         console.log('Error launching dialer');

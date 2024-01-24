@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { DatePipe } from '@angular/common';
 import { CommonServiceService } from '../../service/common-service.service';
 import { ApiService } from '../../service/api/api.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,8 @@ export class LoginComponent  implements OnInit {
 	private router:Router,
   private api:ApiService,
   private datePipe: DatePipe,
-  private commonService:CommonServiceService
+  private commonService:CommonServiceService,
+  private navCtrl:NavController
   
   ){}
  
@@ -65,14 +67,16 @@ export class LoginComponent  implements OnInit {
           const formattedDate :any = this.datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss.SSSZ');
           localStorage.setItem('lastLoginDate', formattedDate);
           localStorage.setItem('token',resp.token.token)
-          localStorage.setItem('user_role',resp.logged_in_user_role)
+         
           const decodedToken:any = jwtDecode(resp.token.token);
+          localStorage.setItem('user_role',decodedToken.user_role)
           localStorage.setItem('user_id',decodedToken.user_id)
-          localStorage.setItem('superadmin_or_admin',resp.superadmin_or_admin)
-          localStorage.setItem('username',resp.username)
+          // localStorage.setItem('superadmin_or_admin',decodedToken.superadmin_or_admin)
+          localStorage.setItem('username',decodedToken.username)
           this.api.loaderDismiss()
           this.loginForm.reset()
-          this.router.navigate(['../inner'])
+          this.navCtrl.navigateRoot('/inner')
+          // this.router.navigate(['../inner'])
           this.api.showToast(resp.message)
         }
       

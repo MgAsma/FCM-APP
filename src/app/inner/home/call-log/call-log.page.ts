@@ -10,6 +10,7 @@ import { BaseServiceService } from '../../../service/base-service.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { CallLog } from '@ionic-native/call-log/ngx';
 
 @Component({
   selector: 'app-call-log',
@@ -39,10 +40,34 @@ export class CallLogPage implements OnInit {
     private popoverController: PopoverController,
     private baseService:BaseServiceService,
     private api:ApiService,
-    private datepipe:DatePipe
+    private datepipe:DatePipe,
+    private callLog: CallLog,
+    private platform: Platform,
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
     this.user_id = localStorage.getItem('user_id')
+
+
+    this.platform.ready().then(() => {
+      this.callLog
+        .hasReadPermission()
+        .then((hasPermission) => {
+          if (!hasPermission) {
+            this.callLog
+              .requestReadPermission()
+              .then((results) => {})
+              .catch((e) =>{
+
+              }
+                // alert(' requestReadPermission ' + JSON.stringify(e))
+              );
+          } else {
+          }
+        })
+        .catch((e) =>{
+          // alert(' hasReadPermission ' + JSON.stringify(e)
+        })
+    });
   }
   
   ngOnInit() {
