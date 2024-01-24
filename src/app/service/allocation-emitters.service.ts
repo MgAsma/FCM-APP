@@ -6,7 +6,9 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AllocationEmittersService {
   searchBar = new BehaviorSubject(false)
-  filterStatus = new BehaviorSubject('')
+  allocationStatus = new BehaviorSubject('')
+  callLogStatus = new BehaviorSubject('')
+  tlsStatus = new BehaviorSubject('')
   callhistoryList = new BehaviorSubject([])
   constructor() { }
 }

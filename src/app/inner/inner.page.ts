@@ -5,6 +5,7 @@ import { AddLeadPage } from './add-lead/add-lead.page';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Storage } from '@capacitor/storage';
 import { OnBreakComponent } from '../shared-modules/on-break/on-break.component';
+import { MeetingComponent } from '../shared-modules/meeting/meeting.component';
 @Component({
   selector: 'app-inner',
   templateUrl: './inner.page.html',
@@ -20,7 +21,7 @@ export class InnerPage implements OnInit {
       icon: 'home'
     },
     {
-      title: 'Lead list',
+      title: 'Allocation',
       url: '/inner/allocations',
       icon: 'information-circle'
     },
@@ -57,11 +58,17 @@ export class InnerPage implements OnInit {
   async initializeApp() {
     await this.platform.ready();
     const breakState = await Storage.get({ key: 'break' });
+    const meetingState = await Storage.get({ key: 'meeting' });
         
     if (breakState.value==="on_break" ) {
       this.openOnBreak()
     }
+    else{
+      if (meetingState.value==="in_meeting" ) {
+        this.openMeeting()
+      }
 
+    }
   }
   async openOnBreak(){
     const popover = await this.popoverController.create({
@@ -73,4 +80,14 @@ export class InnerPage implements OnInit {
     );
     return await popover.present();
     }
+    async openMeeting(){
+      const popover = await this.popoverController.create({
+             component: MeetingComponent ,
+             translucent: true,
+             backdropDismiss: false,
+       }
+      );
+      return await popover.present();
+      }
+          
 }

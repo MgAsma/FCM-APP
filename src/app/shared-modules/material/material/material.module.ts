@@ -2,15 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ToolbarCustomerComponent } from '../../../toolbar-customer/toolbar-customer.component';
 import { CustomerDetailsComponent } from '../../customer-details/customer-details.component';
-import { FilterComponent } from '../../filter/filter.component';
 import { LeadrecurringFollowupComponent } from '../../leadrecurring-followup/leadrecurring-followup.component';
 import { NodataComponent } from '../../nodata/nodata.component';
 import { OnBreakComponent } from '../../on-break/on-break.component';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
-import { ToolbarTopComponent } from '../../toolbar-top/toolbar-top.component';
-
 import {MatListModule} from '@angular/material/list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatExpansionModule} from '@angular/material/expansion';
@@ -23,18 +19,18 @@ import {MatCardModule} from '@angular/material/card';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { RecurringFollowupComponent } from '../../../inner/home/recurring-followup/recurring-followup.component';
+import { MeetingComponent } from '../../meeting/meeting.component';
 
 @NgModule({
   declarations: [
-    ToolbarTopComponent,
+    // ToolbarTopComponent,
     SearchBarComponent,
-    ToolbarCustomerComponent,
-    FilterComponent,
     CustomerDetailsComponent,
     LeadrecurringFollowupComponent,
     OnBreakComponent,
     NodataComponent,
-    RecurringFollowupComponent
+    RecurringFollowupComponent,
+    MeetingComponent
   ],
   imports: [
     CommonModule,
@@ -54,14 +50,11 @@ import { RecurringFollowupComponent } from '../../../inner/home/recurring-follow
     MatListModule
   ],
   exports:[
-    
     LeadrecurringFollowupComponent,
     OnBreakComponent,
     NodataComponent,
-    ToolbarTopComponent,
     SearchBarComponent,
-    ToolbarCustomerComponent,
-    FilterComponent,
+    MeetingComponent,
     CustomerDetailsComponent,
     LeadrecurringFollowupComponent,
     RecurringFollowupComponent,

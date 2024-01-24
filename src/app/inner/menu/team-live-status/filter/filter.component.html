@@ -4,7 +4,9 @@
           <ion-col>
             <h6>Filters</h6>
           </ion-col>
-          <ion-col size="2" id="close" (click)="closeModal()">Done</ion-col>
+          <ion-col size="2" id="close" (click)="closeModel()">
+            <h6>Close</h6>
+          </ion-col>
         </ion-row>
             <!--SORT BY--->
             <ion-row class="sorting-section">
@@ -66,10 +68,19 @@
                 <div>Filter by status</div>
               </ion-col>
              </ion-row>
-             <ion-chip *ngFor="let item of data" [class.selected-chip]="item.selected && selectedStatus"  (click)="toggleChipSelection(item)">
+             <!-- <ion-chip *ngFor="let item of data" [class.selected-chip]="item.selected && selectedStatus"  (click)="toggleChipSelection(item)">
               <ion-label [class.selected-chip]="item.selected && selectedStatus">{{ item.name }}</ion-label>
+            </ion-chip> -->
+            <ion-chip *ngFor="let item of data" [class.selected-chip]="item.selected" (click)="toggleChipSelection(item)">
+              <ion-label [class.selected-chip]="item.selected">{{ item.name }}</ion-label>
             </ion-chip>
             
+            <ion-row class="mt-4">
+              <ion-col class="text-center">
+                <ion-button shape="round" fill="outline" (click)="reset()" >Reset</ion-button>
+                <ion-button shape="round" color="primary" (click)="onSubmit()" >Apply</ion-button>
+              </ion-col>
+            </ion-row>
              <!--Filter BY--->
            </div>
            

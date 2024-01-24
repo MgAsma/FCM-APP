@@ -74,7 +74,7 @@
                 <ion-label position="stacked">Date Of Birth</ion-label>
                 
                 <mat-form-field>
-                  <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" placeholder="MM/DD/YYYY">
+                  <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" [max]="minDateAdapter" placeholder="MM/DD/YYYY">
                   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
@@ -114,8 +114,21 @@
             
             
             <p>Step-2 Select Source And Channel Details.</p>
-                <!-- Campaign Name -->
-                <ion-label position="stacked">Campaign Name</ion-label>
+               <!-- Campaign -->
+            <ion-label position="stacked">Campaign</ion-label>
+            <ion-item>
+              <ion-select formControlName="campaign" placeholder="Select The Campaign">
+                <ion-select-option *ngFor="let option of campaignOptions" [value]="option.id">{{ option.campaign_name }}</ion-select-option>
+              </ion-select>
+              <ion-button
+                fill="clear"
+                (click)="clearSelectField('campaign')"
+                *ngIf="f['campaign']?.value"
+              >
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+        
                 <ion-item>
                   <ion-input
                     type="text"
@@ -123,7 +136,7 @@
                     placeholder="Enter Your Campaign Name"
                   ></ion-input>
                 </ion-item>
-            
+             -->
                 <!-- Season -->
                 <ion-label position="stacked">Season</ion-label>
                 <ion-item>
@@ -500,21 +513,7 @@
               </ion-button>
             </ion-item>
         
-            <!-- Campaign -->
-            <ion-label position="stacked">Campaign</ion-label>
-            <ion-item>
-              <ion-select formControlName="campaign" placeholder="Select The Campaign">
-                <ion-select-option *ngFor="let option of campaignOptions" [value]="option.id">{{ option.campaign_name }}</ion-select-option>
-              </ion-select>
-              <ion-button
-                fill="clear"
-                (click)="clearSelectField('campaign')"
-                *ngIf="f['campaign']?.value"
-              >
-                <ion-icon name="close-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-        
+           
             <!-- Medium -->
             <ion-label position="stacked">Medium</ion-label>
             <ion-item>

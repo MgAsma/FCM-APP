@@ -65,11 +65,12 @@ export class LoginComponent  implements OnInit {
           const formattedDate :any = this.datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss.SSSZ');
           localStorage.setItem('lastLoginDate', formattedDate);
           localStorage.setItem('token',resp.token.token)
-          localStorage.setItem('user_role',resp.logged_in_user_role)
+          
           const decodedToken:any = jwtDecode(resp.token.token);
           localStorage.setItem('user_id',decodedToken.user_id)
+          localStorage.setItem('user_role',decodedToken.user_role)
           localStorage.setItem('superadmin_or_admin',resp.superadmin_or_admin)
-          localStorage.setItem('username',resp.username)
+          localStorage.setItem('username',decodedToken.username)
           this.api.loaderDismiss()
           this.loginForm.reset()
           this.router.navigate(['../inner'])

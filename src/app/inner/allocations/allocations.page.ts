@@ -1,4 +1,4 @@
-import { Component, HostListener, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
 
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -10,12 +10,13 @@ import { ApiService } from '../../service/api/api.service';
 import { BaseServiceService } from '../../service/base-service.service';
 import { CallLog, CallLogObject } from '@ionic-native/call-log/ngx';
 import { AddLeadEmitterService } from '../../service/add-lead-emitter.service';
+import { EditLeadPage } from '../edit-lead/edit-lead.page';
 @Component({
   selector: 'app-allocations',
   templateUrl: './allocations.page.html',
   styleUrls: ['./allocations.page.scss'],
 })
-export class AllocationsPage implements OnInit {
+export class AllocationsPage implements OnInit{
   searchBar: boolean = false;
   placeholderText = 'Search by Name/Status';
   data: any = [];
@@ -33,7 +34,7 @@ export class AllocationsPage implements OnInit {
   recordsFoundText: string;
   listTyle:string;
   pageSize: any = 10;
-  counsellor_ids: any;
+  counsellor_ids: any = [];
   user_id: string;
   superadmin_or_admin: string;
   // callStatus: number;
@@ -55,6 +56,7 @@ export class AllocationsPage implements OnInit {
       private callLog: CallLog,
       private platform: Platform,
       private _addLeadEmitter:AddLeadEmitterService,
+      private modalController:ModalController
     ) {
       this.superadmin_or_admin = localStorage.getItem('superadmin_or_admin')
      
@@ -93,7 +95,7 @@ export class AllocationsPage implements OnInit {
         this.callLog.getCallLog(this.filters).then((results) => {
             for (const log of results) {
               this.callDuration = log.duration;
-              console.log('Call Log:', this.callDuration);
+              //console.log('Call Log:', this.callDuration);
               if (this.callDuration > 0) {
                 this.currentStatus = 2;
               } else {
@@ -102,61 +104,70 @@ export class AllocationsPage implements OnInit {
             
             }
     
-            // console.log(
-            //   JSON.stringify(results),
-            //   'call log responseeeeeeeeeeeeeeeee'
-            // );
+           
             this.recordsFoundText = JSON.stringify(results);
-            console.log(this.recordsFoundText, 'this.recordsFoundText');
             this.recordsFound = results; //JSON.stringify(results);
           })
-          let data = {
-            user:this.user_id,
-            status:6
-          }
-          this.postTLStatus(data)
+         
+          // .catch((e) => alert(' LOG ' + JSON.stringify(e)));
       }
       
-    async callContact(number: string, id: any) {
+     callContact(number: string, id: any) {
       this.leadId = id;
       this.leadPhoneNumber = number;
       this.callStartTime = new Date();
+      
+      // console.log(this.callStartTime, 'time');
       let data = {
         user:this.user_id,
         status:3
       }
      this.postTLStatus(data);
-     await this.callNumber.callNumber(number, true)
+      this.callNumber.callNumber(number, true)
          this.callInitiated = true;
-          await this.getContacts('type','2','==');
-          await this.getContacts('type','5','==');
-          await this.postCallHistory();  
+         // console.log('Dialer Launched!');
+          setTimeout(() => {
+            this.getContacts('type', '2', '==');
+            this.getContacts('type', '5', '==');
+          }, 10000);
+          setTimeout(() => {
+            this.postCallHistory();
+          }, 30000);
+          
       }
 
-  postTLStatus(data){
-    this._baseService.postData(`${environment.counsellor_status}`,data).subscribe((res:any)=>{
-      if(res){
-        this.api.showToast(res.message)  
+      postTLStatus(data){
+        this._baseService.postData(`${environment.counsellor_status}`,data).subscribe((res:any)=>{
+          if(res){
+            console.log(res.message)  
+          }
+        },((error:any)=>{
+          this.api.showToast(error?.error?.message)
+        }))
       }
-    },((error:any)=>{
-      this.api.showToast(error?.error?.message)
-    }))
-  }
 
-  postCallHistory() {
-    let data = {
-      lead_id: this.leadId,
-      phone_number: this.leadPhoneNumber,
-      call_status: this.currentStatus,
-      counsellor: this.counsellor_id,
-      call_start_time: this.callStartTime,
-    };
-    this.api.sendingCallHistory(data).subscribe((res: any) => {
-     // console.log(res, 'sending call history');
-    },(error:any)=>{
-      this.api.showToast(error.error.message);
-    });
-  }
+      postCallHistory() {
+        let data = {
+          lead_id: this.leadId,
+          phone_number: this.leadPhoneNumber,
+          call_status: this.currentStatus,
+          counsellor: this.counsellor_id,
+          call_start_time: this.callStartTime,
+        };
+        this.api.sendingCallHistory(data).subscribe((res: any) => {
+          if(res){
+            let data2 = {
+              user:this.user_id,
+              status:3
+            }
+            this.postTLStatus(data2)
+          }
+        // console.log(res, 'sending call history');
+        },(error:any)=>{
+          this.api.showToast(error.error.message);
+        });
+      
+      }
 
   getStatus() {
     this._baseService.getData(environment.lead_status).subscribe(
@@ -182,10 +193,13 @@ export class AllocationsPage implements OnInit {
       }
     });
     let query: any;
-    this.allocate.filterStatus.subscribe(
+    this.allocate.allocationStatus.subscribe(
       (res: any) => {
-        if (res) {
-          query = `&status=${res}`;
+        if (res.length >0) {
+          query = `status=${res}`;
+          this.getLeadlist(query);
+        }else{
+          query = `page=1&page_size=10`;
           this.getLeadlist(query);
         }
       },
@@ -205,21 +219,28 @@ export class AllocationsPage implements OnInit {
     setTimeout(() => {
       this.leadCards = [];
       this.data = [];
+      this.allocate.allocationStatus.next('')
       let query = `?page=1&page_size=10`;
       this.getLeadlist(query);
       event.target.complete();
     }, 2000);
   }
 
-  getLeadlist(query:any){  
-   this._baseService.getData(`${environment.lead_list}?user_id=${this.user_id}&super_admin=${this.superadmin_or_admin}&${query}`).subscribe((res: any) => {
+  getLeadlist(query:any){
+    let baseQuery = ''
+    let user_role = localStorage.getItem('user_role').toUpperCase()
+    if(user_role == 'SUPERADMIN' || user_role == 'SUPER ADMIN'){
+      baseQuery = `/?${query}`
+    }else{
+      baseQuery = `?counsellor_id=${this.user_id}&${query}`
+    }
+   this._baseService.getData(`${environment.lead_list}${baseQuery}`).subscribe((res: any) => {
      if (res.results) {
       this.leadCards = []
       this.data = []
        this.leadCards = res.results;
        this.data = new MatTableDataSource<any>(this.leadCards);
        this.totalNumberOfRecords = res.total_no_of_record
-       
      }
    }, (error: any) => {
      this.api.showToast(error.error.message);
@@ -240,7 +261,7 @@ export class AllocationsPage implements OnInit {
         this.onEmit(this.counsellor_ids);
         return; // Exit the function after emitting counsellor_ids
       } else {
-        this.allocate.filterStatus.subscribe(
+        this.allocate.allocationStatus.subscribe(
           (res: any) => {
             if (res) {
               query += `status=${res}`;
@@ -282,12 +303,32 @@ export class AllocationsPage implements OnInit {
 
   searchTermChanged(event: any) {
     this.searchTerm = event
-    let query: any;
-    if (event) {
-      query = `page=1&page_size=10&key=${event}`;
-    } else {
-      query = `page=1&page_size=10`;
-    }
+    
+    let query: string = `page=${this.currentPage}&page_size=${this.pageSize}&key=${this.searchTerm}`;
+   
+      this.allocate.allocationStatus.subscribe(
+        (res: any) => {
+          if (res) {
+            query += `&status=${res}`;
+          }
+        },
+        (error: any) => {
+          this.api.showToast(error.error.message);
+        }
+      );
+    
     this.getLeadlist(query);
   }
+  async editLead(allocate) {
+    const modal = await this.modalController.create({
+      component: EditLeadPage, // Replace with your modal content page
+      componentProps: {
+        // You can pass data to the modal using componentProps
+        key: 'value',
+        data:allocate
+      }
+    });
+    return await modal.present();
+  }
+ 
 }
