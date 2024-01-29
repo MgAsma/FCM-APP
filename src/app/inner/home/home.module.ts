@@ -18,10 +18,11 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { StartBreakComponent } from './start-break/start-break.component';
 import { GotoViewCustomerDetailsCallCustomerComponent } from './goto-view-customer-details-call-customer/goto-view-customer-details-call-customer.component';
 import { FollowUpsComponent } from './follow-ups/follow-ups.component';
-import { MaterialModule } from '../../shared-modules/material/material/material.module';
+
 import { CallLog } from '@ionic-native/call-log/ngx';
 import { Device } from '@ionic-native/device/ngx'
 import { CallNumber } from '@ionic-native/call-number/ngx';
+import { MaterialModule } from '../../shared-modules/material/material/material.module';
 @NgModule({
   imports: [
     CommonModule,
