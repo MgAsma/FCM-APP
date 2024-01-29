@@ -8,6 +8,9 @@ import { CallLogPageRoutingModule } from './call-log-routing.module';
 
 import { CallLogPage } from './call-log.page';
 import { MaterialModule } from '../../../shared-modules/material/material/material.module';
+import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
+import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.component';
+import { FilterComponent } from './filter/filter.component';
 
 // import { CallLog, CallLogObject } from '@ionic-native/call-log/ngx';
 
@@ -19,7 +22,7 @@ import { MaterialModule } from '../../../shared-modules/material/material/materi
     CallLogPageRoutingModule,
     MaterialModule
   ],
-  declarations: [CallLogPage],
+  declarations: [CallLogPage,ToolbarTopComponent,ToolbarCustomerComponent,FilterComponent],
   // providers:[CallLog]
 })
 export class CallLogPageModule {}

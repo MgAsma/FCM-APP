@@ -14,7 +14,6 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TeamLiveStatusPage implements OnInit {
   searchBar: boolean = false;
-  id:any
   followupDetails:any=[]
   placeholderText="Search by Name/Status"
   leadCards: any;
@@ -38,13 +37,14 @@ export class TeamLiveStatusPage implements OnInit {
   user_role: any;
   counsellor_ids: any;
   pageSize: any = 10;
+  user_id: string;
   constructor(
     private allocate:AllocationEmittersService,
     private modalController:ModalController,
     private api:ApiService,
     private baseService:BaseServiceService,
     ) { 
-    this.id=localStorage.getItem('user_id')
+    this.user_id=localStorage.getItem('user_id')
     this.user_role=localStorage.getItem('user_role')?.toLocaleUpperCase()
   }
 
@@ -68,18 +68,19 @@ export class TeamLiveStatusPage implements OnInit {
       }
     })
     let query:any;
-    this.allocate.filterStatus.subscribe((res:any)=>{
-      if(res){
+    this.allocate.tlsStatus.subscribe((res:any)=>{
+      if(res.length>0){
         query = `status_id=${res}`
-        //query = `page=1&page_size=10&status_id=${res}`
+        this.getLiveStatus(query)
+      }else{
+        query = ``
         this.getLiveStatus(query)
       }
     },((error:any)=>{
-      this.api.showToast(error.error.error.message)
+      this.api.showToast(error.error.message)
     }))
-    // query = `page=1&page_size=10`
-    query = ``
-    this.getLiveStatus(query)
+    // query = ``
+    // this.getLiveStatus(query)
     this.getCounselor()
    
   }
@@ -110,7 +111,7 @@ export class TeamLiveStatusPage implements OnInit {
     if (event) {
       let query: any;
       this.counsellor_ids = event;
-      query = `page=${this.currentPage}&page_size=${this.pageSize}&counsellor_id=${event}`;
+      query = `page=${this.currentPage}&page_size=${this.pageSize}&counsellor_ids=${event}`;
       this.getLiveStatus(query)
     }
 
@@ -121,6 +122,7 @@ export class TeamLiveStatusPage implements OnInit {
       // Any calls to load data go here
       this.followupDetails = [];
       this.data = [];
+      this.allocate.tlsStatus.next('')
       let query = `page=1&page_size=10`
       this.getLiveStatus(query)
       event.target.complete();
@@ -140,7 +142,7 @@ export class TeamLiveStatusPage implements OnInit {
         }
       )
     }else{
-      this.api.getTeamLiveStatus(`?counsellor_id=${this.id}&${query}`).subscribe(
+      this.api.getTeamLiveStatus(`?counsellor_id=${this.user_id}&${query}`).subscribe(
         (resp:any)=>{
           this.followupDetails=resp.results
           this.data = new MatTableDataSource<any>(this.followupDetails);
@@ -156,9 +158,14 @@ export class TeamLiveStatusPage implements OnInit {
   }
   searchTermChanged(event:any) {
     let query:any;
-    if(event){
-      query = `key=${event}`
-     }
+    query = `key=${event}`
+    this.allocate.tlsStatus.subscribe((res:any)=>{
+      if(res.length>0){
+        query += `&status_id=${res}`
+       }
+    },((error:any)=>{
+      this.api.showToast(error.error.message)
+    }))
      this.getLiveStatus(query)
   }
 

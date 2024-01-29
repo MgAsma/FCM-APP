@@ -38,6 +38,7 @@ const routes: Routes = [
     loadChildren: () => import('./shared-modules/rec-followup-list/rec-followup-list.module').then( m => m.RecFollowupListPageModule)
   }
 
+
 ];
 
 @NgModule({

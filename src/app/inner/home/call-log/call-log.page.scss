@@ -58,3 +58,25 @@ small{
 .p-b-cs{
   padding-bottom: 2.5rem !important;
 }
+mat-form-field{
+  input{
+    font-size: 12px;
+    text-align: center;
+  }
+ 
+}
+.label-log{
+ font-size: 13px;
+}
+.border-set{
+ border:1px solid gray;
+ border-radius: 5px;
+ padding-bottom: 10px;
+}
+.date-range{
+  margin: 10px 0 0;
+  text-align: center;
+  color: black;
+  border-radius: 7px;
+  padding: 8px 0 0;
+}

@@ -37,6 +37,7 @@ export class AddLeadPage implements OnInit {
   seasons:any = [];
   @Output() addLead = new EventEmitter()
   userId:any;
+  minDateAdapter: string;
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -46,7 +47,8 @@ export class AddLeadPage implements OnInit {
     private modalController:ModalController,
     private _addLeadEmitter:AddLeadEmitterService
    ) {
-      
+    let dob = new Date()
+    this.minDateAdapter = this._datePipe.transform(dob,'yyyy-MM-dd')
     }
 
   ngOnInit(): void {
@@ -321,7 +323,7 @@ export class AddLeadPage implements OnInit {
     channel_id:f.channel || undefined,
     source_id:f.source || undefined,
     priority_id:f.priority || undefined,
-    refered_to_id:f.referredTo || undefined,
+    refered_to_id:f.referredTo || this.userId,
     lead_list_status_id:f.status || undefined,
     lead_list_substatus_id:f.subStatus || undefined,
     department_id:f.department || undefined,
@@ -356,7 +358,7 @@ data = JSON.parse(JSON.stringify(data));
       this.addNewLead.markAllAsTouched()
     }
     else{
-      this._baseService.postData(environment.lead_list,data).subscribe((res:any)=>{
+      this._baseService.postData(`${environment.lead_list}/`,data).subscribe((res:any)=>{
         if(res){
           this.addLead.emit('ADD')
           this.api.showToast(res.message)

@@ -48,3 +48,14 @@ ion-input{
 ion-input:focus {
     border-bottom: solid 1px blue;
   }
+  ion-fab{
+    position: relative;
+  }
+  .d-ic-flex{
+    display: inline-grid;
+    justify-content: center;
+    align-items: center;
+  }
+  .title-class{
+    font-size: 13px;
+  }

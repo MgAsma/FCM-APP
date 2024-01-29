@@ -34,6 +34,10 @@ const routes: Routes = [
   },
   {
     path:'customer-details', component:CustomerDetailsComponent
+  },
+  {
+    path: 'edit-lead',
+    loadChildren: () => import('./edit-lead/edit-lead.module').then( m => m.EditLeadPageModule)
   }
   
     ]

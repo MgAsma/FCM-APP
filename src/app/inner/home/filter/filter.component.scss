@@ -7,11 +7,12 @@
 }
 
 .chip {
-    border: solid 1px #f17e33;
+    background: #fce1d8;
     border-radius: 12px;
     padding: 0px 8px;
     font-size: 12px;
-    white-space: nowrap; 
+    white-space: nowrap;
+    font-weight: 400 !important;
 }
 .scroll-items::-webkit-scrollbar {
     display: none; 

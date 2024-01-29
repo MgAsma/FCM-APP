@@ -35,6 +35,9 @@ export class CallLogPage implements OnInit {
   startDate:any;
   callLogForm:FormGroup
   dateFilter: boolean = false;
+  minEndDate: any; 
+  dateForm:FormGroup;
+  dateFiltered: boolean = false;
   constructor(
     private allocate: AllocationEmittersService,
     private popoverController: PopoverController,
@@ -43,6 +46,7 @@ export class CallLogPage implements OnInit {
     private datepipe:DatePipe,
     private callLog: CallLog,
     private platform: Platform,
+    private fb:FormBuilder
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
     this.user_id = localStorage.getItem('user_id')
@@ -69,8 +73,14 @@ export class CallLogPage implements OnInit {
         })
     });
   }
-  
+  initForm(){
+    this.dateForm = this.fb.group({
+      startDate:['',Validators.required],
+      endDate:['',Validators.required]
+    })
+  }
   ngOnInit() {
+    this.initForm()
     this.getFilterByStatus()
     this.allocate.searchBar.subscribe((res) => {
       if (res === true) {
@@ -81,44 +91,50 @@ export class CallLogPage implements OnInit {
     });
     let query:any;
   
-    this.allocate.filterStatus.subscribe((res:any)=>{
-      if(res){
+    this.allocate.callLogStatus.subscribe((res:any)=>{
+      if(res.length >0){
         query = `?counsellor_id=${this.user_id}&status=${res}`
+        this.getCallLogs(query)
+      }else{
+        query = `?counsellor_id=${this.user_id}`
         this.getCallLogs(query)
       }
     },((error:any)=>{
       this.api.showToast(error.error.message)
     }))
-    query = `?counsellor_id=${this.user_id}`
-    this.getCallLogs(query)
+    // query = `?counsellor_id=${this.user_id}`
+    // this.getCallLogs(query)
     this.getCounselor()
   }
   onStartDateChange(event: CustomEvent) {
-    this.startDate = event.detail.value;
+    if(event){
+      console.log(event,event)
+      this.minEndDate = event.target['value'];
+      this.dateForm.patchValue({
+        endDate:''
+      })
+    }
+    
   }
 
   onEndDateChange(event: CustomEvent) {
-    this.endDate = event.detail.value;
+    this.endDate = event.target['value'];
   }
   onSubmit() {
     let query;
-    if (this.startDate && this.endDate) {
-      let sdate = this.datepipe.transform(this.startDate, 'yyyy-MM-dd');
-      let edate = this.datepipe.transform(this.endDate, 'yyyy-MM-dd');
+    if(this.dateForm.invalid){
+      this.dateForm.markAllAsTouched()
+      this.api.showToast('Select start date and end date')
+    }else{
+      let sdate = this.datepipe.transform(this.dateForm.value.startDate, 'yyyy-MM-dd');
+      let edate = this.datepipe.transform(this.dateForm.value.endDate, 'yyyy-MM-dd');
       query = `?counsellor_id=${this.user_id}&from_date=${sdate}&to_date=${edate}`;
-    } else {
-      // If startDate is not set, set it to the current date
-      this.startDate = new Date();
-      let sdate = this.datepipe.transform(this.startDate, 'yyyy-MM-dd');
-  
-      // If endDate is not set, set it to the current date
-      this.endDate = new Date();
-      let edate = this.datepipe.transform(this.endDate, 'yyyy-MM-dd');
-  
-      query = `?counsellor_id=${this.user_id}&from_date=${sdate}&to_date=${edate}`;
-    }
-    this.dateFilter = true
-    this.getCallLogs(query);
+      this.dateFilter = true
+      this.getCallLogs(query);
+      this.dateFiltered = true
+
+    } 
+    
   }
   
   getFilterByStatus() {
@@ -153,7 +169,9 @@ export class CallLogPage implements OnInit {
     setTimeout(() => {
       this.callLogCards = []
       this.data = []
-      let query = `?page=1&page_size=10`
+      this.dateForm.reset()
+      this.allocate.callLogStatus.next('')
+      let query = `?counsellor_id=${this.user_id}&page=1&page_size=10`
       this.getCallLogs(query)
       event.target.complete();
     }, 2000);
@@ -214,7 +232,7 @@ export class CallLogPage implements OnInit {
       this.onSubmit()
       return;
     }else {
-      this.allocate.filterStatus.subscribe(
+      this.allocate.callLogStatus.subscribe(
         (res: any) => {
           if (res) {
             query += `&status=${res}`;
@@ -232,10 +250,22 @@ export class CallLogPage implements OnInit {
   searchTermChanged(event: any) {
     this.searchTerm = event
     let query: any;
-    if (event) {
-      query = `?counsellor_id&page=1&page_size=10&key=${event}`;
-    } else {
-      query = `?counsellor_id&page=1&page_size=10`;
+    query = `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`;
+    
+    this.allocate.callLogStatus.subscribe(
+      (res: any) => {
+        if (res.length >0) {
+          query += `&status=${res}`;
+        }
+      },
+      (error: any) => {
+        this.api.showToast(error.error.message);
+      }
+    );
+    if(this.dateFiltered){
+      let sdate = this.datepipe.transform(this.dateForm.value.startDate, 'yyyy-MM-dd');
+      let edate = this.datepipe.transform(this.dateForm.value.endDate, 'yyyy-MM-dd');
+      query +=`&from_date=${sdate}&to_date=${edate}`
     }
     this.getCallLogs(query);
   }

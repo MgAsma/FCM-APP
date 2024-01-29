@@ -1,0 +1,28 @@
+<ion-content>
+  <ion-row class="bg">
+    <ion-col>
+      <ion-row>
+        <ion-col style="text-align: center">
+          <div
+          class="meeting-container"
+          >
+          <img src="assets/images/meeting-2.svg" height="35px"/>
+        </div>
+          
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col style="text-align: center">
+          <p>You are on meeting since <b>{{ breakTime | date:"medium" }}</b></p>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col></ion-col>
+        <ion-col size="8">
+          <button class="btn" (click)="break()">FINISH MEETING</button>
+        </ion-col>
+        <ion-col></ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>
