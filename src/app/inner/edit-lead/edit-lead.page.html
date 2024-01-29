@@ -122,7 +122,7 @@
              <!-- Campaign -->
             <ion-label position="stacked">Campaign</ion-label>
             <ion-item>
-              <ion-select area-label="" formControlName="campaign" placeholder="Select The Campaign">
+              <ion-select  formControlName="campaign" placeholder="Select The Campaign">
                 <ion-select-option *ngFor="let option of campaignOptions" [value]="option.id">{{ option.campaign_name }}</ion-select-option>
               </ion-select>
               <ion-button
