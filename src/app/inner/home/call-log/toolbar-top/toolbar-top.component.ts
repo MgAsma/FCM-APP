@@ -1,14 +1,17 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
-import { sortingCards, SortingCard,arrayOfObjects } from '../sample-data';
+
 import { IonModal, ModalController } from '@ionic/angular';
 
+
 import { FilterComponent } from '../filter/filter.component';
-import { ToolbarCustomerComponent } from '../../toolbar-customer/toolbar-customer.component';
-import { AllocationEmittersService } from '../../service/allocation-emitters.service';
+import { ToolbarCustomerComponent } from '../toolbar-customer/toolbar-customer.component';
+import { AllocationEmittersService } from '../../../../service/allocation-emitters.service';
+import { SortingCard, arrayOfObjects, sortingCards } from '../../../../shared-modules/sample-data';
+
 
 @Component({
-  selector: 'app-toolbar-top',
+  selector: 'app-call-toolbar-top',
   templateUrl: './toolbar-top.component.html',
   styleUrls: ['./toolbar-top.component.scss'],
 })
@@ -20,7 +23,10 @@ export class ToolbarTopComponent  implements OnInit {
   sortingCards: SortingCard[] = sortingCards;
   arrayOfObjects = arrayOfObjects
   @Output()people = new EventEmitter();
-  constructor(private allocate:AllocationEmittersService,private modalController:ModalController) { }
+  constructor(
+    private allocate:AllocationEmittersService,
+    private modalController:ModalController
+    ) { }
 
   ngOnInit() {}
   enableSearchOption(){

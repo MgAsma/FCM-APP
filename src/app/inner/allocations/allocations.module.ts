@@ -8,6 +8,9 @@ import { CallNumber } from '@ionic-native/call-number/ngx';
 import { MaterialModule } from '../../shared-modules/material/material/material.module';
 import { CallLog } from '@ionic-native/call-log/ngx';
 import { Device } from '@ionic-native/device/ngx'
+import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
+import { FilterComponent } from './filter/filter.component';
+import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.component';
 
 @NgModule({
   imports: [
@@ -16,9 +19,12 @@ import { Device } from '@ionic-native/device/ngx'
     FormsModule,
     IonicModule,
     AllocationsPageRoutingModule,
-    
   ],
-  declarations: [AllocationsPage],
+  declarations: [
+    AllocationsPage,
+    ToolbarTopComponent,
+    ToolbarCustomerComponent,
+    FilterComponent],
   providers:[CallNumber,CallLog,Device]
   
 })

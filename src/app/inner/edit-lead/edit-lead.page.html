@@ -1,0 +1,561 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-row>
+      <ion-col size="10">
+        <ion-title>Edit lead </ion-title>
+      </ion-col>
+      <ion-col size="2">
+        <ion-icon name="close" class="close" (click)="close()"></ion-icon>
+     </ion-col>
+    </ion-row> 
+</ion-toolbar>
+</ion-header>
+
+<div id="custom-height">
+  <form [formGroup]="editLead">
+<div class="container">
+  
+     <ion-accordion-group [value]="['first']">
+      <ion-accordion value="first">
+        <ion-item slot="header" color="light">
+          <ion-label> Lead Details</ion-label>
+        </ion-item>
+        <div slot="content" class="p-3"> 
+          <ng-container>
+            <p>Step-1 Enter below details.</p>
+                <!-- First Name -->
+                <ion-label position="stacked">First Name</ion-label><b class="star-symbol">*</b>
+                <ion-item>    
+                  <ion-input 
+                    type="text"
+                    placeholder="Enter Your First Name"
+                    formControlName="firstName"
+                    required
+                  ></ion-input>
+                </ion-item>
+                <ion-error *ngIf="f['firstName'].touched && f['firstName']?.hasError('required')">
+                  <ion-label color="danger">First Name Is Required.</ion-label>
+                </ion-error>
+                <ion-error *ngIf="f['firstName']?.hasError('pattern')">
+                  <ion-label color="danger">Invalid Name Format. Please Enter Characters.</ion-label>
+                </ion-error>
+            
+                <!-- Last Name -->
+                <ion-label position="stacked">Last Name</ion-label>
+                <ion-item>
+                  <ion-input 
+                    type="text"
+                    placeholder="Enter Your Last Name"
+                    formControlName="lastName"
+                  ></ion-input>
+                </ion-item>
+                <ion-error *ngIf="f['lastName']?.hasError('pattern')">
+                  <ion-label color="danger">Invalid Name Format. Please Enter Characters.</ion-label>
+                </ion-error>
+            
+                <!-- Email -->
+                <ion-label position="stacked">Email Id</ion-label><b class="star-symbol">*</b>
+                <ion-item>
+                  <ion-input 
+                    type="email"
+                    placeholder="Enter Your Email Id"
+                    formControlName="email"
+                    required
+                  ></ion-input>
+                </ion-item>
+                <ion-error *ngIf="f['email'].touched && f['email'].hasError('required')">
+                  <ion-label color="danger">Email Id Is Required.</ion-label>
+                </ion-error>
+                <ion-error *ngIf="f['email'].hasError('email')">
+                  <ion-label color="danger">Invalid Email Format.</ion-label>
+                </ion-error>
+            
+                <!-- Date of Birth -->
+                <ion-label position="stacked">Date Of Birth</ion-label>
+                
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" [max]="minDateAdapter" placeholder="MM/DD/YYYY">
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+               
+                <!-- Mobile Number -->
+                <ion-label position="stacked">Mobile Number</ion-label><b class="star-symbol">*</b>
+                <ion-item>
+                  <ion-input 
+                    type="tel"
+                    placeholder="Enter Your Mobile Number"
+                    formControlName="mobile"
+                    required
+                  ></ion-input>
+                </ion-item>
+                <ion-error *ngIf="f['mobile'].touched && f['mobile'].hasError('required')">
+                  <ion-label color="danger">Mobile Number Is Required.</ion-label>
+                </ion-error>
+                <ion-error *ngIf="f['mobile'].hasError('pattern')">
+                  <ion-label color="danger">Please Enter A 10-Digit Mobile Number.</ion-label>
+                </ion-error>
+            
+                <!-- Highest Qualification -->
+                <ion-label position="stacked">Highest Qualification</ion-label>
+                <ion-item>
+                  
+                  <ion-input 
+                    type="text"
+                    placeholder="Enter Your Highest Qualification"
+                    formControlName="highestQualification"
+                  ></ion-input>
+                </ion-item>
+            
+            
+            <p>Step-2 Select Source And Channel Details.</p>
+                <!-- Campaign Name -->
+                <!-- <ion-label position="stacked">Campaign Name</ion-label>
+                <ion-item>
+                  <ion-input 
+                    type="text"
+                    formControlName="campaignName"
+                    placeholder="Enter Your Campaign Name"
+                  ></ion-input>
+                </ion-item>
+             -->
+             <!-- Campaign -->
+            <ion-label position="stacked">Campaign</ion-label>
+            <ion-item>
+              <ion-select  formControlName="campaign" placeholder="Select The Campaign">
+                <ion-select-option *ngFor="let option of campaignOptions" [value]="option.id">{{ option.campaign_name }}</ion-select-option>
+              </ion-select>
+              <ion-button
+                fill="clear"
+                (click)="clearSelectField('campaign')"
+                *ngIf="f['campaign']?.value"
+              >
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+        
+                <!-- Season -->
+                <ion-label position="stacked">Season</ion-label>
+                <ion-item>
+                  <ion-select  formControlName="season" placeholder="Select The Season">
+                    <ion-select-option *ngFor="let season of seasons" [value]="season.id">{{ season.name }}</ion-select-option>
+                  </ion-select>
+                  <ion-button
+                    fill="clear"
+                    (click)="clearSelectField('season')"
+                    *ngIf="editLead.get('season')?.value"
+                  >
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+            
+                <!-- Channel -->
+                <ion-label position="stacked">Channel</ion-label>
+                <ion-item>
+                  <ion-select  formControlName="channel" placeholder="Select The Channel">
+                    <ion-select-option *ngFor="let channel of channels" [value]="channel.id">{{ channel.channel_name }}</ion-select-option>
+                  </ion-select>
+                  <ion-button
+                    fill="clear"
+                    (click)="clearSelectField('channel')"
+                    *ngIf="editLead.get('channel')?.value"
+                  >
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+            
+                <!-- Source -->
+                <ion-label position="stacked">Source</ion-label>
+                <ion-item>
+                  <ion-select  formControlName="source" placeholder="Select The Source">
+                    <ion-select-option *ngFor="let source of sources" [value]="source.id">{{ source.source_name }}</ion-select-option>
+                  </ion-select>
+                 
+                  <ion-button
+                    fill="clear"
+                    (click)="clearSelectField('source')"
+                    *ngIf="editLead.get('source')?.value"
+                  >
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+            
+                <!-- Priority -->
+                <ion-label position="stacked">Priority</ion-label>
+                <ion-item>
+                  <ion-select  formControlName="priority" placeholder="Select The Priority">
+                    <ion-select-option *ngFor="let priority of priorities" [value]="priority.id">{{ priority.name }}</ion-select-option>
+                  </ion-select>
+                  <ion-button
+                    fill="clear"
+                    (click)="clearSelectField('priority')"
+                    *ngIf="editLead.get('priority')?.value"
+                  >
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+            
+                <!-- Referred To -->
+                <ion-label position="stacked">Referred To</ion-label>
+                <ion-item>
+                  <ion-select  formControlName="referredTo" placeholder="Select The Referred To">
+                    <ion-select-option *ngFor="let referred of referredTo" [value]="referred.id">{{ referred.first_name }}</ion-select-option>
+                  </ion-select>
+                  <ion-button
+                    fill="clear"
+                    (click)="clearSelectField('referredTo')"
+                    *ngIf="editLead.get('referredTo')?.value"
+                  >
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+              
+          
+
+           <p>Step 3 - Select Follow-up Details.</p>
+           
+              <!-- Status -->
+              <ion-label position="stacked">Status</ion-label>
+              <ion-item>
+               
+                <ion-select  formControlName="status" placeholder="Select The Status">
+                  <ion-select-option *ngFor="let status of stat_us" [value]="status.id">{{ status.name }}</ion-select-option>
+                </ion-select>
+               
+                <ion-button
+                fill="clear"
+                (click)="clearSelectField('status')"
+                *ngIf="editLead.get('status')?.value"
+              >
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+              </ion-item>
+          
+              <!-- Sub Status -->
+              <ion-label position="stacked">Sub Status</ion-label>
+              <ion-item>
+                
+                <ion-select  formControlName="subStatus" placeholder="Select The Sub Status">
+                  <ion-select-option *ngFor="let substatus of subStatus" [value]="substatus.id">{{ substatus.name }}</ion-select-option>
+                </ion-select>
+                
+                <ion-button
+                fill="clear"
+                (click)="clearSelectField('subStatus')"
+                *ngIf="editLead.get('subStatus')?.value"
+              >
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+              </ion-item>
+            
+           
+          
+           <p>Step 4 - Select Below Entity Details.</p>
+            
+              <!-- Department -->
+              <ion-label position="stacked">Department</ion-label>
+              <ion-item>
+                <ion-select  formControlName="department" placeholder="Select The Department">
+                  <ion-select-option *ngFor="let option of departmentOptions" [value]="option.id">{{ option.name }}</ion-select-option>
+                </ion-select>
+                <ion-button
+                  fill="clear"
+                  (click)="clearSelectField('department')"
+                  *ngIf="editLead.get('department')?.value"
+                >
+                  <ion-icon name="close-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+          
+              <!-- Course -->
+              <ion-label position="stacked">Course</ion-label>
+              <ion-item>
+                <ion-select  formControlName="course" placeholder="Select The Course">
+                  <ion-select-option *ngFor="let option of courseOptions" [value]="option.id">{{ option.course_name }}</ion-select-option>
+                </ion-select>
+                <ion-button
+                  fill="clear"
+                  (click)="clearSelectField('course')"
+                  *ngIf="editLead.get('course')?.value"
+                >
+                  <ion-icon name="close-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+          
+              <!-- Location -->
+              <ion-label position="stacked">Location</ion-label>
+              <ion-item>
+                <ion-input 
+                  type="text"
+                  placeholder="Enter Your Location"
+                  formControlName="location"
+                ></ion-input>
+              </ion-item>
+          
+              <!-- Year Of Passing -->
+              <ion-label position="stacked">Year Of Passing</ion-label>
+              <ion-item>
+                <ion-input 
+                  type="number"
+                  formControlName="yearOfPassing"
+                  placeholder="Enter Your Year Of Passing"
+                ></ion-input>
+              </ion-item>
+            
+           
+           
+            <p>Step 5 - Select Appropriate Details To Communicate With The Lead (Optional).</p>
+            <ion-label position="stacked">What Is The Best Time To Call?</ion-label>
+            <ion-item>
+              <ion-select  formControlName="callTime" placeholder="What Is The Best Time To Call?">
+                <ion-select-option *ngFor="let option of time" [value]="option">{{ option }}</ion-select-option>
+              </ion-select>
+              <ion-button
+                fill="clear"
+                (click)="clearSelectField('callTime')"
+                *ngIf="editLead.get('callTime')?.value"
+              >
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+        
+         </ng-container>
+        </div>
+      </ion-accordion>
+      <ion-accordion value="second">
+        <ion-item slot="header" color="light">
+          <ion-label>Candidate Details</ion-label>
+        </ion-item>
+        <div slot="content" class="p-3">
+          
+    <!-- Primary Phone Number -->
+     <ion-label position="stacked">Primary Phone Number</ion-label>
+    <ion-item>
+     
+      <ion-input 
+        matInput
+        appFormSpace
+        formControlName="primaryNumber"
+        placeholder="Enter A 10-Digit Primary Phone Number."
+      ></ion-input>
+    </ion-item>
+    <ion-error *ngIf="f['primaryNumber'].hasError('pattern')">
+      <ion-label color="danger">Please Enter A 10-Digit Primary Phone Number.</ion-label>
+    </ion-error>
+
+    <!-- Alternate Phone Number -->
+    <ion-label position="stacked">Alternate Phone Number</ion-label>
+    <ion-item>
+      <ion-input 
+        matInput
+        appFormSpace
+        formControlName="alternateNumber"
+        placeholder="Enter A 10-Digit Alternate Phone Number."
+      ></ion-input>
+    </ion-item>
+    <ion-error *ngIf="f['alternateNumber'].hasError('pattern')">
+      <ion-label color="danger">Please Enter A 10-Digit Alternate Phone Number.</ion-label>
+    </ion-error>
+
+    <!-- Father's Phone Number -->
+    <ion-label position="stacked">Father's Phone Number</ion-label>
+    <ion-item>
+      <ion-input 
+        matInput
+        appFormSpace
+        formControlName="fathersNumber"
+        placeholder="Enter A 10-Digit Father's Phone Number."
+      ></ion-input>
+    </ion-item>
+    <ion-error *ngIf="f['fathersNumber'].hasError('pattern')">
+      <ion-label color="danger">Please Enter A 10-Digit Father's Phone Number.</ion-label>
+    </ion-error>
+
+    <!-- Mother's Phone Number -->
+    <ion-label position="stacked">Mother's Phone Number</ion-label>
+    <ion-item>
+      <ion-input 
+        matInput
+        appFormSpace
+        formControlName="mothersNumber"
+        placeholder="Enter A 10-Digit Mother's Phone Number."
+      ></ion-input>
+    </ion-item>
+    <ion-error *ngIf="f['mothersNumber'].hasError('pattern')">
+      <ion-label color="danger">Please Enter A 10-Digit Mother's Phone Number.</ion-label>
+    </ion-error>
+
+    <!-- Primary Email Id -->
+    <ion-label position="stacked">Primary Email Id</ion-label>
+    <ion-item>
+      <ion-input 
+        matInput
+        appFormSpace
+        formControlName="primaryEmail"
+        placeholder="Enter A Primary Email Id."
+      ></ion-input>
+    </ion-item>
+    <ion-error *ngIf="f['primaryEmail'].hasError('email')">
+      <ion-label color="danger">Invalid Email Format.</ion-label>
+    </ion-error>
+
+    <!-- Alternate Email Id -->
+    <ion-label position="stacked">Alternate Email Id</ion-label>
+    <ion-item>
+      <ion-input 
+        matInput
+        appFormSpace
+        formControlName="alternateEmail"
+        placeholder="Enter An Alternate Email Id."
+      ></ion-input>
+    </ion-item>
+    <ion-error *ngIf="f['alternateEmail'].hasError('email')">
+      <ion-label color="danger">Invalid Email Format.</ion-label>
+    </ion-error>
+
+    <!-- Father's Email Id -->
+    <ion-label position="stacked">Father's Email Id</ion-label>
+    <ion-item>
+      <ion-input 
+        matInput
+        appFormSpace
+        formControlName="fathersEmail"
+        placeholder="Enter Father's Email Id."
+      ></ion-input>
+    </ion-item>
+    <ion-error *ngIf="f['fathersEmail'].hasError('email')">
+      <ion-label color="danger">Invalid Email Format.</ion-label>
+    </ion-error>
+
+    <!-- Mother's Email Id -->
+    <ion-label position="stacked">Mother's Email Id</ion-label>
+    <ion-item>
+      <ion-input 
+        matInput
+        appFormSpace
+        formControlName="mothersEmail"
+        placeholder="Enter Mother's Email Id."
+      ></ion-input>
+    </ion-item>
+    <ion-error *ngIf="f['mothersEmail'].hasError('email')">
+      <ion-label color="danger">Invalid Email Format.</ion-label>
+    </ion-error>
+
+    <!-- Select Country -->
+    <ion-label position="stacked">Select Country</ion-label>
+    <ion-item>
+      <ion-select  formControlName="countryId" placeholder="Select The Country">
+        <ion-select-option *ngFor="let option of countryOptions" [value]="option.id">{{ option.name }}</ion-select-option>
+      </ion-select>
+      <ion-button
+        fill="clear"
+        (click)="clearSelectField('countryId')"
+        *ngIf="f['countryId']?.value"
+      >
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+
+    <!-- Select State -->
+    <ion-label position="stacked">Select State</ion-label>
+    <ion-item>
+      <ion-select  formControlName="state" placeholder="Select The State">
+        <ion-select-option *ngFor="let option of stateOptions" [value]="option.id">{{ option.name }}</ion-select-option>
+      </ion-select>
+      <ion-button
+        fill="clear"
+        (click)="clearSelectField('state')"
+        *ngIf="f['state']?.value"
+      >
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+
+    <!-- City Name -->
+    <ion-label position="stacked">City Name</ion-label>
+    <ion-item>
+      <ion-select  formControlName="cityName" placeholder="Select The City">
+        <ion-select-option *ngFor="let option of cityOptions" [value]="option.id">{{ option.name }}</ion-select-option>
+      </ion-select>
+      <ion-button
+        fill="clear"
+        (click)="clearSelectField('cityName')"
+        *ngIf="f['cityName']?.value"
+      >
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  
+     </div>
+      </ion-accordion>
+      <ion-accordion value="third">
+        <ion-item slot="header" color="light">
+          <ion-label>Application Details</ion-label>
+        </ion-item>
+        <div slot="content" class="p-3">
+          
+            <!-- New Channel -->
+            <ion-label position="stacked">New Channel</ion-label>
+            <ion-item>
+              
+              <ion-select  formControlName="newChannel" placeholder="Select The New Channel">
+                <ion-select-option *ngFor="let option of newChannelOptions" [value]="option.id">{{ option.new_channel_name }}</ion-select-option>
+              </ion-select>
+              <ion-button
+                fill="clear"
+                (click)="clearSelectField('newChannel')"
+                *ngIf="f['newChannel']?.value"
+              >
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+        
+            
+            <!-- Medium -->
+            <ion-label position="stacked">Medium</ion-label>
+            <ion-item>
+              <ion-select  formControlName="medium" placeholder="Select The Medium">
+                <ion-select-option *ngFor="let option of mediumOptions" [value]="option.id">{{ option.medium_name }}</ion-select-option>
+              </ion-select>
+              <ion-button
+                fill="clear"
+                (click)="clearSelectField('medium')"
+                *ngIf="f['medium']?.value"
+              >
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+        
+            <!-- Level Of Program -->
+            <ion-label position="stacked">Level Of Program</ion-label>
+            <ion-item>
+              <ion-select  formControlName="levelOfProgram" placeholder="Select The Level Of Program">
+                <ion-select-option *ngFor="let option of levelOfProgramOptions" [value]="option.id">{{ option.name }}</ion-select-option>
+              </ion-select>
+              <ion-button
+                fill="clear"
+                (click)="clearSelectField('levelOfProgram')"
+                *ngIf="f['levelOfProgram']?.value"
+              >
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+        
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  
+<ion-row class="my-2">
+  <ion-col class="text-center">
+    <ion-button shape="round" fill="outline" (click)="closeModal()" >Close</ion-button>
+    <ion-button shape="round" color="primary" (click)="onSubmit()">Update</ion-button>
+  </ion-col>
+</ion-row>
+</div>
+</form>
+</div>
+<ion-modal [keepContentsMounted]="true">
+  <ng-template>
+    <ion-datetime [showDefaultButtons]="true" presentation="date" id="startDate"></ion-datetime>
+  </ng-template>
+</ion-modal>

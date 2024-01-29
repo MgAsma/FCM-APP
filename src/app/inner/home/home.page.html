@@ -11,12 +11,12 @@
        </ion-row>
        <ion-row>
         <ion-col>
-          <b><h6>FIRSTCLASS MENTOR</h6></b>
+          <h6>FIRSTCLASS MENTOR</h6>
         </ion-col>
        </ion-row>
        <ion-row>
         <ion-col>
-          <p>Hi Welcome, <b><i>{{userName | uppercase}}</i></b></p>
+          <p>Hi Welcome, {{userName | uppercase}}</p>
         </ion-col>
         <ion-col size="2" class="text-end">
           <ion-icon (click)="openStartBreak()" name="cafe"></ion-icon>
@@ -35,37 +35,7 @@
   
 </ion-header>
 <ion-content [fullscreen]="true">
-<!-- <div class="box">
-  <ion-row class="justify-content-end">
-    <ion-col size="4">
-          <button class="button">Switch to Admin</button>
-    </ion-col>
-    <ion-col size="1">
-      <ion-icon class="pt-2 pr-2" name="people"></ion-icon>
-    </ion-col>
-   </ion-row>
-   <ion-row>
-    <ion-col>
-      <h6>FIRSTCLASS MENTOR</h6>
-    </ion-col>
-   </ion-row>
-   <ion-row>
-    <ion-col>
-      <p>Sai Vinay</p>
-    </ion-col>
-    <ion-col size="2" class="text-end">
-      <ion-icon (click)="openStartBreak()" name="cafe"></ion-icon>
-    </ion-col>
-    <ion-col size="2" class="text-center">
-      <ion-icon (click)="openCheckout()" name="power"></ion-icon>
-    </ion-col>
-   </ion-row>
-   <ion-row>
-    <ion-col>
-      <small><ion-icon name="sync"></ion-icon> Default Process</small>
-    </ion-col>
-   </ion-row>
-</div> -->
+
 <ion-row  scrollX="true" class="scroll-items">
   <app-filter-home></app-filter-home>
 </ion-row>

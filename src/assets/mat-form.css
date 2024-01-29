@@ -17,7 +17,7 @@ mat-form-field{
   top:50%;
   font-size:14px;
 }
-app-add-lead {
+app-add-lead,app-edit-lead {
 .mat-mdc-form-field-flex{
   width: 100%!important;
   height: 48px;
@@ -27,4 +27,9 @@ mat-form-field{
   margin: 0 !important;
   width: 100% !important;
 }
+}
+.call-log .mat-mdc-icon-button.mat-mdc-button-base {
+    --mdc-icon-button-state-layer-size: 40px !important;
+   
+
 }

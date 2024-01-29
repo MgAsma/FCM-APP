@@ -8,6 +8,9 @@ import { TeamLiveStatusPageRoutingModule } from './team-live-status-routing.modu
 
 import { TeamLiveStatusPage } from './team-live-status.page';
 import { MaterialModule } from '../../../shared-modules/material/material/material.module';
+import { FilterComponent } from './filter/filter.component';
+import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.component';
+import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
 
 
 @NgModule({
@@ -18,6 +21,6 @@ import { MaterialModule } from '../../../shared-modules/material/material/materi
     TeamLiveStatusPageRoutingModule,
     MaterialModule
   ],
-  declarations: [TeamLiveStatusPage]
+  declarations: [TeamLiveStatusPage,FilterComponent,ToolbarCustomerComponent,ToolbarTopComponent]
 })
 export class TeamLiveStatusPageModule {}
