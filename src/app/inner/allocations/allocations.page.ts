@@ -291,8 +291,11 @@ export class AllocationsPage implements OnInit {
     let query: any;
     this.allocate.allocationStatus.subscribe(
       (res: any) => {
-        if (res) {
-          query = `&status=${res}`;
+        if (res.length >0) {
+          query = `status=${res}`;
+          this.getLeadlist(query);
+        }else{
+          query = `page=1&page_size=10`;
           this.getLeadlist(query);
         }
       },
@@ -304,8 +307,8 @@ export class AllocationsPage implements OnInit {
       query = `page=1&page_size=10`;
       this.getLeadlist(query);
     });
-    query = `page=1&page_size=10`;
-    this.getLeadlist(query);
+    // query = `page=1&page_size=10`;
+    // this.getLeadlist(query);
     this.getCounselor();
   }
   handleRefresh(event: any) {
