@@ -79,8 +79,8 @@ export class TeamLiveStatusPage implements OnInit {
     },((error:any)=>{
       this.api.showToast(error.error.message)
     }))
-    query = ``
-    this.getLiveStatus(query)
+    // query = ``
+    // this.getLiveStatus(query)
     this.getCounselor()
    
   }
