@@ -78,14 +78,19 @@ export class AllocationsPage implements OnInit {
               .then((results) => {
                 // this.getContacts("type", "2", "==");
               })
-              .catch((e) =>
-                alert(" requestReadPermission " + JSON.stringify(e))
+              .catch((e) =>{
+                // alert(" requestReadPermission " + JSON.stringify(e))
+              }
+                
               );
           } else {
             // this.getContacts("type", "5", "==");
           }
         })
-        .catch((e) => alert(" hasReadPermission " + JSON.stringify(e)));
+        .catch((e) => {
+          // alert(" hasReadPermission " + JSON.stringify(e))
+
+        })
     });
   }
 
