@@ -7,9 +7,10 @@ import { IonicModule } from '@ionic/angular';
 import { InnerPageRoutingModule } from './inner-routing.module';
 
 import { InnerPage } from './inner.page';
-import { MaterialModule } from '../shared-modules/material/material/material.module';
+
 // import { CallLog } from '@ionic-native/call-log';
 import { CallNumber } from '@ionic-native/call-number/ngx';
+import { MaterialModule } from '../shared-modules/material/material/material.module';
 
 
 @NgModule({

@@ -11,11 +11,12 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './shared-modules/material/material/material.module';
+
 import { BasicAuthInterceptor } from './service/Auth-interceptor/auth-interceptor';
 import { DatePipe } from '@angular/common';
 import { RouteReuseStrategy } from '@angular/router';
 import { RecFollowupListPage } from './shared-modules/rec-followup-list/rec-followup-list.page';
+import { MaterialModule } from './shared-modules/material/material/material.module';
 
 @NgModule({
   imports: [
