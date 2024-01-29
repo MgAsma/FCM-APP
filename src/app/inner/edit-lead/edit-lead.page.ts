@@ -407,6 +407,7 @@ data = JSON.parse(JSON.stringify(data));
           this._addLeadEmitter.triggerGet();
           this.initForm()
           this.bindFormVal()
+          this.modalController.dismiss()
         }
         else{
           this.api.showToast("ERROR !")

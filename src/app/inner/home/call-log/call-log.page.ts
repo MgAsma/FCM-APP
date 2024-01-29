@@ -89,8 +89,8 @@ export class CallLogPage implements OnInit {
     },((error:any)=>{
       this.api.showToast(error.error.message)
     }))
-    // query = `?counsellor_id=${this.user_id}`
-    // this.getCallLogs(query)
+    query = `?counsellor_id=${this.user_id}`
+    this.getCallLogs(query)
     this.getCounselor()
   }
   onStartDateChange(event: CustomEvent) {
