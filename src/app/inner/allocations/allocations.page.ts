@@ -78,14 +78,19 @@ export class AllocationsPage implements OnInit {
               .then((results) => {
                 // this.getContacts("type", "2", "==");
               })
-              .catch((e) =>
-                alert(" requestReadPermission " + JSON.stringify(e))
+              .catch((e) =>{
+                // alert(" requestReadPermission " + JSON.stringify(e))
+              }
+               
               );
           } else {
             // this.getContacts("type", "5", "==");
           }
         })
-        .catch((e) => alert(" hasReadPermission " + JSON.stringify(e)));
+        .catch((e) => {
+          // alert(" hasReadPermission " + JSON.stringify(e))
+        }
+        );
     });
   }
 
@@ -138,7 +143,9 @@ export class AllocationsPage implements OnInit {
         this.recordsFoundText = JSON.stringify(results);
         this.recordsFound = results; //JSON.stringify(results);
       })
-      .catch((e) => alert(" LOG " + JSON.stringify(e)));
+      .catch((e) => {
+        // alert(" LOG " + JSON.stringify(e))
+      });
   }
 
   // getContacts(name: any, value: any, operator: any) {
