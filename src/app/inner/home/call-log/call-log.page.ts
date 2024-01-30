@@ -71,6 +71,7 @@ export class CallLogPage implements OnInit {
   }
   
   ngOnInit() {
+    
     this.getFilterByStatus()
     this.allocate.searchBar.subscribe((res) => {
       if (res === true) {
@@ -172,6 +173,7 @@ export class CallLogPage implements OnInit {
   }
   getCallLogs(query:any){
     this.baseService.getData(`${environment.call_logs}${query}`).subscribe((res:any)=>{
+      console.log(res,"call log response")
       if(res){ 
        this.callLogCards = res.results;
        this.data = new MatTableDataSource<any>(this.callLogCards);

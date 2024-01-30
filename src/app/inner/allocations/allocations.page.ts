@@ -80,14 +80,19 @@ export class AllocationsPage implements OnInit {
               .then((results) => {
                 // this.getContacts("type", "2", "==");
               })
-              .catch((e) =>
-                alert(" requestReadPermission " + JSON.stringify(e))
+              .catch((e) =>{
+                // alert(" requestReadPermission " + JSON.stringify(e))
+              }
+               
               );
           } else {
             // this.getContacts("type", "5", "==");
           }
         })
-        .catch((e) => alert(" hasReadPermission " + JSON.stringify(e)));
+        .catch((e) => {
+          // alert(" hasReadPermission " + JSON.stringify(e))
+        }
+        );
     });
   }
 
@@ -140,10 +145,73 @@ export class AllocationsPage implements OnInit {
         this.recordsFoundText = JSON.stringify(results);
         this.recordsFound = results; //JSON.stringify(results);
       })
-      .catch((e) => alert(" LOG " + JSON.stringify(e)));
+      .catch((e) => {
+        // alert(" LOG " + JSON.stringify(e))
+      });
   }
 
- 
+  // getContacts(name: any, value: any, operator: any) {
+  //   if (value == '1') {
+  //     this.listTyle = 'Incoming Calls from yesterday';
+  //   } else if (value == '2') {
+  //     this.listTyle = 'Ougoing Calls from yesterday';
+  //   } else if (value == '5') {
+  //     this.listTyle = 'Rejected Calls from yesterday';
+  //   }
+
+  //  // Getting Yesterday Time
+  //   var today = new Date();
+  //   var yesterday = new Date(today);
+  //   yesterday.setDate(today.getDate() - 1);
+  //   var fromTime = yesterday.getTime();
+
+  //   this.filters = [
+  //     {
+  //       name: name,
+  //       value: value,
+  //       operator: operator,
+  //     },
+  //     {
+  //       name: 'date',
+  //       value: fromTime.toString(),
+  //       operator: '>=',
+  //     },
+  //   ];
+
+  //   this.callLog.getCallLog(this.filters).then((results) => {
+  //     for (const log of results) {
+
+  //     this.callDuration=log.duration;
+  //     console.log(this.callDuration,"call duration")
+  //     if (this.callDuration === 0) {
+  //       this.currentStatus = 3;
+  //     } else {
+  //       this.currentStatus = 2;
+  //     }
+  //   }
+  //       //
+
+  //       //   this.callDuration = log.duration;
+  //       //     console.log(log.duration,"duraaaaaaaaaaaaaaaaaaaation")
+  //       //     console.log('Call Log:',JSON.stringify(this.callDuration) );
+
+  //       // }
+
+  //       // console.log(
+  //       //   JSON.stringify(results),
+  //       //   'call log responseeeeeeeeeeeeeeeee'
+  //       // );
+  //       this.recordsFoundText = JSON.stringify(results);
+  //       console.log(this.recordsFoundText, 'recordsFoundText');
+  //       this.recordsFound = results; //JSON.stringify(results);
+  //     })
+  //     let data = {
+  //       user:this.user_id,
+  //       status:6
+  //     }
+  //     this.postTLStatus(data)
+  // }
+
   callContact(number: string, id: any) {
     this.leadId = id;
     this.leadPhoneNumber = number;
@@ -176,7 +244,7 @@ export class AllocationsPage implements OnInit {
       .subscribe(
         (res: any) => {
           if (res) {
-            console.log(res.message);
+            // this.api.showToast(res.message);
           }
         },
         (error: any) => {
