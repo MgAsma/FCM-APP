@@ -358,7 +358,7 @@ data = JSON.parse(JSON.stringify(data));
       this.addNewLead.markAllAsTouched()
     }
     else{
-      this._baseService.postData(`${environment.lead_list}/`,data).subscribe((res:any)=>{
+      this._baseService.postData(`${environment.lead_list}`,data).subscribe((res:any)=>{
         if(res){
           this.addLead.emit('ADD')
           this.api.showToast(res.message)
