@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
+import { App as CapacitorApp } from '@capacitor/app';
 
 import { MenuController, NavController, Platform, ToastController } from '@ionic/angular';
 
@@ -117,4 +118,50 @@ else{
     this.storage.set('ion_did_tutorial', false);
     this.router.navigateByUrl('/tutorial');
   }
+
+
+
+  currentUrl:any
+  backbuttonEvent:any
+    const =  CapacitorApp.addListener('backButton', async ({canGoBack}) => {
+      this.currentUrl=this.router.url;
+      this.platform.backButton.observers.pop();
+      if(this.currentUrl === '/inner/home') {
+        if(canGoBack){
+          if(this.backbuttonEvent===0){
+            this.backbuttonEvent++;
+            let toast = this.toastCtrl.create({
+              message: 'Press back again to exit App',
+              duration: 5000,
+              position: 'bottom','cssClass':'toaster'
+              });
+              (await toast).present();
+              setTimeout(() => {
+                this.backbuttonEvent=0;
+              }, 5000);
+              }else{
+                this.backbuttonEvent=0;
+                CapacitorApp.exitApp();
+              }
+          }else {
+            if(this.backbuttonEvent===0){
+              this.backbuttonEvent++;
+              let toast = this.toastCtrl.create({
+                message: 'Press back again to exit App',
+                duration: 5000,
+                position: 'bottom','cssClass':'toaster'
+                });
+                (await toast).present();
+                setTimeout(() => {
+                  this.backbuttonEvent=0;
+                }, 5000);
+                }else{
+                  this.backbuttonEvent=0;
+                  CapacitorApp.exitApp();
+                }
+          }
+        }
+        
+       
+    });
 }

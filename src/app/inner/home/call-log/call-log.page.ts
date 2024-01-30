@@ -71,6 +71,7 @@ export class CallLogPage implements OnInit {
   }
   
   ngOnInit() {
+    
     this.getFilterByStatus()
     this.allocate.searchBar.subscribe((res) => {
       if (res === true) {

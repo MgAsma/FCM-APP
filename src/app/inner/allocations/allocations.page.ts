@@ -245,7 +245,7 @@ export class AllocationsPage implements OnInit {
       .subscribe(
         (res: any) => {
           if (res) {
-            this.api.showToast(res.message);
+            // this.api.showToast(res.message);
           }
         },
         (error: any) => {
