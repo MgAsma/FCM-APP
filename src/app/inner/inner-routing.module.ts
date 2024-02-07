@@ -38,8 +38,7 @@ const routes: Routes = [
   {
     path: 'edit-lead',
     loadChildren: () => import('./edit-lead/edit-lead.module').then( m => m.EditLeadPageModule)
-  }
-  
+  },
     ]
   },
   

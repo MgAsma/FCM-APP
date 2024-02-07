@@ -16,7 +16,7 @@ import { StatusComponent } from './status/status.component';
 import { OpenFollowupsComponent } from './open-followups/open-followups.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { StartBreakComponent } from './start-break/start-break.component';
-import { GotoViewCustomerDetailsCallCustomerComponent } from './goto-view-customer-details-call-customer/goto-view-customer-details-call-customer.component';
+//import { GotoViewCustomerDetailsCallCustomerComponent } from './goto-view-customer-details-call-customer/goto-view-customer-details-call-customer.component';
 import { FollowUpsComponent } from './follow-ups/follow-ups.component';
 
 import { CallLog } from '@ionic-native/call-log/ngx';
@@ -31,8 +31,17 @@ import { MaterialModule } from '../../shared-modules/material/material/material.
     HomePageRoutingModule,
     MaterialModule
   ],
-  declarations: [HomePage,FilterComponent,InboundComponent,
-    OutboundComponent,TimeListComponent,StatusComponent,OpenFollowupsComponent, CheckoutComponent,StartBreakComponent,GotoViewCustomerDetailsCallCustomerComponent,
+  declarations: [
+    HomePage,
+    FilterComponent,
+    InboundComponent,
+    OutboundComponent,
+    TimeListComponent,
+    StatusComponent,
+    OpenFollowupsComponent, 
+    CheckoutComponent,
+    StartBreakComponent,
+    // GotoViewCustomerDetailsCallCustomerComponent,
   FollowUpsComponent],
   providers:[CallLog,Device,CallNumber]
 })

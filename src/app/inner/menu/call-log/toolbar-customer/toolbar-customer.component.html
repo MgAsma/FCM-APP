@@ -1,0 +1,68 @@
+<!-- <ion-header [translucent]="true">
+
+    <ion-toolbar color="primary">
+      <app-search-bar [placeholder]="placeholderText" (close)="closeModal($event)" (search)="searchTermChanged($event)"></app-search-bar>
+    </ion-toolbar>
+    
+</ion-header>
+  <ion-content>
+    <div class="wrapper">
+    
+          <ion-row>
+            <ion-col>
+              <p class="text-end">Selected Users {{customer.selectedOptions.selected.length}}</p>
+            </ion-col>
+          </ion-row>
+      <div class="customer-card">
+        
+        <mat-selection-list #customer>
+          
+            <mat-list-option *ngFor="let items of filteredData" (click)="itemClicked(items)">
+              {{ items?.first_name }}
+            </mat-list-option>
+      
+        </mat-selection-list>
+        
+        
+      </div>
+      <ion-row>
+        <ion-col class="text-center">
+          <ion-button shape="round" fill="outline" (click)="closeModal($event)" >Close</ion-button>
+          <ion-button shape="round" color="primary" (click)="onSubmit()">Done</ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-content>
+   -->
+   <ion-header [translucent]="true">
+    <ion-toolbar color="primary">
+      <app-search-bar [placeholder]="placeholderText" (close)="closeModal($event)" (search)="searchTermChanged($event)"></app-search-bar>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content *ngIf="filteredData?.length ==0">
+    <app-nodata></app-nodata>
+  </ion-content>
+  <ion-content *ngIf="filteredData?.length >0">
+    <div class="wrapper">
+      <ion-row>
+        <ion-col>
+          <p class="text-end">Selected Users {{  getSelectedListLength() }}</p>
+        </ion-col>
+      </ion-row>
+      <div class="customer-card">
+        <ion-list #customer>
+          <ion-item *ngFor="let item of filteredData" (click)="itemClicked(item)">
+            <ion-label>{{ item?.first_name }}</ion-label>
+            <ion-checkbox slot="end" [(ngModel)]="item.selected"></ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </div>
+      <ion-row>
+        <ion-col class="text-center">
+          <ion-button shape="round" fill="outline" (click)="closeModal($event)">Close</ion-button>
+          <ion-button shape="round" color="primary" (click)="onSubmit()">Done</ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-content>
+  

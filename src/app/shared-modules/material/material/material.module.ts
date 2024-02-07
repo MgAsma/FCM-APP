@@ -20,6 +20,11 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { RecurringFollowupComponent } from '../../../inner/home/recurring-followup/recurring-followup.component';
 import { MeetingComponent } from '../../meeting/meeting.component';
+import { FormSpaceDirective } from '../../form-space.directive';
+import { GotoViewCustomerDetailsCallCustomerComponent } from '../../goto-view-customer-details-call-customer/goto-view-customer-details-call-customer.component';
+import { CallLog } from '@ionic-native/call-log/ngx';
+import { CallNumber } from '@ionic-native/call-number/ngx';
+import { Device } from '@ionic-native/device/ngx';
 
 @NgModule({
   declarations: [
@@ -30,7 +35,9 @@ import { MeetingComponent } from '../../meeting/meeting.component';
     OnBreakComponent,
     NodataComponent,
     RecurringFollowupComponent,
-    MeetingComponent
+    MeetingComponent,
+    FormSpaceDirective,
+    GotoViewCustomerDetailsCallCustomerComponent
   ],
   imports: [
     CommonModule,
@@ -58,6 +65,7 @@ import { MeetingComponent } from '../../meeting/meeting.component';
     CustomerDetailsComponent,
     LeadrecurringFollowupComponent,
     RecurringFollowupComponent,
+    GotoViewCustomerDetailsCallCustomerComponent,
     CommonModule,
     MatInputModule,
     MatExpansionModule,
@@ -71,8 +79,10 @@ import { MeetingComponent } from '../../meeting/meeting.component';
     MatPaginatorModule,
     FormsModule,
     ReactiveFormsModule,
-    MatListModule
+    MatListModule,
+    FormSpaceDirective
   ],
+  providers:[CallLog,Device,CallNumber]
   
 })
 export class MaterialModule { }

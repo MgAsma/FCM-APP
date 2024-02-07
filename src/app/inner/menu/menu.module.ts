@@ -8,8 +8,9 @@ import { MenuPageRoutingModule } from './menu-routing.module';
 
 import { MenuPage } from './menu.page';
 import { MaterialModule } from '../../shared-modules/material/material/material.module';
-
-
+import { CallLog } from '@ionic-native/call-log/ngx';
+import { Device } from '@ionic-native/device/ngx'
+import { CallNumber } from '@ionic-native/call-number/ngx';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { MaterialModule } from '../../shared-modules/material/material/material.
     MenuPageRoutingModule,
     MaterialModule
   ],
-  declarations: [MenuPage]
+  declarations: [MenuPage],
+  providers:[CallLog,Device,CallNumber]
 })
 export class MenuPageModule {}

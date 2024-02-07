@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Platform, PopoverController } from '@ionic/angular';
-import { AllocationEmittersService } from '../../../service/allocation-emitters.service';
-import { environment } from '../../../../environments/environment';
-import { BaseServiceService } from '../../../service/base-service.service';
-import { ApiService } from '../../../service/api/api.service';
+
 import { CallLog,CallLogObject } from '@ionic-native/call-log/ngx';
 import { CallNumber } from '@ionic-native/call-number/ngx';
+import { AllocationEmittersService } from '../../service/allocation-emitters.service';
+import { BaseServiceService } from '../../service/base-service.service';
+import { ApiService } from '../../service/api/api.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-goto-view-customer-details-call-customer',

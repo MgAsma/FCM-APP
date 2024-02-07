@@ -10,6 +10,10 @@ const routes: Routes = [
   {
     path: 'team-live-status',
     loadChildren: () => import('./team-live-status/team-live-status.module').then( m => m.TeamLiveStatusPageModule)
+  },
+  {
+    path:'call-log',
+    loadChildren:() => import('./call-log/call-log.module').then(m =>m.CallLogPageModule)
   }
 ];
 

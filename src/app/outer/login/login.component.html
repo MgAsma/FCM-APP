@@ -17,6 +17,7 @@
               name="username"
               spellcheck="false"
               autocapitalize="off"
+              appFormSpace
               placeholder="Enter Your Phone Number"
               required>
             </ion-input>
@@ -39,6 +40,7 @@
               name="password"
               [type]="hidePassword ? 'password' : 'text' "
               placeholder="Enter Your Password"
+              appFormSpace
               required>
             </ion-input>
             <ion-icon [name]="hidePassword ? 'eye-off' : 'eye'" slot="end"  (click)="togglePasswordVisibility()"></ion-icon>
@@ -47,6 +49,9 @@
           <div class="error-msg mb-3" *ngIf="f['password'].invalid && f['password'].touched">
             <div *ngIf="f['password'].errors && f['password'].errors['required']">
               Password Is Required
+            </div>
+            <div *ngIf="f['password'].errors &&f['password'].errors['space']">
+              Password should not contain spaces.
             </div>
             <div *ngIf="f['password'].errors && f['password'].errors['pattern']">
               Password Must Be At Least 8 Characters Long, One Uppercase Letter, One Special Character, One Number

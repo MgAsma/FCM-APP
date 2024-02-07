@@ -10,8 +10,8 @@ const routes: Routes = [
     component: HomePage
   },
   {
-    path: 'call-log',
-    loadChildren: () => import('./call-log/call-log.module').then( m => m.CallLogPageModule)
+    path: 'home-call-logs',
+    loadChildren: () => import('./home-call-logs/home-call-logs.module').then( m => m.HomeCallLogsPageModule)
   },
   {
     path:'follow-ups', component:FollowUpsComponent
