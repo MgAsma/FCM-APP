@@ -411,8 +411,8 @@ export class AllocationsPage implements OnInit {
 
   searchTermChanged(event: any) {
     this.searchTerm = event
-    
-    let query: string = `page=${this.currentPage}&page_size=${this.pageSize}&key=${this.searchTerm}`;
+    let query = this.searchTerm.length > 0 ? `page=${this.currentPage}&page_size=${this.pageSize}&key=${this.searchTerm}`:
+    `page=${this.currentPage}&page_size=${this.pageSize}`;
    
       this.allocate.allocationStatus.subscribe(
         (res: any) => {

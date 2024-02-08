@@ -20,30 +20,22 @@ export class FilterComponent  implements OnInit {
     private api:ApiService) { }
 
   ngOnInit() {
+   
     this.allocationEmit.callLogStatus.subscribe((res:any)=>{
-      if(res.length == 0){
+      if(res.length == 0){ 
         this.selectedStatus = []
-        this.data.forEach((chip:any) => {
-          chip.selected = false;
-        });
       }else{
-        this.data.forEach((chip:any) => {
-          if (chip.id == this.selectedStatus) {
-            chip.selected = true;
-          }
-        });
+        this.selectedStatus = res
       }
-    },((error:any)=>{
-      this.api.showToast(error.error.message)
-    }))
+    })
       
    
   }
-  toggleSelection(card: SortingCard): void {
-    card.selected = !card.selected;
-  }
+  // toggleSelection(card: SortingCard): void {
+  //   card.selected = !card.selected;
+  // }
   toggleChipSelection(item: any) {
-    this.selectedStatus = []
+    // this.selectedStatus = []
     let id:any = []
     this.data.forEach((chip:any) => {
       if (chip !== item) {
@@ -56,8 +48,9 @@ export class FilterComponent  implements OnInit {
     
     if(item.selected == true){
       id.push(item.id)
-      this.selectedStatus = id
+     
     }
+    this.selectedStatus = id
     
   }
   //MULTISELECT**********
@@ -78,13 +71,17 @@ export class FilterComponent  implements OnInit {
   reset() {
     this.data.forEach(chip => chip.selected = false);
     this.selectedStatus = [];
-    this.modalController.dismiss();
   }
   closeModel(){
     this.modalController.dismiss();
   }
   onSubmit(){
-    this.allocationEmit.callLogStatus.next(this.selectedStatus)
-    this.modalController.dismiss();
+    if(this.selectedStatus.length >0){
+      this.allocationEmit.callLogStatus.next(this.selectedStatus)
+      this.modalController.dismiss();
+    }else{
+      this.api.showToast('Please select any one status')
+    }
+    
   }
 }

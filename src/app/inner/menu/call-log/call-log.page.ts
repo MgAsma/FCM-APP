@@ -189,12 +189,10 @@ export class CallLogPage implements OnInit {
   onEmit(event:any){
     if(event){
     this.counsellor_ids = event
-      let params:any;
-      if(this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER_ADMIN' || this.user_role == 'ADMIN'){
-         params = `page=1&page_size=10`
-      }else{
-         params = `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${event}`
-      }
+     
+      let params = this.user_role == 'COUNSELOR' ? 
+      `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${event}`:
+      `?page=1&page_size=10`
       this.getCallLogs(params)
     } 
 
@@ -206,8 +204,8 @@ export class CallLogPage implements OnInit {
       this.pageSize = event.pageSize;
     }
   
-    let query: string = `?page=${this.currentPage}&page_size=${event.pageSize}`;
-  
+    let query: string =   this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:
+    `?page=${this.currentPage}&page_size=${event.pageSize}`
     if (this.searchTerm) {
       query += `&key=${this.searchTerm}`;
     } else if (this.counsellor_ids) {
@@ -234,12 +232,8 @@ export class CallLogPage implements OnInit {
   
   searchTermChanged(event: any) {
     this.searchTerm = event
-    let query: any;
-    if (event) {
-      query = `?counsellor_id&page=1&page_size=10&key=${event}`;
-    } else {
-      query = `?counsellor_id&page=1&page_size=10`;
-    }
+    let query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`:
+    `?page=1&page_size=10&key=${event}`
     this.getCallLogs(query);
   }
 }

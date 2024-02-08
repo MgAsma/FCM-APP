@@ -31,5 +31,6 @@ export class SearchBarComponent  implements OnInit {
     this.allocation.searchBar.next(false)
      this.router.navigate([this.router.url])
      this.close.emit(true)
+     this.search.emit('')
   }
 }

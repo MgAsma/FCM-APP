@@ -79,7 +79,7 @@ export class FilterComponent  implements OnInit {
     this.data.forEach(chip => chip.selected = false);
     this.selectedStatus = [];
     this.allocationEmit.allocationStatus.next(this.selectedStatus)
-    this.modalController.dismiss();
+    // this.modalController.dismiss();
   }
   closeModel(){
     this.modalController.dismiss();
