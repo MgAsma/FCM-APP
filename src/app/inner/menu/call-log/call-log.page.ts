@@ -72,17 +72,22 @@ export class CallLogPage implements OnInit {
   }
   
   ngOnInit() {
+    this.initializeCallLogs();
     this.setupSearchBarSubscription();
     this.setupCallLogStatusSubscription();
-    this.initializeCallLogs();
-    this.getCOUNSELLOR();
     this.getFilterByStatus();
+    this.getCOUNSELLOR();
   }
   
   private setupSearchBarSubscription() {
     this.allocate.searchBar.subscribe((res) => {
-      this.searchBar = res === true;
+      if(res){
+        this.setupCallLogStatusSubscription()
+      }
+      this.searchBar = res === true
+     
     });
+   
   }
   
   private setupCallLogStatusSubscription() {
@@ -245,6 +250,16 @@ export class CallLogPage implements OnInit {
     this.searchTerm = event
     let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`:
     `?page=1&page_size=10&key=${event}`
+    this.allocate.callLogStatus.subscribe(
+      (res: any) => {
+        if (res) {
+          query += `&status=${res}`;
+        }
+      },
+      (error: any) => {
+        this.api.showToast(error.error.message);
+      }
+    );
     this.getCallLogs(query);
   }
 }
