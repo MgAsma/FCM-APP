@@ -36,6 +36,8 @@ export class CallLogPage implements OnInit {
   startDate:any;
   callLogForm:FormGroup
   dateFilter: boolean = false;
+  minEndDate: any;
+  dateForm!: FormGroup;
   constructor(
     private allocate: AllocationEmittersService,
     private popoverController: PopoverController,
@@ -44,6 +46,7 @@ export class CallLogPage implements OnInit {
     private datepipe:DatePipe,
     private callLog: CallLog,
     private platform: Platform,
+    private fb:FormBuilder
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
     this.user_id = localStorage.getItem('user_id')
@@ -78,7 +81,12 @@ export class CallLogPage implements OnInit {
     this.getFilterByStatus();
     this.getCOUNSELLOR();
   }
-  
+  initForm(){
+    this.dateForm = this.fb.group({
+      startDate:[''],
+     endDate:['']
+    })
+  }
   private setupSearchBarSubscription() {
     this.allocate.searchBar.subscribe((res) => {
       if(res){
@@ -113,7 +121,14 @@ export class CallLogPage implements OnInit {
   //**********************************************************/
   
   onStartDateChange(event: CustomEvent) {
-    this.startDate = event.detail.value;
+    if(event){
+      console.log(event,event)
+      this.minEndDate = event.target['value'];
+      this.dateForm.patchValue({
+        endDate:''
+      })
+    }
+    
   }
 
   onEndDateChange(event: CustomEvent) {
