@@ -72,29 +72,41 @@ export class CallLogPage implements OnInit {
   }
   
   ngOnInit() {
-    
-    this.getFilterByStatus()
-    this.allocate.searchBar.subscribe((res) => {
-      if (res === true) {
-        this.searchBar = true;
-      } else {
-        this.searchBar = false;
-      }
-    });
-    let query:any;
-  
-    this.allocate.callLogStatus.subscribe((res:any)=>{
-      if(res){
-        query = `?counsellor_id=${this.user_id}&status=${res}`
-        this.getCallLogs(query)
-      }
-    },((error:any)=>{
-      this.api.showToast(error.error.message)
-    }))
-    query = `?counsellor_id=${this.user_id}`
-    this.getCallLogs(query)
-    this.getCounselor()
+    this.setupSearchBarSubscription();
+    this.setupCallLogStatusSubscription();
+    this.initializeCallLogs();
+    this.getCounselor();
+    this.getFilterByStatus();
   }
+  
+  private setupSearchBarSubscription() {
+    this.allocate.searchBar.subscribe((res) => {
+      this.searchBar = res === true;
+    });
+  }
+  
+  private setupCallLogStatusSubscription() {
+    this.allocate.callLogStatus.subscribe(
+      (res: any) => {
+        this.handleCallLogStatus(res);
+      },
+      (error: any) => {
+        this.api.showToast(error.error.message);
+      }
+    );
+  }
+  
+  private handleCallLogStatus(status: any) {
+    const query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}${status ? `&status=${status}` : ''}` :`${status ? `?status=${status}` : ''}`;
+    this.getCallLogs(query);
+  }
+  
+  private initializeCallLogs() {
+    const query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id} `:'';
+    this.getCallLogs(query);
+  }
+  //**********************************************************/
+  
   onStartDateChange(event: CustomEvent) {
     this.startDate = event.detail.value;
   }
@@ -155,7 +167,7 @@ export class CallLogPage implements OnInit {
     setTimeout(() => {
       this.callLogCards = []
       this.data = []
-      let query = `?page=1&page_size=10`
+      let query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
       this.getCallLogs(query)
       event.target.complete();
     }, 2000);
@@ -179,7 +191,6 @@ export class CallLogPage implements OnInit {
        this.callLogCards = res.results;
        this.data = new MatTableDataSource<any>(this.callLogCards);
        this.totalNumberOfRecords = res.total_no_of_record
-       //this.filterByStatus = this.getUniqueCallStatus(this.data);
       }
     },((error:any)=>{
       this.api.showToast(error?.error.message)
