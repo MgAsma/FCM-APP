@@ -31,7 +31,7 @@ export class CallLogPage implements OnInit {
   totalNumberOfRecords: any;
   callLogCards: any = [];
   placeholderText = 'Search By Name/Phone'
-  counselor: any = [];
+  COUNSELLOR: any = [];
   endDate:any;
   startDate:any;
   callLogForm:FormGroup
@@ -75,7 +75,7 @@ export class CallLogPage implements OnInit {
     this.setupSearchBarSubscription();
     this.setupCallLogStatusSubscription();
     this.initializeCallLogs();
-    this.getCounselor();
+    this.getCOUNSELLOR();
     this.getFilterByStatus();
   }
   
@@ -97,12 +97,12 @@ export class CallLogPage implements OnInit {
   }
   
   private handleCallLogStatus(status: any) {
-    const query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}${status ? `&status=${status}` : ''}` :`${status ? `?status=${status}` : ''}`;
+    const query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}${status ? `&status=${status}` : ''}` :`${status ? `?status=${status}` : ''}`;
     this.getCallLogs(query);
   }
   
   private initializeCallLogs() {
-    const query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id} `:'';
+    const query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_id=${this.user_id} `:'';
     this.getCallLogs(query);
   }
   //**********************************************************/
@@ -149,13 +149,13 @@ export class CallLogPage implements OnInit {
         }
       );
   }
-  getCounselor() {
+  getCOUNSELLOR() {
     this.baseService
       .getData(`${environment._user}/?role_name=counsellor`)
       .subscribe(
         (res: any) => {
           if (res.results) {
-            this.counselor = res.results;
+            this.COUNSELLOR = res.results;
           }
         },
         (error: any) => {
@@ -167,7 +167,7 @@ export class CallLogPage implements OnInit {
     setTimeout(() => {
       this.callLogCards = []
       this.data = []
-      let query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
       this.getCallLogs(query)
       event.target.complete();
     }, 2000);
@@ -201,7 +201,7 @@ export class CallLogPage implements OnInit {
     if(event){
     this.counsellor_ids = event
      
-      let params = this.user_role == 'COUNSELOR' ? 
+      let params = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? 
       `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${event}`:
       `?page=1&page_size=10`
       this.getCallLogs(params)
@@ -215,7 +215,7 @@ export class CallLogPage implements OnInit {
       this.pageSize = event.pageSize;
     }
   
-    let query: string =   this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:
+    let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:
     `?page=${this.currentPage}&page_size=${event.pageSize}`
     if (this.searchTerm) {
       query += `&key=${this.searchTerm}`;
@@ -243,7 +243,7 @@ export class CallLogPage implements OnInit {
   
   searchTermChanged(event: any) {
     this.searchTerm = event
-    let query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`:
+    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`:
     `?page=1&page_size=10&key=${event}`
     this.getCallLogs(query);
   }
