@@ -37,7 +37,9 @@ export class CallLogPage implements OnInit {
   callLogForm:FormGroup
   dateFilter: boolean = false;
   minEndDate: any;
+  maxStartDate:any;
   dateForm!: FormGroup;
+  dateFiltered: boolean = false;
   constructor(
     private allocate: AllocationEmittersService,
     private popoverController: PopoverController,
@@ -50,7 +52,8 @@ export class CallLogPage implements OnInit {
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
     this.user_id = localStorage.getItem('user_id')
-
+    let today = new Date()
+    this.maxStartDate = this.datepipe.transform(today,'YYYY-MM-dd')
 
     this.platform.ready().then(() => {
       this.callLog
@@ -80,20 +83,17 @@ export class CallLogPage implements OnInit {
     this.setupCallLogStatusSubscription();
     this.getFilterByStatus();
     this.getCOUNSELLOR();
+    this.initForm()
   }
   initForm(){
     this.dateForm = this.fb.group({
-      startDate:[''],
-     endDate:['']
+     startDate:['',Validators.required],
+     endDate:['',Validators.required]
     })
   }
   private setupSearchBarSubscription() {
     this.allocate.searchBar.subscribe((res) => {
-      if(res){
-        this.setupCallLogStatusSubscription()
-      }
       this.searchBar = res === true
-     
     });
    
   }
@@ -136,23 +136,19 @@ export class CallLogPage implements OnInit {
   }
   onSubmit() {
     let query;
-    if (this.startDate && this.endDate) {
-      let sdate = this.datepipe.transform(this.startDate, 'yyyy-MM-dd');
-      let edate = this.datepipe.transform(this.endDate, 'yyyy-MM-dd');
-      query = `?counsellor_id=${this.user_id}&from_date=${sdate}&to_date=${edate}`;
-    } else {
-      // If startDate is not set, set it to the current date
-      this.startDate = new Date();
-      let sdate = this.datepipe.transform(this.startDate, 'yyyy-MM-dd');
-  
-      // If endDate is not set, set it to the current date
-      this.endDate = new Date();
-      let edate = this.datepipe.transform(this.endDate, 'yyyy-MM-dd');
-  
-      query = `?counsellor_id=${this.user_id}&from_date=${sdate}&to_date=${edate}`;
-    }
-    this.dateFilter = true
-    this.getCallLogs(query);
+    if(this.dateForm.invalid){
+      this.dateForm.markAllAsTouched()
+      this.api.showToast('Select start date and end date')
+    }else{
+      let sdate = this.datepipe.transform(this.dateForm.value.startDate, 'yyyy-MM-dd');
+      let edate = this.datepipe.transform(this.dateForm.value.endDate, 'yyyy-MM-dd');
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ?  `?counsellor_id=${this.user_id}&from_date=${sdate}&to_date=${edate}`
+      :`?from_date=${sdate}&to_date=${edate}`;
+      this.dateFilter = true
+      this.getCallLogs(query);
+      this.dateFiltered = true
+
+    } 
   }
   
   getFilterByStatus() {

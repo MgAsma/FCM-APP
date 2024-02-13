@@ -39,7 +39,7 @@
         <ion-card class="date-range">
           <mat-label class="label-log">Start Date</mat-label>
           <mat-form-field class="m-0 call-log">
-          <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="startDate" (dateChange)="onStartDateChange($event)">
+          <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="startDate" [max]="maxStartDate" (dateChange)="onStartDateChange($event)">
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -49,7 +49,7 @@
         <ion-card class="date-range">
           <mat-label class="label-log">End Date</mat-label>
           <mat-form-field class="m-0 call-log">
-            <input matInput [matDatepicker]="picker2"  formControlName="endDate" [min]="minEndDate"  placeholder="MM/DD/YYYY" (dateChange)="onEndDateChange($event)">
+            <input matInput [matDatepicker]="picker2"  formControlName="endDate" [min]="minEndDate" [max]="maxStartDate" placeholder="MM/DD/YYYY" (dateChange)="onEndDateChange($event)">
             <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
