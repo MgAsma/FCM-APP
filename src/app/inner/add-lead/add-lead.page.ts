@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
 import { ApiService } from '../../service/api/api.service';
@@ -34,10 +34,14 @@ export class AddLeadPage implements OnInit {
   referredTo:any = [];
   stat_us:any= [];
   time:any = ['Morning', 'Afternoon', 'Evening', 'Night', 'Other'];
+  zone:string[] = ['South','North', 'East', 'West'];
   seasons:any = [];
   @Output() addLead = new EventEmitter()
   userId:any;
   minDateAdapter: string;
+  streamList: any;
+  adminList: any = [];
+  leadStage: any = [];
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -69,51 +73,73 @@ export class AddLeadPage implements OnInit {
     this.getStatus();
     this.getSubStatus();
     this.getSeason();
-    this.getCounselor()
+    this.getCounselor();
+    this.getStream();
+    this.getCounselledBy();
+    this.getLeadStage()
     this.initForm()
    }
   get f() {
     return this.addNewLead.controls;
   }
- initForm(){
-  this.addNewLead = this.fb.group({
-    firstName: ['', [Validators.required,Validators.pattern(this._commonService.namePattern)]],
-    lastName: ['',[Validators.pattern(this._commonService.namePattern)]],
-    email: ['', [ Validators.required,Validators.email]],
-    mobile: ['', [ Validators.required,Validators.pattern(this._commonService.mobilePattern)]],
-    dateOfBirth:['',[]],
-    highestQualification: [''],
-    callTime:[''],
-    campaignName: [''],
-    season: [''],
-    channel: [''],
-    source: [''],
-    priority: [''],
-    referredTo: [''],
-    status:[''],
-    subStatus:[''],
-    department: [''],
-    course: [''],
-    location: [''],
-    yearOfPassing: [''],
-    primaryNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-    fathersNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-    mothersNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-    alternateNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-    primaryEmail:['',[Validators.email]],
-    alternateEmail:['',[Validators.email]],
-    fathersEmail:['',[Validators.email]],
-    mothersEmail:['',[Validators.email]],
-    countryId: [''],
-    state: [''],
-    cityName: [''],
-    newChannel: [''],
-    campaign: [''],
-    medium: [''],
-    levelOfProgram: [''],
-  });
- }
- 
+  initForm(){
+    this.addNewLead = this.fb.group({
+      firstName: ['', [Validators.required,Validators.pattern(this._commonService.namePattern)]],
+      mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern)]],
+      alternateNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
+      email: ['', [Validators.email]],
+      dateOfBirth:[''],
+      state: [''],
+      zone:[''],
+      cityName: [''],
+      pincode:['',this.pincodeLengthValidator],
+      countryId:[''],
+      referenceName:[''],
+      referencePhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
+      fatherName:[''],
+      fatherOccupation:[''],
+      fatherPhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
+      tenthPercentage :[''],
+      twelthPercentage :[''],
+      degree:[''],
+      course:[''],
+      otherCourse:[''],
+      entranceExam:[''],
+      courseLookingfor:[''],
+      preferredCollege1:[''],
+      preferredCollege2:[''],
+      preferredLocation1:[''],
+      preferredLocation2:[''],
+      counsellor:['',[Validators.required]],
+      counsellorAdmin:[''],
+      leadSource:['',[Validators.required]],
+      leadStages:['',[Validators.required]],
+      leadStatus:[''],
+      notes:[''],
+      remarks:['']
+    })
+}
+pincodeLengthValidator(control:FormControl) {
+  const value = control.value;
+
+  if (value && value.toString().length !== 6) {
+    return { invalidPincodeLength: true };
+  }
+
+  return null;
+}
+getStream(){
+  this._baseService.getData(`${environment.studying_stream}`).subscribe((resp:any)=>{
+  if(resp){
+   this.streamList = resp
+  } 
+  },(error:any)=>{
+    //console.log(error);
+    
+  }
+
+  )
+}
   
   getCountry(){
     this.api.getAllCountry().subscribe((res:any)=>{
@@ -217,8 +243,8 @@ export class AddLeadPage implements OnInit {
   }
   getCourse(){
     this.api.getAllCourse().subscribe((res:any)=>{
-      if(res.results){
-        this.courseOptions = res.results;
+      if(res){
+        this.courseOptions = res;
       }
       else{
         this.api.showToast('ERROR')
@@ -300,6 +326,24 @@ export class AddLeadPage implements OnInit {
        this.api.showToast(error?.error?.message)
     }))
   }
+  getCounselledBy(){
+    this._baseService.getData(`${environment._user}?role_name=Admin`).subscribe((res:any)=>{
+      if(res.results){
+      this.adminList = res.results
+      }
+    },((error:any)=>{
+       this.api.showError(this.api.toTitleCase(error.error.message))
+    }))
+  }
+  getLeadStage(){
+    this._baseService.getData(environment.leadStage).subscribe((res:any)=>{
+     if(res){
+      this.leadStage = res
+     }
+    },((error:any)=>{
+     this.api.showError(error.error.message)
+    }))
+   }
   
   clearSelectField(fieldName: string) {
       this.addNewLead.get(fieldName)?.reset();

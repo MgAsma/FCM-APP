@@ -203,10 +203,10 @@ export class CallLogPage implements OnInit {
   getCallLogs(query:any){
     this.baseService.getData(`${environment.call_logs}${query}`).subscribe((res:any)=>{
       console.log(res,"call log response")
-      if(res){ 
+      if(res){   
        this.callLogCards = res.results;
        this.data = new MatTableDataSource<any>(this.callLogCards);
-       this.totalNumberOfRecords = res.total_no_of_record
+       this.totalNumberOfRecords = res.total_no_of_record 
       }
     },((error:any)=>{
       this.api.showToast(error?.error.message)
