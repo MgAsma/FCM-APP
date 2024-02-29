@@ -40,10 +40,11 @@ export class CheckoutComponent  implements OnInit {
         this.api.showLoading()
         this.api.logout(this.logoutForm.value).subscribe(
         (resp:any)=>{
+          localStorage.clear()
           this.logoutForm.reset()
           this.api.loaderDismiss()
           this.close()
-          localStorage.clear()
+       
  
           this.router.navigate(['../outer'])
           this.api.showToast(resp.message)

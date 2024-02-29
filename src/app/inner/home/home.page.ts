@@ -15,6 +15,7 @@ userName:any
   }
 
   ngOnInit() {
+    this.userName=localStorage.getItem('username')
   }
   async openCheckout(){
     const popover = await this.popoverController.create({

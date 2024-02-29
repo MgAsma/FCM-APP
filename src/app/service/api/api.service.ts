@@ -39,13 +39,13 @@ export class ApiService {
     }
     //Login
     getStatus(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/status?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/status/?page_size=${size}&page=${pageNo}`)
     }
     getStatusSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/status?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/status/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllStatus(){
-      return this.http.get(`${this.baseurl}/api/status`)
+      return this.http.get(`${this.baseurl}/api/status/`)
     }
     getStatusById(id:any){
       return this.http.get(`${this.baseurl}/api/status/${id}/`)
@@ -64,13 +64,13 @@ export class ApiService {
     //Sub Status
   
     getSubStatus(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/sub-status?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/sub-status/?page_size=${size}&page=${pageNo}`)
     }
     getSubStatusSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/sub-status?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/sub-status/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllSubStatus(){
-      return this.http.get(`${this.baseurl}/api/sub-status`)
+      return this.http.get(`${this.baseurl}/api/sub-status/`)
     }
     getSubStatusById(id:any){
       return this.http.get(`${this.baseurl}/api/sub-status/${id}/`)
@@ -83,28 +83,28 @@ export class ApiService {
     }
     //Master Status
     getAllMasterStatus(){
-      return this.http.get(`${this.baseurl}/api/master-status`)
+      return this.http.get(`${this.baseurl}/api/master-status/`)
     }
     //Master Status
     // Status Group
     getAllStatusGroup(){
-      return this.http.get(`${this.baseurl}/api/status-group`)
+      return this.http.get(`${this.baseurl}/api/status-group/`)
     }
     // Status Group
     // Status Group
     getAllReasonGroup(){
-      return this.http.get(`${this.baseurl}/api/reason-group`)
+      return this.http.get(`${this.baseurl}/api/reason-group/`)
     }
     // Status Group
     //Channel
     getChannel(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/channel?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/channel/?page_size=${size}&page=${pageNo}`)
     }
     getChannelSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/channel?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/channel/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllChannel(){
-      return this.http.get(`${this.baseurl}/api/channel`)
+      return this.http.get(`${this.baseurl}/api/channel/`)
     }
     getChannelById(id:any){
       return this.http.get(`${this.baseurl}/api/channel/${id}/`)
@@ -118,13 +118,13 @@ export class ApiService {
     //Channel
     //Source
     getSource(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/source?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/source/?page_size=${size}&page=${pageNo}`)
     }
     getSourceSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/source?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/source/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllSource(){
-      return this.http.get(`${this.baseurl}/api/source`)
+      return this.http.get(`${this.baseurl}/api/source/`)
     }
     getSourceById(id:any){
       return this.http.get(`${this.baseurl}/api/source/${id}/`)
@@ -138,13 +138,13 @@ export class ApiService {
     //Source
     //New Channel
     getNewChannel(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/new-channel?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/new-channel/?page_size=${size}&page=${pageNo}`)
     }
     getNewChannelSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/new-channel?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/new-channel/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllNewChannel(){
-      return this.http.get(`${this.baseurl}/api/new-channel`)
+      return this.http.get(`${this.baseurl}/api/new-channel/`)
     }
     getNewChannelById(id:any){
       return this.http.get(`${this.baseurl}/api/new-channel/${id}/`)
@@ -158,13 +158,13 @@ export class ApiService {
     //Source
     //Campign
     getCampign(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/campaign?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/campaign/?page_size=${size}&page=${pageNo}`)
     }
     getCampignSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/new-channel?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/new-channel/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllCampign(){
-      return this.http.get(`${this.baseurl}/api/campaign`)
+      return this.http.get(`${this.baseurl}/api/campaign/`)
     }
     getCampignById(id:any){
       return this.http.get(`${this.baseurl}/api/campaign/${id}/`)
@@ -178,13 +178,13 @@ export class ApiService {
     //Campaign
     //Medium
     getMedium(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/medium?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/medium/?page_size=${size}&page=${pageNo}`)
     }
     getMediumSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/medium?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/medium/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllMedium(){
-      return this.http.get(`${this.baseurl}/api/medium`)
+      return this.http.get(`${this.baseurl}/api/medium/`)
     }
     getMediumById(id:any){
       return this.http.get(`${this.baseurl}/api/medium/${id}/`)
@@ -198,13 +198,13 @@ export class ApiService {
     //Medium
     //Level of program
     getLevelOfProgram(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/level-of-program?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/level-of-program/?page_size=${size}&page=${pageNo}`)
     }
     getLevelOfProgramSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/level-of-program?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/level-of-program/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllLevelOfProgram(){
-      return this.http.get(`${this.baseurl}/api/level-of-program`)
+      return this.http.get(`${this.baseurl}/api/level-of-program/`)
     }
     getLevelOfProgramById(id:any){
       return this.http.get(`${this.baseurl}/api/level-of-program/${id}/`)
@@ -218,13 +218,13 @@ export class ApiService {
     //Level of program
     //Department
     getDepartment(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/department?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/department/?page_size=${size}&page=${pageNo}`)
     }
     getDepartmentSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/department?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/department/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllDepartment(){
-      return this.http.get(`${this.baseurl}/api/department`)
+      return this.http.get(`${this.baseurl}/api/department/`)
     }
     getDepartmentById(id:any){
       return this.http.get(`${this.baseurl}/api/department/${id}/`)
@@ -238,13 +238,13 @@ export class ApiService {
     //Department
     //Course
     getCourse(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/course?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/course/?page_size=${size}&page=${pageNo}`)
     }
     getCourseSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/course?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/course/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllCourse(){
-      return this.http.get(`${this.baseurl}/api/course`)
+      return this.http.get(`${this.baseurl}/api/course/`)
     }
     getCourseById(id:any){
       return this.http.get(`${this.baseurl}/api/course/${id}/`)
@@ -258,13 +258,13 @@ export class ApiService {
     //Course
     //Country
     getCountry(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/country?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/country/?page_size=${size}&page=${pageNo}`)
     }
     getCountrySearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/country?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/country/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllCountry(){
-      return this.http.get(`${this.baseurl}/api/country`)
+      return this.http.get(`${this.baseurl}/api/country/`)
     }
     getCountryById(id:any){
       return this.http.get(`${this.baseurl}/api/country/${id}/`)
@@ -278,13 +278,13 @@ export class ApiService {
     //Country
     //State
     getState(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/state?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/state/?page_size=${size}&page=${pageNo}`)
     }
     getStateSearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/state?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/state/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllState(){
-      return this.http.get(`${this.baseurl}/api/state`)
+      return this.http.get(`${this.baseurl}/api/state/`)
     }
     getStateById(id:any){
       return this.http.get(`${this.baseurl}/api/state/${id}/`)
@@ -298,13 +298,13 @@ export class ApiService {
     //State
     //City
     getCity(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/city?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/city/?page_size=${size}&page=${pageNo}`)
     }
     getCitySearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/city?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/city/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllCity(){
-      return this.http.get(`${this.baseurl}/api/city`)
+      return this.http.get(`${this.baseurl}/api/city/`)
     }
     getCityById(id:any){
       return this.http.get(`${this.baseurl}/api/city/${id}/`)
@@ -318,13 +318,13 @@ export class ApiService {
     //State
     //Priority
     getPriority(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/priority-name?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/priority-name/?page_size=${size}&page=${pageNo}`)
     }
     getPrioritySearch(search:any,size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/priority-name?page_size=${size}&page=${pageNo}&key=${search}`)
+      return this.http.get(`${this.baseurl}/api/priority-name/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
     getAllPriority(){
-      return this.http.get(`${this.baseurl}/api/priority-name`)
+      return this.http.get(`${this.baseurl}/api/priority-name/`)
     }
     getPriorityById(id:any){
       return this.http.get(`${this.baseurl}/api/priority-name/${id}/`)
@@ -338,10 +338,10 @@ export class ApiService {
     //Priority
     //Priority Group
     getPriorityGroup(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/priority-group?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/priority-group/?page_size=${size}&page=${pageNo}`)
     }
     getAllPriorityGroup(){
-      return this.http.get(`${this.baseurl}/api/priority-group`)
+      return this.http.get(`${this.baseurl}/api/priority-group/`)
     }
     getPriorityGroupById(id:any){
       return this.http.get(`${this.baseurl}/api/priority-group/${id}/`)
@@ -356,25 +356,25 @@ export class ApiService {
     //User
     getUser(size:any,pageNo:any,data:any){
       if(data!=null){
-        return this.http.get(`${this.baseurl}/api/user?page_size=${size}&page=${pageNo}&${data}`)
+        return this.http.get(`${this.baseurl}/api/user/?page_size=${size}&page=${pageNo}&${data}`)
       }
       else{
-        return this.http.get(`${this.baseurl}/api/user?page_size=${size}&page=${pageNo}`)
+        return this.http.get(`${this.baseurl}/api/user/?page_size=${size}&page=${pageNo}`)
   
       }
     }
     getUserSearch(search:any,size:any,pageNo:any,data:any){
       if(data!=null){
-        return this.http.get(`${this.baseurl}/api/user?page_size=${size}&page=${pageNo}&key=${search}&${data}`)
+        return this.http.get(`${this.baseurl}/api/user/?page_size=${size}&page=${pageNo}&key=${search}&${data}`)
       }
       else{
-        return this.http.get(`${this.baseurl}/api/user?page_size=${size}&page=${pageNo}&key=${search}`)
+        return this.http.get(`${this.baseurl}/api/user/?page_size=${size}&page=${pageNo}&key=${search}`)
   
       }
       
     }
     getAllUser(){
-      return this.http.get(`${this.baseurl}/api/user`)
+      return this.http.get(`${this.baseurl}/api/user/`)
     }
     getuserByFilter(url:any){
       return this.http.get(url)
@@ -403,10 +403,10 @@ export class ApiService {
     //User
     //Role
     getRole(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/role?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/role/?page_size=${size}&page=${pageNo}`)
     }
     getAllRole(){
-      return this.http.get(`${this.baseurl}/api/role`)
+      return this.http.get(`${this.baseurl}/api/role/`)
     }
     getRoleById(id:any){
       return this.http.get(`${this.baseurl}/api/role/${id}/`)
@@ -420,10 +420,10 @@ export class ApiService {
     //Role
     //Designation
     getDesignation(size:any,pageNo:any){
-      return this.http.get(`${this.baseurl}/api/designation?page_size=${size}&page=${pageNo}`)
+      return this.http.get(`${this.baseurl}/api/designation/?page_size=${size}&page=${pageNo}`)
     }
     getAllDesignation(){
-      return this.http.get(`${this.baseurl}/api/designation`)
+      return this.http.get(`${this.baseurl}/api/designation/`)
     }
     getDesignationById(id:any){
       return this.http.get(`${this.baseurl}/api/designation/${id}/`)
@@ -440,26 +440,26 @@ export class ApiService {
     //Whatsapp Template
     getWhatsappTemplate(size:any,pageNo:any,data:any){
       if(data!=null){
-        return this.http.get(`${this.baseurl}/api/template?page_size=${size}&page=${pageNo}&${data}`)
+        return this.http.get(`${this.baseurl}/api/template/?page_size=${size}&page=${pageNo}&${data}`)
       }
       else{
-        return this.http.get(`${this.baseurl}/api/template?page_size=${size}&page=${pageNo}`)
+        return this.http.get(`${this.baseurl}/api/template/?page_size=${size}&page=${pageNo}`)
   
       }
       // return this.http.get(`${this.baseurl}/api/template?page_size=${size}&page=${pageNo}`)
     }
     getWhatsappTemplateSearch(search:any,size:any,pageNo:any,data:any){
       if(data!=null){
-        return this.http.get(`${this.baseurl}/api/template?page_size=${size}&page=${pageNo}&key=${search}&${data}`)
+        return this.http.get(`${this.baseurl}/api/template/?page_size=${size}&page=${pageNo}&key=${search}&${data}`)
       }
       else{
-        return this.http.get(`${this.baseurl}/api/template?page_size=${size}&page=${pageNo}&key=${search}`)
+        return this.http.get(`${this.baseurl}/api/template/?page_size=${size}&page=${pageNo}&key=${search}`)
   
       }
       
     }
     getAllWhatsappTemplate(){
-      return this.http.get(`${this.baseurl}/api/template`)
+      return this.http.get(`${this.baseurl}/api/template/`)
     }
     getWhatsappTemplateById(id:any){
       return this.http.get(`${this.baseurl}/api/template/${id}/`)
@@ -576,7 +576,7 @@ export class ApiService {
     //menu
     //Team Live Status
     getTeamLiveStatus(query:any){
-      return this.http.get(`${this.baseurl}/api/counsellor-status${query}`) 
+      return this.http.get(`${this.baseurl}/api/counsellor-status/${query}`) 
     }
     //Team Live Status
     //menu

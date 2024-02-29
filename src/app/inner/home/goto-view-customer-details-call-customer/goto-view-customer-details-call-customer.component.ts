@@ -149,7 +149,7 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     }
     this._baseService.postData(`${environment.counsellor_status}`,data).subscribe((res:any)=>{
       if(res){
-        this.api.showToast(res.message)  
+        // this.api.showToast(res.message)  
       }
     },((error:any)=>{
       this.api.showToast(error?.error?.message)
@@ -184,7 +184,7 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
       }
       this._baseService.postData(`${environment.counsellor_status}`,data2).subscribe((res:any)=>{
         if(res){
-          this.api.showToast(res.message)  
+          // this.api.showToast(res.message)  
         }
       },((error:any)=>{
         this.api.showToast(error?.error?.message)

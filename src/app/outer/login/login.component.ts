@@ -73,6 +73,8 @@ export class LoginComponent  implements OnInit {
           localStorage.setItem('user_id',decodedToken.user_id)
           // localStorage.setItem('superadmin_or_admin',decodedToken.superadmin_or_admin)
           localStorage.setItem('username',decodedToken.username)
+          console.log(decodedToken.username,"decoded username");
+          console.log(decodedToken,"decodedToken")
           this.api.loaderDismiss()
           this.loginForm.reset()
           this.navCtrl.navigateRoot('/inner')
