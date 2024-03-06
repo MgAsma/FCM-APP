@@ -1,23 +1,21 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ModalController, Platform, PopoverController } from '@ionic/angular';
-
-// import { RecurringFollowupComponent } from '../recurring-followup/recurring-followup.component';
-import { GotoViewCustomerDetailsCallCustomerComponent } from '../goto-view-customer-details-call-customer/goto-view-customer-details-call-customer.component';
+import { FormGroup } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { CallLog } from '@ionic-native/call-log/ngx';
+import { PopoverController, Platform } from '@ionic/angular';
 import { environment } from '../../../../environments/environment';
 import { AllocationEmittersService } from '../../../service/allocation-emitters.service';
 import { ApiService } from '../../../service/api/api.service';
 import { BaseServiceService } from '../../../service/base-service.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-import { CallLog } from '@ionic-native/call-log/ngx';
+import { GotoViewCustomerDetailsCallCustomerComponent } from '../../../shared-modules/goto-view-customer-details-call-customer/goto-view-customer-details-call-customer.component';
 
 @Component({
-  selector: 'app-call-log',
-  templateUrl: './call-log.page.html',
-  styleUrls: ['./call-log.page.scss'],
+  selector: 'app-home-call-logs',
+  templateUrl: './home-call-logs.page.html',
+  styleUrls: ['./home-call-logs.page.scss'],
 })
-export class CallLogPage implements OnInit {
+export class HomeCallLogsPage implements OnInit {
   searchBar: boolean = false;
   filterByStatus:any = []
   data:any = []

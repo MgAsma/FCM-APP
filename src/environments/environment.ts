@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  live_url: 'https://fcmdev.thestorywallcafe.com',
-  // live_url:'https://fcmtest.thestorywallcafe.com',
+  //live_url: 'https://fcmdev.thestorywallcafe.com',
+  live_url:'https://fcmtest.thestorywallcafe.com',
   lead_list:'/api/lead-list/',
   lead_status:'/api/lead-list-status/',
   lead_subStatus:'/api/lead-list-substatus/',
@@ -25,7 +25,7 @@ export const environment = {
   export_leads:`/api/export-leads/`,
   leadPayment:`/api/send-payment-link/`,
   paymentDetails:`/api/payment-details/`,
-  rec_follow_up:`/api/rec_follow_up/`,
+  rec_follow_up:`/api/rec-follow-up/`,
   tls_counsellor:`/api/counsellor-sts-typ/`,
   call_logs:`/api/call-logs/`,
   counsellor_status:`/api/counsellor-status/`,

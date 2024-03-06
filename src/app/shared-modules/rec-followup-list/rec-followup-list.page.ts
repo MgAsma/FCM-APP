@@ -31,7 +31,7 @@ export class RecFollowupListPage implements OnInit {
         this.followupList = res.result
       }
     },((error:any)=>{
-      this.api.showToast(error.error.error.message)
+      this.api.showToast(error.error.message)
     }))
   }
   handleRefresh(event:any){

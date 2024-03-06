@@ -12,10 +12,12 @@ export class HomePage implements OnInit {
 userName:any
   constructor(private popoverController:PopoverController) {
   this.userName=localStorage.getItem('username')
+  console.log(this.userName,"username")
   }
 
   ngOnInit() {
     this.userName=localStorage.getItem('username')
+    console.log(this.userName,"usernameeeeeeeeeee")
   }
   async openCheckout(){
     const popover = await this.popoverController.create({

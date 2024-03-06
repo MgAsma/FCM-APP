@@ -38,7 +38,7 @@ export class LoginComponent  implements OnInit {
   initForm(){
     this.loginForm = this._fb.group({
       mobile_number:['' ,[Validators.required,Validators.pattern(this.commonService.mobilePattern)]],
-      password:['',[Validators.required]],
+      password:['',[Validators.required,this.noSpaceValidator]],
       device_type:['',[Validators.required]]
     })
   }
@@ -52,6 +52,11 @@ export class LoginComponent  implements OnInit {
   get password() {
     return this.loginForm.get('password');
   }
+  // Custom validator function
+   noSpaceValidator = (control) => {
+    const hasSpace = (control.value || '').includes(' ');
+    return hasSpace ? { 'space': true } : null;
+  };
   login(){
     this.loginForm.patchValue({device_type:"mobile"})
 		if(this.loginForm.invalid){
@@ -77,15 +82,19 @@ export class LoginComponent  implements OnInit {
           console.log(decodedToken,"decodedToken")
           this.api.loaderDismiss()
           this.loginForm.reset()
-          this.navCtrl.navigateRoot('/inner')
-          // this.router.navigate(['../inner'])
-          this.api.showToast(resp.message)
+          // this.navCtrl.navigateRoot('/inner/home')
+          window.location.href='/inner'
+          // this.router.navigate(['/inner']);
+          
+          this.api.showToast(resp.message.message)
         }
       
 			},
+
 			(error:any)=>{
         this.api.loaderDismiss()
         this.api.showToast(error.error.message)
+       // this.api.showToast(error.error.error.message)
 			}
 		  )
 		}

@@ -338,7 +338,7 @@ export class AllocationsPage implements OnInit {
     let baseQuery = ''
     let user_role = localStorage.getItem('user_role').toUpperCase()
     if(user_role == 'SUPERADMIN' || user_role == 'SUPER ADMIN'){
-      baseQuery = `/?${query}`
+      baseQuery = `?${query}`
     }else{
       baseQuery = `?counsellor_id=${this.user_id}&${query}`
     }
@@ -364,7 +364,7 @@ export class AllocationsPage implements OnInit {
       let query: string = `page=${this.currentPage}&page_size=${event.pageSize}`;
   
       if (this.searchTerm) {
-        query += `key=${this.searchTerm}`;
+        query += `&key=${this.searchTerm}`;
       } else if (this.counsellor_ids) {
         this.onEmit(this.counsellor_ids);
         return; // Exit the function after emitting counsellor_ids
@@ -372,7 +372,7 @@ export class AllocationsPage implements OnInit {
         this.allocate.allocationStatus.subscribe(
           (res: any) => {
             if (res) {
-              query += `status=${res}`;
+              query += `&status=${res}`;
             }
           },
           (error: any) => {
@@ -411,8 +411,8 @@ export class AllocationsPage implements OnInit {
 
   searchTermChanged(event: any) {
     this.searchTerm = event
-    
-    let query: string = `page=${this.currentPage}&page_size=${this.pageSize}&key=${this.searchTerm}`;
+    let query = this.searchTerm.length > 0 ? `page=${this.currentPage}&page_size=${this.pageSize}&key=${this.searchTerm}`:
+    `page=${this.currentPage}&page_size=${this.pageSize}`;
    
       this.allocate.allocationStatus.subscribe(
         (res: any) => {
