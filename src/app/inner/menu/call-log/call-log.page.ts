@@ -31,11 +31,15 @@ export class CallLogPage implements OnInit {
   totalNumberOfRecords: any;
   callLogCards: any = [];
   placeholderText = 'Search By Name/Phone'
-  counselor: any = [];
+  COUNSELLOR: any = [];
   endDate:any;
   startDate:any;
   callLogForm:FormGroup
   dateFilter: boolean = false;
+  minEndDate: any;
+  maxStartDate:any;
+  dateForm!: FormGroup;
+  dateFiltered: boolean = false;
   constructor(
     private allocate: AllocationEmittersService,
     private popoverController: PopoverController,
@@ -44,10 +48,12 @@ export class CallLogPage implements OnInit {
     private datepipe:DatePipe,
     private callLog: CallLog,
     private platform: Platform,
+    private fb:FormBuilder
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
     this.user_id = localStorage.getItem('user_id')
-
+    let today = new Date()
+    this.maxStartDate = this.datepipe.transform(today,'YYYY-MM-dd')
 
     this.platform.ready().then(() => {
       this.callLog
@@ -72,17 +78,24 @@ export class CallLogPage implements OnInit {
   }
   
   ngOnInit() {
+    this.initializeCallLogs();
     this.setupSearchBarSubscription();
     this.setupCallLogStatusSubscription();
-    this.initializeCallLogs();
-    this.getCounselor();
     this.getFilterByStatus();
+    this.getCOUNSELLOR();
+    this.initForm()
   }
-  
+  initForm(){
+    this.dateForm = this.fb.group({
+     startDate:['',Validators.required],
+     endDate:['',Validators.required]
+    })
+  }
   private setupSearchBarSubscription() {
     this.allocate.searchBar.subscribe((res) => {
-      this.searchBar = res === true;
+      this.searchBar = res === true
     });
+   
   }
   
   private setupCallLogStatusSubscription() {
@@ -97,18 +110,25 @@ export class CallLogPage implements OnInit {
   }
   
   private handleCallLogStatus(status: any) {
-    const query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}${status ? `&status=${status}` : ''}` :`${status ? `?status=${status}` : ''}`;
+    const query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}${status ? `&status=${status}` : ''}` :`${status ? `?status=${status}` : ''}`;
     this.getCallLogs(query);
   }
   
   private initializeCallLogs() {
-    const query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id} `:'';
+    const query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_id=${this.user_id} `:'';
     this.getCallLogs(query);
   }
   //**********************************************************/
   
   onStartDateChange(event: CustomEvent) {
-    this.startDate = event.detail.value;
+    if(event){
+      console.log(event,event)
+      this.minEndDate = event.target['value'];
+      this.dateForm.patchValue({
+        endDate:''
+      })
+    }
+    
   }
 
   onEndDateChange(event: CustomEvent) {
@@ -116,23 +136,19 @@ export class CallLogPage implements OnInit {
   }
   onSubmit() {
     let query;
-    if (this.startDate && this.endDate) {
-      let sdate = this.datepipe.transform(this.startDate, 'yyyy-MM-dd');
-      let edate = this.datepipe.transform(this.endDate, 'yyyy-MM-dd');
-      query = `?counsellor_id=${this.user_id}&from_date=${sdate}&to_date=${edate}`;
-    } else {
-      // If startDate is not set, set it to the current date
-      this.startDate = new Date();
-      let sdate = this.datepipe.transform(this.startDate, 'yyyy-MM-dd');
-  
-      // If endDate is not set, set it to the current date
-      this.endDate = new Date();
-      let edate = this.datepipe.transform(this.endDate, 'yyyy-MM-dd');
-  
-      query = `?counsellor_id=${this.user_id}&from_date=${sdate}&to_date=${edate}`;
-    }
-    this.dateFilter = true
-    this.getCallLogs(query);
+    if(this.dateForm.invalid){
+      this.dateForm.markAllAsTouched()
+      this.api.showToast('Select start date and end date')
+    }else{
+      let sdate = this.datepipe.transform(this.dateForm.value.startDate, 'yyyy-MM-dd');
+      let edate = this.datepipe.transform(this.dateForm.value.endDate, 'yyyy-MM-dd');
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ?  `?counsellor_id=${this.user_id}&from_date=${sdate}&to_date=${edate}`
+      :`?from_date=${sdate}&to_date=${edate}`;
+      this.dateFilter = true
+      this.getCallLogs(query);
+      this.dateFiltered = true
+
+    } 
   }
   
   getFilterByStatus() {
@@ -149,13 +165,13 @@ export class CallLogPage implements OnInit {
         }
       );
   }
-  getCounselor() {
+  getCOUNSELLOR() {
     this.baseService
       .getData(`${environment._user}/?role_name=counsellor`)
       .subscribe(
         (res: any) => {
           if (res.results) {
-            this.counselor = res.results;
+            this.COUNSELLOR = res.results;
           }
         },
         (error: any) => {
@@ -167,7 +183,7 @@ export class CallLogPage implements OnInit {
     setTimeout(() => {
       this.callLogCards = []
       this.data = []
-      let query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
       this.getCallLogs(query)
       event.target.complete();
     }, 2000);
@@ -187,10 +203,10 @@ export class CallLogPage implements OnInit {
   getCallLogs(query:any){
     this.baseService.getData(`${environment.call_logs}${query}`).subscribe((res:any)=>{
       console.log(res,"call log response")
-      if(res){ 
+      if(res){   
        this.callLogCards = res.results;
        this.data = new MatTableDataSource<any>(this.callLogCards);
-       this.totalNumberOfRecords = res.total_no_of_record
+       this.totalNumberOfRecords = res.total_no_of_record 
       }
     },((error:any)=>{
       this.api.showToast(error?.error.message)
@@ -201,7 +217,7 @@ export class CallLogPage implements OnInit {
     if(event){
     this.counsellor_ids = event
      
-      let params = this.user_role == 'COUNSELOR' ? 
+      let params = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? 
       `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${event}`:
       `?page=1&page_size=10`
       this.getCallLogs(params)
@@ -215,7 +231,7 @@ export class CallLogPage implements OnInit {
       this.pageSize = event.pageSize;
     }
   
-    let query: string =   this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:
+    let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:
     `?page=${this.currentPage}&page_size=${event.pageSize}`
     if (this.searchTerm) {
       query += `&key=${this.searchTerm}`;
@@ -243,8 +259,18 @@ export class CallLogPage implements OnInit {
   
   searchTermChanged(event: any) {
     this.searchTerm = event
-    let query = this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`:
+    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`:
     `?page=1&page_size=10&key=${event}`
+    this.allocate.callLogStatus.subscribe(
+      (res: any) => {
+        if (res) {
+          query += `&status=${res}`;
+        }
+      },
+      (error: any) => {
+        this.api.showToast(error.error.message);
+      }
+    );
     this.getCallLogs(query);
   }
 }
