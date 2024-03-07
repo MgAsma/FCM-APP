@@ -57,7 +57,7 @@
                   </ion-error>
 
                     <!--Alternate Mobile Number -->
-                    <ion-label position="stacked">Alternate Mobile Number</ion-label><b class="star-symbol">*</b>
+                    <ion-label position="stacked">Alternate Mobile Number</ion-label>
                     <ion-item>
                       <ion-input
                         type="tel"
@@ -71,30 +71,31 @@
                     </ion-error>
                   
                   <!-- Email -->
-                  <ion-label position="stacked">Email Id</ion-label><b class="star-symbol">*</b>
+                  <ion-label position="stacked">Email Id</ion-label>
                   <ion-item>
                     <ion-input
                       type="email"
                       placeholder="Enter Your Email Id"
                       formControlName="email"
-                      required
                     ></ion-input>
                   </ion-item>
-                  <ion-error *ngIf="f['email'].touched && f['email'].hasError('required')">
-                    <ion-label color="danger">Email Id Is Required.</ion-label>
-                  </ion-error>
-                  <ion-error *ngIf="f['email'].hasError('email')">
+                  <ion-error *ngIf="f['email'].hasError('pattern')">
                     <ion-label color="danger">Invalid Email Format.</ion-label>
                   </ion-error>
               
-                <!-- Date of Birth -->
+                <!-----  Date Of Birth ---->
                 <ion-label position="stacked">Date Of Birth</ion-label>
-                <mat-form-field>
-                  <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" [max]="minDateAdapter" placeholder="MM/DD/YYYY">
-                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-                
+                <ion-item (click)="showPicker = !showPicker">
+                 <ion-text>{{addNewLead.value.dateOfBirth || 'YYYY/MM/DD'}}</ion-text>
+                 <ion-icon name="calendar-outline" slot="end"></ion-icon>
+                </ion-item>
+                <ion-datetime presentation="date" [value]="minDateAdapter" size="cover" 
+                *ngIf="showPicker"
+                #datePicker
+                [max]="minDateAdapter"
+                (ionChange)="dateChanged(datePicker.value)">
+
+                </ion-datetime>
               <!-- State -->
               <ion-label position="stacked">State</ion-label>
               <ion-item>
@@ -142,7 +143,7 @@
                 </ion-item>
               
                 <!-- Pincode -->
-                <ion-label position="stacked">Pincode</ion-label><b class="star-symbol">*</b>
+                <ion-label position="stacked">Pincode</ion-label>
                 <ion-item>
                   <ion-input
                     type="tel"
@@ -150,7 +151,9 @@
                     formControlName="pincode"
                   ></ion-input>
                 </ion-item>
-
+                <ion-error *ngIf="f['pincode'].hasError('pattern')">
+                  <ion-label color="danger">Please Enter 6-Digit Pincode.</ion-label>
+                </ion-error>
                 <!-- Country -->
                 <ion-label position="stacked">Country Name</ion-label>
                 <ion-item>

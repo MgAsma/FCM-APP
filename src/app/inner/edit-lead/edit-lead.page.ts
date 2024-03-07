@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
 import { ApiService } from '../../service/api/api.service';
@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 })
 export class EditLeadPage implements OnInit {
    _inputData: any;
+  showPicker: boolean = false;
   @Input() set data(value:any){
     this._inputData = value;
     console.log(this._inputData,"ssdgdgg")
@@ -37,10 +38,15 @@ export class EditLeadPage implements OnInit {
   referredTo:any = [];
   stat_us:any= [];
   time:any = ['Morning', 'Afternoon', 'Evening', 'Night', 'Other'];
+  zone:string[] = ['South','North', 'East', 'West'];
   seasons:any = [];
   @Output() addLead = new EventEmitter()
-  userId:any;
   minDateAdapter: string;
+  streamList: any;
+  adminList: any = [];
+  leadStage: any = [];
+  user_id: any;
+ 
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -50,12 +56,17 @@ export class EditLeadPage implements OnInit {
     private modalController:ModalController,
     private _addLeadEmitter:AddLeadEmitterService
    ) {
-      let dob = new Date()
-      this.minDateAdapter = this._datePipe.transform(dob,'yyyy-MM-dd')
+    let dob = new Date()
+    this.minDateAdapter = this._datePipe.transform(dob,'yyyy-MM-dd')
     }
-
+    dateChanged(value){
+      this.editLead.patchValue({
+        dateOfBirth:this._datePipe.transform(value,'yyyy-MM-dd')
+      })
+      this.showPicker = false
+    }
   ngOnInit(): void {
-    this.userId = localStorage.getItem('user_id')
+    this.user_id = localStorage.getItem('user_id')
     this.getCountry();
     this.getState();
     this.getChannel();
@@ -72,94 +83,121 @@ export class EditLeadPage implements OnInit {
     this.getStatus();
     this.getSubStatus();
     this.getSeason();
-    this.getCounselor()
+    this.getCounselor();
+    this.getStream();
+    this.getCounselledBy();
+    this.getLeadStage()
     this.initForm()
-    this.bindFormVal()
-   }
+    this.getLeadById()
+  }
   get f() {
     return this.editLead.controls;
+  }
+  getLeadById() {
+    this._baseService.getByID(`${environment.lead_list}${this._inputData.user_data.id}/`).subscribe(
+      (res: any) => {
+        if (res && res.result && res.result.length > 0) {
+          const lead = res.result[0];
+          this.editLead.patchValue({
+            firstName: lead.user_data.first_name,
+            mobile: lead.user_data.mobile_number,
+            alternateNumber: lead.alternate_mobile_number,
+            email: lead.user_data.email,
+            dateOfBirth: lead.date_of_birth,
+            state: lead.state,
+            zone: lead.zone,
+            course:lead.course,
+            cityName: lead.city,
+            pincode: lead.pincode,
+            countryId: lead.country,
+            referenceName: lead.reference_name,
+            referencePhoneNumber: lead.reference_mobile_number,
+            fatherName: lead.father_name,
+            fatherOccupation: lead.father_occupation,
+            fatherPhoneNumber: lead.father_mobile_number,
+            tenthPercentage: lead.tenth_per,
+            twelthPercentage: lead.twelfth_per,
+            degree: lead.degree_per,
+            otherCourse: lead.others,
+            entranceExam: lead.enterance_exam,
+            courseLookingfor: lead.course_looking_for_id,
+            preferredCollege1: lead.preferred_college1,
+            preferredCollege2: lead.preferred_college2,
+            preferredLocation1: lead.preferred_location1,
+            preferredLocation2: lead.preferred_location2,
+            counsellor: lead.referred_to,
+            counsellorAdmin: lead.counselled_by,
+            leadSource: lead.source,
+            leadStages: lead.lead_stage,
+            leadStatus: lead.lead_list_status,
+            notes: lead.notes,
+            remarks: lead.remark
+          });
+        }
+      },
+      (error) => {
+        this.api.showError(error.error.message);
+      }
+    );
   }
   initForm(){
     this.editLead = this.fb.group({
       firstName: ['', [Validators.required,Validators.pattern(this._commonService.namePattern)]],
-      lastName: ['',[Validators.pattern(this._commonService.namePattern)]],
-      email: ['', [ Validators.required,Validators.email]],
-      mobile: ['', [ Validators.required,Validators.pattern(this._commonService.mobilePattern)]],
-      dateOfBirth:['',[]],
-      highestQualification: [''],
-      callTime:[''],
-      campaignName: [''],
-      season: [''],
-      channel: [''],
-      source: [''],
-      priority: [''],
-      referredTo: [''],
-      status:[''],
-      subStatus:[''],
-      department: [''],
-      course: [''],
-      location: [''],
-      yearOfPassing: [''],
-      primaryNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-      fathersNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-      mothersNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
+      mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern)]],
       alternateNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-      primaryEmail:['',[Validators.email]],
-      alternateEmail:['',[Validators.email]],
-      fathersEmail:['',[Validators.email]],
-      mothersEmail:['',[Validators.email]],
-      countryId: [''],
+      email: ['', [Validators.pattern(this._commonService.emailPattern)]],
+      dateOfBirth:[''],
       state: [''],
+      zone:[''],
       cityName: [''],
-      newChannel: [''],
-      campaign: [''],
-      medium: [''],
-      levelOfProgram: [''],
-    });
-   }
-  bindFormVal(){
-  
-  
-    this.editLead.patchValue({
-      firstName:this._inputData.user_data.first_name,
-      lastName:this._inputData.user_data.last_name,
-      email:this._inputData.user_data.email,
-      mobile:this._inputData.user_data.mobile_number,
-      dateOfBirth:this._inputData.date_of_birth,
-      highestQualification:this._inputData.higest_qualification,
-      callTime:this._inputData.best_time_to_call,
-      campaignName: this._inputData.campaign_id,
-      season: this._inputData.season_id,
-      channel: this._inputData.channel_id,
-      source: this._inputData.source_id,
-      priority: this._inputData.priority_id,
-      referredTo: this._inputData.referredTo_id,
-      status:this._inputData.status_id,
-      subStatus:this._inputData.lead_list_substatus_id,
-      department: this._inputData.department_id,
-      course: this._inputData.course_id,
-      location: this._inputData.location,
-      yearOfPassing: this._inputData.year_of_passing,
-      primaryNumber:this._inputData.primary_phone_number,
-      fathersNumber:this._inputData.father_phone_number,
-      mothersNumber:this._inputData.mother_phone_number,
-      alternateNumber:this._inputData.alternate_phone_number,
-      alternateEmail:this._inputData.alternate_email,
-      fathersEmail:this._inputData.father_email,
-      mothersEmail:this._inputData.mother_email,
-      countryId: this._inputData.country_id,
-      state: this._inputData.state_id,
-      cityName: this._inputData.city_id,
-      newChannel: this._inputData.new_channel_id,
-      campaign: this._inputData.campaign_id,
-      medium: this._inputData.medium_id,
-      levelOfProgram: this._inputData.level_of_program_id,
-
-    
-    });
+      pincode:['',Validators.pattern(this._commonService.pincode)],
+      countryId:[''],
+      referenceName:[''],
+      referencePhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
+      fatherName:[''],
+      fatherOccupation:[''],
+      fatherPhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
+      tenthPercentage :[''],
+      twelthPercentage :[''],
+      degree:[''],
+      course:[''],
+      otherCourse:[''],
+      entranceExam:[''],
+      courseLookingfor:[''],
+      preferredCollege1:[''],
+      preferredCollege2:[''],
+      preferredLocation1:[''],
+      preferredLocation2:[''],
+      counsellor:['',[Validators.required]],
+      counsellorAdmin:[''],
+      leadSource:['',[Validators.required]],
+      leadStages:['',[Validators.required]],
+      leadStatus:[''],
+      notes:[''],
+      remarks:['']
+    })
   }
- 
- 
+  pincodeLengthValidator(control:FormControl) {
+    const value = control.value;
+
+    if (value && value.toString().length !== 6) {
+      return { invalidPincodeLength: true };
+    }
+
+    return null;
+  }
+  getStream(){
+    this._baseService.getData(`${environment.studying_stream}`).subscribe((resp:any)=>{
+    if(resp){
+    this.streamList = resp
+    } 
+    },(error:any)=>{
+      //console.log(error);
+      
+    }
+
+    )
+  }
   
   getCountry(){
     this.api.getAllCountry().subscribe((res:any)=>{
@@ -263,8 +301,8 @@ export class EditLeadPage implements OnInit {
   }
   getCourse(){
     this.api.getAllCourse().subscribe((res:any)=>{
-      if(res.results){
-        this.courseOptions = res.results;
+      if(res){
+        this.courseOptions = res;
       }
       else{
         this.api.showToast('ERROR')
@@ -346,77 +384,29 @@ export class EditLeadPage implements OnInit {
        this.api.showToast(error?.error?.message)
     }))
   }
+  getCounselledBy(){
+    this._baseService.getData(`${environment._user}?role_name=Admin`).subscribe((res:any)=>{
+      if(res.results){
+      this.adminList = res.results
+      }
+    },((error:any)=>{
+       this.api.showError(this.api.toTitleCase(error.error.message))
+    }))
+  }
+  getLeadStage(){
+    this._baseService.getData(environment.leadStage).subscribe((res:any)=>{
+     if(res){
+      this.leadStage = res
+     }
+    },((error:any)=>{
+     this.api.showError(error.error.message)
+    }))
+   }
   
   clearSelectField(fieldName: string) {
       this.editLead.get(fieldName)?.reset();
   }
-  onSubmit(){
-    
-  let f = this.editLead.value;
-  let data: any = {
-    first_name: f.firstName,
-    last_name: f.lastName,
-    email: f.email,
-    mobile_number: f.mobile,
-    role: 5,
-    created_by:f.created_by,
-    updated_by:this.userId,
-    higest_qualification: f.highestQualification || undefined,
-    campaign_name: f.campaignName || undefined,
-    season_id:f.season || undefined,
-    channel_id:f.channel || undefined,
-    source_id:f.source || undefined,
-    priority_id:f.priority || undefined,
-    refered_to_id:f.referredTo || this.userId,
-    lead_list_status_id:f.status || undefined,
-    lead_list_substatus_id:f.subStatus || undefined,
-    department_id:f.department || undefined,
-    date_of_birth:this._datePipe.transform(f.dateOfBirth,'YYYY-MM-dd')|| undefined,
-    course_id:f.course || undefined,
-    location: f.location || undefined,
-    year_of_passing:f.yearOfPassing || undefined,
-    best_time_to_call:f.callTime || undefined,
-    country_id:f.countryId || undefined,
-    state_id:f.state || undefined,
-    city_id:f.cityName || undefined,
-    role_id:5,
-    new_channel_id:f.newChannel || undefined,
-    campaign_id:f.campaign || undefined,
-    medium_id:f.medium || undefined,
-    level_of_program_id:f.levelOfProgram || undefined,
-    status:f.status || undefined,
-    alternate_phone_number: f.alternateNumber || undefined,
-    primary_phone_number: f.primaryNumber || undefined,
-    father_phone_number: f.fathersNumber || undefined,
-    mother_phone_number: f.mothersNumber || undefined,
-    alternate_email: f.alternateEmail || undefined,
-    primary_email: f.primaryEmail || undefined,
-    father_email: f.fathersEmail || undefined,
-    mother_email: f.mothersEmail || undefined
-  };
-
-data = JSON.parse(JSON.stringify(data));
-    if(this.editLead.invalid){
-      this.editLead.markAllAsTouched()
-    }
-    else{
-      this._baseService.updateData(`${environment.lead_list}/${this._inputData.id}/`,data).subscribe((res:any)=>{
-        if(res){
-          this.addLead.emit('ADD')
-          this.api.showToast(res.message)
-          this._addLeadEmitter.triggerGet();
-          this.initForm()
-          this.bindFormVal()
-          this.modalController.dismiss()
-        }
-        else{
-          this.api.showToast("ERROR !")
-        }
-      },((error:any)=>{
-        this.api.showToast(error?.error?.message)
-      }))
-    }
-  }
+  
   step = 0;
 
   setStep(index: number) {
@@ -438,4 +428,79 @@ data = JSON.parse(JSON.stringify(data));
     this.modalController.dismiss()
     this._addLeadEmitter.triggerGet();
   }
+  onSubmit(){
+  
+  const formData = this.editLead.value;
+  let data ={
+    first_name: formData.firstName,
+    last_name:"",
+    email: formData.email,
+    mobile_number: formData.mobile ,
+    date_of_birth: this._datePipe.transform(formData.dateOfBirth,'YYYY-MM-dd') || null,
+    alternate_mobile_number: formData.alternateNumber || null,
+    role: 5,
+    location:  formData.cityName,
+    pincode: formData.pincode || null,
+    country: formData.countryId,
+    state: formData.state, 
+    city: formData.cityName, 
+    zone: formData.zone,
+    lead_list_status: formData.leadStatus,
+    lead_list_substatus: 1,
+    counselled_by: formData.counsellorAdmin,
+    lead_stage: formData.leadStages,
+    updated_by:this.user_id,
+    note: formData.notes,
+    remark: formData.remarks,
+    source: formData.leadSource,
+    refered_to: formData.counsellor,
+    education_details: {
+    tenth_per: formData.tenthPercentage || null,
+    twelfth_per: formData.twelthPercentage || null,
+    degree_per: formData.degree || null,
+    stream: formData.course,
+    others: formData.otherCourse,
+    enterance_exam: formData.entranceExam,
+    course_looking_for: formData.courseLookingfor,
+      preferance_college_and_location: 
+        {
+          preferred_college1: formData.preferredCollege1,
+          preferred_college2: formData.preferredCollege2,
+          preferred_location1: formData.preferredLocation1,
+          preferred_location2: formData.preferredLocation2
+        }
+      
+    },
+    additional_info: {
+      reference_name: formData.referenceName,
+      reference_mobile_number:formData.referencePhoneNumber,
+      father_name: formData.fatherName,
+      father_occupation: formData.fatherOccupation,
+      father_mobile_number: formData.fatherPhoneNumber
+    }
+  }
+
+   data = JSON.parse(JSON.stringify(data));
+    if(this.editLead.invalid){
+      this.editLead.markAllAsTouched()
+      this.api.showError("Please Fill The Mandatory Fields")
+    }
+    else{
+      this._baseService.updateData(`${environment.lead_list}/${this._inputData.user_data.id}/`,data).subscribe((res:any)=>{
+        if(res){
+          this.addLead.emit('ADD')
+          this.api.showToast(res.message)
+          this._addLeadEmitter.triggerGet();
+          this.initForm()
+          this.modalController.dismiss()
+        }
+        else{
+          this.api.showToast("ERROR !")
+        }
+      },((error:any)=>{
+        this.api.showToast(error?.error?.message)
+      }))
+    }
+  }
+  
 }

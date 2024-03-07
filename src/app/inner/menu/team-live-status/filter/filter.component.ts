@@ -25,54 +25,55 @@ export class FilterComponent  implements OnInit {
     private allocationEmit:AllocationEmittersService) { }
 
   ngOnInit() {
-    this.allocationEmit.tlsStatus.subscribe((res:any)=>{
-      if(res.length == 0){
-        this.selectedStatus = []
-        this.data.forEach((chip:any) => {
-          chip.selected = false;
-        });
-      }else{
-        this.data.forEach((chip:any) => {
-          if (chip.id == this.selectedStatus) {
-            chip.selected = true;
+   
+    this.allocationEmit.tlsStatus.subscribe((res: any) => {
+      this.selectedStatus = [];
+      this.data.forEach((chip: any) => {
+        chip.selected = false;
+      });
+    
+      if (res.length > 0 && this.data.length > 0) {
+        res.forEach((status: any) => {
+          const matchingChip = this.data.find((chip: any) => chip.id === status);
+          if (matchingChip) {
+            matchingChip.selected = true;
+            this.selectedStatus.push(status);
           }
         });
       }
-    },((error:any)=>{
-      this.api.showToast(error.error.message)
-    }))
-      
+    });
+    
   }
   toggleSelection(card: SortingCard): void {
     card.selected = !card.selected;
   }
-  toggleChipSelection(item: any) {
-    this.selectedStatus = []
-    let id:any = []
-    this.data.forEach((chip:any) => {
-      if (chip !== item) {
-        chip.selected = false;
-      }
-    });
-
-    // Toggle the 'selected' property of the clicked chip
-    item.selected = !item.selected;
-    
-    if(item.selected == true){
-      id.push(item.id)
-      this.selectedStatus = id
-    }
-    
-  }
-  //MULTISELECT**********
   // toggleChipSelection(item: any) {
+  //   this.selectedStatus = []
+  //   let id:any = []
+  //   this.data.forEach((chip:any) => {
+  //     if (chip !== item) {
+  //       chip.selected = false;
+  //     }
+  //   });
+
   //   // Toggle the 'selected' property of the clicked chip
   //   item.selected = !item.selected;
-  
-  //   // Update the selectedStatus array based on the selected items
-  //   this.selectedStatus = this.data.filter(chip => chip.selected).map(selectedChip => selectedChip.id);
+    
+  //   if(item.selected == true){
+  //     id.push(item.id)
+  //     this.selectedStatus = id
+  //   }
     
   // }
+  //MULTISELECT**********
+  toggleChipSelection(item: any) {
+    // Toggle the 'selected' property of the clicked chip
+    item.selected = !item.selected;
+  
+    // Update the selectedStatus array based on the selected items
+    this.selectedStatus = this.data.filter(chip => chip.selected).map(selectedChip => selectedChip.id);
+    
+  }
   
   selectedColumn: string = 'Selected Users'; // By default, 'Selected Users' is selected
 
@@ -82,14 +83,19 @@ export class FilterComponent  implements OnInit {
   reset() {
     this.data.forEach(chip => chip.selected = false);
     this.selectedStatus = [];
+    this.allocationEmit.tlsStatus.next(this.selectedStatus)
     this.modalController.dismiss();
   }
   closeModel(){
     this.modalController.dismiss();
   }
   onSubmit(){
-    this.allocationEmit.tlsStatus.next(this.selectedStatus)
-    //console.log(this.selectedStatus,"SELECTED")
-    this.modalController.dismiss();
+    if(this.selectedStatus.length >0){
+      this.allocationEmit.tlsStatus.next(this.selectedStatus)
+      this.modalController.dismiss();
+    }else{
+      this.api.showToast('Please select any one status')
+    }
   }
+
 }

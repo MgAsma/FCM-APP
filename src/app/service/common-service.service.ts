@@ -11,11 +11,16 @@ export class CommonServiceService implements OnInit {
 
   // Regular expression for mobile number validation (exactly 10 digits, no leading spaces)
   readonly mobilePattern = /^[0-9]{10}$/;
+  
+  readonly emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 
   // Regular expression for password validation (at least 8 characters with special characters)
   readonly passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}$/;
   yearList: any;
-
+  
+  //Pincode 
+  readonly pincode = /^\d{6}$/
+  
   // Common validator function to check if the input value matches the provided pattern
   patternValidator(pattern: RegExp): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {

@@ -24,23 +24,23 @@ export class FilterComponent  implements OnInit {
     private allocationEmit:AllocationEmittersService) { }
 
   ngOnInit() {
-    this.allocationEmit.allocationStatus.subscribe((res:any)=>{
-      if(res.length == 0){
-        this.selectedStatus = []
-        this.data.forEach((chip:any) => {
-          chip.selected = false;
-        });
-      }else{
-        this.data.forEach((chip:any) => {
-          if (chip.id == this.selectedStatus) {
-            chip.selected = true;
+    this.allocationEmit.allocationStatus.subscribe((res: any) => {
+      this.selectedStatus = [];
+      this.data.forEach((chip: any) => {
+        chip.selected = false;
+      });
+    
+      if (res.length > 0 && this.data.length > 0) {
+        res.forEach((status: any) => {
+          const matchingChip = this.data.find((chip: any) => chip.id === status);
+          if (matchingChip) {
+            matchingChip.selected = true;
+            this.selectedStatus.push(status);
           }
         });
       }
-    },((error:any)=>{
-      this.api.showToast(error.error.message)
-    }))
-
+    });
+    
   }
   toggleSelection(card: SortingCard): void {
     card.selected = !card.selected;

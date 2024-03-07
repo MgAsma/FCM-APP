@@ -2,6 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,12 @@ export class ApiService {
 
 
   private leadData: any[] = [];
-  toastr: any;
-  constructor(private http:HttpClient, private loadingCtrl:LoadingController, private toastCtrl:ToastController) { }
+
+  constructor(
+    private http:HttpClient, 
+    private loadingCtrl:LoadingController, 
+    private toastCtrl:ToastController,
+    private toastr:ToastrService) { }
   async showLoading() {
     const loading = await this.loadingCtrl.create({
       message: 'Loading...',

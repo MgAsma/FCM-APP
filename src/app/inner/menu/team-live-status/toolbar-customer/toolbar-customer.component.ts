@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { AddLeadEmitterService } from '../../../../service/add-lead-emitter.service';
 // import { userData } from '../shared-modules/sample-data';
 // import { BaseServiceService } from '../service/base-service.service';
 // import { environment } from 'src/environments/environment';
@@ -18,7 +19,8 @@ export class ToolbarCustomerComponent  implements OnInit {
   private _inputData: any;
   selectedCounselorIds: any = [];
   constructor(
-    private modalController:ModalController) { 
+    private modalController:ModalController,
+    private addEmit:AddLeadEmitterService) { 
       
     }
     @Input()set data(data: any) {
@@ -31,19 +33,56 @@ export class ToolbarCustomerComponent  implements OnInit {
       this._inputData = data;
     }
    
-  ngOnInit() {}
+  ngOnInit() {
+    this.addEmit.tlsCounsellor.subscribe((res:any)=>{
+      this.selectedCounselorIds = [];
+      this.filteredData.forEach((chip: any) => {
+        chip.selected = false;
+      });
+    
+      if (res.length > 0 && this.filteredData.length > 0) {
+        res.forEach((status: any) => {
+          const matchingChip = this.filteredData.find((chip: any) => chip.id === status);
+          if (matchingChip) {
+            matchingChip.selected = true;
+            this.selectedCounselorIds.push(status);
+          }
+        });
+      }
+    })
+  }
   closeModal(event:any) {
     if(event){
       this.selectedCounselorIds = []
-      this.modalController.dismiss();
     }  
   }
-  itemClicked(item: any) {
-   this.selectedCounselorIds.push(item.id)
+  close(){
+    this.modalController.dismiss();
   }
+  // itemClicked(item: any) {
+  //  this.selectedCounselorIds.push(item.id)
+  // }
   onSubmit(){
+    this.addEmit.tlsCounsellor.next(this.selectedCounselorIds)
     this.modalController.dismiss(this.selectedCounselorIds);
-    this.selectedCounselorIds = []
+  }
+  itemClicked(item: any) {
+    const index = this.filteredData.findIndex((chip: any) => chip.id === item.id);
+  
+    if (index !== -1) {
+      // Toggle the selected property of the clicked item
+      this.filteredData[index].selected = !this.filteredData[index].selected;
+  
+      if (this.filteredData[index].selected) {
+        // If the item is selected, add its id to the array
+        if (!this.selectedCounselorIds.includes(item.id)) {
+          this.selectedCounselorIds.push(item.id);
+        }
+      } else {
+        // If the item is deselected, remove its id from the array
+        this.selectedCounselorIds = this.selectedCounselorIds.filter(id => id !== item.id);
+      }
+    }
   }
  // Filter function to update the displayed list based on search term
  updateFilteredData(event:any) {

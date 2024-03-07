@@ -37,11 +37,15 @@ export class AddLeadPage implements OnInit {
   zone:string[] = ['South','North', 'East', 'West'];
   seasons:any = [];
   @Output() addLead = new EventEmitter()
-  userId:any;
+  
   minDateAdapter: string;
   streamList: any;
   adminList: any = [];
   leadStage: any = [];
+  user_id: any;
+  showPicker = false;
+  dateOfBirth = new Date()
+  formatedDate: string;
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -53,10 +57,16 @@ export class AddLeadPage implements OnInit {
    ) {
     let dob = new Date()
     this.minDateAdapter = this._datePipe.transform(dob,'yyyy-MM-dd')
+    this.formatedDate = this._datePipe.transform(this.dateOfBirth,'dd/MM/YYYY')
     }
-
+  dateChanged(value){
+    this.addNewLead.patchValue({
+      dateOfBirth:this._datePipe.transform(value,'yyyy-MM-dd')
+    })
+    this.showPicker = false
+  }
   ngOnInit(): void {
-    this.userId = localStorage.getItem('user_id')
+    this.user_id = localStorage.getItem('user_id')
     this.getCountry();
     this.getState();
     this.getChannel();
@@ -78,7 +88,7 @@ export class AddLeadPage implements OnInit {
     this.getCounselledBy();
     this.getLeadStage()
     this.initForm()
-   }
+  }
   get f() {
     return this.addNewLead.controls;
   }
@@ -87,12 +97,12 @@ export class AddLeadPage implements OnInit {
       firstName: ['', [Validators.required,Validators.pattern(this._commonService.namePattern)]],
       mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern)]],
       alternateNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-      email: ['', [Validators.email]],
+      email: ['', [Validators.pattern(this._commonService.emailPattern)]],
       dateOfBirth:[''],
       state: [''],
       zone:[''],
       cityName: [''],
-      pincode:['',this.pincodeLengthValidator],
+      pincode:['',Validators.pattern(this._commonService.pincode)],
       countryId:[''],
       referenceName:[''],
       referencePhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
@@ -118,28 +128,28 @@ export class AddLeadPage implements OnInit {
       notes:[''],
       remarks:['']
     })
-}
-pincodeLengthValidator(control:FormControl) {
-  const value = control.value;
-
-  if (value && value.toString().length !== 6) {
-    return { invalidPincodeLength: true };
   }
+  pincodeLengthValidator(control:FormControl) {
+    const value = control.value;
 
-  return null;
-}
-getStream(){
-  this._baseService.getData(`${environment.studying_stream}`).subscribe((resp:any)=>{
-  if(resp){
-   this.streamList = resp
-  } 
-  },(error:any)=>{
-    //console.log(error);
-    
+    if (value && value.toString().length !== 6) {
+      return { invalidPincodeLength: true };
+    }
+
+    return null;
   }
+  getStream(){
+    this._baseService.getData(`${environment.studying_stream}`).subscribe((resp:any)=>{
+    if(resp){
+    this.streamList = resp
+    } 
+    },(error:any)=>{
+      //console.log(error);
+      
+    }
 
-  )
-}
+    )
+  }
   
   getCountry(){
     this.api.getAllCountry().subscribe((res:any)=>{
@@ -348,75 +358,7 @@ getStream(){
   clearSelectField(fieldName: string) {
       this.addNewLead.get(fieldName)?.reset();
   }
-  onSubmit(){
-    
-  let f = this.addNewLead.value;
-  let data: any = {
-    user_data: {
-      first_name: f.firstName,
-      last_name: f.lastName,
-      email: f.email,
-      mobile_number: f.mobile,
-      role: 5,
-    },
-    created_by:this.userId,
-    updated_by:this.userId,
-    higest_qualification: f.highestQualification || undefined,
-    campaign_name: f.campaignName || undefined,
-    season_id:f.season || undefined,
-    channel_id:f.channel || undefined,
-    source_id:f.source || undefined,
-    priority_id:f.priority || undefined,
-    refered_to_id:f.referredTo || this.userId,
-    lead_list_status_id:f.status || undefined,
-    lead_list_substatus_id:f.subStatus || undefined,
-    department_id:f.department || undefined,
-    date_of_birth:this._datePipe.transform(f.dateOfBirth,'YYYY-MM-dd')|| undefined,
-    course_id:f.course || undefined,
-    location: f.location || undefined,
-    year_of_passing:f.yearOfPassing || undefined,
-    best_time_to_call:f.callTime || undefined,
-    country_id:f.countryId || undefined,
-    state_id:f.state || undefined,
-    city_id:f.cityName || undefined,
-    role_id:5,
-    new_channel_id:f.newChannel || undefined,
-    campaign_id:f.campaign || undefined,
-    medium_id:f.medium || undefined,
-    level_of_program_id:f.levelOfProgram || undefined,
-    status:f.status || undefined,
-    lead_contact: {
-      alternate_phone_number: f.alternateNumber || undefined,
-      primary_phone_number: f.primaryNumber || undefined,
-      father_phone_number: f.fathersNumber || undefined,
-      mother_phone_number: f.mothersNumber || undefined,
-      alternate_email: f.alternateEmail || undefined,
-      primary_email: f.primaryEmail || undefined,
-      father_email: f.fathersEmail || undefined,
-      mother_email: f.mothersEmail || undefined,
-    },
-  };
-
-data = JSON.parse(JSON.stringify(data));
-    if(this.addNewLead.invalid){
-      this.addNewLead.markAllAsTouched()
-    }
-    else{
-      this._baseService.postData(`${environment.lead_list}`,data).subscribe((res:any)=>{
-        if(res){
-          this.addLead.emit('ADD')
-          this.api.showToast(res.message)
-          this._addLeadEmitter.triggerGet();
-          this.initForm()
-        }
-        else{
-          this.api.showToast("ERROR !")
-        }
-      },((error:any)=>{
-        this.api.showToast(error?.error?.message)
-      }))
-    }
-  }
+  
   step = 0;
 
   setStep(index: number) {
@@ -438,5 +380,73 @@ data = JSON.parse(JSON.stringify(data));
     this.modalController.dismiss()
     this._addLeadEmitter.triggerGet();
   }
+  onSubmit(){
+    let f = this.addNewLead.value;
+    let data:any ={
+      first_name: f['firstName'],
+      last_name: "",
+      email: f['email'] || null,
+      mobile_number:f['mobile'],
+      date_of_birth:this._datePipe.transform(f['dateOfBirth'],'YYYY-MM-dd') || null,
+      alternate_mobile_number:f['alternateNumber'] || null,
+      role: 5,
+      created_by: this.user_id,
+      refered_to: f['counsellor'],
+      location:  null,
+      pincode: f['pincode'] || null,
+      country:f['countryId'],
+      state: f['state'],
+      city: f['cityName'],
+      zone:f['zone'],
+      reference_name:f['referenceName'],
+      reference_mobile_number:f['referencePhoneNumber'] || null,
+      father_name:f['fatherName'],
+      father_occupation:f['fatherOccupation'],
+      father_mobile_number:f['fatherPhoneNumber'] || null,
+      tenth_per: f['tenthPercentage'] || null,
+      twelfth_per: f['twelthPercentage'] || null,
+      degree_per: f['degree'] || null,
+      stream: f["course"],
+      others: f["otherCourse"],
+      enterance_exam: f["entranceExam"],
+      course_looking_for: f["courseLookingfor"],
+      lead_list_status:f['leadStatus'],
+      lead_list_substatus: null,
+      counselled_by:f['counsellorAdmin'],
+      lead_stage: f['leadStages'],
+      source: f['leadSource'],
+      preferance_college_and_location: 
+              {
+                preferred_college1: f["preferredCollege1"],
+                preferred_college2: f["preferredCollege2"],
+                preferred_location1: f["preferredLocation1"],
+                preferred_location2: f["preferredLocation2"]
+              },
+      note_name:f['notes'],
+      created_note_remark_by:this.user_id,
+      remark_name:f['remarks']
+    }
+  
+     data = JSON.parse(JSON.stringify(data));
+      if(this.addNewLead.invalid){
+        this.addNewLead.markAllAsTouched()
+        this.api.showError("Please Fill The Mandatory Fields")
+      }
+      else{
+        this._baseService.postData(`${environment.lead_list}`,data).subscribe((res:any)=>{
+          if(res){
+            this.addLead.emit('ADD')
+            this.api.showToast(res.message)
+            this._addLeadEmitter.triggerGet();
+            this.initForm()
+          }
+          else{
+            this.api.showToast("ERROR !")
+          }
+        },((error:any)=>{
+          this.api.showToast(error?.error?.message)
+        }))
+      }
+    }
 }
 

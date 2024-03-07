@@ -26,7 +26,7 @@ export const environment = {
   leadPayment:`/api/send-payment-link/`,
   paymentDetails:`/api/payment-details/`,
   rec_follow_up:`/api/rec-follow-up/`,
-  tls_counsellor:`/api/counsellor-sts-typ/`,
+  tls_counsellor:`/api/counsellor-status-type/`,
   call_logs:`/api/call-logs/`,
   counsellor_status:`/api/counsellor-status/`,
   call_log_status:`/api/call-logs-status/`,

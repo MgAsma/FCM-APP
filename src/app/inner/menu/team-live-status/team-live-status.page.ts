@@ -5,6 +5,7 @@ import { AllocationEmittersService } from '../../../service/allocation-emitters.
 import { ApiService } from '../../../service/api/api.service';
 import { BaseServiceService } from '../../../service/base-service.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { AddLeadEmitterService } from '../../../service/add-lead-emitter.service';
 
 
 @Component({
@@ -35,17 +36,21 @@ export class TeamLiveStatusPage implements OnInit {
       ]
   filterByStatus: any;
   user_role: any;
-  counsellor_ids: any;
+  counsellor_ids: any = [];
   pageSize: any = 10;
   user_id: string;
+  statusFilter: boolean = false;
+  searchTerm: any;
+  defaultData: boolean = false;
   constructor(
     private allocate:AllocationEmittersService,
     private modalController:ModalController,
     private api:ApiService,
     private baseService:BaseServiceService,
+    private addEmit:AddLeadEmitterService
     ) { 
     this.user_id=localStorage.getItem('user_id')
-    this.user_role=localStorage.getItem('user_role')?.toLocaleUpperCase()
+    this.user_role=localStorage.getItem('user_role')?.toUpperCase()
   }
 
   
@@ -58,7 +63,7 @@ export class TeamLiveStatusPage implements OnInit {
       this.api.showToast(error.error.message)
     })
   }
-  ngOnInit() {
+   ngOnInit() {
     this.getStatus()
     this.allocate.searchBar.subscribe((res)=>{
       if(res === true){
@@ -68,33 +73,59 @@ export class TeamLiveStatusPage implements OnInit {
       }
     })
     let query:any;
+    this.addEmit.tlsCounsellor.subscribe((res) => {
+      if(res.length > 0){
+        this.counsellor_ids = res
+      }
+    })
     this.allocate.tlsStatus.subscribe((res:any)=>{
       if(res.length>0){
-        query = `status_id=${res}`
+        this.statusFilter = true
+        query = `status_id=${res}&page=${this.currentPage}&page_size=${this.pageSize}`
         this.getLiveStatus(query)
       }else{
-        query = ``
-        this.getLiveStatus(query)
+        if(this.counsellor_ids){
+          let params =`page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`
+          this.getLiveStatus(params)
+        }else{
+          let params =`page=1&page_size=10`
+          this.getLiveStatus(params)
+        }
       }
     },((error:any)=>{
       this.api.showToast(error.error.message)
     }))
-    // query = ``
-    // this.getLiveStatus(query)
+   
     this.getCounselor()
+    
    
   }
   goBack(){
     window.history.back();
   }
   onPageChange(event: any, dataSource: MatTableDataSource<any>,type?:any) {
+    let query:any;
     if(event){
       this.currentPage = event.pageIndex + 1;
-        let query:any;
-         query = `&page=${this.currentPage}&page_size=${event.pageSize}`
-         this.getLiveStatus(query)
+      query = `&page=${this.currentPage}&page_size=${event.pageSize}`
     } 
-
+   
+    if(this.statusFilter){
+     this.allocate.tlsStatus.subscribe((res:any)=>{
+      if(res.length>0){
+        this.statusFilter = true
+        query += `&status_id=${res}`
+       
+      }
+    })
+    }
+    //  if (this.counsellor_ids) {
+    //   query += `&counsellor_ids=${this.counsellor_ids}`
+    // }
+    if(this.searchTerm){
+      query += `&key=${this.searchTerm}`
+    }
+    this.getLiveStatus(query)
   }
   getCounselor(){
     this.baseService.getData(`${environment._user}/?role_name=counsellor`).subscribe((res:any)=>{
@@ -107,14 +138,27 @@ export class TeamLiveStatusPage implements OnInit {
     }))
    
    }
-   onEmit(event:any){
+   onEmit(event:any){ 
+    let query: any;
     if (event) {
-      let query: any;
-      this.counsellor_ids = event;
-      query = `page=${this.currentPage}&page_size=${this.pageSize}&counsellor_ids=${event}`;
-      this.getLiveStatus(query)
+      // this.counsellor_ids = event;
+      this.addEmit.tlsCounsellor.next(event)
+      query = `page=${this.currentPage}&page_size=${this.pageSize}&counsellor_ids=${this.counsellor_ids}`;
+  
+    if(this.statusFilter){
+      this.allocate.tlsStatus.subscribe((res:any)=>{
+       if(res.length>0){
+         this.statusFilter = true
+         query += `&status_id=${res}`
+        
+       }
+     })
+     }
+     if(this.searchTerm){
+       query += `&key=${this.searchTerm}`
+     }
+     this.getLiveStatus(query)
     }
-
   }
   
   handleRefresh(event:any) {
@@ -129,12 +173,17 @@ export class TeamLiveStatusPage implements OnInit {
     }, 2000);
   }
   getLiveStatus(query:any){
-    if(this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER_ADMIN' || this.user_role == 'ADMIN' ){
+    this.followupDetails = []
+    this.data = []
+    this.totalNumberOfRecords = []
+    if(this.user_role !== 'COUNSELLOR' ){
       this.api.getTeamLiveStatus(`?${query}`).subscribe(
         (resp:any)=>{
+          if(resp.results.length === 0){
+            this.defaultData = true
+          }
           this.followupDetails=resp.results
           this.data = new MatTableDataSource<any>(this.followupDetails);
-          console.log(this.data.data,"DATA")
           this.totalNumberOfRecords = resp.total_no_of_record
         },
         (error:any)=>{
@@ -144,9 +193,11 @@ export class TeamLiveStatusPage implements OnInit {
     }else{
       this.api.getTeamLiveStatus(`?counsellor_id=${this.user_id}&${query}`).subscribe(
         (resp:any)=>{
+          if(resp.results.length === 0){
+            this.defaultData = true
+          }
           this.followupDetails=resp.results
           this.data = new MatTableDataSource<any>(this.followupDetails);
-          console.log(this.data.data,"DATA")
           this.totalNumberOfRecords = resp.total_no_of_record
         },
         (error:any)=>{
@@ -154,18 +205,28 @@ export class TeamLiveStatusPage implements OnInit {
         }
       )
     }
-   
+  
   }
+  // resetPage(){
+  //   if(this.defaultData){
+  //    let query = `page=${this.currentPage}&page_size=${this.pageSize}`
+  //     this.getLiveStatus(query)
+  //   }
+  // }
   searchTermChanged(event:any) {
     let query:any;
-    query = `key=${event}`
-    this.allocate.tlsStatus.subscribe((res:any)=>{
-      if(res.length>0){
-        query += `&status_id=${res}`
+    query = `key=${event}&page=${this.currentPage}&page_size=${this.pageSize}`
+    this.searchTerm = event
+    if(this.statusFilter){
+      this.allocate.tlsStatus.subscribe((res:any)=>{
+       if(res.length>0){
+         query += `&status_id=${res}`
        }
-    },((error:any)=>{
-      this.api.showToast(error.error.message)
-    }))
+     })
+     }
+    if (this.counsellor_ids) {
+       query += `&counsellor_ids=${this.counsellor_ids}`
+     }
      this.getLiveStatus(query)
   }
 

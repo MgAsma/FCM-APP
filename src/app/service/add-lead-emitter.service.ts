@@ -12,6 +12,10 @@ export class AddLeadEmitterService {
   triggerGetFilter$ = this.triggerGetFilter.asObservable();
   leadFilter = new BehaviorSubject('')
   leadFilterIcon = new BehaviorSubject('')
+  filterStatus = new BehaviorSubject(false)
+  selectedCounsellor = new BehaviorSubject([])
+  callLogCounsellor = new BehaviorSubject([])
+  tlsCounsellor = new BehaviorSubject([])
   triggerGet() {
     this.triggerGetSource.next();
   }

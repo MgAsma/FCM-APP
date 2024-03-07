@@ -3,11 +3,10 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 
 import { IonModal, ModalController } from '@ionic/angular';
 
-
-import { FilterComponent } from '../filter/filter.component';
 import { ToolbarCustomerComponent } from '../toolbar-customer/toolbar-customer.component';
 import { AllocationEmittersService } from '../../../../service/allocation-emitters.service';
 import { SortingCard, arrayOfObjects, sortingCards } from '../../../../shared-modules/sample-data';
+import { FilterComponent } from '../filter/filter.component';
 
 
 @Component({
@@ -23,10 +22,13 @@ export class ToolbarTopComponent  implements OnInit {
   sortingCards: SortingCard[] = sortingCards;
   arrayOfObjects = arrayOfObjects
   @Output()people = new EventEmitter();
+  user_role: string;
   constructor(
     private allocate:AllocationEmittersService,
     private modalController:ModalController
-    ) { }
+    ) { 
+      this.user_role= localStorage.getItem('user_role').toLowerCase()
+    }
 
   ngOnInit() {}
   enableSearchOption(){

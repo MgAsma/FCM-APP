@@ -23,10 +23,13 @@ export class ToolbarTopComponent  implements OnInit {
   sortingCards: SortingCard[] = sortingCards;
   arrayOfObjects = arrayOfObjects
   @Output()people = new EventEmitter();
+  user_role: string;
   constructor(
     private allocate:AllocationEmittersService,
     private modalController:ModalController
-    ) { }
+    ) { 
+      this.user_role = localStorage.getItem('user_role').toLowerCase()
+    }
 
   ngOnInit() {}
   enableSearchOption(){

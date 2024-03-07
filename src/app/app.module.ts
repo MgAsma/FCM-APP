@@ -18,6 +18,24 @@ import { RouteReuseStrategy } from '@angular/router';
 import { RecFollowupListPage } from './shared-modules/rec-followup-list/rec-followup-list.page';
 import { MaterialModule } from './shared-modules/material/material/material.module';
 
+// import {
+//   NgxUiLoaderHttpModule, NgxUiLoaderModule,
+//   NgxUiLoaderConfig,
+//   SPINNER,
+//   POSITION,
+//   PB_DIRECTION,
+// } from "ngx-ui-loader";
+import { ToastrModule } from 'ngx-toastr';
+// const ngxUiLoaderConfig: NgxUiLoaderConfig = {
+//   bgsColor: "red",
+//   bgsPosition: POSITION.bottomCenter,
+//   bgsSize: 20,
+//   bgsType: SPINNER.rectangleBouncePulseOutRapid, // background spinner type
+//   fgsType: SPINNER.rectangleBouncePulseOutRapid, // foreground spinner type
+//   pbDirection: PB_DIRECTION.leftToRight, // progress bar direction
+//   pbThickness: 5, // progress bar thickness
+//   fgsSize:50
+// };
 @NgModule({
   imports: [
     BrowserModule,
@@ -31,12 +49,21 @@ import { MaterialModule } from './shared-modules/material/material/material.modu
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production
     }),
-    
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass:"toast-top-right",
+      preventDuplicates: true,
+      // closeButton:true,
+    }),
   ],exports:[
     MaterialModule
   ],
   declarations: [AppComponent],
-  providers: [InAppBrowser,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },{provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },DatePipe],
+  providers: [
+    InAppBrowser,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+    DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

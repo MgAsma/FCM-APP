@@ -53,14 +53,14 @@
         <ion-list #customer>
           <ion-item *ngFor="let item of filteredData" (click)="itemClicked(item)">
             <ion-label>{{ item?.first_name }}</ion-label>
-            <ion-checkbox slot="end" [(ngModel)]="item.selected"></ion-checkbox>
+            <ion-checkbox slot="end" [checked]="item.selected"></ion-checkbox>
           </ion-item>
         </ion-list>
       </div>
       <ion-row>
         <ion-col class="text-center">
-          <ion-button shape="round" fill="outline" (click)="closeModal($event)">Close</ion-button>
-          <ion-button shape="round" color="primary" (click)="onSubmit()">Done</ion-button>
+          <ion-button shape="round" fill="outline" (click)="resetModel()">RESET</ion-button>
+          <ion-button shape="round" color="primary" (click)="onSubmit()">APPLY</ion-button>
         </ion-col>
       </ion-row>
     </div>

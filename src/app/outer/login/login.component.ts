@@ -63,7 +63,7 @@ export class LoginComponent  implements OnInit {
 			this.loginForm.markAllAsTouched()
 		}
 		else{
-      this.api.showLoading()
+      // this.api.showLoading()
 		  this.api.login(this.loginForm.value).subscribe(
 			(resp:any)=>{
         if(resp){
@@ -82,17 +82,18 @@ export class LoginComponent  implements OnInit {
           this.loginForm.reset()
           this.navCtrl.navigateRoot('/inner')
           // this.router.navigate(['../inner'])
-          this.api.showToast(resp.message)
+          this.api.showSuccess(resp.message)
         }
       
 			},
 			(error:any)=>{
-        this.api.loaderDismiss()
-        this.api.showToast(error.error.message)
+        // this.api.loaderDismiss()
+        this.api.showError(error.error.message)
        // this.api.showToast(error.error.error.message)
 			}
 		  )
 		}
+    // this.api.loaderDismiss()
 	  }
    
 }

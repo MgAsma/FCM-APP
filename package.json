@@ -54,6 +54,7 @@
     "core-js": "^3.6.4",
     "ionic": "^5.4.16",
     "jwt-decode": "^4.0.0",
+    "ngx-toastr": "^18.0.0",
     "rxjs": "^7.8.0",
     "sw-toolbox": "3.6.0",
     "tslib": "^2.0.0",
