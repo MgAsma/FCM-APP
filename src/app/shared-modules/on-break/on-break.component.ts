@@ -28,7 +28,7 @@ export class OnBreakComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.id = localStorage.getItem('user_id');
+    this.id = sessionStorage.getItem('user_id');
     this.initForm();
   }
   initForm() {

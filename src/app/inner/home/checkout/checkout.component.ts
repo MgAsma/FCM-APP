@@ -17,7 +17,7 @@ export class CheckoutComponent  implements OnInit {
   constructor(private popoverController:PopoverController,private api:ApiService,private _fb:FormBuilder,private router:Router) { }
 
   ngOnInit(): void {
-    this.id=localStorage.getItem('user_id')
+    this.id=sessionStorage.getItem('user_id')
     this.initForm()
   }
   initForm(){
@@ -35,6 +35,7 @@ export class CheckoutComponent  implements OnInit {
       this.logoutForm.patchValue({logged_in_from:"mobile"})
       if(this.logoutForm.invalid){
         console.log("Invalid");	
+        this.router.navigate(['../outer'])
       }
       else{
         this.api.showLoading()
@@ -43,7 +44,7 @@ export class CheckoutComponent  implements OnInit {
           this.logoutForm.reset()
           this.api.loaderDismiss()
           this.close()
-          localStorage.clear()
+          sessionStorage.clear()
  
           this.router.navigate(['../outer'])
           this.api.showToast(resp.message)
@@ -52,7 +53,8 @@ export class CheckoutComponent  implements OnInit {
         (error:any)=>{
           this.api.loaderDismiss()
           this.api.showToast(error.error.message)
-         
+          sessionStorage.clear()
+          this.router.navigate(['../outer'])
         }
         )
       }

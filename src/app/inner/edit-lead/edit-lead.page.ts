@@ -66,7 +66,7 @@ export class EditLeadPage implements OnInit {
       this.showPicker = false
     }
   ngOnInit(): void {
-    this.user_id = localStorage.getItem('user_id')
+    this.user_id = sessionStorage.getItem('user_id')
     this.getCountry();
     this.getState();
     this.getChannel();
@@ -106,7 +106,7 @@ export class EditLeadPage implements OnInit {
             dateOfBirth: lead.date_of_birth,
             state: lead.state,
             zone: lead.zone,
-            course:lead.course,
+            course:lead.stream,
             cityName: lead.city,
             pincode: lead.pincode,
             countryId: lead.country,
@@ -130,8 +130,8 @@ export class EditLeadPage implements OnInit {
             leadSource: lead.source,
             leadStages: lead.lead_stage,
             leadStatus: lead.lead_list_status,
-            notes: lead.notes,
-            remarks: lead.remark
+            notes: lead.note_name,
+            remarks: lead.remark_name
           });
         }
       },
@@ -157,9 +157,9 @@ export class EditLeadPage implements OnInit {
       fatherName:[''],
       fatherOccupation:[''],
       fatherPhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
-      tenthPercentage :[''],
-      twelthPercentage :[''],
-      degree:[''],
+      tenthPercentage :['',Validators.pattern(this._commonService.nonNegativeValidator)],
+      twelthPercentage :['',Validators.pattern(this._commonService.nonNegativeValidator)],
+      degree:['',Validators.pattern(this._commonService.nonNegativeValidator)],
       course:[''],
       otherCourse:[''],
       entranceExam:[''],
@@ -177,6 +177,8 @@ export class EditLeadPage implements OnInit {
       remarks:['']
     })
   }
+   
+
   pincodeLengthValidator(control:FormControl) {
     const value = control.value;
 
@@ -422,7 +424,6 @@ export class EditLeadPage implements OnInit {
   }
   close(){
     this.modalController.dismiss()
-    this._addLeadEmitter.triggerGet();
   }
   closeModal(){
     this.modalController.dismiss()

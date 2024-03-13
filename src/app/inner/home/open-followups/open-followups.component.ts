@@ -11,7 +11,7 @@ export class OpenFollowupsComponent  implements OnInit {
   id:any;
   followupDetails:any=[]
   constructor(private api:ApiService) { 
-    this.id=localStorage.getItem('user_id')
+    this.id=sessionStorage.getItem('user_id')
   }
 
   ngOnInit() {

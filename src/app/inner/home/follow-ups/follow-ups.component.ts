@@ -28,7 +28,7 @@ export class FollowUpsComponent  implements OnInit {
   data:any=[]
 
   constructor(private allocate:AllocationEmittersService,private modalController:ModalController,private api:ApiService,  private baseService:BaseServiceService,) { 
-    this.id=localStorage.getItem('user_id')
+    this.id=sessionStorage.getItem('user_id')
   }
 
 

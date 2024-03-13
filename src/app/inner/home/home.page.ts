@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { StartBreakComponent } from './start-break/start-break.component';
@@ -8,10 +8,12 @@ import { StartBreakComponent } from './start-break/start-break.component';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit,AfterViewInit {
 userName:any
   constructor(private popoverController:PopoverController) {
-  this.userName=localStorage.getItem('username')
+  }
+  ngAfterViewInit(): void {
+    this.userName=sessionStorage.getItem('username')
   }
 
   ngOnInit() {
@@ -36,6 +38,6 @@ userName:any
     );
     return await popover.present();
     }
-
+   
 
 }

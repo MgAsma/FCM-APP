@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
     this.initializeApp();
 
 
-    let token = localStorage.getItem('token');
+    let token = sessionStorage.getItem('token');
 if(token){
   this.navCtrl.navigateRoot("/inner")
 }

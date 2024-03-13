@@ -55,8 +55,8 @@ export class CallLogPage implements OnInit {
     private fb:FormBuilder,
     private addEmiter:AddLeadEmitterService,
   ) {
-    this.user_role = localStorage.getItem('user_role')?.toUpperCase()
-    this.user_id = localStorage.getItem('user_id')
+    this.user_role = sessionStorage.getItem('user_role')?.toUpperCase()
+    this.user_id = sessionStorage.getItem('user_id')
     let today = new Date()
     this.maxStartDate = this.datepipe.transform(today,'YYYY-MM-dd')
     
@@ -87,27 +87,36 @@ export class CallLogPage implements OnInit {
   }
   
   ngOnInit() {
-    
+    this.addEmiter.callLogCounsellor.subscribe((res) => {
+      if(res.length > 0){
+        this.counsellor_ids = res
+      }
+    })
+    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_id=${this.user_id}&page=1&page_size=10 `
+    :'?page=1&page_size=10';
     this.allocate.callLogStatus.subscribe(
       (res: any) => {
         if(res.length >0){
           this.statusFilter = true;
-          this.handleCallLogStatus(res);
+          query +=`&status=${res}`
+        }if(this.counsellor_ids.length >0){
+          query +=`&counsellor_ids=${this.counsellor_ids}`
         }
+        this.callLogCards = []
+        this.data = []  
+        this.baseService.getData(`${environment.call_logs}${query}`).subscribe((res:any)=>{
+          if(res){
+           this.callLogCards = res.results;
+           this.data = new MatTableDataSource<any>(this.callLogCards);
+           this.totalNumberOfRecords = res.total_no_of_record 
+          }
+        },((error:any)=>{
+          this.api.showToast(error?.error.message)
+        }))
       }
     );
     this.setupSearchBarSubscription();
-    this.addEmiter.callLogCounsellor.subscribe((res) => {
-      if(res.length > 0){
-        this.counsellor_ids = res
-        let params = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? 
-      `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${res}`:
-      `?page=1&page_size=10&counsellor_ids=${res}`
-      this.getCallLogs(params)
-      }else{
-        this.initializeCallLogs();
-      }
-    })
+   
   }
   initForm(){
     this.dateForm = this.fb.group({
@@ -122,31 +131,7 @@ export class CallLogPage implements OnInit {
    
   }
   
-  //  setupCallLogStatusSubscription() {
-   
-  // }
   
-   handleCallLogStatus(status: any) {
-    if(status){
-    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}`: `?page=${this.currentPage}&page_size=${this.pageSize}`
-    if(status){
-    query +=`&status=${status}`;
-    }
-    // if(this.dateFilter){
-    //   query += `&from_date=${this.sdate}&to_date=${this.edate}`
-    // }
-     if (this.counsellor_ids) {
-      query += `&counsellor_ids=${this.counsellor_ids}`
-    }
-    this.getCallLogs(query);
-  }
-  }
-  
-  private initializeCallLogs() {
-    const query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_id=${this.user_id} `:'';
-    this.getCallLogs(query);
-  }
-  //**********************************************************/
   
   onStartDateChange(event: CustomEvent) {
     if(event){
@@ -211,11 +196,14 @@ export class CallLogPage implements OnInit {
     setTimeout(() => {
       this.callLogCards = []
       this.data = []
-      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
-      this.getCallLogs(query)
+     
       this.addEmiter.filterStatus.next(true)
       this.allocate.callLogStatus.next([])
       this.addEmiter.callLogCounsellor.next([])
+      this.dateForm.reset()
+      this.allocate.searchBar.next(false)
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
+      this.getCallLogs(query)
       event.target.complete();
     }, 2000);
   }
@@ -287,7 +275,7 @@ export class CallLogPage implements OnInit {
     if(this.statusFilter){
       this.allocate.callLogStatus.subscribe(
        (res: any) => {
-         if (res) {
+         if (res.length >0) {
            query += `&status=${res}`;
          }
        },
@@ -296,7 +284,7 @@ export class CallLogPage implements OnInit {
        }
      );
     }
-     if (this.counsellor_ids) {
+     if (this.counsellor_ids.length >0) {
       query += `&counsellor_ids=${this.counsellor_ids}`
     }
   
@@ -312,7 +300,7 @@ export class CallLogPage implements OnInit {
     if(this.statusFilter){
      this.allocate.callLogStatus.subscribe(
       (res: any) => {
-        if (res) {
+        if (res.length >0) {
           query += `&status=${res}`;
         }
       }
@@ -321,19 +309,20 @@ export class CallLogPage implements OnInit {
     if(this.dateFilter){
       query += `&from_date=${this.sdate}&to_date=${this.edate}`
     }
-    if(this.statusFilter){
-      this.allocate.callLogStatus.subscribe(
-       (res: any) => {
-         if (res) {
-           query += `&status=${res}`;
-         }
-       }
-     );
-    }
-     if (this.counsellor_ids) {
+   
+     if (this.counsellor_ids.length >0) {
       query += `&counsellor_ids=${this.counsellor_ids}`
     }
-  
-    this.getCallLogs(query);
+    this.callLogCards = []
+    this.data = []  
+    this.baseService.getData(`${environment.call_logs}${query}`).subscribe((res:any)=>{
+      if(res){  
+       this.callLogCards = res.results;
+       this.data = new MatTableDataSource<any>(this.callLogCards);
+       this.totalNumberOfRecords = res.total_no_of_record 
+      }
+    },((error:any)=>{
+      this.api.showToast(error?.error.message)
+    }))
   }
 }

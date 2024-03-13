@@ -28,7 +28,7 @@ export class LoginComponent  implements OnInit {
   private api:ApiService,
   private datePipe: DatePipe,
   private commonService:CommonServiceService,
-  private navCtrl:NavController
+  private navCtrl:Router
   
   ){}
  
@@ -67,21 +67,20 @@ export class LoginComponent  implements OnInit {
 		  this.api.login(this.loginForm.value).subscribe(
 			(resp:any)=>{
         if(resp){
+          sessionStorage.clear()
           console.log(resp,"RESP")
           const currentDate = new Date();
+
           const formattedDate :any = this.datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss.SSSZ');
-          localStorage.setItem('lastLoginDate', formattedDate);
-          localStorage.setItem('token',resp.token.token)
+          sessionStorage.setItem('lastLoginDate', formattedDate);
+          sessionStorage.setItem('token',resp.token.token)
          
           const decodedToken:any = jwtDecode(resp.token.token);
-          localStorage.setItem('user_role',decodedToken.user_role)
-          localStorage.setItem('user_id',decodedToken.user_id)
-          // localStorage.setItem('superadmin_or_admin',decodedToken.superadmin_or_admin)
-          localStorage.setItem('username',decodedToken.username)
-          this.api.loaderDismiss()
+          sessionStorage.setItem('user_role',decodedToken.user_role)
+          sessionStorage.setItem('user_id',decodedToken.user_id)
+          sessionStorage.setItem('username',decodedToken.username)
           this.loginForm.reset()
-          this.navCtrl.navigateRoot('/inner')
-          // this.router.navigate(['../inner'])
+          this.navCtrl.navigate(['/inner'])
           this.api.showSuccess(resp.message)
         }
       

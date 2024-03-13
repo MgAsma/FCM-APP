@@ -7,6 +7,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
+  ViewChild,
 } from "@angular/core";
 import { ModalController, Platform } from "@ionic/angular";
 
@@ -25,12 +26,12 @@ import { EditLeadPage } from "../edit-lead/edit-lead.page";
   templateUrl: "./allocations.page.html",
   styleUrls: ["./allocations.page.scss"],
 })
-export class AllocationsPage implements OnInit {
+export class AllocationsPage implements AfterViewInit  {
   searchBar: boolean = false;
   placeholderText = "Search by Name";
   data: any = [];
   leadCards: any;
-  totalNumberOfRecords: any;
+  totalNumberOfRecords: any = 0;
   currentPage: any = 1;
   counselor: any = [];
   filteredData: any = [];
@@ -57,6 +58,9 @@ export class AllocationsPage implements OnInit {
   callStartTime!: Date;
   user_role: string;
   statusFilter: boolean = false;
+  // allPaginator: any;
+  @ViewChild('paginator', { static: true }) paginator: MatPaginator;
+  pageIndex: number;
 
   constructor(
     private allocate: AllocationEmittersService,
@@ -68,9 +72,9 @@ export class AllocationsPage implements OnInit {
     private _addLeadEmitter: AddLeadEmitterService,
     private modalController:ModalController
   ) {
-    this.user_role = localStorage.getItem('user_role')?.toUpperCase()
+    this.user_role = sessionStorage.getItem('user_role')?.toUpperCase()
 
-    this.counsellor_id = localStorage.getItem("user_id");
+    this.counsellor_id = sessionStorage.getItem("user_id");
 
     this.platform.ready().then(() => {
       this.callLog
@@ -231,9 +235,9 @@ export class AllocationsPage implements OnInit {
     );
   }
  
-  ngOnInit() {
-    this.user_id = localStorage.getItem('user_id')
-   
+  ngAfterViewInit() {
+    this.pageIndex = 0
+    this.user_id = sessionStorage.getItem('user_id')
     this.getStatus();
     this.allocate.searchBar.subscribe((res) => {
       if (res === true) {
@@ -242,53 +246,69 @@ export class AllocationsPage implements OnInit {
         this.searchBar = false;
       }
     });
+    
     let query: any;
+    this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
+      if(res){
+        this.counsellor_ids = res
+      } 
+    });
+    
     this.allocate.allocationStatus.subscribe(
       (res: any) => {
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
         if (res.length >0) {
           this.statusFilter = true
-          query = `?status=${res}&page=1&page_size=10`;
-          this.getLeadlist(query);
-        }else{
-          query = `?page=1&page_size=10`;
-          this.getLeadlist(query);
+          query += `&status=${res}`;
         }
+        if(this.counsellor_ids.length > 0){
+          query += `&counsellor_id=${this.counsellor_ids}`;
+        }
+        this.leadCards = []
+        this.data = []
+        this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
+          if (res.results) {
+            this.leadCards = res.results;
+            this.data = new MatTableDataSource<any>(this.leadCards);
+            this.totalNumberOfRecords = res.total_no_of_record
+          }
+        }, (error: any) => {
+          this.api.showToast(error.error.message);
+        });
+        
       },
       (error: any) => {
         this.api.showToast(error.error.message);
       }
     );
-    this._addLeadEmitter.triggerGet$.subscribe(() => {
-      query = `?page=1&page_size=10`;
-      this.getLeadlist(query);
-    });
-    // query = `page=1&page_size=10`;
-    // this.getLeadlist(query);
-    this.getCounselor();
-    this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
-      if(res){
-        query = `?page=1&page_size=10&counsellor_ids=${res}`;
+   
+    this._addLeadEmitter.triggerGet$.subscribe((res:any) => {
+        let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
         this.getLeadlist(query);
-      } 
-    });
+     });
+
+    this.getCounselor();
+   
   }
  
   handleRefresh(event: any) {
     setTimeout(() => {
       this.leadCards = [];
       this.data = [];
+      this.totalNumberOfRecords = 0
       this.allocate.allocationStatus.next('')
-      let query = `?page=1&page_size=10`;
+      this._addLeadEmitter.selectedCounsellor.next([])
+      this.allocate.searchBar.next(false)
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
       this.getLeadlist(query);
       event.target.complete();
     }, 2000);
   }
-
+ 
   getLeadlist(query:any){
-    
+   
    this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
      if (res.results) {
-     
        this.leadCards = res.results;
        this.data = new MatTableDataSource<any>(this.leadCards);
        this.totalNumberOfRecords = res.total_no_of_record
@@ -304,7 +324,7 @@ export class AllocationsPage implements OnInit {
       this.currentPage = event.pageIndex + 1;
       this.pageSize = event.pageSize;
     }
-  
+   
     let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:
     `?page=${this.currentPage}&page_size=${this.pageSize}`
     if (this.searchTerm) {
@@ -324,12 +344,20 @@ export class AllocationsPage implements OnInit {
        }
      );
     }
-     if (this.counsellor_ids) {
-      query += `&counsellor_ids=${this.counsellor_ids}`
+     if (this.counsellor_ids.length >0) {
+      query += `&counsellor_id=${this.counsellor_ids}`
     }
-  
-      this.getLeadlist(query);
-    
+     
+      this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
+        if (res.results) {
+          this.leadCards = res.results;
+          this.data = new MatTableDataSource<any>(this.leadCards);
+          this.totalNumberOfRecords = res.total_no_of_record
+        }
+      }, (error: any) => {
+        this.api.showToast(error.error.message);
+      });
+      
   }
   
 
@@ -347,14 +375,15 @@ export class AllocationsPage implements OnInit {
         }
       );
   }
+
   onEmit(event: any) {
     
     if(event){
       this.counsellor_ids = event
       this._addLeadEmitter.selectedCounsellor.next(event)
         let params = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? 
-        `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${this.pageSize}&counsellor_ids=${event}`:
-        `?page=${this.currentPage}&page_size=${this.pageSize}&counsellor_ids=${event}`
+        `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_id=${event}`:
+        `?page=1&page_size=10&counsellor_id=${event}`
         if(this.statusFilter){
           this.allocate.allocationStatus.subscribe(
            (res: any) => {
@@ -373,11 +402,10 @@ export class AllocationsPage implements OnInit {
 
   searchTermChanged(event: any) {
     this.searchTerm = event
-    
-
-    this.searchTerm = event
-    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${this.pageSize}&key=${event}`:
-    `?page=${this.currentPage}&page_size=${this.pageSize}&key=${event}`
+    this.leadCards = []
+    this.data = []
+    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`:
+    `?page=1&page_size=10&key=${event}`
     if(this.statusFilter){
      this.allocate.callLogStatus.subscribe(
       (res: any) => {
@@ -397,11 +425,20 @@ export class AllocationsPage implements OnInit {
        }
      );
     }
-     if (this.counsellor_ids) {
-      query += `&counsellor_ids=${this.counsellor_ids}`
+     if (this.counsellor_ids.length >0) {
+      query += `&counsellor_id=${this.counsellor_ids}`
     }
-    this.getLeadlist(query);
+    this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
+      if (res.results) {
+        this.leadCards = res.results;
+        this.data = new MatTableDataSource<any>(this.leadCards);
+        this.totalNumberOfRecords = res.total_no_of_record
+      }
+    }, (error: any) => {
+      this.api.showToast(error.error.message);
+    });
   }
+
   async editLead(allocate) {
     const modal = await this.modalController.create({
       component: EditLeadPage, // Replace with your modal content page
@@ -413,4 +450,5 @@ export class AllocationsPage implements OnInit {
     });
     return await modal.present();
   }
+ 
 }

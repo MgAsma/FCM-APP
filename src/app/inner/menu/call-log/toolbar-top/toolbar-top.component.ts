@@ -27,7 +27,7 @@ export class ToolbarTopComponent  implements OnInit {
     private allocate:AllocationEmittersService,
     private modalController:ModalController
     ) { 
-      this.user_role= localStorage.getItem('user_role').toLowerCase()
+      this.user_role= sessionStorage.getItem('user_role').toLowerCase()
     }
 
   ngOnInit() {}

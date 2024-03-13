@@ -66,7 +66,7 @@ export class AddLeadPage implements OnInit {
     this.showPicker = false
   }
   ngOnInit(): void {
-    this.user_id = localStorage.getItem('user_id')
+    this.user_id = sessionStorage.getItem('user_id')
     this.getCountry();
     this.getState();
     this.getChannel();
@@ -109,9 +109,9 @@ export class AddLeadPage implements OnInit {
       fatherName:[''],
       fatherOccupation:[''],
       fatherPhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
-      tenthPercentage :[''],
-      twelthPercentage :[''],
-      degree:[''],
+      tenthPercentage :['',Validators.pattern(this._commonService.nonNegativeValidator)],
+      twelthPercentage :['',Validators.pattern(this._commonService.nonNegativeValidator)],
+      degree:['',Validators.pattern(this._commonService.nonNegativeValidator)],
       course:[''],
       otherCourse:[''],
       entranceExam:[''],
@@ -129,6 +129,7 @@ export class AddLeadPage implements OnInit {
       remarks:['']
     })
   }
+ 
   pincodeLengthValidator(control:FormControl) {
     const value = control.value;
 

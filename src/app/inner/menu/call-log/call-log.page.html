@@ -23,7 +23,7 @@
       </ion-row>
     </ion-toolbar>
   </ion-header>
-  <ion-content *ngIf="data?.data?.length == 0 && statusFilter && counsellor_ids.length === 0">
+  <ion-content *ngIf="data?.data?.length == 0 && statusFilter && counsellor_ids.length === 0 && !searchTerm ">
     <ion-row>
       <ion-col size="12">
         <div class="text-center p-3">
@@ -33,7 +33,7 @@
         
           <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
           <ion-label >
-            Staus Filter Applied Total Call Logs- {{totalNumberOfRecords || 0}}
+            Status Filter Applied Total Call Logs- {{totalNumberOfRecords || 0}}
           </ion-label> 
           <!-- <ion-label *ngIf="!statusFilter && counsellor_ids.length >0">
             Filter By Counsellor Applied Total Call Logs- {{totalNumberOfRecords || 0}}
@@ -48,7 +48,7 @@
       
   
   </ion-content>
-  <ion-content *ngIf="data?.data?.length == 0 && !statusFilter&& counsellor_ids.length >0 ">
+  <ion-content *ngIf="data?.data?.length == 0 && !statusFilter&& counsellor_ids.length >0 && !searchTerm ">
     <ion-row>
       <ion-col size="12">
         <div class="text-center p-3">
@@ -71,7 +71,7 @@
       
   
   </ion-content>
-  <ion-content *ngIf="data?.data?.length == 0 && statusFilter && counsellor_ids.length >0">
+  <ion-content *ngIf="data?.data?.length == 0 && statusFilter && counsellor_ids.length >0 && !searchTerm ">
     <ion-row>
       <ion-col size="12">
         <div class="text-center p-3">
@@ -94,7 +94,14 @@
       
   
   </ion-content>
-  <ion-content *ngIf="data?.data?.length == 0 && !statusFilter && counsellor_ids.length === 0 || searchTerm">
+ 
+  <ion-content *ngIf="data?.data?.length == 0 && !statusFilter && counsellor_ids.length === 0">
+    <app-nodata></app-nodata> 
+  </ion-content>
+  <ion-content *ngIf="data?.data?.length == 0 && statusFilter && counsellor_ids.length === 0  && searchTerm">
+    <app-nodata></app-nodata> 
+  </ion-content>
+  <ion-content *ngIf="data?.data?.length == 0 && !statusFilter && counsellor_ids.length > 0  && searchTerm">
     <app-nodata></app-nodata> 
   </ion-content>
   <ion-content [fullscreen]="true" *ngIf="data?.data?.length > 0">

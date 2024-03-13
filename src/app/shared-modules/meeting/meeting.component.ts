@@ -29,7 +29,7 @@ export class MeetingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.id = localStorage.getItem('user_id');
+    this.id = sessionStorage.getItem('user_id');
     this.initForm();
   }
   initForm() {
@@ -43,7 +43,7 @@ export class MeetingComponent implements OnInit {
   }
   break() {
     this.meetingForm.patchValue({ user: this.id });
-    this.meetingForm.patchValue({ status: 1 });
+    this.meetingForm.patchValue({ status: 7 });
 
     //console.log(this.meetingForm.value);
 

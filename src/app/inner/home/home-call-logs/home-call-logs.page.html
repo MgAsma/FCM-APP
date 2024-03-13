@@ -1,185 +1,185 @@
 
-<ion-header>
-  <ion-toolbar *ngIf="!searchBar" color="primary">
-    <ion-buttons (click)="goBack()" slot="start">
-      <ion-icon class="back" name="arrow-back-outline"></ion-icon>
-    </ion-buttons>
-    <ion-row class="d-flex align-items-center">
-      <ion-col size="6">
-        <h6 class="mt-2">Call Logs</h6>
-      </ion-col>
-      <ion-col size="6">
-        <app-call-toolbar-top [data]="COUNSELLOR" [statusList]="filterByStatus" (people)="onEmit($event)"></app-call-toolbar-top>
-      </ion-col>
-    </ion-row>
-    
-  </ion-toolbar>
-  <ion-toolbar *ngIf="searchBar" color="primary">
-    <ion-row >
-      <ion-col>
-        <app-search-bar [placeholder]="placeholderText"
-        (search)="searchTermChanged($event)"></app-search-bar>
-      </ion-col>
-    </ion-row>
-  </ion-toolbar>
-</ion-header>
-<ion-content *ngIf="data?.data?.length == 0 && statusFilter && counsellor_ids.length === 0">
-  <ion-row>
-    <ion-col size="12">
-      <div class="text-center p-3">
-        <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
-          <ion-refresher-content></ion-refresher-content>
-        </ion-refresher>
-      
-        <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
-        <ion-label >
-          Staus Filter Applied Total Call Logs- {{totalNumberOfRecords || 0}}
-        </ion-label> 
-        <!-- <ion-label *ngIf="!statusFilter && counsellor_ids.length >0">
-          Filter By Counsellor Applied Total Call Logs- {{totalNumberOfRecords || 0}}
-        </ion-label>  -->
-        </div>
-      
-    </ion-col>
-    <ion-col size="12" class="nodata-filter">
-      <app-nodata></app-nodata>
-    </ion-col>
-  </ion-row>
-    
-
-</ion-content>
-<ion-content *ngIf="data?.data?.length == 0 && !statusFilter&& counsellor_ids.length >0 ">
-  <ion-row>
-    <ion-col size="12">
-      <div class="text-center p-3">
-        <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
-          <ion-refresher-content></ion-refresher-content>
-        </ion-refresher>
-      
-        <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
-      
-        <ion-label>
-          Filter By Counsellor Applied Total Call Logs- {{totalNumberOfRecords || 0}}
-        </ion-label> 
-        </div>
-      
-    </ion-col>
-    <ion-col size="12" class="nodata-filter">
-      <app-nodata></app-nodata>
-    </ion-col>
-  </ion-row>
-    
-
-</ion-content>
-<ion-content *ngIf="data?.data?.length == 0 && statusFilter && counsellor_ids.length >0">
-  <ion-row>
-    <ion-col size="12">
-      <div class="text-center p-3">
-        <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
-          <ion-refresher-content></ion-refresher-content>
-        </ion-refresher>
-      
-        <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
-      
-        <ion-label>
-          Filter By Counsellor and Status Filter Applied Total Count- {{totalNumberOfRecords || 0}}
-        </ion-label> 
-        </div>
-      
-    </ion-col>
-    <ion-col size="12" class="nodata-filter">
-      <app-nodata></app-nodata>
-    </ion-col>
-  </ion-row>
-    
-
-</ion-content>
-<ion-content *ngIf="data?.data?.length == 0 && !statusFilter && counsellor_ids.length === 0 || searchTerm">
-  <app-nodata></app-nodata> 
-</ion-content>
-<ion-content [fullscreen]="true" *ngIf="data?.data?.length > 0">
-  <div class="mb-4">
-    <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
-      <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
-  
-    <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
-    <form [formGroup]="dateForm">
-    <ion-row class="container">
-    <ion-col size="6">
-      <ion-card class="date-range">
-        <mat-label class="label-log">Start Date</mat-label>
-        <mat-form-field class="m-0 call-log">
-        <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="startDate" [max]="maxStartDate" (dateChange)="onStartDateChange($event)">
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      </ion-card>
-    </ion-col>
-    <ion-col size="6">
-      <ion-card class="date-range">
-        <mat-label class="label-log">End Date</mat-label>
-        <mat-form-field class="m-0 call-log">
-          <input matInput [matDatepicker]="picker2"  formControlName="endDate" [min]="minEndDate" [max]="maxStartDate" placeholder="MM/DD/YYYY" (dateChange)="onEndDateChange($event)">
-          <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
-          <mat-datepicker #picker2></mat-datepicker>
-        </mat-form-field>
-      </ion-card>
-    </ion-col>
-    </ion-row>
-   </form>
-          
-    <div class="text-center mt-2">
-      <ion-button type="button" (click)="onSubmit()">Submit</ion-button>
-    </div>
-  
-    <ion-row class="px-3 py-2">
-      <ion-col>
-        <div style="color: #0d0dff;">Total Call Logs- {{totalNumberOfRecords || 0}}</div>
-      </ion-col>
-    </ion-row>
-    <ion-card class="list-card">
-    <ion-card-content>
-      <ion-row class="">
-        <ion-col >
-          <ion-list lines="full" *ngFor="let items of data?.data">
-            <ion-item (click)="openGotoCallOrDetails(items)">
-              <ion-row class="align-items-center" style="width: 100%;">
-                <ion-col size="1">
-                  <ion-icon name="checkmark-outline" style="color: blue;"></ion-icon>
-                </ion-col>
-                <ion-col  class="ml-4">
-                  <ion-row >
-                    <small>{{items?.lead_name || 'Unknown'}}</small><span></span><p class="label">{{items?.call_status}}</p>
-                  </ion-row>
-                  <ion-row>
-                    <small>{{items?.phone_number}}</small>
-                  </ion-row>
-                  <ion-row>
-                      <p>At {{items?.call_start_time | date }} {{items?.call_start_time | date : 'h:mm a'}}  by {{items?.counsellor_name}}</p>
-                  </ion-row>
-                </ion-col>
-              </ion-row>
-            </ion-item>
-         
-            
-          </ion-list>
-        
+  <ion-header>
+    <ion-toolbar *ngIf="!searchBar" color="primary">
+      <ion-buttons (click)="goBack()" slot="start">
+        <ion-icon class="back" name="arrow-back-outline"></ion-icon>
+      </ion-buttons>
+      <ion-row class="d-flex align-items-center">
+        <ion-col size="6">
+          <h6 class="mt-2">Call Logs</h6>
+        </ion-col>
+        <ion-col size="6">
+          <app-call-toolbar-top [data]="COUNSELLOR" [statusList]="filterByStatus" (people)="onEmit($event)"></app-call-toolbar-top>
         </ion-col>
       </ion-row>
-      <mat-paginator
-      class="p-b-cs"
-      *ngIf="data?.data.length > 0"
-      [length]="totalNumberOfRecords"
-      [pageSizeOptions]="[10, 20,50]"
-      (page)="onPageChange($event, data,'All')"
-      #allPaginator
-    ></mat-paginator>
-    </ion-card-content>
-    </ion-card>
-   
-  </div>
+      
+    </ion-toolbar>
+    <ion-toolbar *ngIf="searchBar" color="primary">
+      <ion-row >
+        <ion-col>
+          <app-search-bar [placeholder]="placeholderText"
+          (search)="searchTermChanged($event)"></app-search-bar>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content *ngIf="data?.data?.length == 0 && statusFilter && counsellor_ids.length === 0 && !searchTerm ">
+    <ion-row>
+      <ion-col size="12">
+        <div class="text-center p-3">
+          <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+          </ion-refresher>
+        
+          <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
+          <ion-label >
+            Staus Filter Applied Total Call Logs- {{totalNumberOfRecords || 0}}
+          </ion-label> 
+          <!-- <ion-label *ngIf="!statusFilter && counsellor_ids.length >0">
+            Filter By Counsellor Applied Total Call Logs- {{totalNumberOfRecords || 0}}
+          </ion-label>  -->
+          </div>
+        
+      </ion-col>
+      <ion-col size="12" class="nodata-filter">
+        <app-nodata></app-nodata>
+      </ion-col>
+    </ion-row>
+      
   
-</ion-content>
+  </ion-content>
+  <ion-content *ngIf="data?.data?.length == 0 && !statusFilter&& counsellor_ids.length >0 && !searchTerm ">
+    <ion-row>
+      <ion-col size="12">
+        <div class="text-center p-3">
+          <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+          </ion-refresher>
+        
+          <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
+        
+          <ion-label>
+            Filter By Counsellor Applied Total Call Logs- {{totalNumberOfRecords || 0}}
+          </ion-label> 
+          </div>
+        
+      </ion-col>
+      <ion-col size="12" class="nodata-filter">
+        <app-nodata></app-nodata>
+      </ion-col>
+    </ion-row>
+      
+  
+  </ion-content>
+  <ion-content *ngIf="data?.data?.length == 0 && statusFilter && counsellor_ids.length >0 && !searchTerm ">
+    <ion-row>
+      <ion-col size="12">
+        <div class="text-center p-3">
+          <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+          </ion-refresher>
+        
+          <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
+        
+          <ion-label>
+            Filter By Counsellor and Status Filter Applied Total Count- {{totalNumberOfRecords || 0}}
+          </ion-label> 
+          </div>
+        
+      </ion-col>
+      <ion-col size="12" class="nodata-filter">
+        <app-nodata></app-nodata>
+      </ion-col>
+    </ion-row>
+      
+  
+  </ion-content>
+  <ion-content *ngIf="data?.data?.length == 0 && !statusFilter && counsellor_ids.length === 0 || searchTerm">
+    <app-nodata></app-nodata> 
+  </ion-content>
+  <ion-content [fullscreen]="true" *ngIf="data?.data?.length > 0">
+    <div class="mb-4">
+      <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+    
+      <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
+      <form [formGroup]="dateForm">
+      <ion-row class="container">
+      <ion-col size="6">
+        <ion-card class="date-range">
+          <mat-label class="label-log">Start Date</mat-label>
+          <mat-form-field class="m-0 call-log">
+          <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="startDate" [max]="maxStartDate" (dateChange)="onStartDateChange($event)">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card class="date-range">
+          <mat-label class="label-log">End Date</mat-label>
+          <mat-form-field class="m-0 call-log">
+            <input matInput [matDatepicker]="picker2"  formControlName="endDate" [min]="minEndDate" [max]="maxStartDate" placeholder="MM/DD/YYYY" (dateChange)="onEndDateChange($event)">
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </ion-card>
+      </ion-col>
+      </ion-row>
+     </form>
+            
+      <div class="text-center mt-2">
+        <ion-button type="button" (click)="onSubmit()">Submit</ion-button>
+      </div>
+    
+      <ion-row class="px-3 py-2">
+        <ion-col>
+          <div style="color: #0d0dff;">Total Call Logs- {{totalNumberOfRecords || 0}}</div>
+        </ion-col>
+      </ion-row>
+      <ion-card class="list-card">
+      <ion-card-content>
+        <ion-row class="">
+          <ion-col >
+            <ion-list lines="full" *ngFor="let items of data?.data">
+              <ion-item (click)="openGotoCallOrDetails(items)">
+                <ion-row class="align-items-center" style="width: 100%;">
+                  <ion-col size="1">
+                    <ion-icon name="checkmark-outline" style="color: blue;"></ion-icon>
+                  </ion-col>
+                  <ion-col  class="ml-4">
+                    <ion-row >
+                      <small>{{items?.lead_name || 'Unknown'}}</small><span></span><p class="label">{{items?.call_status}}</p>
+                    </ion-row>
+                    <ion-row>
+                      <small>{{items?.phone_number}}</small>
+                    </ion-row>
+                    <ion-row>
+                        <p>At {{items?.call_start_time | date }} {{items?.call_start_time | date : 'h:mm a'}}  by {{items?.counsellor_name}}</p>
+                    </ion-row>
+                  </ion-col>
+                </ion-row>
+              </ion-item>
+           
+              
+            </ion-list>
+          
+          </ion-col>
+        </ion-row>
+        <mat-paginator
+        class="p-b-cs"
+        *ngIf="data?.data.length > 0"
+        [length]="totalNumberOfRecords"
+        [pageSizeOptions]="[10, 20,50]"
+        (page)="onPageChange($event, data,'All')"
+        #allPaginator
+      ></mat-paginator>
+      </ion-card-content>
+      </ion-card>
+     
+    </div>
+    
+  </ion-content>
 
-
+ 

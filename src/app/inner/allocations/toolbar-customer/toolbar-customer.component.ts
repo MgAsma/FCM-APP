@@ -52,10 +52,9 @@ export class ToolbarCustomerComponent  implements OnInit {
       }
     })
   }
-  closeModal(event:any) {
+  resetModal(event:any) {
     if(event){
       this.selectedCounselorIds = []
-      this.modalController.dismiss();
     }  
   }
   // itemClicked(item: any) {

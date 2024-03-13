@@ -25,7 +25,7 @@
                   <!-- First Name -->
                   <ion-label position="stacked">Student Name</ion-label><b class="star-symbol">*</b>
                   <ion-item>    
-                    <ion-input
+                    <ion-input appFormSpace
                       type="text"
                       placeholder="Enter Student Name"
                       formControlName="firstName"
@@ -42,9 +42,9 @@
                   <!-- Mobile Number -->
                   <ion-label position="stacked">Mobile Number</ion-label><b class="star-symbol">*</b>
                   <ion-item>
-                    <ion-input
+                    <ion-input appFormSpace
                       type="tel"
-                      placeholder="Enter Your Mobile Number"
+                      placeholder="Enter  Mobile Number"
                       formControlName="mobile"
                       required
                     ></ion-input>
@@ -59,9 +59,9 @@
                     <!--Alternate Mobile Number -->
                     <ion-label position="stacked">Alternate Mobile Number</ion-label>
                     <ion-item>
-                      <ion-input
+                      <ion-input appFormSpace
                         type="tel"
-                        placeholder="Enter Your Alternate Mobile Number"
+                        placeholder="Enter  Alternate Mobile Number"
                         formControlName="alternateNumber"
                       ></ion-input>
                     </ion-item>
@@ -73,9 +73,9 @@
                   <!-- Email -->
                   <ion-label position="stacked">Email Id</ion-label>
                   <ion-item>
-                    <ion-input
+                    <ion-input appFormSpace
                       type="email"
-                      placeholder="Enter Your Email Id"
+                      placeholder="Enter  Email Id"
                       formControlName="email"
                     ></ion-input>
                   </ion-item>
@@ -145,7 +145,7 @@
                 <!-- Pincode -->
                 <ion-label position="stacked">Pincode</ion-label>
                 <ion-item>
-                  <ion-input
+                  <ion-input appFormSpace
                     type="tel"
                     placeholder="Enter Pincode"
                     formControlName="pincode"
@@ -180,7 +180,7 @@
             <!---Reference Name----->
             <ion-label position="stacked">Reference Name</ion-label>
             <ion-item>
-              <ion-input
+              <ion-input appFormSpace
                 type="text"
                 placeholder="Enter The Reference Name"
                 formControlName="referenceName"
@@ -190,7 +190,7 @@
             <!---Reference Phone Number----->
             <ion-label position="stacked">Reference Phone Number</ion-label>
             <ion-item>
-              <ion-input
+              <ion-input appFormSpace
                 type="tel"
                 placeholder="Enter Reference Phone Number"
                 formControlName="referencePhoneNumber"
@@ -203,7 +203,7 @@
               <!---Father Name----->
               <ion-label position="stacked">Father Name</ion-label>
               <ion-item>
-                <ion-input
+                <ion-input appFormSpace
                   type="text"
                   placeholder="Enter Father Name"
                   formControlName="fatherName"
@@ -213,7 +213,7 @@
                 <!---Father Occupation----->
             <ion-label position="stacked">Father Occupation</ion-label>
             <ion-item>
-              <ion-input
+              <ion-input appFormSpace
                 type="text"
                 placeholder="Enter Father Occupation"
                 formControlName="fatherOccupation"
@@ -222,7 +222,7 @@
             <!----Father Phone Number -->
             <ion-label position="stacked">Father Phone Number</ion-label>
             <ion-item>
-              <ion-input
+              <ion-input appFormSpace
                 type="tel"
                 placeholder="Enter Father Phone Number"
                 formControlName="fatherPhoneNumber"
@@ -242,32 +242,39 @@
         <!---Tenth Percentage----->
         <ion-label position="stacked">Tenth Percentage</ion-label>
         <ion-item>
-          <ion-input
+          <ion-input appFormSpace
             type="text"
             placeholder="Enter Tenth Percentage"
             formControlName="tenthPercentage"
           ></ion-input>
         </ion-item>
-
+        <ion-error *ngIf="f['tenthPercentage'].touched && f['tenthPercentage']?.hasError('pattern')">
+          <ion-label color="danger">Invalid Tenth Percentage.</ion-label>
+        </ion-error>
           <!---Twelfth Percentage----->
           <ion-label position="stacked">Twelfth Percentage</ion-label>
           <ion-item>
-            <ion-input
+            <ion-input appFormSpace
               type="text"
               placeholder="Enter Twelfth Percentage"
               formControlName="twelthPercentage"
             ></ion-input>
           </ion-item>
-
+          <ion-error *ngIf="f['twelthPercentage'].touched && f['twelthPercentage']?.hasError('pattern')">
+            <ion-label color="danger">Invalid Twelfth Percentage</ion-label>
+          </ion-error>
         <!---Degree Percentage----->
       <ion-label position="stacked">Degree Percentage</ion-label>
           <ion-item>
-            <ion-input
+            <ion-input appFormSpace
               type="text"
               placeholder="Enter Degree Percentage"
               formControlName="degree"
             ></ion-input>
           </ion-item>
+          <ion-error *ngIf="f['degree'].touched && f['degree']?.hasError('pattern')">
+            <ion-label color="danger">Invalid Degree Percentage.</ion-label>
+          </ion-error>
             </div>
         </ion-accordion>
           <ion-accordion value="fourth">
@@ -294,7 +301,7 @@
                 <!----Entrance Exam -->
               <ion-label position="stacked">Entrance Exam</ion-label>
               <ion-item>
-                <ion-input
+                <ion-input appFormSpace
                   type="text"
                   placeholder="Enter Entrance Exam"
                   formControlName="entranceExam"
@@ -318,7 +325,7 @@
                   <!----Preferred College 1 -->
               <ion-label position="stacked">Preferred College 1</ion-label>
               <ion-item>
-                <ion-input
+                <ion-input appFormSpace
                   type="text"
                   placeholder="Enter Preferred College 1"
                   formControlName="preferredCollege1"
@@ -328,7 +335,7 @@
                 <!----Preferred College 2 -->
                 <ion-label position="stacked">Preferred College 2</ion-label>
                 <ion-item>
-                  <ion-input
+                  <ion-input appFormSpace
                     type="text"
                     placeholder="Enter Preferred College 2"
                     formControlName="preferredCollege2"
@@ -338,7 +345,7 @@
                   <!----Preferred Location 1 -->
               <ion-label position="stacked">Preferred Location 1</ion-label>
               <ion-item>
-                <ion-input
+                <ion-input appFormSpace
                   type="text"
                   placeholder="Enter Preferred Location 1"
                   formControlName="preferredLocation1"
@@ -348,7 +355,7 @@
                 <!----Preferred Location 2 -->
                 <ion-label position="stacked">Preferred Location 2</ion-label>
                 <ion-item>
-                  <ion-input
+                  <ion-input appFormSpace
                     type="text"
                     placeholder="Enter Preferred Location 2"
                     formControlName="preferredLocation2"
@@ -447,9 +454,9 @@
               <!----Notes -->
               <ion-label position="stacked">Notes</ion-label>
               <ion-item>
-                <ion-input
+                <ion-input appFormSpace
                   type="text"
-                  placeholder="Enter Your Notes"
+                  placeholder="Enter  Notes"
                   formControlName="notes"
                 ></ion-input>
               </ion-item>
@@ -457,9 +464,9 @@
                <!----Remarks -->
                <ion-label position="stacked">Remarks</ion-label>
                <ion-item>
-                 <ion-input
+                 <ion-input appFormSpace
                    type="text"
-                   placeholder="Enter Your Remarks"
+                   placeholder="Enter  Remarks"
                    formControlName="remarks"
                  ></ion-input>
                </ion-item>

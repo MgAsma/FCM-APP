@@ -56,6 +56,7 @@ export class ToolbarCustomerComponent  implements OnInit {
       this.modalController.dismiss();
     }  
   }
+  
   resetModel(){
     this.selectedCounselorIds = []
     this.addEmit.callLogCounsellor.next([])
@@ -82,12 +83,12 @@ export class ToolbarCustomerComponent  implements OnInit {
         // If the item is deselected, remove its id from the array
         this.selectedCounselorIds = this.selectedCounselorIds.filter(id => id !== item.id);
       }
-      this.addEmit.callLogCounsellor.next(this.selectedCounselorIds)
+     
     }
   }
   onSubmit(){
+    this.addEmit.callLogCounsellor.next(this.selectedCounselorIds)
     this.modalController.dismiss(this.selectedCounselorIds);
-    // this.selectedCounselorIds = []
   }
  // Filter function to update the displayed list based on search term
  updateFilteredData(event:any) {
@@ -108,3 +109,5 @@ getSelectedListLength(): number {
   return this.filteredData.filter(item => item.selected).length;
 }
 }
+
+

@@ -36,7 +36,7 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     private callLog:CallLog,
     private platform: Platform
     ) { 
-      this.counsellor_id = localStorage.getItem('user_id');
+      this.counsellor_id = sessionStorage.getItem('user_id');
 
 
       this.platform.ready().then(() => {
@@ -150,10 +150,10 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     }
     this._baseService.postData(`${environment.counsellor_status}`,data).subscribe((res:any)=>{
       if(res){
-        this.api.showToast(res.message)  
+        // this.api.showToast(res.message)  
       }
     },((error:any)=>{
-      this.api.showToast(error?.error?.message)
+      // this.api.showToast(error?.error?.message)
     }))
     this.callNumber
       .callNumber(event.phone_number, true)
@@ -185,10 +185,10 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
       }
       this._baseService.postData(`${environment.counsellor_status}`,data2).subscribe((res:any)=>{
         if(res){
-          this.api.showToast(res.message)  
+          // this.api.showToast(res.message)  
         }
       },((error:any)=>{
-        this.api.showToast(error?.error?.message)
+        //this.api.showToast(error?.error?.message)
       }))
   }
   postCallHistory() {
@@ -202,7 +202,7 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     this.api.sendingCallHistory(data).subscribe((res: any) => {
       //console.log(res, 'sending call history');
     },(error:any)=>{
-      this.api.showToast(error.error.message);
+      // this.api.showToast(error.error.message);
     });
   }
 }

@@ -4,6 +4,7 @@ import { SortingCard, sortingCards } from '../../../shared-modules/sample-data';
 import { BaseServiceService } from '../../../service/base-service.service';
 import { ApiService } from '../../../service/api/api.service';
 import { AllocationEmittersService } from '../../../service/allocation-emitters.service';
+import { AddLeadEmitterService } from '../../../service/add-lead-emitter.service';
 
 
 
@@ -21,7 +22,8 @@ export class FilterComponent  implements OnInit {
     private modalController:ModalController,
     private _baseService:BaseServiceService,
     private api : ApiService,
-    private allocationEmit:AllocationEmittersService) { }
+    private allocationEmit:AllocationEmittersService,
+    private addEmit:AddLeadEmitterService) { }
 
   ngOnInit() {
     this.allocationEmit.allocationStatus.subscribe((res: any) => {

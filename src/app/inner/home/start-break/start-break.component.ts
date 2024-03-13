@@ -23,8 +23,8 @@ export class StartBreakComponent  implements OnInit {
   constructor(private popoverController:PopoverController,private api:ApiService,private _fb:FormBuilder,private router:Router) { }
 
   ngOnInit(): void {
-    this.id=localStorage.getItem('user_id')
-    this.lastLoginDate=localStorage.getItem('lastLoginDate')
+    this.id=sessionStorage.getItem('user_id')
+    this.lastLoginDate=sessionStorage.getItem('lastLoginDate')
     this.initForm()
   }
   initForm(){
