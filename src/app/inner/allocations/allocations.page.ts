@@ -396,7 +396,18 @@ export class AllocationsPage implements AfterViewInit  {
            }
          );
         }
-        this.getLeadlist(params);
+        this.leadCards = []
+        this.data = []
+        this.totalNumberOfRecords = []
+        this._baseService.getData(`${environment.lead_list}${params}`).subscribe((res: any) => {
+          if (res.results) {
+            this.leadCards = res.results;
+            this.data = new MatTableDataSource<any>(this.leadCards);
+            this.totalNumberOfRecords = res.total_no_of_record
+          }
+        }, (error: any) => {
+          this.api.showToast(error.error.message);
+        });
       } 
   }
 

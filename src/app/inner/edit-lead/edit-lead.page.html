@@ -57,7 +57,7 @@
               </ion-error>
 
                 <!--Alternate Mobile Number -->
-                <ion-label position="stacked">Alternate Mobile Number</ion-label>
+                <ion-label position="stacked">Alternate Mobile Number</ion-label><b class="star-symbol">*</b>
                 <ion-item>
                   <ion-input appFormSpace
                     type="tel"
@@ -69,9 +69,14 @@
                 <ion-error *ngIf="f['alternateNumber'].hasError('pattern')">
                   <ion-label color="danger">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
                 </ion-error>
-              
+                <ion-error *ngIf="f['alternateNumber'].hasError('required')">
+                  <ion-label color="danger">Alternate Mobile Number Is Required.</ion-label>
+                </ion-error>
+                <ion-error *ngIf="f['alternateNumber'].hasError('sameAsMobile')">
+                  <ion-label color="danger">Alternate Phone Number Should Not Be The Same As Mobile Number.</ion-label>
+                </ion-error>
               <!-- Email -->
-              <ion-label position="stacked">Email Id</ion-label>
+              <ion-label position="stacked">Email Id</ion-label><b class="star-symbol">*</b>
               <ion-item>
                 <ion-input appFormSpace
                   type="email"
@@ -81,9 +86,14 @@
                 ></ion-input>
               </ion-item>
               
-              <ion-error *ngIf="f['email'].hasError('pattern')">
-                <ion-label color="danger">Invalid Email Format.</ion-label>
-              </ion-error>
+              <ng-container *ngIf="f['email'].touched && f['email'].invalid">
+                <ion-error *ngIf="f['email'].hasError('required')">
+                  <ion-label color="danger">Email Id Required.</ion-label>
+                </ion-error>
+                <ion-error *ngIf="!f['email'].hasError('required')&&f['email'].hasError('pattern')">
+                  <ion-label color="danger">Invalid Email Format.</ion-label>
+                </ion-error>
+              </ng-container>
           
                  <!-----  Date Of Birth ---->
             <ion-label position="stacked">Date Of Birth</ion-label>
@@ -246,7 +256,7 @@
    <ion-label position="stacked">Tenth Percentage</ion-label>
    <ion-item>
      <ion-input appFormSpace
-       type="text"
+       type="tel"
        placeholder="Enter Tenth Percentage"
        formControlName="tenthPercentage"
      ></ion-input>
@@ -258,7 +268,7 @@
      <ion-label position="stacked">Twelfth Percentage</ion-label>
      <ion-item>
        <ion-input appFormSpace
-         type="text"
+         type="tel"
          placeholder="Enter Twelfth Percentage"
          formControlName="twelthPercentage"
        ></ion-input>
@@ -270,7 +280,7 @@
  <ion-label position="stacked">Degree Percentage</ion-label>
      <ion-item>
        <ion-input appFormSpace
-         type="text"
+         type="tel"
          placeholder="Enter Degree Percentage"
          formControlName="degree"
        ></ion-input>

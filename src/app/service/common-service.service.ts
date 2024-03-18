@@ -14,7 +14,7 @@ export class CommonServiceService implements OnInit {
   
   readonly emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
 
-  readonly nonNegativeValidator = /^(?!-?\d+$)[A-Za-z\d]+$/
+  readonly nonNegativeValidator = /^(?!-)\d+(\.\d+)?%?$/
 
   // Regular expression for password validation (at least 8 characters with special characters)
   readonly passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}$/;

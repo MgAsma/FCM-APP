@@ -1,87 +1,87 @@
 
-      <div class="wrapper">
-        <ion-row>
-          <ion-col>
-            <h6>Filters</h6>
-          </ion-col>
-          <ion-col size="2" id="close" (click)="closeModel()">
-            <h6>Close</h6>
-          </ion-col>
-        </ion-row>
-            <!--SORT BY--->
-            <ion-row class="sorting-section">
-            <ion-col class="p-1">
-              <div>Sort by</div>
-              <ion-row class="scroll-x-sort">
-                <ion-col *ngFor="let card of sortingCards" size="3">
-                  <ion-card class="sorting-type" [class.selected]="card.selected" (click)="toggleSelection(card)">
-                    <ion-card-content>
-                      <ion-row>
-                        <ion-col>
-                          <ion-icon name="{{card.icon}}"></ion-icon>
-                          <ion-icon *ngIf="card.arrowIcon" name="{{card.arrowIcon}}"></ion-icon>
-                        </ion-col>
-                      </ion-row>
-                      <ion-row class="middle-text">
-                        <ion-col>
-                          {{card.middleText}}
-                        </ion-col>
-                      </ion-row>
-                      <ion-row>
-                        <ion-col>
-                          {{card.bottomText}}
-                        </ion-col>
-                      </ion-row>
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-              </ion-row>
-              
-            </ion-col>
-            </ion-row>
-              <!--SORT BY--->
-              <!---Assign TO---->
-              
-              <ion-row class="sorting-section">
-                <ion-col class="p-1">
-                  <div>Assign To</div>
-                </ion-col>
-               </ion-row>
-              
-                <ion-row >
-                  <ion-col class="assign-to-class" [ngClass]="{ 'selected-column': selectedColumn === 'Selected Users' }"
-                           (click)="selectColumn('Selected Users')">
-                    Selected Users
-                  </ion-col>
-                  <ion-col class="assign-to-class" [ngClass]="{ 'selected-column': selectedColumn === 'Common Pool' }"
-                           (click)="selectColumn('Common Pool')">
-                    Common Pool
+<div class="wrapper">
+  <ion-row>
+    <ion-col>
+      <h6>Filters</h6>
+    </ion-col>
+    <ion-col size="2" id="close" (click)="closeModel()">
+      <h6>Close</h6>
+    </ion-col>
+  </ion-row>
+      <!--SORT BY--->
+      <ion-row class="sorting-section">
+      <ion-col class="p-1">
+        <div>Sort by</div>
+        <ion-row class="scroll-x-sort">
+          <ion-col *ngFor="let card of sortingCards" size="3">
+            <ion-card class="sorting-type" [class.selected]="card.selected" (click)="toggleSelection(card)">
+              <ion-card-content>
+                <ion-row>
+                  <ion-col>
+                    <ion-icon name="{{card.icon}}"></ion-icon>
+                    <ion-icon *ngIf="card.arrowIcon" name="{{card.arrowIcon}}"></ion-icon>
                   </ion-col>
                 </ion-row>
-              
-              
-              <!---Assign TO---->
-             <!--Filter BY--->
-             
-             <ion-row class="sorting-section">
-              <ion-col class="p-1">
-                <div>Filter by status</div>
-              </ion-col>
-             </ion-row>
-             <!-- <ion-chip *ngFor="let item of data" [class.selected-chip]="item.selected && selectedStatus"  (click)="toggleChipSelection(item)">
-              <ion-label [class.selected-chip]="item.selected && selectedStatus">{{ item.name }}</ion-label>
-            </ion-chip> -->
-            <ion-chip *ngFor="let item of data" [class.selected-chip]="item.selected" (click)="toggleChipSelection(item)">
-              <ion-label [class.selected-chip]="item.selected">{{ item.name }}</ion-label>
-            </ion-chip>
-            
-            <ion-row>
-              <ion-col class="text-center">
-                <ion-button shape="round" fill="outline" (click)="reset()" >Reset</ion-button>
-                <ion-button shape="round" color="primary" (click)="onSubmit()" >Apply</ion-button>
-              </ion-col>
-            </ion-row>
-             <!--Filter BY--->
-           </div>
-           
-         
+                <ion-row class="middle-text">
+                  <ion-col>
+                    {{card.middleText}}
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    {{card.bottomText}}
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        
+      </ion-col>
+      </ion-row>
+        <!--SORT BY--->
+        <!---Assign TO---->
+        
+        <ion-row class="sorting-section">
+          <ion-col class="p-1">
+            <div>Assign To</div>
+          </ion-col>
+         </ion-row>
+        
+          <ion-row >
+            <ion-col class="assign-to-class" [ngClass]="{ 'selected-column': selectedColumn === 'Selected Users' }"
+                     (click)="selectColumn('Selected Users')">
+              Selected Users
+            </ion-col>
+            <ion-col class="assign-to-class" [ngClass]="{ 'selected-column': selectedColumn === 'Common Pool' }"
+                     (click)="selectColumn('Common Pool')">
+              Common Pool
+            </ion-col>
+          </ion-row>
+        
+        
+        <!---Assign TO---->
+       <!--Filter BY--->
+       
+       <ion-row class="sorting-section">
+        <ion-col class="p-1">
+          <div>Filter by status</div>
+        </ion-col>
+       </ion-row>
+       <!-- <ion-chip *ngFor="let item of data" [class.selected-chip]="item.selected && selectedStatus"  (click)="toggleChipSelection(item)">
+        <ion-label [class.selected-chip]="item.selected && selectedStatus">{{ item.name }}</ion-label>
+      </ion-chip> -->
+      <ion-chip *ngFor="let item of data" [class.selected-chip]="item.selected" (click)="toggleChipSelection(item)">
+        <ion-label [class.selected-chip]="item.selected">{{ item.name }}</ion-label>
+      </ion-chip>
+      
+      <ion-row>
+        <ion-col class="text-center">
+          <ion-button shape="round" fill="outline" (click)="reset()" >Reset</ion-button>
+          <ion-button shape="round" color="primary" (click)="onSubmit()" >Apply</ion-button>
+        </ion-col>
+      </ion-row>
+       <!--Filter BY--->
+     </div>
+     
+   

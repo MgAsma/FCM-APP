@@ -90,7 +90,7 @@ export class FilterComponent  implements OnInit {
       this.allocationEmit.callLogStatus.next(this.selectedStatus)
       this.modalController.dismiss();
     }else{
-      this.api.showToast('Please select any one status')
+      this.api.showWarning('Please select at least one status')
     }
     
   }

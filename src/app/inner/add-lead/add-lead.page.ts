@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
 import { ApiService } from '../../service/api/api.service';
@@ -96,8 +96,8 @@ export class AddLeadPage implements OnInit {
     this.addNewLead = this.fb.group({
       firstName: ['', [Validators.required,Validators.pattern(this._commonService.namePattern)]],
       mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern)]],
-      alternateNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-      email: ['', [Validators.pattern(this._commonService.emailPattern)]],
+      alternateNumber:['',[Validators.required,Validators.pattern(this._commonService.mobilePattern)]],
+      email: ['', [Validators.required,Validators.pattern(this._commonService.emailPattern)]],
       dateOfBirth:[''],
       state: [''],
       zone:[''],
@@ -129,7 +129,13 @@ export class AddLeadPage implements OnInit {
       remarks:['']
     })
   }
- 
+  notSameAsMobileValidator(mobileControlName: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const mobile = control.root.get(mobileControlName)?.value;
+      const alternateNumber = control.value;
+      return mobile === alternateNumber ? { sameAsMobile: true } : null;
+    };
+  }
   pincodeLengthValidator(control:FormControl) {
     const value = control.value;
 
@@ -429,23 +435,47 @@ export class AddLeadPage implements OnInit {
     }
   
      data = JSON.parse(JSON.stringify(data));
-      if(this.addNewLead.invalid){
-        this.addNewLead.markAllAsTouched()
-        this.api.showError("Please Fill The Mandatory Fields")
+     if (this.addNewLead.invalid) {
+      let mandatoryFieldsEmpty = false;
+      let nonMandatoryFieldsInvalid = false;
+    
+      // Check if any mandatory fields are empty
+      const mandatoryFields = ['firstName', 'mobile', 'email', 'counsellor', 'leadSource', 'leadStages','alternateNumber'];
+      mandatoryFields.forEach(field => {
+        if (!this.addNewLead.get(field).value) {
+          mandatoryFieldsEmpty = true;
+          this.addNewLead.markAllAsTouched()
+        }
+      });
+    
+      // Check if any non-mandatory fields are invalid
+      Object.keys(this.addNewLead.controls).forEach(key => {
+        const control = this.addNewLead.get(key);
+        if (control.invalid && !mandatoryFields.includes(key)) {
+          nonMandatoryFieldsInvalid = true;
+          this.addNewLead.markAllAsTouched()
+        }
+      });
+    
+      if (mandatoryFieldsEmpty && nonMandatoryFieldsInvalid) {
+        this.api.showError("Please fill the mandatory fields and correct the invalid inputs.");
+      } else if (mandatoryFieldsEmpty) {
+        this.api.showError("Please fill the mandatory fields.");
+      } else if (nonMandatoryFieldsInvalid) {
+        this.api.showError("Correct the invalid inputs.");
       }
+    } 
       else{
         this._baseService.postData(`${environment.lead_list}`,data).subscribe((res:any)=>{
           if(res){
             this.addLead.emit('ADD')
-            this.api.showToast(res.message)
+            this.api.showSuccess(res.message)
             this._addLeadEmitter.triggerGet();
             this.initForm()
           }
-          else{
-            this.api.showToast("ERROR !")
-          }
+         
         },((error:any)=>{
-          this.api.showToast(error?.error?.message)
+          this.api.showError(error?.error?.message)
         }))
       }
     }

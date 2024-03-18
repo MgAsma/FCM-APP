@@ -13,7 +13,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
 
         // Ensure token availability
         if (!token) {
-            console.error('Token not available.');
+          //console.error('Token not available.');
             // Handle this scenario based on your app's logic, e.g., redirect to login.
         }
 

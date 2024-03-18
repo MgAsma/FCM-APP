@@ -60,7 +60,7 @@ export class TeamLiveStatusPage implements OnInit {
         this.filterByStatus = res.data
       }
     },(error:any)=>{
-      this.api.showToast(error.error.message)
+      this.api.showError(error.error.message)
     })
   }
    ngOnInit() {
@@ -127,7 +127,7 @@ export class TeamLiveStatusPage implements OnInit {
        this.counselor = res.results 
      }
     },((error:any)=>{
-     this.api.showToast(error.error.message)
+     this.api.showError(error.error.message)
      
     }))
    
@@ -137,7 +137,7 @@ export class TeamLiveStatusPage implements OnInit {
     if (event) {
        this.counsellor_ids = event;
       this.addEmit.tlsCounsellor.next(event)
-      query = `page=1&page_size=2&counsellor_ids=${this.counsellor_ids}`;
+      query = `page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`;
   
     if(this.statusFilter){
       this.allocate.tlsStatus.subscribe((res:any)=>{

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AddLeadEmitterService } from '../../../../service/add-lead-emitter.service';
+import { ApiService } from '../../../../service/api/api.service';
 // import { userData } from '../shared-modules/sample-data';
 // import { BaseServiceService } from '../service/base-service.service';
 // import { environment } from 'src/environments/environment';
@@ -20,7 +21,8 @@ export class ToolbarCustomerComponent  implements OnInit {
   selectedCounselorIds: any = [];
   constructor(
     private modalController:ModalController,
-    private addEmit:AddLeadEmitterService) { 
+    private addEmit:AddLeadEmitterService,
+    private api:ApiService) { 
       
     }
     @Input()set data(data: any) {
@@ -87,8 +89,13 @@ export class ToolbarCustomerComponent  implements OnInit {
     }
   }
   onSubmit(){
-    this.addEmit.callLogCounsellor.next(this.selectedCounselorIds)
-    this.modalController.dismiss(this.selectedCounselorIds);
+    if(this.selectedCounselorIds.length > 0){
+      this.addEmit.callLogCounsellor.next(this.selectedCounselorIds)
+      this.modalController.dismiss(this.selectedCounselorIds);
+    }else{
+      this.api.showWarning('Please select at least one counselor')
+    }
+   
   }
  // Filter function to update the displayed list based on search term
  updateFilteredData(event:any) {

@@ -94,7 +94,7 @@ export class FilterComponent  implements OnInit {
       this.allocationEmit.tlsStatus.next(this.selectedStatus)
       this.modalController.dismiss();
     }else{
-      this.api.showToast('Please select any one status')
+      this.api.showWarning('Please select atleast one status')
     }
   }
 

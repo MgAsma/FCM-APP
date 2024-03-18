@@ -1,9 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-
-
 import { IonModal, ModalController } from '@ionic/angular';
-
-
 import { FilterComponent } from '../filter/filter.component';
 import { ToolbarCustomerComponent } from '../toolbar-customer/toolbar-customer.component';
 import { AllocationEmittersService } from '../../../../service/allocation-emitters.service';

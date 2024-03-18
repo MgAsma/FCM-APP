@@ -87,7 +87,11 @@ export class FilterComponent  implements OnInit {
     this.modalController.dismiss();
   }
   onSubmit(){
-    this.allocationEmit.allocationStatus.next(this.selectedStatus)
-    this.modalController.dismiss();
+    if(this.selectedStatus.length >0){
+      this.allocationEmit.allocationStatus.next(this.selectedStatus)
+      this.modalController.dismiss();
+    }else{
+      this.api.showToast('Please select at least one status')
+    }
   }
 }
