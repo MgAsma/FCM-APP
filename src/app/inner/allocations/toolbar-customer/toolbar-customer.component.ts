@@ -99,7 +99,7 @@ export class ToolbarCustomerComponent  implements OnInit {
       this.modalController.dismiss(this.selectedCounselorIds);
       this.addEmit.selectedCounsellor.next(this.selectedCounselorIds)
     }else{
-      this.api.showToast('Please select at least one counselor')
+      this.api.showError('Please select at least one counselor')
     }
   }
  // Filter function to update the displayed list based on search term

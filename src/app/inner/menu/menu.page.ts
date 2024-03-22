@@ -26,7 +26,7 @@ export class MenuPage implements OnInit {
     });
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned !== null) {
-        console.log('Modal data:', dataReturned.data);
+        //console.log('Modal data:', dataReturned.data);
       }
 
     });

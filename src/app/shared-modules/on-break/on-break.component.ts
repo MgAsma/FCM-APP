@@ -28,7 +28,7 @@ export class OnBreakComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.id = sessionStorage.getItem('user_id');
+    this.id = localStorage.getItem('user_id');
     this.initForm();
   }
   initForm() {
@@ -44,10 +44,10 @@ export class OnBreakComponent implements OnInit {
     this.breakForm.patchValue({ user: this.id });
     this.breakForm.patchValue({ status: 1 });
 
-    console.log(this.breakForm.value);
+    //console.log(this.breakForm.value);
 
     if (this.breakForm.invalid) {
-      console.log('Invalid');
+      //console.log('Invalid');
     } else {
       this.api.showLoading();
       this.api.break(this.breakForm.value).subscribe(

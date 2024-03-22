@@ -55,7 +55,9 @@
                   <ion-error *ngIf="f['mobile'].hasError('pattern')">
                     <ion-label color="danger">Please Enter A 10-Digit Mobile Number.</ion-label>
                   </ion-error>
-
+                  <ion-error *ngIf="!f['mobile'].hasError('required') && f['mobile'].hasError('sameAsMobile')">
+                    <ion-label color="danger">Mobile Number Should Not Be The Same As Alternate Number..</ion-label>
+                  </ion-error>
                     <!--Alternate Mobile Number -->
                     <ion-label position="stacked">Alternate Mobile Number</ion-label><b class="star-symbol">*</b>
                     <ion-item>
@@ -65,16 +67,18 @@
                         formControlName="alternateNumber"
                       ></ion-input>
                     </ion-item>
+                    <ng-container *ngIf="f['alternateNumber'].touched && f['alternateNumber'].invalid">
+                      <ion-error *ngIf="f['alternateNumber'].hasError('pattern')">
+                        <ion-label color="danger">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
+                      </ion-error>
+                      <ion-error *ngIf="f['alternateNumber'].hasError('required')">
+                        <ion-label color="danger">Alternate Mobile Number Is Required.</ion-label>
+                      </ion-error>
+                      <ion-error *ngIf="!f['alternateNumber'].hasError('required') && f['alternateNumber'].hasError('sameAsMobile')">
+                        <ion-label color="danger">Alternate Phone Number Should Not Be The Same As Mobile Number..</ion-label>
+                      </ion-error>
+                    </ng-container>
                     
-                    <ion-error *ngIf="f['alternateNumber'].hasError('pattern')">
-                      <ion-label color="danger">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
-                    </ion-error>
-                    <ion-error *ngIf="f['alternateNumber'].hasError('required')">
-                      <ion-label color="danger">Alternate Mobile Number Is Required.</ion-label>
-                    </ion-error>
-                    <ion-error *ngIf="f['alternateNumber'].hasError('sameAsMobile')">
-                      <ion-label color="danger">Alternate Phone Number Should Not Be The Same As Mobile Number..</ion-label>
-                    </ion-error>
                   <!-- Email -->
                   <ion-label position="stacked">Email Id</ion-label><b class="star-symbol">*</b>
                   <ion-item>
@@ -197,7 +201,9 @@
                 formControlName="referenceName"
               ></ion-input>
             </ion-item>
-
+            <ion-error *ngIf="f['referenceName'].hasError('pattern')">
+              <ion-label color="danger">Invalid Reference Name.Please Enter Characters.</ion-label>
+            </ion-error>
             <!---Reference Phone Number----->
             <ion-label position="stacked">Reference Phone Number</ion-label>
             <ion-item>
@@ -220,7 +226,9 @@
                   formControlName="fatherName"
                 ></ion-input>
               </ion-item>
-
+              <ion-error *ngIf="f['fatherName'].hasError('pattern')">
+                <ion-label color="danger">Invalid Father Name.Please Enter Characters.</ion-label>
+              </ion-error>
                 <!---Father Occupation----->
             <ion-label position="stacked">Father Occupation</ion-label>
             <ion-item>
@@ -230,6 +238,9 @@
                 formControlName="fatherOccupation"
               ></ion-input>
             </ion-item>
+            <ion-error *ngIf="f['fatherOccupation'].hasError('pattern')">
+              <ion-label color="danger">Invalid Father Occupation.Please Enter Characters.</ion-label>
+            </ion-error>
             <!----Father Phone Number -->
             <ion-label position="stacked">Father Phone Number</ion-label>
             <ion-item>
@@ -240,7 +251,7 @@
               ></ion-input>
             </ion-item>
             <ion-error *ngIf="f['fatherPhoneNumber'].hasError('pattern')">
-            <ion-label color="danger">Please Enter A 10-Digit Reference Phone Number.</ion-label>
+            <ion-label color="danger">Please Enter A 10-Digit Phone Number.</ion-label>
           </ion-error>
           </div>
         </ion-accordion>
@@ -318,6 +329,9 @@
                   formControlName="entranceExam"
                 ></ion-input>
               </ion-item>
+              <ion-error *ngIf="f['entranceExam'].hasError('pattern')">
+                <ion-label color="danger">Invalid Entrance Exam.Please Enter Characters.</ion-label>
+              </ion-error>
                 <!-- Course Looking For -->
                 <ion-label position="stacked">Course Looking For</ion-label>
                 <ion-item>
@@ -342,7 +356,9 @@
                   formControlName="preferredCollege1"
                 ></ion-input>
               </ion-item>
-
+              <ion-error *ngIf="f['preferredCollege1'].hasError('pattern')">
+                <ion-label color="danger">Invalid Preferred College 1 Name.Please Enter Characters.</ion-label>
+              </ion-error>
                 <!----Preferred College 2 -->
                 <ion-label position="stacked">Preferred College 2</ion-label>
                 <ion-item>
@@ -352,7 +368,9 @@
                     formControlName="preferredCollege2"
                   ></ion-input>
                 </ion-item>
-
+                <ion-error *ngIf="f['preferredCollege2'].hasError('pattern')">
+                  <ion-label color="danger">Invalid Preferred College 2 Name.Please Enter Characters.</ion-label>
+                </ion-error>
                   <!----Preferred Location 1 -->
               <ion-label position="stacked">Preferred Location 1</ion-label>
               <ion-item>
@@ -362,7 +380,9 @@
                   formControlName="preferredLocation1"
                 ></ion-input>
               </ion-item>
-
+              <ion-error *ngIf="f['preferredLocation1'].hasError('pattern')">
+                <ion-label color="danger">Invalid Preferred Location 1 Name.Please Enter Characters.</ion-label>
+              </ion-error>
                 <!----Preferred Location 2 -->
                 <ion-label position="stacked">Preferred Location 2</ion-label>
                 <ion-item>
@@ -372,6 +392,9 @@
                     formControlName="preferredLocation2"
                   ></ion-input>
                 </ion-item>
+                <ion-error *ngIf="f['preferredLocation2'].hasError('pattern')">
+                  <ion-label color="danger">Invalid Preferred Location 2 Name.Please Enter Characters.</ion-label>
+                </ion-error>
               </div>
         </ion-accordion>
         <ion-accordion value="fifth">
@@ -471,7 +494,9 @@
                   formControlName="notes"
                 ></ion-input>
               </ion-item>
-
+              <ion-error *ngIf="f['notes'].hasError('pattern')">
+                <ion-label color="danger">Invalid Notes.Please Enter Characters.</ion-label>
+              </ion-error>
                <!----Remarks -->
                <ion-label position="stacked">Remarks</ion-label>
                <ion-item>
@@ -481,6 +506,9 @@
                    formControlName="remarks"
                  ></ion-input>
                </ion-item>
+               <ion-error *ngIf="f['remarks'].hasError('pattern')">
+                <ion-label color="danger">Invalid Remarks.Please Enter Characters.</ion-label>
+              </ion-error>
             </div>
           
         </ion-accordion>

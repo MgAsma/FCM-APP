@@ -52,8 +52,8 @@ export class HomeCallLogsPage implements OnInit {
     private fb:FormBuilder,
     private addEmiter:AddLeadEmitterService,
   ) {
-    this.user_role = sessionStorage.getItem('user_role')?.toUpperCase()
-    this.user_id = sessionStorage.getItem('user_id')
+    this.user_role = localStorage.getItem('user_role')?.toUpperCase()
+    this.user_id = localStorage.getItem('user_id')
     let today = new Date()
     this.maxStartDate = this.datepipe.transform(today,'YYYY-MM-dd')
     
@@ -103,7 +103,6 @@ export class HomeCallLogsPage implements OnInit {
         this.data = []  
         this.baseService.getData(`${environment.call_logs}${query}`).subscribe((res:any)=>{
           if(res){
-            debugger;
            this.callLogCards = res.results;
            this.data = new MatTableDataSource<any>(this.callLogCards);
            this.totalNumberOfRecords = res.total_no_of_record 
@@ -133,7 +132,7 @@ export class HomeCallLogsPage implements OnInit {
   
   onStartDateChange(event: CustomEvent) {
     if(event){
-      console.log(event,event)
+      //console.log(event,event)
       this.minEndDate = event.target['value'];
       this.dateForm.patchValue({
         endDate:''
@@ -149,7 +148,7 @@ export class HomeCallLogsPage implements OnInit {
     let query;
     if(this.dateForm.invalid){
       this.dateForm.markAllAsTouched()
-      this.api.showWarning('Select start date and end date')
+      this.api.showError('Select start date and end date')
     }else{
       this.sdate = this.datepipe.transform(this.dateForm.value.startDate, 'yyyy-MM-dd');
       this.edate = this.datepipe.transform(this.dateForm.value.endDate, 'yyyy-MM-dd');
@@ -196,7 +195,7 @@ export class HomeCallLogsPage implements OnInit {
       this.data = []
      
       this.addEmiter.filterStatus.next(true)
-      this.allocate.callLogStatus.next([])
+      this.allocate.callLogStatus.next('')
       this.addEmiter.callLogCounsellor.next([])
       this.dateForm.reset()
       this.allocate.searchBar.next(false)

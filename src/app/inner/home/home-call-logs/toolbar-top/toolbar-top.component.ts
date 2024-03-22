@@ -51,7 +51,7 @@ export class ToolbarTopComponent  implements OnInit {
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned !== null) {
         let uniqueArray = Array.from(new Set(dataReturned.data));
-        // console.log('Modal data:', uniqueArray);
+        // //console.log('Modal data:', uniqueArray);
         this.people.emit(uniqueArray) 
       }
 

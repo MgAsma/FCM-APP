@@ -8,7 +8,7 @@ export class BasicAuthInterceptor implements HttpInterceptor {
     constructor(private baseService: BaseServiceService) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        let token = sessionStorage.getItem('token');
+        let token = localStorage.getItem('token');
         const loginUrl = 'https://fcmdev.thestorywallcafe.com/api/user-login/';
 
         // Ensure token availability

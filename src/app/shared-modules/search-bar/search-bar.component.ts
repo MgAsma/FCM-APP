@@ -17,7 +17,7 @@ export class SearchBarComponent  implements OnInit {
     private allocation:AllocationEmittersService,
     private router:Router,
     private route:ActivatedRoute){
-    console.log(this.router.url)
+    //console.log(this.router.url)
   }
   
   // Function to trigger the passed search handler

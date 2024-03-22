@@ -49,8 +49,8 @@ export class TeamLiveStatusPage implements OnInit {
     private baseService:BaseServiceService,
     private addEmit:AddLeadEmitterService
     ) { 
-    this.user_id=sessionStorage.getItem('user_id')
-    this.user_role=sessionStorage.getItem('user_role')?.toUpperCase()
+    this.user_id=localStorage.getItem('user_id')
+    this.user_role=localStorage.getItem('user_role')?.toUpperCase()
   }
 
   
@@ -87,7 +87,20 @@ export class TeamLiveStatusPage implements OnInit {
       }if(this.counsellor_ids.length >0){
          query =`&counsellor_ids=${this.counsellor_ids}`
         }
-        this.getLiveStatus(query)
+        this.followupDetails = []
+        this.data = []
+        this.totalNumberOfRecords = []
+        let query2 = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${query}`:`?${query}`
+      this.api.getTeamLiveStatus(query2).subscribe(
+        (resp:any)=>{
+          this.followupDetails=resp.results
+          this.data = new MatTableDataSource<any>(this.followupDetails);
+          this.totalNumberOfRecords = resp.total_no_of_record
+        },
+        (error:any)=>{
+          this.api.showError(error?.error.message)
+        }
+      )
     },((error:any)=>{
       this.api.showToast(error.error.message)
     }))
@@ -151,7 +164,21 @@ export class TeamLiveStatusPage implements OnInit {
      if(this.searchTerm){
        query += `&key=${this.searchTerm}`
      }
-     this.getLiveStatus(query)
+     this.followupDetails = []
+     this.data = []
+     this.totalNumberOfRecords = []
+     let query2 = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${query}`:`?${query}`
+     this.api.getTeamLiveStatus(query2).subscribe(
+       (resp:any)=>{
+         this.followupDetails=resp.results
+         this.data = new MatTableDataSource<any>(this.followupDetails);
+         this.totalNumberOfRecords = resp.total_no_of_record
+       },
+       (error:any)=>{
+         this.api.showError(error?.error.message)
+       }
+     )
+  
     }
   }
   
@@ -163,8 +190,22 @@ export class TeamLiveStatusPage implements OnInit {
       this.allocate.tlsStatus.next('')
       this.addEmit.tlsCounsellor.next([])
       this.allocate.searchBar.next(false)
-      let query = `page=1&page_size=10`
-      this.getLiveStatus(query)
+      let params = `page=1&page_size=10`
+      let query = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${params}`:`?${params}`
+      this.followupDetails = []
+      this.data = []
+      this.totalNumberOfRecords = []
+      this.api.getTeamLiveStatus(query).subscribe(
+        (resp:any)=>{
+          this.followupDetails=resp.results
+          this.data = new MatTableDataSource<any>(this.followupDetails);
+          this.totalNumberOfRecords = resp.total_no_of_record
+        },
+        (error:any)=>{
+          this.api.showError(error?.error.message)
+        }
+      )
+   
       event.target.complete();
     }, 2000);
   }

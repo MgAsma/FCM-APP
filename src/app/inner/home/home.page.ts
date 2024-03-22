@@ -13,7 +13,7 @@ userName:any
   constructor(private popoverController:PopoverController) {
   }
   ngAfterViewInit(): void {
-    this.userName=sessionStorage.getItem('username')
+    this.userName=localStorage.getItem('username')
   }
 
   ngOnInit() {

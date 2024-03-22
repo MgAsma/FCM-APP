@@ -11,7 +11,7 @@ export class ActivateChildGuard implements CanActivateChild {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    const isLoggedIn: boolean = sessionStorage.getItem('token') !== null;
+    const isLoggedIn: boolean = localStorage.getItem('token') !== null;
 
     if (!isLoggedIn) {
       this._router.navigate(['/outer']);

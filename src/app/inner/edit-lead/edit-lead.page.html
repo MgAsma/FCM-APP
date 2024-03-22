@@ -13,488 +13,514 @@
 
 <div id="custom-height">
   <form [formGroup]="editLead">
-<div class="container">
+    <div class="container">
   
-  <ion-accordion-group>
-    <ion-accordion value="first">
-      <ion-item slot="header" color="light">
-        <ion-label> Basic Information</ion-label>
-      </ion-item>
-      <div slot="content" class="p-3"> 
-        <ng-container>
-              <!-- First Name -->
-              <ion-label position="stacked">Student Name</ion-label><b class="star-symbol">*</b>
-              <ion-item>    
-                <ion-input appFormSpace
-                  type="text"
-                  placeholder="Enter Student Name"
-                  formControlName="firstName"
-                  required
-                ></ion-input>
-              </ion-item>
-              <ion-error *ngIf="f['firstName'].touched && f['firstName']?.hasError('required')">
-                <ion-label color="danger">Student Name Is Required.</ion-label>
-              </ion-error>
-              <ion-error *ngIf="f['firstName']?.hasError('pattern')">
-                <ion-label color="danger">Invalid Name Format. Please Enter Characters.</ion-label>
-              </ion-error>
-          
-              <!-- Mobile Number -->
-              <ion-label position="stacked">Mobile Number</ion-label><b class="star-symbol">*</b>
-              <ion-item>
-                <ion-input appFormSpace
-                  type="tel"
-                  placeholder="Enter  Mobile Number"
-                  formControlName="mobile"
-                  required
-                ></ion-input>
-              </ion-item>
-              <ion-error *ngIf="f['mobile'].touched && f['mobile'].hasError('required')">
-                <ion-label color="danger">Mobile Number Is Required.</ion-label>
-              </ion-error>
-              <ion-error *ngIf="f['mobile'].hasError('pattern')">
-                <ion-label color="danger">Please Enter A 10-Digit Mobile Number.</ion-label>
-              </ion-error>
-
-                <!--Alternate Mobile Number -->
-                <ion-label position="stacked">Alternate Mobile Number</ion-label><b class="star-symbol">*</b>
-                <ion-item>
-                  <ion-input appFormSpace
-                    type="tel"
-                    placeholder="Enter  Alternate Mobile Number"
-                    formControlName="alternateNumber"
-                  ></ion-input>
-                </ion-item>
-                
-                <ion-error *ngIf="f['alternateNumber'].hasError('pattern')">
-                  <ion-label color="danger">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
-                </ion-error>
-                <ion-error *ngIf="f['alternateNumber'].hasError('required')">
-                  <ion-label color="danger">Alternate Mobile Number Is Required.</ion-label>
-                </ion-error>
-                <ion-error *ngIf="f['alternateNumber'].hasError('sameAsMobile')">
-                  <ion-label color="danger">Alternate Phone Number Should Not Be The Same As Mobile Number.</ion-label>
-                </ion-error>
-              <!-- Email -->
-              <ion-label position="stacked">Email Id</ion-label><b class="star-symbol">*</b>
-              <ion-item>
-                <ion-input appFormSpace
-                  type="email"
-                  placeholder="Enter  Email Id"
-                  formControlName="email"
-                  
-                ></ion-input>
-              </ion-item>
-              
-              <ng-container *ngIf="f['email'].touched && f['email'].invalid">
-                <ion-error *ngIf="f['email'].hasError('required')">
-                  <ion-label color="danger">Email Id Required.</ion-label>
-                </ion-error>
-                <ion-error *ngIf="!f['email'].hasError('required')&&f['email'].hasError('pattern')">
-                  <ion-label color="danger">Invalid Email Format.</ion-label>
-                </ion-error>
-              </ng-container>
-          
+      <ion-accordion-group>
+         <ion-accordion value="first">
+           <ion-item slot="header" color="light">
+             <ion-label> Basic Information</ion-label>
+           </ion-item>
+           <div slot="content" class="p-3"> 
+             <ng-container>
+                   <!-- First Name -->
+                   <ion-label position="stacked">Student Name</ion-label><b class="star-symbol">*</b>
+                   <ion-item>    
+                     <ion-input appFormSpace
+                       type="text"
+                       placeholder="Enter Student Name"
+                       formControlName="firstName"
+                       required
+                     ></ion-input>
+                   </ion-item>
+                   <ion-error *ngIf="f['firstName'].touched && f['firstName']?.hasError('required')">
+                     <ion-label color="danger">Student Name Is Required.</ion-label>
+                   </ion-error>
+                   <ion-error *ngIf="f['firstName']?.hasError('pattern')">
+                     <ion-label color="danger">Invalid Name Format. Please Enter Characters.</ion-label>
+                   </ion-error>
+               
+                   <!-- Mobile Number -->
+                   <ion-label position="stacked">Mobile Number</ion-label><b class="star-symbol">*</b>
+                   <ion-item>
+                     <ion-input appFormSpace
+                       type="tel"
+                       placeholder="Enter  Mobile Number"
+                       formControlName="mobile"
+                       required
+                     ></ion-input>
+                   </ion-item>
+                   <ion-error *ngIf="f['mobile'].touched && f['mobile'].hasError('required')">
+                     <ion-label color="danger">Mobile Number Is Required.</ion-label>
+                   </ion-error>
+                   <ion-error *ngIf="f['mobile'].hasError('pattern')">
+                     <ion-label color="danger">Please Enter A 10-Digit Mobile Number.</ion-label>
+                   </ion-error>
+                   <ion-error *ngIf="!f['mobile'].hasError('required') && f['mobile'].hasError('sameAsMobile')">
+                     <ion-label color="danger">Mobile Number Should Not Be The Same As Alternate Number..</ion-label>
+                   </ion-error>
+                     <!--Alternate Mobile Number -->
+                     <ion-label position="stacked">Alternate Mobile Number</ion-label><b class="star-symbol">*</b>
+                     <ion-item>
+                       <ion-input appFormSpace
+                         type="tel"
+                         placeholder="Enter  Alternate Mobile Number"
+                         formControlName="alternateNumber"
+                       ></ion-input>
+                     </ion-item>
+                     <ng-container *ngIf="f['alternateNumber'].touched && f['alternateNumber'].invalid">
+                       <ion-error *ngIf="f['alternateNumber'].hasError('pattern')">
+                         <ion-label color="danger">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
+                       </ion-error>
+                       <ion-error *ngIf="f['alternateNumber'].hasError('required')">
+                         <ion-label color="danger">Alternate Mobile Number Is Required.</ion-label>
+                       </ion-error>
+                       <ion-error *ngIf="!f['alternateNumber'].hasError('required') && f['alternateNumber'].hasError('sameAsMobile')">
+                         <ion-label color="danger">Alternate Phone Number Should Not Be The Same As Mobile Number..</ion-label>
+                       </ion-error>
+                     </ng-container>
+                     
+                   <!-- Email -->
+                   <ion-label position="stacked">Email Id</ion-label><b class="star-symbol">*</b>
+                   <ion-item>
+                     <ion-input appFormSpace
+                       type="email"
+                       placeholder="Enter  Email Id"
+                       formControlName="email"
+                     ></ion-input>
+                   </ion-item>
+                   <ng-container *ngIf="f['email'].touched && f['email'].invalid">
+                     <ion-error *ngIf="f['email'].hasError('required')">
+                       <ion-label color="danger">Email Id Required.</ion-label>
+                     </ion-error>
+                     <ion-error *ngIf="!f['email'].hasError('required') && f['email'].hasError('pattern')">
+                       <ion-label color="danger">Invalid Email Format.</ion-label>
+                     </ion-error>
+                   </ng-container>
+                   
+               
                  <!-----  Date Of Birth ---->
-            <ion-label position="stacked">Date Of Birth</ion-label>
-            <ion-item (click)="showPicker = !showPicker">
-             <ion-text>{{editLead.value.dateOfBirth || 'YYYY/MM/DD'}}</ion-text>
-             <ion-icon name="calendar-outline" slot="end"></ion-icon>
-            </ion-item>
-            <ion-datetime presentation="date" [value]="minDateAdapter" size="cover" 
-            *ngIf="showPicker"
-            #datePicker
-            [max]="minDateAdapter"
-            (ionChange)="dateChanged(datePicker.value)">
-
-            </ion-datetime>
-
-          <!-- State -->
-          <ion-label position="stacked">State</ion-label>
-          <ion-item>
-            <ion-select formControlName="state" placeholder="Select The State" >
-              <ion-select-option *ngFor="let option of stateOptions" [value]="option.id">{{ option.name }}</ion-select-option>
-            </ion-select>
-            <ion-button
-              fill="clear"
-              (click)="clearSelectField('state')"
-              *ngIf="f['state']?.value"
-            >
-              <ion-icon name="close-outline"></ion-icon>
-            </ion-button>
-          </ion-item>
-
-          <!-- Zone -->
-          <ion-label position="stacked">Zone</ion-label>
-          <ion-item>
-            <ion-select formControlName="zone" placeholder="Select The Zone">
-              <ion-select-option *ngFor="let option of zone" [value]="option">{{ option }}</ion-select-option>
-            </ion-select>
-            <ion-button
-              fill="clear"
-              (click)="clearSelectField('zone')"
-              *ngIf="f['zone']?.value"
-            >
-              <ion-icon name="close-outline"></ion-icon>
-            </ion-button>
-          </ion-item>
-          
-          
-            <!-- City Name -->
-            <ion-label position="stacked">City Name</ion-label>
-            <ion-item>
-              <ion-select formControlName="cityName" placeholder="Select The City Name">
-                <ion-select-option *ngFor="let option of cityOptions" [value]="option.id">{{ option.name }}</ion-select-option>
-              </ion-select>
-              <ion-button
-                fill="clear"
-                (click)="clearSelectField('cityName')"
-                *ngIf="f['cityName']?.value"
-              >
-                <ion-icon name="close-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-          
-            <!-- Pincode -->
-            <ion-label position="stacked">Pincode</ion-label>
-            <ion-item>
-              <ion-input appFormSpace
-                type="tel"
-                placeholder="Enter Pincode"
-                formControlName="pincode"
-              ></ion-input>
-            </ion-item>
-              <ion-error *ngIf="f['pincode'].hasError('pattern')">
-              <ion-label color="danger">Please Enter 6-Digit Pincode.</ion-label>
-            </ion-error>
-            <!-- Country -->
-            <ion-label position="stacked">Country Name</ion-label>
-            <ion-item>
-              <ion-select formControlName="countryId" placeholder="Select The Country Name">
-                <ion-select-option *ngFor="let option of countryOptions" [value]="option.id">{{ option.name }}</ion-select-option>
-              </ion-select>
-              <ion-button
-                fill="clear"
-                (click)="clearSelectField('countryId')"
-                *ngIf="f['countryId']?.value"
-              >
-                <ion-icon name="close-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-          
-      </ng-container>
-      </div>
-    </ion-accordion>
-    <ion-accordion value="second">
-      <ion-item slot="header" color="light">
-        <ion-label>Candidate Details</ion-label>
-      </ion-item>
-      <div slot="content" class="p-3">
-        <!---Reference Name----->
-        <ion-label position="stacked">Reference Name</ion-label>
-        <ion-item>
-          <ion-input appFormSpace
-            type="text"
-            placeholder="Enter The Reference Name"
-            formControlName="referenceName"
-          ></ion-input>
-        </ion-item>
-
-        <!---Reference Phone Number----->
-        <ion-label position="stacked">Reference Phone Number</ion-label>
-        <ion-item>
-          <ion-input appFormSpace
-            type="tel"
-            placeholder="Enter Reference Phone Number"
-            formControlName="referencePhoneNumber"
-          ></ion-input>
-        </ion-item>
-        <ion-error *ngIf="f['referencePhoneNumber'].hasError('pattern')">
-          <ion-label color="danger">Please Enter A 10-Digit Reference Phone Number.</ion-label>
-        </ion-error>
-
-          <!---Father Name----->
-          <ion-label position="stacked">Father Name</ion-label>
-          <ion-item>
-            <ion-input appFormSpace
-              type="text"
-              placeholder="Enter Father Name"
-              formControlName="fatherName"
-            ></ion-input>
-          </ion-item>
-
-            <!---Father Occupation----->
-        <ion-label position="stacked">Father Occupation</ion-label>
-        <ion-item>
-          <ion-input appFormSpace
-            type="text"
-            placeholder="Enter Father Occupation"
-            formControlName="fatherOccupation"
-          ></ion-input>
-        </ion-item>
-        <!----Father Phone Number -->
-        <ion-label position="stacked">Father Phone Number</ion-label>
-        <ion-item>
-          <ion-input appFormSpace
-            type="tel"
-            placeholder="Enter Father Phone Number"
-            formControlName="fatherPhoneNumber"
-          ></ion-input>
-        </ion-item>
-        <ion-error *ngIf="f['fatherPhoneNumber'].hasError('pattern')">
-        <ion-label color="danger">Please Enter A 10-Digit Reference Phone Number.</ion-label>
-      </ion-error>
-      </div>
-    </ion-accordion>
-    <ion-accordion value="third">
-  
-    <ion-item slot="header" color="light">
-      <ion-label>Student Education details</ion-label>
-    </ion-item>
-    <div slot="content" class="p-3">
-   <!---Tenth Percentage----->
-   <ion-label position="stacked">Tenth Percentage</ion-label>
-   <ion-item>
-     <ion-input appFormSpace
-       type="tel"
-       placeholder="Enter Tenth Percentage"
-       formControlName="tenthPercentage"
-     ></ion-input>
-   </ion-item>
-   <ion-error *ngIf="f['tenthPercentage'].touched && f['tenthPercentage']?.hasError('pattern')">
-     <ion-label color="danger">Invalid Tenth Percentage.</ion-label>
-   </ion-error>
-     <!---Twelfth Percentage----->
-     <ion-label position="stacked">Twelfth Percentage</ion-label>
-     <ion-item>
-       <ion-input appFormSpace
-         type="tel"
-         placeholder="Enter Twelfth Percentage"
-         formControlName="twelthPercentage"
-       ></ion-input>
-     </ion-item>
-     <ion-error *ngIf="f['twelthPercentage'].touched && f['twelthPercentage']?.hasError('pattern')">
-       <ion-label color="danger">Invalid Twelfth Percentage</ion-label>
-     </ion-error>
-   <!---Degree Percentage----->
- <ion-label position="stacked">Degree Percentage</ion-label>
-     <ion-item>
-       <ion-input appFormSpace
-         type="tel"
-         placeholder="Enter Degree Percentage"
-         formControlName="degree"
-       ></ion-input>
-     </ion-item>
-     <ion-error *ngIf="f['degree'].touched && f['degree']?.hasError('pattern')">
-       <ion-label color="danger">Invalid Degree Percentage.</ion-label>
-     </ion-error>
-        </div>
-    </ion-accordion>
-      <ion-accordion value="fourth">
-      
-          <ion-item slot="header" color="light">
-            <ion-label>Student Studying Stream</ion-label>
-          </ion-item>
-          <div slot="content" class="p-3">
-          <!-- Stream -->
-          <ion-label position="stacked">Stream</ion-label>
-          <ion-item>
-            <ion-select formControlName="course" placeholder="Select The Stream" >
-              <ion-select-option *ngFor="let option of streamList" [value]="option.id">{{ option.stream_name }}</ion-select-option>
-            </ion-select>
-            <ion-button
-              fill="clear"
-              (click)="clearSelectField('stream')"
-              *ngIf="f['stream']?.value"
-            >
-              <ion-icon name="close-outline"></ion-icon>
-            </ion-button>
-          </ion-item>
-
-            <!----Entrance Exam -->
-          <ion-label position="stacked">Entrance Exam</ion-label>
-          <ion-item>
-            <ion-input appFormSpace
-              type="text"
-              placeholder="Enter Entrance Exam"
-              formControlName="entranceExam"
-            ></ion-input>
-          </ion-item>
-            <!-- Course Looking For -->
-            <ion-label position="stacked">Course Looking For</ion-label>
-            <ion-item>
-              <ion-select formControlName="courseLookingfor" placeholder="Select Course Looking For" >
-                <ion-select-option *ngFor="let option of courseOptions" [value]="option.id">{{ option.course_name }}</ion-select-option>
-              </ion-select>
-              <ion-button
-                fill="clear"
-                (click)="clearSelectField('courseLookingfor')"
-                *ngIf="f['courseLookingfor']?.value"
-              >
-                <ion-icon name="close-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-
-              <!----Preferred College 1 -->
-          <ion-label position="stacked">Preferred College 1</ion-label>
-          <ion-item>
-            <ion-input appFormSpace
-              type="text"
-              placeholder="Enter Preferred College 1"
-              formControlName="preferredCollege1"
-            ></ion-input>
-          </ion-item>
-
-            <!----Preferred College 2 -->
-            <ion-label position="stacked">Preferred College 2</ion-label>
-            <ion-item>
-              <ion-input appFormSpace
-                type="text"
-                placeholder="Enter Preferred College 2"
-                formControlName="preferredCollege2"
-              ></ion-input>
-            </ion-item>
-
-              <!----Preferred Location 1 -->
-          <ion-label position="stacked">Preferred Location 1</ion-label>
-          <ion-item>
-            <ion-input appFormSpace
-              type="text"
-              placeholder="Enter Preferred Location 1"
-              formControlName="preferredLocation1"
-            ></ion-input>
-          </ion-item>
-
-            <!----Preferred Location 2 -->
-            <ion-label position="stacked">Preferred Location 2</ion-label>
-            <ion-item>
-              <ion-input appFormSpace
-                type="text"
-                placeholder="Enter Preferred Location 2"
-                formControlName="preferredLocation2"
-              ></ion-input>
-            </ion-item>
-          </div>
-    </ion-accordion>
-    <ion-accordion value="fifth">
-        <ion-item slot="header" color="light">
-          <ion-label> Lead Details </ion-label>
-        </ion-item>
-        <div slot="content" class="p-3">
-
-        <!-- Lead Owner -->
-        <ion-label position="stacked">Lead Owner</ion-label><b class="star-symbol">*</b>
-        <ion-item>
-          <ion-select formControlName="counsellor" placeholder="Select The Lead Owner" >
-            <ion-select-option *ngFor="let option of referredTo" [value]="option.id">{{ option?.first_name }}</ion-select-option>
-          </ion-select>
-          <ion-button
-            fill="clear"
-            (click)="clearSelectField('counsellor')"
-            *ngIf="f['counsellor']?.value"
-          >
-            <ion-icon name="close-outline"></ion-icon>
-          </ion-button>
-        </ion-item>
-        <ion-error *ngIf="f['counsellor'].touched && f['counsellor']?.hasError('required')">
-          <ion-label color="danger">Lead Owner Is Required.</ion-label>
-        </ion-error>
-
-        <!-- Counselled By -->
-        <ion-label position="stacked">Counselled By</ion-label>
-        <ion-item>
-          <ion-select formControlName="counsellorAdmin" placeholder="Select Counselled By" >
-            <ion-select-option *ngFor="let option of adminList" [value]="option.id">{{ option?.first_name }}</ion-select-option>
-          </ion-select>
-          <ion-button
-            fill="clear"
-            (click)="clearSelectField('counsellorAdmin')"
-            *ngIf="f['counsellorAdmin']?.value"
-          >
-            <ion-icon name="close-outline"></ion-icon>
-          </ion-button>
-        </ion-item>
-
-         <!-- Source -->
-         <ion-label position="stacked">Source</ion-label><b class="star-symbol">*</b>
-         <ion-item>
-           <ion-select formControlName="leadSource" placeholder="Select Source" >
-             <ion-select-option *ngFor="let option of sources" [value]="option.id">{{ option?.source_name }}</ion-select-option>
-           </ion-select>
-           <ion-button
-             fill="clear"
-             (click)="clearSelectField('leadSource')"
-             *ngIf="f['leadSource']?.value"
-           >
-             <ion-icon name="close-outline"></ion-icon>
-           </ion-button>
+                 <ion-label position="stacked">Date Of Birth</ion-label>
+                 <ion-item (click)="showPicker = !showPicker">
+                  <ion-text>{{editLead.value.dateOfBirth || 'YYYY/MM/DD'}}</ion-text>
+                  <ion-icon name="calendar-outline" slot="end"></ion-icon>
+                 </ion-item>
+                 <ion-datetime presentation="date" [value]="minDateAdapter" size="cover" 
+                 *ngIf="showPicker"
+                 #datePicker
+                 [max]="minDateAdapter"
+                 (ionChange)="dateChanged(datePicker.value)">
+ 
+                 </ion-datetime>
+               <!-- State -->
+               <ion-label position="stacked">State</ion-label>
+               <ion-item>
+                 <ion-select formControlName="state" placeholder="Select The State" >
+                   <ion-select-option *ngFor="let option of stateOptions" [value]="option.id">{{ option.name }}</ion-select-option>
+                 </ion-select>
+                 <ion-button
+                   fill="clear"
+                   (click)="clearSelectField('state')"
+                   *ngIf="f['state']?.value"
+                 >
+                   <ion-icon name="close-outline"></ion-icon>
+                 </ion-button>
+               </ion-item>
+ 
+               <!-- Zone -->
+               <ion-label position="stacked">Zone</ion-label>
+               <ion-item>
+                 <ion-select formControlName="zone" placeholder="Select The Zone">
+                   <ion-select-option *ngFor="let option of zone" [value]="option">{{ option }}</ion-select-option>
+                 </ion-select>
+                 <ion-button
+                   fill="clear"
+                   (click)="clearSelectField('zone')"
+                   *ngIf="f['zone']?.value"
+                 >
+                   <ion-icon name="close-outline"></ion-icon>
+                 </ion-button>
+               </ion-item>
+               
+               
+                 <!-- City Name -->
+                 <ion-label position="stacked">City Name</ion-label>
+                 <ion-item>
+                   <ion-select formControlName="cityName" placeholder="Select The City Name">
+                     <ion-select-option *ngFor="let option of cityOptions" [value]="option.id">{{ option.name }}</ion-select-option>
+                   </ion-select>
+                   <ion-button
+                     fill="clear"
+                     (click)="clearSelectField('cityName')"
+                     *ngIf="f['cityName']?.value"
+                   >
+                     <ion-icon name="close-outline"></ion-icon>
+                   </ion-button>
+                 </ion-item>
+               
+                 <!-- Pincode -->
+                 <ion-label position="stacked">Pincode</ion-label>
+                 <ion-item>
+                   <ion-input appFormSpace
+                     type="tel"
+                     placeholder="Enter Pincode"
+                     formControlName="pincode"
+                   ></ion-input>
+                 </ion-item>
+                 <ion-error *ngIf="f['pincode'].hasError('pattern')">
+                   <ion-label color="danger">Please Enter 6-Digit Pincode.</ion-label>
+                 </ion-error>
+                 <!-- Country -->
+                 <ion-label position="stacked">Country Name</ion-label>
+                 <ion-item>
+                   <ion-select formControlName="countryId" placeholder="Select The Country Name">
+                     <ion-select-option *ngFor="let option of countryOptions" [value]="option.id">{{ option.name }}</ion-select-option>
+                   </ion-select>
+                   <ion-button
+                     fill="clear"
+                     (click)="clearSelectField('countryId')"
+                     *ngIf="f['countryId']?.value"
+                   >
+                     <ion-icon name="close-outline"></ion-icon>
+                   </ion-button>
+                 </ion-item>
+               
+           </ng-container>
+           </div>
+         </ion-accordion>
+         <ion-accordion value="second">
+           <ion-item slot="header" color="light">
+             <ion-label>Candidate Details</ion-label>
+           </ion-item>
+           <div slot="content" class="p-3">
+             <!---Reference Name----->
+             <ion-label position="stacked">Reference Name</ion-label>
+             <ion-item>
+               <ion-input appFormSpace
+                 type="text"
+                 placeholder="Enter The Reference Name"
+                 formControlName="referenceName"
+               ></ion-input>
+             </ion-item>
+             <ion-error *ngIf="f['referenceName'].hasError('pattern')">
+               <ion-label color="danger">Invalid Reference Name.Please Enter Characters.</ion-label>
+             </ion-error>
+             <!---Reference Phone Number----->
+             <ion-label position="stacked">Reference Phone Number</ion-label>
+             <ion-item>
+               <ion-input appFormSpace
+                 type="tel"
+                 placeholder="Enter Reference Phone Number"
+                 formControlName="referencePhoneNumber"
+               ></ion-input>
+             </ion-item>
+             <ion-error *ngIf="f['referencePhoneNumber'].hasError('pattern')">
+               <ion-label color="danger">Please Enter A 10-Digit Reference Phone Number.</ion-label>
+             </ion-error>
+ 
+               <!---Father Name----->
+               <ion-label position="stacked">Father Name</ion-label>
+               <ion-item>
+                 <ion-input appFormSpace
+                   type="text"
+                   placeholder="Enter Father Name"
+                   formControlName="fatherName"
+                 ></ion-input>
+               </ion-item>
+               <ion-error *ngIf="f['fatherName'].hasError('pattern')">
+                 <ion-label color="danger">Invalid Father Name.Please Enter Characters.</ion-label>
+               </ion-error>
+                 <!---Father Occupation----->
+             <ion-label position="stacked">Father Occupation</ion-label>
+             <ion-item>
+               <ion-input appFormSpace
+                 type="text"
+                 placeholder="Enter Father Occupation"
+                 formControlName="fatherOccupation"
+               ></ion-input>
+             </ion-item>
+             <ion-error *ngIf="f['fatherOccupation'].hasError('pattern')">
+               <ion-label color="danger">Invalid Father Occupation.Please Enter Characters.</ion-label>
+             </ion-error>
+             <!----Father Phone Number -->
+             <ion-label position="stacked">Father Phone Number</ion-label>
+             <ion-item>
+               <ion-input appFormSpace
+                 type="tel"
+                 placeholder="Enter Father Phone Number"
+                 formControlName="fatherPhoneNumber"
+               ></ion-input>
+             </ion-item>
+             <ion-error *ngIf="f['fatherPhoneNumber'].hasError('pattern')">
+             <ion-label color="danger">Please Enter A 10-Digit Phone Number.</ion-label>
+           </ion-error>
+           </div>
+         </ion-accordion>
+         <ion-accordion value="third">
+       
+         <ion-item slot="header" color="light">
+           <ion-label>Student Education details</ion-label>
          </ion-item>
-         <ion-error *ngIf="f['leadSource'].touched && f['leadSource']?.hasError('required')">
-          <ion-label color="danger">Source Is Required.</ion-label>
-        </ion-error>
-          <!-- Lead Stage -->
-        <ion-label position="stacked">Lead Stage</ion-label><b class="star-symbol">*</b>
-        <ion-item>
-          <ion-select formControlName="leadStages" placeholder="Select Lead Stage" >
-            <ion-select-option *ngFor="let option of leadStage" [value]="option.id">{{ option?.name }}</ion-select-option>
-          </ion-select>
-          <ion-button
-            fill="clear"
-            (click)="clearSelectField('leadStages')"
-            *ngIf="f['leadStages']?.value"
-          >
-            <ion-icon name="close-outline"></ion-icon>
-          </ion-button>
-        </ion-item>
-        <ion-error *ngIf="f['leadStages'].touched && f['leadStages']?.hasError('required')">
-          <ion-label color="danger">Lead Stage Is Required.</ion-label>
-        </ion-error>
-         <!-- Status -->
-         <ion-label position="stacked">Status</ion-label>
+         <div slot="content" class="p-3">
+         <!---Tenth Percentage----->
+         <ion-label position="stacked">Tenth Percentage</ion-label>
          <ion-item>
-           <ion-select formControlName="leadStatus" placeholder="Select Status" >
-             <ion-select-option *ngFor="let option of stat_us" [value]="option.id">{{ option?.name }}</ion-select-option>
-           </ion-select>
-           <ion-button
-             fill="clear"
-             (click)="clearSelectField('leadStatus')"
-             *ngIf="f['leadStatus']?.value"
-           >
-             <ion-icon name="close-outline"></ion-icon>
-           </ion-button>
+           <ion-input appFormSpace
+             type="tel"
+             placeholder="Enter Tenth Percentage"
+             formControlName="tenthPercentage"
+           ></ion-input>
          </ion-item>
-
-          <!----Notes -->
-          <ion-label position="stacked">Notes</ion-label>
-          <ion-item>
-            <ion-input appFormSpace
-              type="text"
-              placeholder="Enter  Notes"
-              formControlName="notes"
-            ></ion-input>
-          </ion-item>
-
-           <!----Remarks -->
-           <ion-label position="stacked">Remarks</ion-label>
+         <ion-error *ngIf="f['tenthPercentage'].touched && f['tenthPercentage']?.hasError('pattern')">
+           <ion-label color="danger">Invalid Tenth Percentage.</ion-label>
+         </ion-error>
+           <!---Twelfth Percentage----->
+           <ion-label position="stacked">Twelfth Percentage</ion-label>
            <ion-item>
              <ion-input appFormSpace
-               type="text"
-               placeholder="Enter  Remarks"
-               formControlName="remarks"
+               type="tel"
+               placeholder="Enter Twelfth Percentage"
+               formControlName="twelthPercentage"
              ></ion-input>
            </ion-item>
-        </div>
-      
-    </ion-accordion>
-</ion-accordion-group>
-
-<ion-row class="my-2">
-  <ion-col class="text-center">
-    <ion-button shape="round" fill="outline" (click)="closeModal()" >Close</ion-button>
-    <ion-button shape="round" color="primary" (click)="onSubmit()">Update</ion-button>
-  </ion-col>
-</ion-row>
-</div>
+           <ion-error *ngIf="f['twelthPercentage'].touched && f['twelthPercentage']?.hasError('pattern')">
+             <ion-label color="danger">Invalid Twelfth Percentage</ion-label>
+           </ion-error>
+         <!---Degree Percentage----->
+       <ion-label position="stacked">Degree Percentage</ion-label>
+           <ion-item>
+             <ion-input appFormSpace
+               type="tel"
+               placeholder="Enter Degree Percentage"
+               formControlName="degree"
+             ></ion-input>
+           </ion-item>
+           <ion-error *ngIf="f['degree'].touched && f['degree']?.hasError('pattern')">
+             <ion-label color="danger">Invalid Degree Percentage.</ion-label>
+           </ion-error>
+             </div>
+         </ion-accordion>
+           <ion-accordion value="fourth">
+           
+               <ion-item slot="header" color="light">
+                 <ion-label>Student Studying Stream</ion-label>
+               </ion-item>
+               <div slot="content" class="p-3">
+               <!-- Stream -->
+               <ion-label position="stacked">Stream</ion-label>
+               <ion-item>
+                 <ion-select formControlName="course" placeholder="Select The Stream" >
+                   <ion-select-option *ngFor="let option of streamList" [value]="option.id">{{ option.stream_name }}</ion-select-option>
+                 </ion-select>
+                 <ion-button
+                   fill="clear"
+                   (click)="clearSelectField('stream')"
+                   *ngIf="f['stream']?.value"
+                 >
+                   <ion-icon name="close-outline"></ion-icon>
+                 </ion-button>
+               </ion-item>
+ 
+                 <!----Entrance Exam -->
+               <ion-label position="stacked">Entrance Exam</ion-label>
+               <ion-item>
+                 <ion-input appFormSpace
+                   type="text"
+                   placeholder="Enter Entrance Exam"
+                   formControlName="entranceExam"
+                 ></ion-input>
+               </ion-item>
+               <ion-error *ngIf="f['entranceExam'].hasError('pattern')">
+                 <ion-label color="danger">Invalid Entrance Exam.Please Enter Characters.</ion-label>
+               </ion-error>
+                 <!-- Course Looking For -->
+                 <ion-label position="stacked">Course Looking For</ion-label>
+                 <ion-item>
+                   <ion-select formControlName="courseLookingfor" placeholder="Select Course Looking For" >
+                     <ion-select-option *ngFor="let option of courseOptions" [value]="option.id">{{ option.course_name }}</ion-select-option>
+                   </ion-select>
+                   <ion-button
+                     fill="clear"
+                     (click)="clearSelectField('courseLookingfor')"
+                     *ngIf="f['courseLookingfor']?.value"
+                   >
+                     <ion-icon name="close-outline"></ion-icon>
+                   </ion-button>
+                 </ion-item>
+ 
+                   <!----Preferred College 1 -->
+               <ion-label position="stacked">Preferred College 1</ion-label>
+               <ion-item>
+                 <ion-input appFormSpace
+                   type="text"
+                   placeholder="Enter Preferred College 1"
+                   formControlName="preferredCollege1"
+                 ></ion-input>
+               </ion-item>
+               <ion-error *ngIf="f['preferredCollege1'].hasError('pattern')">
+                 <ion-label color="danger">Invalid Preferred College 1 Name.Please Enter Characters.</ion-label>
+               </ion-error>
+                 <!----Preferred College 2 -->
+                 <ion-label position="stacked">Preferred College 2</ion-label>
+                 <ion-item>
+                   <ion-input appFormSpace
+                     type="text"
+                     placeholder="Enter Preferred College 2"
+                     formControlName="preferredCollege2"
+                   ></ion-input>
+                 </ion-item>
+                 <ion-error *ngIf="f['preferredCollege2'].hasError('pattern')">
+                   <ion-label color="danger">Invalid Preferred College 2 Name.Please Enter Characters.</ion-label>
+                 </ion-error>
+                   <!----Preferred Location 1 -->
+               <ion-label position="stacked">Preferred Location 1</ion-label>
+               <ion-item>
+                 <ion-input appFormSpace
+                   type="text"
+                   placeholder="Enter Preferred Location 1"
+                   formControlName="preferredLocation1"
+                 ></ion-input>
+               </ion-item>
+               <ion-error *ngIf="f['preferredLocation1'].hasError('pattern')">
+                 <ion-label color="danger">Invalid Preferred Location 1 Name.Please Enter Characters.</ion-label>
+               </ion-error>
+                 <!----Preferred Location 2 -->
+                 <ion-label position="stacked">Preferred Location 2</ion-label>
+                 <ion-item>
+                   <ion-input appFormSpace
+                     type="text"
+                     placeholder="Enter Preferred Location 2"
+                     formControlName="preferredLocation2"
+                   ></ion-input>
+                 </ion-item>
+                 <ion-error *ngIf="f['preferredLocation2'].hasError('pattern')">
+                   <ion-label color="danger">Invalid Preferred Location 2 Name.Please Enter Characters.</ion-label>
+                 </ion-error>
+               </div>
+         </ion-accordion>
+         <ion-accordion value="fifth">
+             <ion-item slot="header" color="light">
+               <ion-label> Lead Details </ion-label>
+             </ion-item>
+             <div slot="content" class="p-3">
+ 
+             <!-- Lead Owner -->
+             <ion-label position="stacked">Lead Owner</ion-label><b class="star-symbol">*</b>
+             <ion-item>
+               <ion-select formControlName="counsellor" placeholder="Select The Lead Owner" >
+                 <ion-select-option *ngFor="let option of referredTo" [value]="option.id">{{ option?.first_name }}</ion-select-option>
+               </ion-select>
+               <ion-button
+                 fill="clear"
+                 (click)="clearSelectField('counsellor')"
+                 *ngIf="f['counsellor']?.value"
+               >
+                 <ion-icon name="close-outline"></ion-icon>
+               </ion-button>
+             </ion-item>
+             <ion-error *ngIf="f['counsellor'].touched && f['counsellor']?.hasError('required')">
+               <ion-label color="danger">Lead Owner Is Required.</ion-label>
+             </ion-error>
+ 
+             <!-- Counselled By -->
+             <ion-label position="stacked">Counselled By</ion-label>
+             <ion-item>
+               <ion-select formControlName="counsellorAdmin" placeholder="Select Counselled By" >
+                 <ion-select-option *ngFor="let option of adminList" [value]="option.id">{{ option?.first_name }}</ion-select-option>
+               </ion-select>
+               <ion-button
+                 fill="clear"
+                 (click)="clearSelectField('counsellorAdmin')"
+                 *ngIf="f['counsellorAdmin']?.value"
+               >
+                 <ion-icon name="close-outline"></ion-icon>
+               </ion-button>
+             </ion-item>
+ 
+              <!-- Source -->
+              <ion-label position="stacked">Source</ion-label><b class="star-symbol">*</b>
+              <ion-item>
+                <ion-select formControlName="leadSource" placeholder="Select Source" >
+                  <ion-select-option *ngFor="let option of sources" [value]="option.id">{{ option?.source_name }}</ion-select-option>
+                </ion-select>
+                <ion-button
+                  fill="clear"
+                  (click)="clearSelectField('leadSource')"
+                  *ngIf="f['leadSource']?.value"
+                >
+                  <ion-icon name="close-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+              <ion-error *ngIf="f['leadSource'].touched && f['leadSource']?.hasError('required')">
+               <ion-label color="danger">Source Is Required.</ion-label>
+             </ion-error>
+               <!-- Lead Stage -->
+             <ion-label position="stacked">Lead Stage</ion-label><b class="star-symbol">*</b>
+             <ion-item>
+               <ion-select formControlName="leadStages" placeholder="Select Lead Stage" >
+                 <ion-select-option *ngFor="let option of leadStage" [value]="option.id">{{ option?.name }}</ion-select-option>
+               </ion-select>
+               <ion-button
+                 fill="clear"
+                 (click)="clearSelectField('leadStages')"
+                 *ngIf="f['leadStages']?.value"
+               >
+                 <ion-icon name="close-outline"></ion-icon>
+               </ion-button>
+             </ion-item>
+             <ion-error *ngIf="f['leadStages'].touched && f['leadStages']?.hasError('required')">
+               <ion-label color="danger">Lead Stage Is Required.</ion-label>
+             </ion-error>
+              <!-- Status -->
+              <ion-label position="stacked">Status</ion-label>
+              <ion-item>
+                <ion-select formControlName="leadStatus" placeholder="Select Status" >
+                  <ion-select-option *ngFor="let option of stat_us" [value]="option.id">{{ option?.name }}</ion-select-option>
+                </ion-select>
+                <ion-button
+                  fill="clear"
+                  (click)="clearSelectField('leadStatus')"
+                  *ngIf="f['leadStatus']?.value"
+                >
+                  <ion-icon name="close-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+ 
+               <!----Notes -->
+               <ion-label position="stacked">Notes</ion-label>
+               <ion-item>
+                 <ion-input appFormSpace
+                   type="text"
+                   placeholder="Enter  Notes"
+                   formControlName="notes"
+                 ></ion-input>
+               </ion-item>
+               <ion-error *ngIf="f['notes'].hasError('pattern')">
+                 <ion-label color="danger">Invalid Notes.Please Enter Characters.</ion-label>
+               </ion-error>
+                <!----Remarks -->
+                <ion-label position="stacked">Remarks</ion-label>
+                <ion-item>
+                  <ion-input appFormSpace
+                    type="text"
+                    placeholder="Enter  Remarks"
+                    formControlName="remarks"
+                  ></ion-input>
+                </ion-item>
+                <ion-error *ngIf="f['remarks'].hasError('pattern')">
+                 <ion-label color="danger">Invalid Remarks.Please Enter Characters.</ion-label>
+               </ion-error>
+             </div>
+           
+         </ion-accordion>
+     </ion-accordion-group>
+   
+ <ion-row class="my-2">
+   <ion-col class="text-center">
+     <ion-button shape="round" fill="outline" (click)="closeModal()" >Close</ion-button>
+     <ion-button shape="round" color="primary" (click)="onSubmit()">Done</ion-button>
+   </ion-col>
+ </ion-row>
+ </div>
 </form>
 </div>
 <ion-modal [keepContentsMounted]="true">

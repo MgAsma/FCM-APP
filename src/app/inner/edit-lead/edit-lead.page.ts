@@ -17,7 +17,7 @@ export class EditLeadPage implements OnInit {
   showPicker: boolean = false;
   @Input() set data(value:any){
     this._inputData = value;
-    console.log(this._inputData,"ssdgdgg")
+    //console.log(this._inputData,"ssdgdgg")
   }
   editLead!: FormGroup;
  
@@ -66,7 +66,7 @@ export class EditLeadPage implements OnInit {
       this.showPicker = false
     }
   ngOnInit(): void {
-    this.user_id = sessionStorage.getItem('user_id')
+    this.user_id = localStorage.getItem('user_id')
     this.getCountry();
     this.getState();
     this.getChannel();
@@ -143,7 +143,7 @@ export class EditLeadPage implements OnInit {
   initForm(){
     this.editLead = this.fb.group({
       firstName: ['', [Validators.required,Validators.pattern(this._commonService.namePattern)]],
-      mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern)]],
+      mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern),this.notSameAsMobileValidator('alternateNumber')]],
       alternateNumber:['',[Validators.required,Validators.pattern(this._commonService.mobilePattern),this.notSameAsMobileValidator('mobile')]],
       email: ['', [Validators.required,Validators.pattern(this._commonService.emailPattern)]],
       dateOfBirth:[''],
@@ -152,29 +152,29 @@ export class EditLeadPage implements OnInit {
       cityName: [''],
       pincode:['',Validators.pattern(this._commonService.pincode)],
       countryId:[''],
-      referenceName:[''],
+      referenceName:['',Validators.pattern(this._commonService.namePattern)],
       referencePhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
-      fatherName:[''],
-      fatherOccupation:[''],
+      fatherName:['',Validators.pattern(this._commonService.namePattern)],
+      fatherOccupation:['',Validators.pattern(this._commonService.namePattern)],
       fatherPhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
       tenthPercentage :['',Validators.pattern(this._commonService.nonNegativeValidator)],
       twelthPercentage :['',Validators.pattern(this._commonService.nonNegativeValidator)],
       degree:['',Validators.pattern(this._commonService.nonNegativeValidator)],
       course:[''],
       otherCourse:[''],
-      entranceExam:[''],
-      courseLookingfor:[''],
-      preferredCollege1:[''],
-      preferredCollege2:[''],
-      preferredLocation1:[''],
-      preferredLocation2:[''],
+      entranceExam:['',Validators.pattern(this._commonService.namePattern)],
+      courseLookingfor:['',Validators.pattern(this._commonService.namePattern)],
+      preferredCollege1:['',Validators.pattern(this._commonService.namePattern)],
+      preferredCollege2:['',Validators.pattern(this._commonService.namePattern)],
+      preferredLocation1:['',Validators.pattern(this._commonService.namePattern)],
+      preferredLocation2:['',Validators.pattern(this._commonService.namePattern)],
       counsellor:['',[Validators.required]],
       counsellorAdmin:[''],
       leadSource:['',[Validators.required]],
       leadStages:['',[Validators.required]],
       leadStatus:[''],
-      notes:[''],
-      remarks:['']
+      notes:['',Validators.pattern(this._commonService.namePattern)],
+      remarks:['',Validators.pattern(this._commonService.namePattern)]
     })
   }
    
@@ -200,7 +200,7 @@ export class EditLeadPage implements OnInit {
     this.streamList = resp
     } 
     },(error:any)=>{
-      //console.log(error);
+      ////console.log(error);
       
     }
 

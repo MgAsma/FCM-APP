@@ -28,7 +28,7 @@ export class FollowUpsComponent  implements OnInit {
   data:any=[]
 
   constructor(private allocate:AllocationEmittersService,private modalController:ModalController,private api:ApiService,  private baseService:BaseServiceService,) { 
-    this.id=sessionStorage.getItem('user_id')
+    this.id=localStorage.getItem('user_id')
   }
 
 
@@ -89,7 +89,7 @@ export class FollowUpsComponent  implements OnInit {
   getFollowupList(query:any){
     this.api.getFollowupListById(this.id,query).subscribe(
       (resp:any)=>{
-        console.log(resp);
+        //console.log(resp);
         this.followupDetails=resp.result[0]
         this.data = new MatTableDataSource<any>(this.followupDetails);
         this.totalNumberOfRecords = resp.total_no_of_record

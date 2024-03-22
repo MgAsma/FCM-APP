@@ -72,9 +72,9 @@ export class AllocationsPage implements AfterViewInit  {
     private _addLeadEmitter: AddLeadEmitterService,
     private modalController:ModalController
   ) {
-    this.user_role = sessionStorage.getItem('user_role')?.toUpperCase()
+    this.user_role = localStorage.getItem('user_role')?.toUpperCase()
 
-    this.counsellor_id = sessionStorage.getItem("user_id");
+    this.counsellor_id = localStorage.getItem("user_id");
 
     this.platform.ready().then(() => {
       this.callLog
@@ -132,9 +132,9 @@ export class AllocationsPage implements AfterViewInit  {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        console.log(JSON.stringify(results[0]),"latest call log")
+        //console.log(JSON.stringify(results[0]),"latest call log")
         this.callDuration=results[0].duration;
-        console.log(JSON.stringify(this.callDuration),"latest call duration")
+        //console.log(JSON.stringify(this.callDuration),"latest call duration")
         if (this.callDuration > 0) {
               this.currentStatus = 2;
             } else {
@@ -144,10 +144,10 @@ export class AllocationsPage implements AfterViewInit  {
 
         
 
-        console.log(
-          JSON.stringify(results),
-          'call log responseeeeeeeeeeeeeeeee'
-        );
+        //console.log(
+        //   JSON.stringify(results),
+        //   'call log responseeeeeeeeeeeeeeeee'
+        // );
         this.recordsFoundText = JSON.stringify(results);
         this.recordsFound = results; //JSON.stringify(results);
       })
@@ -190,11 +190,11 @@ export class AllocationsPage implements AfterViewInit  {
       .subscribe(
         (res: any) => {
           if (res) {
-            // this.api.showToast(res.message);
+            // this.api.showError(res.message);
           }
         },
         (error: any) => {
-          this.api.showToast(error?.error?.message);
+          this.api.showError(error?.error?.message);
         }
       );
   }
@@ -209,7 +209,7 @@ export class AllocationsPage implements AfterViewInit  {
     };
     this.api.sendingCallHistory(data).subscribe(
       (res: any) => {
-        console.log(res, "sending call history");
+        //console.log(res, "sending call history");
         let tlsData = {
           user: this.user_id,
           status: 3
@@ -217,7 +217,7 @@ export class AllocationsPage implements AfterViewInit  {
         this.postTLStatus(tlsData)
       },
       (error: any) => {
-        this.api.showToast(error.error.message);
+        this.api.showError(error.error.message);
       }
     );
   }
@@ -230,14 +230,14 @@ export class AllocationsPage implements AfterViewInit  {
         }
       },
       (error: any) => {
-        this.api.showToast(error.error.message);
+        this.api.showError(error.error.message);
       }
     );
   }
  
   ngAfterViewInit() {
     this.pageIndex = 0
-    this.user_id = sessionStorage.getItem('user_id')
+    this.user_id = localStorage.getItem('user_id')
     this.getStatus();
     this.allocate.searchBar.subscribe((res) => {
       if (res === true) {
@@ -273,18 +273,30 @@ export class AllocationsPage implements AfterViewInit  {
             this.totalNumberOfRecords = res.total_no_of_record
           }
         }, (error: any) => {
-          this.api.showToast(error.error.message);
+          this.api.showError(error.error.message);
         });
         
       },
       (error: any) => {
-        this.api.showToast(error.error.message);
+        this.api.showError(error.error.message);
       }
     );
    
     this._addLeadEmitter.triggerGet$.subscribe((res:any) => {
         let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
-        this.getLeadlist(query);
+        this.leadCards = [];
+        this.data = [];
+        this.totalNumberOfRecords = []
+        this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
+          if (res.results) {
+         
+            this.leadCards = res.results;
+            this.data = new MatTableDataSource<any>(this.leadCards);
+            this.totalNumberOfRecords = res.total_no_of_record
+          }
+        }, (error: any) => {
+          this.api.showError(error.error.message);
+        });
      });
 
     this.getCounselor();
@@ -309,12 +321,15 @@ export class AllocationsPage implements AfterViewInit  {
    
    this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
      if (res.results) {
+      this.leadCards = [];
+      this.data = [];
+      this.totalNumberOfRecords = []
        this.leadCards = res.results;
        this.data = new MatTableDataSource<any>(this.leadCards);
        this.totalNumberOfRecords = res.total_no_of_record
      }
    }, (error: any) => {
-     this.api.showToast(error.error.message);
+     this.api.showError(error.error.message);
    });
    
   }
@@ -340,7 +355,7 @@ export class AllocationsPage implements AfterViewInit  {
          }
        },
        (error: any) => {
-         this.api.showToast(error.error.message);
+         this.api.showError(error.error.message);
        }
      );
     }
@@ -355,7 +370,7 @@ export class AllocationsPage implements AfterViewInit  {
           this.totalNumberOfRecords = res.total_no_of_record
         }
       }, (error: any) => {
-        this.api.showToast(error.error.message);
+        this.api.showError(error.error.message);
       });
       
   }
@@ -371,7 +386,7 @@ export class AllocationsPage implements AfterViewInit  {
           }
         },
         (error: any) => {
-          this.api.showToast(error.error.message);
+          this.api.showError(error.error.message);
         }
       );
   }
@@ -392,7 +407,7 @@ export class AllocationsPage implements AfterViewInit  {
              }
            },
            (error: any) => {
-             this.api.showToast(error.error.message);
+             this.api.showError(error.error.message);
            }
          );
         }
@@ -406,7 +421,7 @@ export class AllocationsPage implements AfterViewInit  {
             this.totalNumberOfRecords = res.total_no_of_record
           }
         }, (error: any) => {
-          this.api.showToast(error.error.message);
+          this.api.showError(error.error.message);
         });
       } 
   }
@@ -446,7 +461,7 @@ export class AllocationsPage implements AfterViewInit  {
         this.totalNumberOfRecords = res.total_no_of_record
       }
     }, (error: any) => {
-      this.api.showToast(error.error.message);
+      this.api.showError(error.error.message);
     });
   }
 

@@ -23,8 +23,8 @@ export class StartBreakComponent  implements OnInit {
   constructor(private popoverController:PopoverController,private api:ApiService,private _fb:FormBuilder,private router:Router) { }
 
   ngOnInit(): void {
-    this.id=sessionStorage.getItem('user_id')
-    this.lastLoginDate=sessionStorage.getItem('lastLoginDate')
+    this.id=localStorage.getItem('user_id')
+    this.lastLoginDate=localStorage.getItem('lastLoginDate')
     this.initForm()
   }
   initForm(){
@@ -53,10 +53,10 @@ export class StartBreakComponent  implements OnInit {
           this.breakForm.patchValue({user:this.id})
           this.breakForm.patchValue({status:1})
         
-          console.log(this.breakForm.value);
+          //console.log(this.breakForm.value);
           
           if(this.breakForm.invalid){
-            console.log("Invalid");	
+            //console.log("Invalid");	
           }
           else{
             this.api.showLoading()
@@ -91,10 +91,10 @@ export class StartBreakComponent  implements OnInit {
             this.breakForm.patchValue({user:this.id})
             this.breakForm.patchValue({status:7})
           
-            console.log(this.breakForm.value);
+            //console.log(this.breakForm.value);
             
             if(this.breakForm.invalid){
-              console.log("Invalid");	
+              //console.log("Invalid");	
             }
             else{
               this.api.showLoading()
