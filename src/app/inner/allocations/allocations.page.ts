@@ -378,7 +378,7 @@ export class AllocationsPage implements AfterViewInit  {
 
   getCounselor() {
     this._baseService
-      .getData(`${environment._user}/?role_name=counsellor`)
+      .getData(`${environment._user}?role_name=counsellor`)
       .subscribe(
         (res: any) => {
           if (res.results) {

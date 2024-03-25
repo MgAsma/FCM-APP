@@ -95,7 +95,8 @@ export class HomeCallLogsPage implements OnInit {
       (res: any) => {
         if(res.length >0){
           this.statusFilter = true;
-          query +=`&status=${res}`
+          let status = res
+          query +=`&status=${status}`
         }if(this.counsellor_ids.length >0){
           query +=`&counsellor_ids=${this.counsellor_ids}`
         }
@@ -195,7 +196,7 @@ export class HomeCallLogsPage implements OnInit {
       this.data = []
      
       this.addEmiter.filterStatus.next(true)
-      this.allocate.callLogStatus.next('')
+      this.allocate.callLogStatus.next([])
       this.addEmiter.callLogCounsellor.next([])
       this.dateForm.reset()
       this.allocate.searchBar.next(false)

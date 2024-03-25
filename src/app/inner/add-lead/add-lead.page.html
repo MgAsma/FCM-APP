@@ -101,16 +101,17 @@
                 <!-----  Date Of Birth ---->
                 <ion-label position="stacked">Date Of Birth</ion-label>
                 <ion-item (click)="showPicker = !showPicker">
-                 <ion-text>{{addNewLead.value.dateOfBirth || 'YYYY/MM/DD'}}</ion-text>
+                 <!-- <ion-text>{{addNewLead.value.dateOfBirth || 'YYYY/MM/DD'}}</ion-text> -->
+                 <ion-input type="date" [max]="minDateAdapter"/>
                  <ion-icon name="calendar-outline" slot="end"></ion-icon>
                 </ion-item>
-                <ion-datetime presentation="date" [value]="minDateAdapter" size="cover" 
+                <!-- <ion-datetime presentation="date" [value]="minDateAdapter" size="cover" 
                 *ngIf="showPicker"
                 #datePicker
-                [max]="minDateAdapter"
+               
                 (ionChange)="dateChanged(datePicker.value)">
 
-                </ion-datetime>
+                </ion-datetime> -->
               <!-- State -->
               <ion-label position="stacked">State</ion-label>
               <ion-item>

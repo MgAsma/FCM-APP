@@ -75,11 +75,15 @@ export class LoginComponent  implements OnInit {
           localStorage.setItem('lastLoginDate', formattedDate);
           localStorage.setItem('token',resp.token.token)
          
-          const decodedToken:any = jwtDecode(resp.token.token);
+          let decodedToken:any = ''
+          localStorage.setItem('device_token',resp.device_token)
+          decodedToken = jwtDecode(resp.token.token);
           localStorage.setItem('user_role',decodedToken.user_role)
           localStorage.setItem('user_id',decodedToken.user_id)
           localStorage.setItem('username',decodedToken.username)
+          // localStorage.setItem('device_token',decodedToken.device_token)
           this.loginForm.reset()
+         
           this.navCtrl.navigate(['/inner'])
           this.api.showSuccess(resp.message)
         }

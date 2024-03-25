@@ -163,7 +163,7 @@ export class EditLeadPage implements OnInit {
       course:[''],
       otherCourse:[''],
       entranceExam:['',Validators.pattern(this._commonService.namePattern)],
-      courseLookingfor:['',Validators.pattern(this._commonService.namePattern)],
+      courseLookingfor:[''],
       preferredCollege1:['',Validators.pattern(this._commonService.namePattern)],
       preferredCollege2:['',Validators.pattern(this._commonService.namePattern)],
       preferredLocation1:['',Validators.pattern(this._commonService.namePattern)],

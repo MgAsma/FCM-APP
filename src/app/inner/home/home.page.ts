@@ -9,7 +9,7 @@ import { StartBreakComponent } from './start-break/start-break.component';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit,AfterViewInit {
-userName:any
+userName:any = ''
   constructor(private popoverController:PopoverController) {
   }
   ngAfterViewInit(): void {

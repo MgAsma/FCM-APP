@@ -35,6 +35,7 @@ export class CheckoutComponent  implements OnInit {
       this.logoutForm.patchValue({logged_in_from:"mobile"})
       if(this.logoutForm.invalid){
         //console.log("Invalid");	
+         window.location.reload();
         this.router.navigate(['../outer'])
       }
       else{

@@ -96,12 +96,24 @@
   </ion-content>
  
   <ion-content *ngIf="data?.data?.length == 0 && !statusFilter && counsellor_ids.length === 0">
+    <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
     <app-nodata></app-nodata> 
   </ion-content>
   <ion-content *ngIf="data?.data?.length == 0 && statusFilter && counsellor_ids.length === 0  && searchTerm">
+    <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
     <app-nodata></app-nodata> 
   </ion-content>
   <ion-content *ngIf="data?.data?.length == 0 && !statusFilter && counsellor_ids.length > 0  && searchTerm">
+    <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
     <app-nodata></app-nodata> 
   </ion-content>
   <ion-content [fullscreen]="true" *ngIf="data?.data?.length > 0">
