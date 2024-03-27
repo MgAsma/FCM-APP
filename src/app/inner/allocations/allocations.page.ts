@@ -20,12 +20,16 @@ import { BaseServiceService } from "../../service/base-service.service";
 import { CallLog, CallLogObject } from "@ionic-native/call-log/ngx";
 import { AddLeadEmitterService } from "../../service/add-lead-emitter.service";
 import { EditLeadPage } from "../edit-lead/edit-lead.page";
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+  var PhoneCallTrap:any
 @Component({
   selector: "app-allocations",
   templateUrl: "./allocations.page.html",
   styleUrls: ["./allocations.page.scss"],
 })
+
 export class AllocationsPage implements OnInit {
+ 
   searchBar: boolean = false;
   placeholderText = "Search by Name/Status";
   data: any = [];
@@ -64,7 +68,8 @@ export class AllocationsPage implements OnInit {
     private callLog: CallLog,
     private platform: Platform,
     private _addLeadEmitter: AddLeadEmitterService,
-    private modalController:ModalController
+    private modalController:ModalController,
+    private androidPermissions: AndroidPermissions,
   ) {
     this.superadmin_or_admin = localStorage.getItem("superadmin_or_admin");
 
@@ -130,7 +135,7 @@ export class AllocationsPage implements OnInit {
         this.callDuration=results[0].duration;
         console.log(JSON.stringify(this.callDuration),"latest call duration")
         if (this.callDuration > 0) {
-              this.currentStatus = 2;
+              this.currentStatus = 1;
             } else {
               this.currentStatus = 3;
             }
@@ -212,7 +217,73 @@ export class AllocationsPage implements OnInit {
   //     this.postTLStatus(data)
   // }
 
-  callContact(number: string, id: any) {
+
+
+
+
+
+  // async checkPermissions() {
+  //   try {
+  //     const phoneStateResult = await this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_PHONE_STATE)
+  //     if (!phoneStateResult.hasPermission) {
+  //       this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.READ_PHONE_STATE)
+  //     }
+
+  //     const callLogResult = await this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_CALL_LOG)
+  //     if (!callLogResult.hasPermission) {
+  //       this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.READ_CALL_LOG)
+  //     }
+
+     
+
+  //   } catch (error) {
+  //     console.log('Error!', error)
+  //   }
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+  // private  initiateCallStatus(){
+  //   const that = this;
+  //   console.log(PhoneCallTrap,"PhoneCallTrap");
+    
+  //   PhoneCallTrap?.onCall(function(state:string) {
+  //     console.log("CHANGE STATE: " + state);
+  //     alert(state)
+  
+  //     switch (state) {
+  //         case "RINGING":
+  //           alert("Phone is ringing")
+  //             console.log("Phone is ringing");
+  //             break;
+  //         case "OFFHOOK":
+  //           alert("Phone is off-hook")
+  //             console.log("Phone is off-hook");
+  //             break;
+  
+  //         case "IDLE":
+  //           alert("Phone is idle")
+  //             console.log("Phone is idle");
+  //             break;
+  //     }
+  // });
+
+  // }
+
+
+
+
+  async callContact(number: string, id: any) {
+    
     this.leadId = id;
     this.leadPhoneNumber = number;
     this.callStartTime = new Date();
@@ -220,12 +291,19 @@ export class AllocationsPage implements OnInit {
       user: this.user_id,
       status: 3,
     };
+    
     this.postTLStatus(data);
-    this.callNumber.callNumber(number, true);
+   
+   await this.callNumber.callNumber(number, true);
+   const that = this;
     this.callInitiated = true;
+    // this.initiateCallStatus();
     // await this.getContacts('type','2','==');
     // await this.getContacts('type','5','==');
     // await this.postCallHistory();
+
+  
+ 
 
     setTimeout(() => {
       this.getContacts("type", "2", "==");
@@ -235,7 +313,6 @@ export class AllocationsPage implements OnInit {
       this.postCallHistory();
     }, 90000);
   }
-
   
 
   postTLStatus(data) {
@@ -290,6 +367,8 @@ export class AllocationsPage implements OnInit {
   }
  
   ngOnInit() {
+    // this.checkPermissions()
+    // this.initiateCallStatus()
     this.user_id = localStorage.getItem('user_id')
    
     this.getStatus();

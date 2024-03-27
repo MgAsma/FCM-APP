@@ -117,7 +117,7 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
         this.callDuration=results[0].duration;
         console.log(JSON.stringify(this.callDuration),"latest call duration")
         if (this.callDuration > 0) {
-              this.callStatus = 2;
+              this.callStatus = 1;
             } else {
               this.callStatus = 3;
             }

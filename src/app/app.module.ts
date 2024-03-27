@@ -17,6 +17,7 @@ import { DatePipe } from '@angular/common';
 import { RouteReuseStrategy } from '@angular/router';
 import { RecFollowupListPage } from './shared-modules/rec-followup-list/rec-followup-list.page';
 import { MaterialModule } from './shared-modules/material/material/material.module';
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
 
 @NgModule({
   imports: [
@@ -32,11 +33,12 @@ import { MaterialModule } from './shared-modules/material/material/material.modu
       enabled: environment.production
     }),
     
+    
   ],exports:[
     MaterialModule
   ],
   declarations: [AppComponent],
-  providers: [InAppBrowser,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },{provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },DatePipe],
+  providers: [InAppBrowser,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },{provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },DatePipe,AndroidPermissions],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -86,7 +86,7 @@ export class LoginComponent  implements OnInit {
           window.location.href='/inner'
           // this.router.navigate(['/inner']);
           
-          this.api.showToast(resp.message.message)
+          this.api.showToast(resp)
         }
       
 			},
