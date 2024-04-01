@@ -28,7 +28,7 @@ export class LoginComponent  implements OnInit {
   private api:ApiService,
   private datePipe: DatePipe,
   private commonService:CommonServiceService,
-  private navCtrl:Router
+  private navCtrl:NavController
   
   ){}
  
@@ -63,14 +63,15 @@ export class LoginComponent  implements OnInit {
 			this.loginForm.markAllAsTouched()
 		}
 		else{
-      // this.api.showLoading()
+      this.api.showLoading()
 		  this.api.login(this.loginForm.value).subscribe(
 			(resp:any)=>{
         if(resp){
           localStorage.clear()
           //console.log(resp,"RESP")
           const currentDate = new Date();
-
+          // window.location.reload();
+          this.api.showSuccess(resp.message)
           const formattedDate :any = this.datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss.SSSZ');
           localStorage.setItem('lastLoginDate', formattedDate);
           localStorage.setItem('token',resp.token.token)
@@ -83,20 +84,22 @@ export class LoginComponent  implements OnInit {
           localStorage.setItem('username',decodedToken.username)
           // localStorage.setItem('device_token',decodedToken.device_token)
           this.loginForm.reset()
-         
-          this.navCtrl.navigate(['/inner'])
+          
+          this.navCtrl.navigateForward(['/inner'])
           this.api.showSuccess(resp.message)
+          window.location.reload()
+          this.api.loaderDismiss()
         }
       
 			},
 			(error:any)=>{
-        // this.api.loaderDismiss()
+        this.api.loaderDismiss()
         this.api.showError(error.error.message)
        // this.api.showToast(error.error.error.message)
 			}
 		  )
 		}
-    // this.api.loaderDismiss()
+    
 	  }
    
 }

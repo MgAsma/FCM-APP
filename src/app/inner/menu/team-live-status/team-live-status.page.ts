@@ -135,7 +135,7 @@ export class TeamLiveStatusPage implements OnInit {
     this.getLiveStatus(query)
   }
   getCounselor(){
-    this.baseService.getData(`${environment._user}/?role_name=counsellor`).subscribe((res:any)=>{
+    this.baseService.getData(`${environment._user}?role_name=counsellor`).subscribe((res:any)=>{
      if(res.results){    
        this.counselor = res.results 
      }
@@ -194,6 +194,7 @@ export class TeamLiveStatusPage implements OnInit {
       let query = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${params}`:`?${params}`
       this.followupDetails = []
       this.data = []
+      this.statusFilter = false;
       this.totalNumberOfRecords = []
       this.api.getTeamLiveStatus(query).subscribe(
         (resp:any)=>{

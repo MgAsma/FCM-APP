@@ -53,5 +53,51 @@ ion-select{
     top: 12px;
     left: -13px; 
   }
-
+  .custom-errmsg{
+    color: #eb445a;
+    font-size: 14px;
+  }
+  .date-input{
+    background: #f3f3f3;
+    padding: 3px 13px !important;
+  }
   
+  input[type="date"] {
+    position: relative;
+    padding: 10px 0;
+    width: 100%;
+    background: none;
+    border: 0;
+    outline: 0;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    color: transparent;
+    background: none;
+    z-index: 1;
+  }
+  
+  input[type="date"]:before {
+    color: transparent;
+    background: none;
+    display: block;
+    font-family: 'FontAwesome';
+    content: '\f073';
+    /* This is the calendar icon in FontAwesome */
+    width: 15px;
+    height: 20px;
+    position: absolute;
+    top: 12px;
+    right: 6px;
+    color: #4f4f4f;
+  }
+  .label {
+    position: relative;  
+  }
+  .custom-placeholder {
+      position: absolute;
+      top: 16px;
+      left: 0;
+      z-index: 10;
+      color: #616161;
+  }

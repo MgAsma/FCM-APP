@@ -7,7 +7,7 @@ import { ApiService } from '../../../../service/api/api.service';
 // import { environment } from 'src/environments/environment';
 // import { ApiService } from '../service/api/api.service';
 @Component({
-  selector: 'app-call-toolbar-customer',
+  selector: 'app-toolbar-customer',
   templateUrl: './toolbar-customer.component.html',
   styleUrls: ['./toolbar-customer.component.scss'],
 })
@@ -55,6 +55,7 @@ export class ToolbarCustomerComponent  implements OnInit {
   }
   closeModal(event:any) {
     if(event){
+      this.addEmit.callLogCounsellor.next(this.selectedCounselorIds)
       this.modalController.dismiss();
     }  
   }

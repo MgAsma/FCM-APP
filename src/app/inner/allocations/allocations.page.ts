@@ -136,7 +136,7 @@ export class AllocationsPage implements AfterViewInit  {
         this.callDuration=results[0].duration;
         //console.log(JSON.stringify(this.callDuration),"latest call duration")
         if (this.callDuration > 0) {
-              this.currentStatus = 2;
+              this.currentStatus = 1;
             } else {
               this.currentStatus = 3;
             }
@@ -310,6 +310,7 @@ export class AllocationsPage implements AfterViewInit  {
       this.totalNumberOfRecords = 0
       this.allocate.allocationStatus.next('')
       this._addLeadEmitter.selectedCounsellor.next([])
+      this.statusFilter = false;
       this.allocate.searchBar.next(false)
       let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
       this.getLeadlist(query);

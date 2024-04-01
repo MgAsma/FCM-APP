@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 export class EditLeadPage implements OnInit {
    _inputData: any;
   showPicker: boolean = false;
+  min:string;
   @Input() set data(value:any){
     this._inputData = value;
     //console.log(this._inputData,"ssdgdgg")
@@ -57,7 +58,9 @@ export class EditLeadPage implements OnInit {
     private _addLeadEmitter:AddLeadEmitterService
    ) {
     let dob = new Date()
+    let minimum = new Date('1990-01-01')
     this.minDateAdapter = this._datePipe.transform(dob,'yyyy-MM-dd')
+    this.min = this._datePipe.transform(minimum,'yyyy-MM-dd')
     }
     dateChanged(value){
       this.editLead.patchValue({
@@ -143,8 +146,8 @@ export class EditLeadPage implements OnInit {
   initForm(){
     this.editLead = this.fb.group({
       firstName: ['', [Validators.required,Validators.pattern(this._commonService.namePattern)]],
-      mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern),this.notSameAsMobileValidator('alternateNumber')]],
-      alternateNumber:['',[Validators.required,Validators.pattern(this._commonService.mobilePattern),this.notSameAsMobileValidator('mobile')]],
+      mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern)]],
+      alternateNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
       email: ['', [Validators.required,Validators.pattern(this._commonService.emailPattern)]],
       dateOfBirth:[''],
       state: [''],
@@ -178,13 +181,7 @@ export class EditLeadPage implements OnInit {
     })
   }
    
-  notSameAsMobileValidator(mobileControlName: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const mobile = control.root.get(mobileControlName)?.value;
-      const alternateNumber = control.value;
-      return mobile === alternateNumber ? { sameAsMobile: true } : null;
-    };
-  }
+  
   pincodeLengthValidator(control:FormControl) {
     const value = control.value;
 

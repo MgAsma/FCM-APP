@@ -46,6 +46,8 @@ export class AddLeadPage implements OnInit {
   showPicker = false;
   dateOfBirth = new Date()
   formatedDate: string;
+  type = 'text'
+  min:string;
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -56,8 +58,10 @@ export class AddLeadPage implements OnInit {
     private _addLeadEmitter:AddLeadEmitterService
    ) {
     let dob = new Date()
+    let minimum = new Date('1990-01-01')
     this.minDateAdapter = this._datePipe.transform(dob,'yyyy-MM-dd')
     this.formatedDate = this._datePipe.transform(this.dateOfBirth,'dd/MM/YYYY')
+    this.min = this._datePipe.transform(minimum,'yyyy-MM-dd')
     }
   dateChanged(value){
     this.addNewLead.patchValue({
@@ -95,8 +99,8 @@ export class AddLeadPage implements OnInit {
   initForm(){
     this.addNewLead = this.fb.group({
       firstName: ['', [Validators.required,Validators.pattern(this._commonService.namePattern)]],
-      mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern),this.notSameAsMobileValidator('alternateNumber')]],
-      alternateNumber:['',[Validators.required,Validators.pattern(this._commonService.mobilePattern),this.notSameAsMobileValidator('mobile')]],
+      mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern)]],
+      alternateNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
       email: ['', [Validators.required,Validators.pattern(this._commonService.emailPattern)]],
       dateOfBirth:[''],
       state: [''],
@@ -129,12 +133,8 @@ export class AddLeadPage implements OnInit {
       remarks:['',Validators.pattern(this._commonService.namePattern)]
     })
   }
-  notSameAsMobileValidator(mobileControlName: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const mobile = control.root.get(mobileControlName)?.value;
-      const alternateNumber = control.value;
-      return mobile === alternateNumber ? { sameAsMobile: true } : null;
-    };
+  modifyType(){
+    this.type = 'date'
   }
   pincodeLengthValidator(control:FormControl) {
     const value = control.value;

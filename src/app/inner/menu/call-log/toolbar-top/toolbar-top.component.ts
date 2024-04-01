@@ -10,7 +10,7 @@ import { FilterComponent } from '../filter/filter.component';
 
 
 @Component({
-  selector: 'app-call-toolbar-top',
+  selector: 'app-toolbar-top',
   templateUrl: './toolbar-top.component.html',
   styleUrls: ['./toolbar-top.component.scss'],
 })

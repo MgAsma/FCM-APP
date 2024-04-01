@@ -11,7 +11,7 @@ import { SortingCard, arrayOfObjects, sortingCards } from '../../../../shared-mo
 
 
 @Component({
-  selector: 'app-tls-toolbar-top',
+  selector: 'app-toolbar-top',
   templateUrl: './toolbar-top.component.html',
   styleUrls: ['./toolbar-top.component.scss'],
 })

@@ -35,7 +35,7 @@ export class CheckoutComponent  implements OnInit {
       this.logoutForm.patchValue({logged_in_from:"mobile"})
       if(this.logoutForm.invalid){
         //console.log("Invalid");	
-         window.location.reload();
+        window.location.reload();
         this.router.navigate(['../outer'])
       }
       else{
@@ -43,14 +43,12 @@ export class CheckoutComponent  implements OnInit {
         this.api.logout(this.logoutForm.value).subscribe(
         (resp:any)=>{
           this.logoutForm.reset()
-          this.api.loaderDismiss()
           this.close()
           localStorage.clear()
-          localStorage.clear()
- 
+          window.location.reload();
           this.router.navigate(['../outer'])
           this.api.showToast(resp.message)
-  
+          this.api.loaderDismiss()
         },
         (error:any)=>{
           this.api.loaderDismiss()

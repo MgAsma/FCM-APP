@@ -55,11 +55,11 @@
                   <ion-error *ngIf="f['mobile'].hasError('pattern')">
                     <ion-label color="danger">Please Enter A 10-Digit Mobile Number.</ion-label>
                   </ion-error>
-                  <ion-error *ngIf="!f['mobile'].hasError('required') && f['mobile'].hasError('sameAsMobile')">
+                  <!-- <ion-error *ngIf="!f['mobile'].hasError('required') && f['mobile'].hasError('sameAsMobile')">
                     <ion-label color="danger">Mobile Number Should Not Be The Same As Alternate Number..</ion-label>
-                  </ion-error>
+                  </ion-error> -->
                     <!--Alternate Mobile Number -->
-                    <ion-label position="stacked">Alternate Mobile Number</ion-label><b class="star-symbol">*</b>
+                    <ion-label position="stacked">Alternate Mobile Number</ion-label>
                     <ion-item>
                       <ion-input appFormSpace
                         type="tel"
@@ -71,14 +71,10 @@
                       <ion-error *ngIf="f['alternateNumber'].hasError('pattern')">
                         <ion-label color="danger">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
                       </ion-error>
-                      <ion-error *ngIf="f['alternateNumber'].hasError('required')">
-                        <ion-label color="danger">Alternate Mobile Number Is Required.</ion-label>
-                      </ion-error>
-                      <ion-error *ngIf="!f['alternateNumber'].hasError('required') && f['alternateNumber'].hasError('sameAsMobile')">
-                        <ion-label color="danger">Alternate Phone Number Should Not Be The Same As Mobile Number..</ion-label>
-                      </ion-error>
                     </ng-container>
-                    
+                   <div class="custom-errmsg" *ngIf="!f['mobile'].hasError('pattern') && f['alternateNumber'].value && f['mobile'].value == f['alternateNumber'].value">
+                        Mobile and Alternate Numbers cannot be the same
+                  </div>
                   <!-- Email -->
                   <ion-label position="stacked">Email Id</ion-label><b class="star-symbol">*</b>
                   <ion-item>
@@ -100,18 +96,10 @@
               
                 <!-----  Date Of Birth ---->
                 <ion-label position="stacked">Date Of Birth</ion-label>
-                <ion-item (click)="showPicker = !showPicker">
-                 <!-- <ion-text>{{addNewLead.value.dateOfBirth || 'YYYY/MM/DD'}}</ion-text> -->
-                 <ion-input type="date" [max]="minDateAdapter"/>
-                 <ion-icon name="calendar-outline" slot="end"></ion-icon>
-                </ion-item>
-                <!-- <ion-datetime presentation="date" [value]="minDateAdapter" size="cover" 
-                *ngIf="showPicker"
-                #datePicker
-               
-                (ionChange)="dateChanged(datePicker.value)">
-
-                </ion-datetime> -->
+                  <ion-item class="label">
+                    <input type="date"  [min]="min" formControlName="dateOfBirth" [max]="minDateAdapter" />
+                    <span class="custom-placeholder" *ngIf="!f['dateOfBirth'].value">MM/DD/YYYY</span>
+                  </ion-item>
               <!-- State -->
               <ion-label position="stacked">State</ion-label>
               <ion-item>
@@ -314,8 +302,8 @@
                 </ion-select>
                 <ion-button
                   fill="clear"
-                  (click)="clearSelectField('stream')"
-                  *ngIf="f['stream']?.value"
+                  (click)="clearSelectField('course')"
+                  *ngIf="f['course']?.value"
                 >
                   <ion-icon name="close-outline"></ion-icon>
                 </ion-button>

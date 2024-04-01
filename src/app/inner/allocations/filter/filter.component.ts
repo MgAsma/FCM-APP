@@ -84,7 +84,9 @@ export class FilterComponent  implements OnInit {
     // this.modalController.dismiss();
   }
   closeModel(){
+    this.allocationEmit.allocationStatus.next(this.selectedStatus)
     this.modalController.dismiss();
+    
   }
   onSubmit(){
     if(this.selectedStatus.length >0){

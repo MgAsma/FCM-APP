@@ -121,6 +121,7 @@ getSelectedListLength(): number {
   return this.filteredData.filter(item => item.selected).length;
 }
 closePopup(){
+  this.addEmit.selectedCounsellor.next(this.selectedCounselorIds)
   this.modalController.dismiss()
 }
 }

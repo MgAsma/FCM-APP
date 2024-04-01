@@ -5,11 +5,8 @@ import { BaseServiceService } from '../../../../service/base-service.service';
 import { ApiService } from '../../../../service/api/api.service';
 import { AllocationEmittersService } from '../../../../service/allocation-emitters.service';
 
-
-
-
 @Component({
-  selector: 'app-tls-filter',
+  selector: 'app-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss'],
 })
@@ -87,6 +84,7 @@ export class FilterComponent  implements OnInit {
     this.modalController.dismiss();
   }
   closeModel(){
+    this.allocationEmit.tlsStatus.next(this.selectedStatus)
     this.modalController.dismiss();
   }
   onSubmit(){

@@ -6,7 +6,7 @@ import { ApiService } from '../../../../service/api/api.service';
 import { AddLeadEmitterService } from '../../../../service/add-lead-emitter.service';
 
 @Component({
-  selector: 'app-call-filter',
+  selector: 'app-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss'],
 })
@@ -83,6 +83,7 @@ export class FilterComponent  implements OnInit {
     this.allocationEmit.callLogStatus.next(this.selectedStatus)
   }
   closeModel(){
+    this.allocationEmit.callLogStatus.next(this.selectedStatus)
     this.modalController.dismiss();
   }
   onSubmit(){

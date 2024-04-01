@@ -19,24 +19,21 @@ export class ActivateChildGuard implements CanActivateChild {
     state: RouterStateSnapshot
   ): boolean {
     const isLoggedIn: boolean = localStorage.getItem('token') !== null;
-    const device_token = localStorage.getItem('device_token')
-    const user_id = localStorage.getItem('user_id')
+    // const device_token = localStorage.getItem('device_token')
+    // const user_id = localStorage.getItem('user_id')
     
-
-
-    
-      if(isLoggedIn){
-        this.baseService.getData(`${environment.device_token}?user_id=${user_id}`).subscribe((res:any)=>{
-          if(res){
-           this.newDeviceToken = res.device_token
-           if(this.newDeviceToken != device_token){
-             this._router.navigate(['/outer']);
-            return false;
-          }
-           console.log(this.newDeviceToken === device_token,"TOKEN")
-          }
-        })
-      }
+      // if(isLoggedIn){
+      //   this.baseService.getData(`${environment.device_token}${user_id}`).subscribe((res:any)=>{
+      //     if(res){
+      //      this.newDeviceToken = res.device_token
+      //      if(this.newDeviceToken != device_token){
+      //        this._router.navigate(['/outer']);
+      //       return false;
+      //     }
+      //      console.log(this.newDeviceToken === device_token,"TOKEN")
+      //     }
+      //   })
+      // }
       if (!isLoggedIn) {
         this._router.navigate(['/outer']);
         return false;
