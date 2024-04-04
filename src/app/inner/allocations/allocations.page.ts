@@ -20,16 +20,15 @@ import { BaseServiceService } from "../../service/base-service.service";
 import { CallLog, CallLogObject } from "@ionic-native/call-log/ngx";
 import { AddLeadEmitterService } from "../../service/add-lead-emitter.service";
 import { EditLeadPage } from "../edit-lead/edit-lead.page";
-import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
-  var PhoneCallTrap:any
+// import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
+declare var PhoneCallTrap: any;
 @Component({
   selector: "app-allocations",
   templateUrl: "./allocations.page.html",
   styleUrls: ["./allocations.page.scss"],
 })
-
 export class AllocationsPage implements OnInit {
- 
   searchBar: boolean = false;
   placeholderText = "Search by Name/Status";
   data: any = [];
@@ -59,6 +58,8 @@ export class AllocationsPage implements OnInit {
   currentStatus: any;
   callInitiated: boolean = false;
   callStartTime!: Date;
+  isPhoneHalfHook: boolean = false;
+  isPhoneIdle: boolean = false;
 
   constructor(
     private allocate: AllocationEmittersService,
@@ -68,8 +69,8 @@ export class AllocationsPage implements OnInit {
     private callLog: CallLog,
     private platform: Platform,
     private _addLeadEmitter: AddLeadEmitterService,
-    private modalController:ModalController,
-    private androidPermissions: AndroidPermissions,
+    private modalController: ModalController,
+    private androidPermissions: AndroidPermissions
   ) {
     this.superadmin_or_admin = localStorage.getItem("superadmin_or_admin");
 
@@ -85,19 +86,16 @@ export class AllocationsPage implements OnInit {
               .then((results) => {
                 // this.getContacts("type", "2", "==");
               })
-              .catch((e) =>{
+              .catch((e) => {
                 // alert(" requestReadPermission " + JSON.stringify(e))
-              }
-               
-              );
+              });
           } else {
             // this.getContacts("type", "5", "==");
           }
         })
         .catch((e) => {
           // alert(" hasReadPermission " + JSON.stringify(e))
-        }
-        );
+        });
     });
   }
 
@@ -131,24 +129,30 @@ export class AllocationsPage implements OnInit {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        console.log(JSON.stringify(results[0]),"latest call log")
-        this.callDuration=results[0].duration;
-        console.log(JSON.stringify(this.callDuration),"latest call duration")
-        if (this.callDuration > 0) {
-              this.currentStatus = 1;
-            } else {
-              this.currentStatus = 3;
-            }
-          
-
+        console.log(JSON.stringify(results[0]), "latest call log");
+        const calculateTime=results[0].date-this.calledTime
+        console.log(calculateTime,"calulatedTime");
         
+        this.callDuration = results[0].duration;
+        console.log(JSON.stringify(this.callDuration), "latest call duration");
+        if (this.callDuration > 0) {
+          this.currentStatus = 1;
+        } else {
+          this.currentStatus = 3;
+        }
 
         console.log(
           JSON.stringify(results),
-          'call log responseeeeeeeeeeeeeeeee'
+          "call log responseeeeeeeeeeeeeeeee"
         );
         this.recordsFoundText = JSON.stringify(results);
         this.recordsFound = results; //JSON.stringify(results);
+
+
+        if(calculateTime>0){
+          this.postCallHistory();
+        }
+        
       })
       .catch((e) => {
         // alert(" LOG " + JSON.stringify(e))
@@ -217,103 +221,118 @@ export class AllocationsPage implements OnInit {
   //     this.postTLStatus(data)
   // }
 
+  async checkPermissions() {
+    try {
+      const phoneStateResult = await this.androidPermissions.checkPermission(
+        this.androidPermissions.PERMISSION.READ_PHONE_STATE
+      );
+      if (!phoneStateResult.hasPermission) {
+        this.androidPermissions.requestPermission(
+          this.androidPermissions.PERMISSION.READ_PHONE_STATE
+        );
+      }
 
+      const callLogResult = await this.androidPermissions.checkPermission(
+        this.androidPermissions.PERMISSION.READ_CALL_LOG
+      );
+      if (!callLogResult.hasPermission) {
+        this.androidPermissions.requestPermission(
+          this.androidPermissions.PERMISSION.READ_CALL_LOG
+        );
+      }
+    } catch (error) {
+      console.log("Error!", error);
+    }
+  }
+calledTime:any;
+  private initiateCallStatus() {
+    const that = this;
+    console.log(PhoneCallTrap, "PhoneCallTrap");
 
+    PhoneCallTrap?.onCall(function (state: string) {
+      console.log("CHANGE STATE: " + state);
+      // alert(state);
 
+      switch (state) {
+        case "RINGING":
+          // alert("Phone is ringing");
+          console.log("Phone is ringing");
+          break;
+        case "OFFHOOK":
+          that.isPhoneHalfHook = true;
+       
 
+          // alert("Phone is off-hook");
+          console.log("Phone is off-hook");
+          break;
 
-  // async checkPermissions() {
-  //   try {
-  //     const phoneStateResult = await this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_PHONE_STATE)
-  //     if (!phoneStateResult.hasPermission) {
-  //       this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.READ_PHONE_STATE)
-  //     }
+        case "IDLE":
+          that.isPhoneIdle = true;
+          
+          if(that.isPhoneHalfHook == true){
+            setTimeout(()=>{
+              that.getContacktAndPostHistory()
+            },2000)
 
-  //     const callLogResult = await this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_CALL_LOG)
-  //     if (!callLogResult.hasPermission) {
-  //       this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.READ_CALL_LOG)
-  //     }
+           
+          }
+          that.isPhoneHalfHook=false;
 
-     
+          // alert("Phone is idle");
+          console.log("Phone is idle");
+       
 
-  //   } catch (error) {
-  //     console.log('Error!', error)
-  //   }
-  // }
+          break;
+      }
+    });
+  }
 
+  getContacktAndPostHistory() {
+    this.getContacts("type", "2", "==");
 
-
-
-
-
-
-
-
-
-
-
-  // private  initiateCallStatus(){
-  //   const that = this;
-  //   console.log(PhoneCallTrap,"PhoneCallTrap");
-    
-  //   PhoneCallTrap?.onCall(function(state:string) {
-  //     console.log("CHANGE STATE: " + state);
-  //     alert(state)
-  
-  //     switch (state) {
-  //         case "RINGING":
-  //           alert("Phone is ringing")
-  //             console.log("Phone is ringing");
-  //             break;
-  //         case "OFFHOOK":
-  //           alert("Phone is off-hook")
-  //             console.log("Phone is off-hook");
-  //             break;
-  
-  //         case "IDLE":
-  //           alert("Phone is idle")
-  //             console.log("Phone is idle");
-  //             break;
-  //     }
-  // });
-
-  // }
-
-
-
+  }
 
   async callContact(number: string, id: any) {
-    
-    this.leadId = id;
-    this.leadPhoneNumber = number;
-    this.callStartTime = new Date();
-    let data = {
-      user: this.user_id,
-      status: 3,
-    };
-    
-    this.postTLStatus(data);
-   
-   await this.callNumber.callNumber(number, true);
-   const that = this;
-    this.callInitiated = true;
-    // this.initiateCallStatus();
-    // await this.getContacts('type','2','==');
-    // await this.getContacts('type','5','==');
-    // await this.postCallHistory();
+    try {
+      this.leadId = id;
+      this.leadPhoneNumber = number;
+      this.callStartTime = new Date();
+      console.log( this.callStartTime," this.callStartTime");
+      
+      let data = {
+        user: this.user_id,
+        status: 3,
+      };
 
-  
- 
-
-    setTimeout(() => {
-      this.getContacts("type", "2", "==");
-      // this.getContacts("type", "5", "==");
-    }, 70000);
-    setTimeout(() => {
-      this.postCallHistory();
-    }, 90000);
+      this.postTLStatus(data);
+      setTimeout(async () => {
+        this.calledTime=new Date().getTime();
+        this.callStartTime = new Date();
+        await this.callNumber.callNumber(number, true);
+        
+        const that = this;
+        this.callInitiated = true;
+        
+        
+        // this.initiateCallStatus();
+      }, 100);
+    } catch (error) {
+      console.log(error);
+    }
   }
-  
+
+  // this.initiateCallStatus();
+  // await this.getContacts('type','2','==');
+  // await this.getContacts('type','5','==');
+  // await this.postCallHistory();
+
+  // setTimeout(() => {
+  //   // this.getContacts("type", "2", "==");
+  //   // this.getContacts("type", "5", "==");
+  // }, 70000);
+  // setTimeout(() => {
+  //   this.postCallHistory();
+  // }, 90000);
 
   postTLStatus(data) {
     this._baseService
@@ -343,9 +362,9 @@ export class AllocationsPage implements OnInit {
         console.log(res, "sending call history");
         let tlsData = {
           user: this.user_id,
-          status: 3
+          status: 3,
         };
-        this.postTLStatus(tlsData)
+        this.postTLStatus(tlsData);
       },
       (error: any) => {
         this.api.showToast(error.error.message);
@@ -365,12 +384,15 @@ export class AllocationsPage implements OnInit {
       }
     );
   }
- 
+
   ngOnInit() {
-    // this.checkPermissions()
-    // this.initiateCallStatus()
-    this.user_id = localStorage.getItem('user_id')
-   
+    this.checkPermissions();
+    this.initiateCallStatus();
+    this.isPhoneHalfHook = false;
+    this.isPhoneIdle = false;
+
+    this.user_id = localStorage.getItem("user_id");
+
     this.getStatus();
     this.allocate.searchBar.subscribe((res) => {
       if (res === true) {
@@ -382,10 +404,10 @@ export class AllocationsPage implements OnInit {
     let query: any;
     this.allocate.allocationStatus.subscribe(
       (res: any) => {
-        if (res.length >0) {
+        if (res.length > 0) {
           query = `status=${res}`;
           this.getLeadlist(query);
-        }else{
+        } else {
           query = `page=1&page_size=10`;
           this.getLeadlist(query);
         }
@@ -406,42 +428,44 @@ export class AllocationsPage implements OnInit {
     setTimeout(() => {
       this.leadCards = [];
       this.data = [];
-      this.allocate.allocationStatus.next('')
+      this.allocate.allocationStatus.next("");
       let query = `?page=1&page_size=10`;
       this.getLeadlist(query);
       event.target.complete();
     }, 2000);
   }
 
-  getLeadlist(query:any){
-    let baseQuery = ''
-    let user_role = localStorage.getItem('user_role').toUpperCase()
-    if(user_role == 'SUPERADMIN' || user_role == 'SUPER ADMIN'){
-      baseQuery = `?${query}`
-    }else{
-      baseQuery = `?counsellor_id=${this.user_id}&${query}`
+  getLeadlist(query: any) {
+    let baseQuery = "";
+    let user_role = localStorage.getItem("user_role").toUpperCase();
+    if (user_role == "SUPERADMIN" || user_role == "SUPER ADMIN") {
+      baseQuery = `?${query}`;
+    } else {
+      baseQuery = `?counsellor_id=${this.user_id}&${query}`;
     }
-   this._baseService.getData(`${environment.lead_list}${baseQuery}`).subscribe((res: any) => {
-     if (res.results) {
-      this.leadCards = []
-      this.data = []
-       this.leadCards = res.results;
-       this.data = new MatTableDataSource<any>(this.leadCards);
-       this.totalNumberOfRecords = res.total_no_of_record
-     }
-   }, (error: any) => {
-     this.api.showToast(error.error.message);
-   });
-   
+    this._baseService.getData(`${environment.lead_list}${baseQuery}`).subscribe(
+      (res: any) => {
+        if (res.results) {
+          this.leadCards = [];
+          this.data = [];
+          this.leadCards = res.results;
+          this.data = new MatTableDataSource<any>(this.leadCards);
+          this.totalNumberOfRecords = res.total_no_of_record;
+        }
+      },
+      (error: any) => {
+        this.api.showToast(error.error.message);
+      }
+    );
   }
-  
+
   onPageChange(event: any, dataSource: MatTableDataSource<any>, type?: any) {
     if (event) {
       this.currentPage = event.pageIndex + 1;
       this.pageSize = event.pageSize;
-  
+
       let query: string = `page=${this.currentPage}&page_size=${event.pageSize}`;
-  
+
       if (this.searchTerm) {
         query += `&key=${this.searchTerm}`;
       } else if (this.counsellor_ids) {
@@ -459,11 +483,10 @@ export class AllocationsPage implements OnInit {
           }
         );
       }
-  
+
       this.getLeadlist(query);
     }
   }
-  
 
   getCounselor() {
     this._baseService
@@ -489,21 +512,23 @@ export class AllocationsPage implements OnInit {
   }
 
   searchTermChanged(event: any) {
-    this.searchTerm = event
-    let query = this.searchTerm.length > 0 ? `page=${this.currentPage}&page_size=${this.pageSize}&key=${this.searchTerm}`:
-    `page=${this.currentPage}&page_size=${this.pageSize}`;
-   
-      this.allocate.allocationStatus.subscribe(
-        (res: any) => {
-          if (res) {
-            query += `&status=${res}`;
-          }
-        },
-        (error: any) => {
-          this.api.showToast(error.error.message);
+    this.searchTerm = event;
+    let query =
+      this.searchTerm.length > 0
+        ? `page=${this.currentPage}&page_size=${this.pageSize}&key=${this.searchTerm}`
+        : `page=${this.currentPage}&page_size=${this.pageSize}`;
+
+    this.allocate.allocationStatus.subscribe(
+      (res: any) => {
+        if (res) {
+          query += `&status=${res}`;
         }
-      );
-    
+      },
+      (error: any) => {
+        this.api.showToast(error.error.message);
+      }
+    );
+
     this.getLeadlist(query);
   }
   async editLead(allocate) {
@@ -511,9 +536,9 @@ export class AllocationsPage implements OnInit {
       component: EditLeadPage, // Replace with your modal content page
       componentProps: {
         // You can pass data to the modal using componentProps
-        key: 'value',
-        data:allocate
-      }
+        key: "value",
+        data: allocate,
+      },
     });
     return await modal.present();
   }

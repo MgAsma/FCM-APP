@@ -55,26 +55,7 @@ export class CallLogPage implements OnInit {
     let today = new Date()
     this.maxStartDate = this.datepipe.transform(today,'YYYY-MM-dd')
 
-    this.platform.ready().then(() => {
-      this.callLog
-        .hasReadPermission()
-        .then((hasPermission) => {
-          if (!hasPermission) {
-            this.callLog
-              .requestReadPermission()
-              .then((results) => {})
-              .catch((e) =>{
-
-              }
-                // alert(' requestReadPermission ' + JSON.stringify(e))
-              );
-          } else {
-          }
-        })
-        .catch((e) =>{
-          // alert(' hasReadPermission ' + JSON.stringify(e)
-        })
-    });
+   
   }
   
   ngOnInit() {
@@ -197,7 +178,14 @@ export class CallLogPage implements OnInit {
       component: GotoViewCustomerDetailsCallCustomerComponent,
       translucent: true,
       backdropDismiss: false,
+
       });
+      popover.onDidDismiss().then((data:any)=>{
+        if(data){
+          this.initializeCallLogs();
+        }
+       
+      })
     return await popover.present();
   }
   getCallLogs(query:any){

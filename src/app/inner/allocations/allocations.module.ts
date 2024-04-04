@@ -11,7 +11,8 @@ import { Device } from '@ionic-native/device/ngx'
 import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
 import { FilterComponent } from './filter/filter.component';
 import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.component';
-import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+// import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 
 @NgModule({
   imports: [

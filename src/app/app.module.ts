@@ -17,7 +17,8 @@ import { DatePipe } from '@angular/common';
 import { RouteReuseStrategy } from '@angular/router';
 import { RecFollowupListPage } from './shared-modules/rec-followup-list/rec-followup-list.page';
 import { MaterialModule } from './shared-modules/material/material/material.module';
-import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+// import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 
 @NgModule({
   imports: [

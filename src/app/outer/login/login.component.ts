@@ -37,7 +37,7 @@ export class LoginComponent  implements OnInit {
   }
   initForm(){
     this.loginForm = this._fb.group({
-      mobile_number:['' ,[Validators.required,Validators.pattern(this.commonService.mobilePattern)]],
+      email_or_phone:['' ,[Validators.required,Validators.pattern(this.commonService.mobilePattern)]],
       password:['',[Validators.required,this.noSpaceValidator]],
       device_type:['',[Validators.required]]
     })
@@ -45,8 +45,8 @@ export class LoginComponent  implements OnInit {
   get f() {
     return this.loginForm.controls;
   }
-  get mobileNumber() {
-    return this.loginForm.get('mobile_number');
+  get email_or_phone() {
+    return this.loginForm.get('email_or_phone');
   }
 
   get password() {
@@ -86,7 +86,7 @@ export class LoginComponent  implements OnInit {
           window.location.href='/inner'
           // this.router.navigate(['/inner']);
           
-          this.api.showToast(resp)
+          // this.api.showToast(resp)
         }
       
 			},

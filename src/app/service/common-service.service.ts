@@ -10,7 +10,7 @@ export class CommonServiceService implements OnInit {
   readonly namePattern = /^[a-zA-Z]+[a-zA-Z\s]*$/;
 
   // Regular expression for mobile number validation (exactly 10 digits, no leading spaces)
-  readonly mobilePattern = /^[0-9]{10}$/;
+  readonly mobilePattern = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})|(^[0-9]{10})+$/;
 
   // Regular expression for password validation (at least 8 characters with special characters)
   readonly passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{7,}$/;

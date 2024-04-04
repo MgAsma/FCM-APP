@@ -11,7 +11,8 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { Storage } from '@ionic/storage-angular';
 
 import { UserData } from './providers/user-data';
-import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+// import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx'
 
 @Component({
   selector: 'app-root',

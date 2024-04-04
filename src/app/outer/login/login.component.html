@@ -11,24 +11,24 @@
           <ion-item>
            
             <ion-input
-              formControlName="mobile_number"
+              formControlName="email_or_phone"
               maxlength="10"
               type="tel"
               name="username"
               spellcheck="false"
               autocapitalize="off"
               appFormSpace
-              placeholder="Enter Your Phone Number"
+              placeholder="Enter Your Phone Number or Email"
               required>
             </ion-input>
             <ion-icon name="call" slot="end" ></ion-icon>
           </ion-item>
   
-          <div class="error-msg mb-3" *ngIf="f['mobile_number'].invalid && f['mobile_number'].touched">
-            <div *ngIf="f['mobile_number'].errors && f['mobile_number'].errors['required']">
-              Phone Number Is Required
+          <div class="error-msg mb-3" *ngIf="f['email_or_phone'].invalid && f['email_or_phone'].touched">
+            <div *ngIf="f['email_or_phone'].errors && f['email_or_phone'].errors['required']">
+             Email or Phone Number Is Required
             </div>
-            <div *ngIf="f['mobile_number'].errors && f['mobile_number'].errors['pattern']">
+            <div *ngIf="f['email_or_phone'].errors && f['email_or_phone'].errors['pattern']">
               Please Enter 10-Digit Phone Number
             </div>
           </div>
