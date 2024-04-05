@@ -11,6 +11,7 @@ import { Device } from '@ionic-native/device/ngx'
 import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
 import { FilterComponent } from './filter/filter.component';
 import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.component';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @NgModule({
   imports: [
@@ -25,7 +26,7 @@ import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.co
     ToolbarTopComponent,
     ToolbarCustomerComponent,
     FilterComponent],
-  providers:[CallNumber,CallLog,Device]
+    providers:[CallNumber,CallLog,Device,AndroidPermissions]
   
 })
 export class AllocationsPageModule {}

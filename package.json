@@ -50,8 +50,10 @@
     "bootstrap": "^5.3.2",
     "cordova": "^12.0.0",
     "cordova-android": "^12.0.1",
+    "cordova-plugin-android-permissions": "^1.1.5",
     "cordova-plugin-inappbrowser": "5.0.0",
     "core-js": "^3.6.4",
+    "io.gvox.plugin.phonecalltrap": "^0.1.2",
     "ionic": "^5.4.16",
     "jwt-decode": "^4.0.0",
     "ngx-toastr": "^18.0.0",
@@ -110,7 +112,9 @@
   "cordova": {
     "plugins": {
       "mx.ferreyra.callnumber": {},
-      "cordova-plugin-calllog": {}
+      "cordova-plugin-calllog": {},
+      "cordova-plugin-android-permissions": {},
+      "io.gvox.plugin.phonecalltrap": {}
     }
   }
 }

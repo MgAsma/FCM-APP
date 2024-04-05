@@ -126,11 +126,11 @@ export class CallLogPage implements OnInit {
       '?page=1&page_size=10';
     
       // Add date filter to query if applicable
-    if (this.dateFilter && !this.dateForm.invalid) {
-      this.sdate = this.datepipe.transform(this.dateForm.value.startDate, 'yyyy-MM-dd');
-      this.edate = this.datepipe.transform(this.dateForm.value.endDate, 'yyyy-MM-dd');
-      query += `&from_date=${this.sdate}&to_date=${this.edate}`;
-    }
+    // if (this.dateFilter && !this.dateForm.invalid) {
+    //   this.sdate = this.datepipe.transform(this.dateForm.value.startDate, 'yyyy-MM-dd');
+    //   this.edate = this.datepipe.transform(this.dateForm.value.endDate, 'yyyy-MM-dd');
+    //   query += `&from_date=${this.sdate}&to_date=${this.edate}`;
+    // }
     // Add status filter to query if applicable
     if (this.statusFilter) {
       query += `&status=${this.status}`;
