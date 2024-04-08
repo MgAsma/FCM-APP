@@ -53,7 +53,7 @@ export class ToolbarCustomerComponent  implements OnInit {
       }
     })
   }
-  closeModal(event:any) {
+  reset(event:any) {
    this.selectedCounselorIds = []
     this.addEmit.tlsCounsellor.next([])
     this.filteredData.forEach((chip: any) => {

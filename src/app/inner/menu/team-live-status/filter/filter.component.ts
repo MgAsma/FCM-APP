@@ -81,7 +81,6 @@ export class FilterComponent  implements OnInit {
     this.data.forEach(chip => chip.selected = false);
     this.selectedStatus = [];
     this.allocationEmit.tlsStatus.next(this.selectedStatus)
-    this.modalController.dismiss();
   }
   closeModel(){
     this.allocationEmit.tlsStatus.next(this.selectedStatus)

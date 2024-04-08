@@ -7,18 +7,17 @@
         </ion-row>
   
         <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
-          <div class="my-1" >Phone Number</div>
+          <div class="my-1" >Email/Phone Number</div>
           <ion-item>
            
             <ion-input
               formControlName="email_or_phone"
-              maxlength="10"
-              type="tel"
+              type="text"
               name="username"
               spellcheck="false"
               autocapitalize="off"
               appFormSpace
-              placeholder="Enter Your Phone Number / Email Id"
+              placeholder="Enter Your Email/Phone Number"
               required>
             </ion-input>
             <ion-icon name="call" slot="end" ></ion-icon>
@@ -26,7 +25,7 @@
   
           <div class="error-msg mb-3" *ngIf="f['email_or_phone'].invalid && f['email_or_phone'].touched">
             <div *ngIf="f['email_or_phone'].errors && f['email_or_phone'].errors['required']">
-              Phone Number/Email Id Is Required
+              Email/Phone Number Is Required
             </div>
             <div *ngIf="f['email_or_phone'].errors && f['email_or_phone'].errors['pattern']">
               Please Enter 10-Digit Phone Number.

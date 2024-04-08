@@ -116,6 +116,7 @@ export class ToolbarCustomerComponent  implements OnInit {
 // This function will be called when the search term changes
 searchTermChanged(event:any) {
   this.updateFilteredData(event);
+ 
 }
 getSelectedListLength(): number {
   return this.filteredData.filter(item => item.selected).length;
