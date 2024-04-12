@@ -111,7 +111,9 @@ export class ToolbarCustomerComponent  implements OnInit {
 
 // This function will be called when the search term changes
 searchTermChanged(event:any) {
-  this.updateFilteredData(event);
+   // Remove trailing spaces from the search term
+   const searchTerm = event.trim();
+   this.updateFilteredData(searchTerm);
 }
 
 getSelectedListLength(): number {
