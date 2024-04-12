@@ -26,6 +26,7 @@ import { MaterialModule } from './shared-modules/material/material/material.modu
 //   PB_DIRECTION,
 // } from "ngx-ui-loader";
 import { ToastrModule } from 'ngx-toastr';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 // const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 //   bgsColor: "red",
 //   bgsPosition: POSITION.bottomCenter,
@@ -59,7 +60,7 @@ import { ToastrModule } from 'ngx-toastr';
     MaterialModule
   ],
   declarations: [AppComponent],
-  providers: [
+  providers: [AndroidPermissions,
     InAppBrowser,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
