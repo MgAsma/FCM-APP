@@ -142,8 +142,8 @@ export class CallLogPage implements OnInit {
     }
   
    
-   alert(this.sdate)
-   alert(!this.dateForm.invalid )
+  //  alert(this.sdate)
+  //  alert(!this.dateForm.invalid )
     // Call API with updated query
     this.callLogCards = [];
     this.data = [];
@@ -299,7 +299,7 @@ export class CallLogPage implements OnInit {
       );
   }
   handleRefresh(event:any) {
-    setTimeout(() => {
+    // setTimeout(() => {
       this.resetAll = true;
       this.callLogCards = []
       this.data = []
@@ -310,8 +310,8 @@ export class CallLogPage implements OnInit {
       this.addEmiter.callLogCounsellor.next([])
       this.dateForm.reset()
       this.initForm();
-      this.sdate = '';
-      this.edate = '';
+      // this.sdate = '';
+      // this.edate = '';
       this.dateFilter = false
       this.allocate.searchBar.next(false)
       this.counsellor_ids = []
@@ -328,7 +328,7 @@ export class CallLogPage implements OnInit {
         this.api.showError(error?.error.message)
       }))
       event.target.complete();
-    },100);
+    // },100);
   }
   goBack() {
     window.history.back();
@@ -375,9 +375,9 @@ export class CallLogPage implements OnInit {
          }
        );
       }
-      if(this.sdate != null && this.edate != null){
-        params += `&from_date=${this.sdate}&to_date=${this.edate}`
-      }
+      // if(this.sdate != null && this.edate != null){
+      //   params += `&from_date=${this.sdate}&to_date=${this.edate}`
+      // }
       this.callLogCards = []
       this.data = [] 
       this.baseService.getData(`${environment.call_logs}${params}`).subscribe((res:any)=>{
@@ -405,9 +405,9 @@ export class CallLogPage implements OnInit {
       query += `&key=${this.searchTerm}`;
     }
      
-    if(this.sdate != null && this.edate != null){
-      query += `&from_date=${this.sdate}&to_date=${this.edate}`
-    }
+    // if(this.sdate != null && this.edate != null){
+    //   query += `&from_date=${this.sdate}&to_date=${this.edate}`
+    // }
     if(this.statusFilter){
       this.allocate.callLogStatus.subscribe(
        (res: any) => {
@@ -441,9 +441,9 @@ export class CallLogPage implements OnInit {
       }
     );
     }
-    if(this.sdate != null && this.edate != null){
-      query += `&from_date=${this.sdate}&to_date=${this.edate}`
-    }
+    // if(this.sdate != null && this.edate != null){
+    //   query += `&from_date=${this.sdate}&to_date=${this.edate}`
+    // }
    
      if (this.counsellor_ids.length >0) {
       query += `&counsellor_ids=${this.counsellor_ids}`
