@@ -199,6 +199,10 @@ export class CallLogPage implements OnInit {
       this.dateForm.markAllAsTouched()
       this.api.showError('Select start date and end date')
     }else{
+      this.dateForm.patchValue({
+        startDate:this.dateForm.value.startDate,
+        endDate:this.dateForm.value.endDate
+      })
       this.addEmiter.callLogCounsellor.subscribe((res) => {
         if (res.length > 0) {
           this.counsellor_ids = res;
