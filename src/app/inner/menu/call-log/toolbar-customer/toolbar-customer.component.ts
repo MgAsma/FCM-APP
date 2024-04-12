@@ -55,8 +55,7 @@ export class ToolbarCustomerComponent  implements OnInit {
   }
   closeModal(event:any) {
     if(event){
-      this.addEmit.callLogCounsellor.next(this.selectedCounselorIds)
-      this.modalController.dismiss();
+      this.modalController.dismiss(this.selectedCounselorIds);
     }  
   }
   
@@ -109,11 +108,14 @@ export class ToolbarCustomerComponent  implements OnInit {
   }
 }
 
+
 // This function will be called when the search term changes
 searchTermChanged(event:any) {
   this.updateFilteredData(event);
 }
+
 getSelectedListLength(): number {
-  return this.filteredData.filter(item => item.selected).length;
+  // Filter the selected items based on the filteredData
+  return this.selectedCounselorIds.length;
 }
 }

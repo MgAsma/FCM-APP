@@ -119,10 +119,9 @@ searchTermChanged(event:any) {
  
 }
 getSelectedListLength(): number {
-  return this.filteredData.filter(item => item.selected).length;
+  return this.selectedCounselorIds.length;
 }
 closePopup(){
-  this.addEmit.selectedCounsellor.next(this.selectedCounselorIds)
-  this.modalController.dismiss()
+  this.modalController.dismiss(this.selectedCounselorIds);
 }
 }

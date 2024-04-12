@@ -62,8 +62,7 @@ export class ToolbarCustomerComponent  implements OnInit {
     
   }
   close(){
-    this.addEmit.tlsCounsellor.next(this.selectedCounselorIds)
-    this.modalController.dismiss();
+    this.modalController.dismiss(this.selectedCounselorIds);
   }
  
   onSubmit(){
@@ -109,6 +108,6 @@ searchTermChanged(event:any) {
   this.updateFilteredData(event);
 }
 getSelectedListLength(): number {
-  return this.filteredData.filter(item => item.selected).length;
+  return this.selectedCounselorIds.length;
 }
 }
