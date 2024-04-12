@@ -11,6 +11,7 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { Storage } from '@ionic/storage-angular';
 
 import { UserData } from './providers/user-data';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,8 @@ export class AppComponent implements OnInit {
     private userData: UserData,
     private swUpdate: SwUpdate,
     private toastCtrl: ToastController,
-    private navCtrl:NavController
+    private navCtrl:NavController,
+    private androidPermissions:AndroidPermissions
   ) {
     this.initializeApp();
 
@@ -46,7 +48,40 @@ else{
 }
   }
 
+
+  async checkPermissions() {
+    try {
+      const phoneStateResult = await this.androidPermissions.checkPermission(
+        this.androidPermissions.PERMISSION.READ_PHONE_STATE
+      );
+      if (!phoneStateResult.hasPermission) {
+        this.androidPermissions.requestPermission(
+          this.androidPermissions.PERMISSION.READ_PHONE_STATE
+        );
+      }
+
+      const callLogResult = await this.androidPermissions.checkPermission(
+        this.androidPermissions.PERMISSION.READ_CALL_LOG
+      );
+      if (!callLogResult.hasPermission) {
+        this.androidPermissions.requestPermission(
+          this.androidPermissions.PERMISSION.READ_CALL_LOG
+        );
+      }
+    } catch (error) {
+      console.log("Error!", error);
+    }
+  }
+
+
+
+
+
+
+
+
   async ngOnInit() {
+    this.checkPermissions();
     await this.storage.create();
     this.checkLoginStatus();
     this.listenForLoginEvents();

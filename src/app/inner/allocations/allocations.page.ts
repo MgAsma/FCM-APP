@@ -21,12 +21,14 @@ import { BaseServiceService } from "../../service/base-service.service";
 import { CallLog, CallLogObject } from "@ionic-native/call-log/ngx";
 import { AddLeadEmitterService } from "../../service/add-lead-emitter.service";
 import { EditLeadPage } from "../edit-lead/edit-lead.page";
+import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
+declare var PhoneCallTrap: any;
 @Component({
   selector: "app-allocations",
   templateUrl: "./allocations.page.html",
   styleUrls: ["./allocations.page.scss"],
 })
-export class AllocationsPage implements AfterViewInit  {
+export class AllocationsPage implements AfterViewInit,OnInit  {
   searchBar: boolean = false;
   placeholderText = "Search by Name";
   data: any = [];
@@ -58,6 +60,8 @@ export class AllocationsPage implements AfterViewInit  {
   callStartTime!: Date;
   user_role: string;
   statusFilter: boolean = false;
+  isPhoneHalfHook: boolean = false;
+  isPhoneIdle: boolean = false;
   // allPaginator: any;
   @ViewChild('paginator', { static: true }) paginator: MatPaginator;
   pageIndex: number;
@@ -70,37 +74,46 @@ export class AllocationsPage implements AfterViewInit  {
     private callLog: CallLog,
     private platform: Platform,
     private _addLeadEmitter: AddLeadEmitterService,
-    private modalController:ModalController
+    private modalController:ModalController,
+    private androidPermissions: AndroidPermissions
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
 
     this.counsellor_id = localStorage.getItem("user_id");
 
-    this.platform.ready().then(() => {
-      this.callLog
-        .hasReadPermission()
-        .then((hasPermission) => {
-          if (!hasPermission) {
-            this.callLog
-              .requestReadPermission()
-              .then((results) => {
-                // this.getContacts("type", "2", "==");
-              })
-              .catch((e) =>{
-                // alert(" requestReadPermission " + JSON.stringify(e))
-              }
+    // this.platform.ready().then(() => {
+    //   this.callLog
+    //     .hasReadPermission()
+    //     .then((hasPermission) => {
+    //       if (!hasPermission) {
+    //         this.callLog
+    //           .requestReadPermission()
+    //           .then((results) => {
+    //             // this.getContacts("type", "2", "==");
+    //           })
+    //           .catch((e) =>{
+    //             // alert(" requestReadPermission " + JSON.stringify(e))
+    //           }
                
-              );
-          } else {
-            // this.getContacts("type", "5", "==");
-          }
-        })
-        .catch((e) => {
-          // alert(" hasReadPermission " + JSON.stringify(e))
-        }
-        );
-    });
+    //           );
+    //       } else {
+    //         // this.getContacts("type", "5", "==");
+    //       }
+    //     })
+    //     .catch((e) => {
+    //       // alert(" hasReadPermission " + JSON.stringify(e))
+    //     }
+    //     );
+    // });
   }
+
+  ngOnInit(){
+    // this.checkPermissions();
+    this.initiateCallStatus();
+    this.isPhoneHalfHook = false;
+    this.isPhoneIdle = false;
+  }
+
 
   getContacts(name, value, operator) {
     if (value == "1") {
@@ -132,24 +145,30 @@ export class AllocationsPage implements AfterViewInit  {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        //console.log(JSON.stringify(results[0]),"latest call log")
-        this.callDuration=results[0].duration;
-        //console.log(JSON.stringify(this.callDuration),"latest call duration")
-        if (this.callDuration > 0) {
-              this.currentStatus = 1;
-            } else {
-              this.currentStatus = 3;
-            }
-          
-
+        console.log(JSON.stringify(results[0]), "latest call log");
+        const calculateTime=Number(results[0].date)-Number(this.calledTime)
+        console.log(calculateTime,"calulatedTime");
         
+        this.callDuration = results[0].duration;
+        console.log(JSON.stringify(this.callDuration), "latest call duration");
+        if (this.callDuration > 0) {
+          this.currentStatus = 1;
+        } else {
+          this.currentStatus = 3;
+        }
 
-        //console.log(
-        //   JSON.stringify(results),
-        //   'call log responseeeeeeeeeeeeeeeee'
-        // );
+        console.log(
+          JSON.stringify(results),
+          "call log responseeeeeeeeeeeeeeeee"
+        );
         this.recordsFoundText = JSON.stringify(results);
         this.recordsFound = results; //JSON.stringify(results);
+
+
+        if(calculateTime>0){
+          this.postCallHistory();
+        }
+        
       })
       .catch((e) => {
         // alert(" LOG " + JSON.stringify(e))
@@ -157,29 +176,84 @@ export class AllocationsPage implements AfterViewInit  {
   }
 
   
+calledTime:any;
+  private initiateCallStatus() {
+    const that = this;
+    console.log(PhoneCallTrap, "PhoneCallTrap");
 
-  callContact(number: string, id: any) {
-    this.leadId = id;
-    this.leadPhoneNumber = number;
-    this.callStartTime = new Date();
-    let data = {
-      user: this.user_id,
-      status: 3,
-    };
-    this.postTLStatus(data);
-    this.callNumber.callNumber(number, true);
-    this.callInitiated = true;
-    // await this.getContacts('type','2','==');
-    // await this.getContacts('type','5','==');
-    // await this.postCallHistory();
+    PhoneCallTrap?.onCall(function (state: string) {
+      console.log("CHANGE STATE: " + state);
+      // alert(state);
 
-    setTimeout(() => {
-      this.getContacts("type", "2", "==");
-      // this.getContacts("type", "5", "==");
-    }, 70000);
-    setTimeout(() => {
-      this.postCallHistory();
-    }, 90000);
+      switch (state) {
+        case "RINGING":
+          // alert("Phone is ringing");
+          console.log("Phone is ringing");
+          break;
+        case "OFFHOOK":
+          that.isPhoneHalfHook = true;
+       
+
+          // alert("Phone is off-hook");
+          console.log("Phone is off-hook");
+          break;
+
+        case "IDLE":
+          that.isPhoneIdle = true;
+          
+          if(that.isPhoneHalfHook == true){
+            setTimeout(()=>{
+              that.getContacktAndPostHistory()
+            },2000)
+
+           
+          }
+          that.isPhoneHalfHook=false;
+
+          // alert("Phone is idle");
+          console.log("Phone is idle");
+       
+
+          break;
+      }
+    });
+  }
+
+  getContacktAndPostHistory() {
+    this.getContacts("type", "2", "==");
+
+  }
+
+  async callContact(number: string, id: any) {
+    try {
+      this.leadId = id;
+      this.leadPhoneNumber = number;
+      this.callStartTime = new Date();
+      console.log( this.callStartTime," this.callStartTime");
+      
+      let data = {
+        user: this.user_id,
+        status: 3,
+      };
+
+      this.postTLStatus(data);
+      this.calledTime=new Date().getTime();
+      console.log(this.calledTime,"this.calledTime in allocation ");
+      
+      setTimeout(async () => {
+    
+        this.callStartTime = new Date();
+        await this.callNumber.callNumber(number, true);
+        
+        const that = this;
+        this.callInitiated = true;
+        
+        
+        // this.initiateCallStatus();
+      }, 100);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   
