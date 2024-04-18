@@ -22,6 +22,7 @@ import { CallLog, CallLogObject } from "@ionic-native/call-log/ngx";
 import { AddLeadEmitterService } from "../../service/add-lead-emitter.service";
 import { EditLeadPage } from "../edit-lead/edit-lead.page";
 import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
+import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings';
 declare var PhoneCallTrap: any;
 @Component({
   selector: "app-allocations",
@@ -76,36 +77,39 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
     private platform: Platform,
     private _addLeadEmitter: AddLeadEmitterService,
     private modalController:ModalController,
-    private androidPermissions: AndroidPermissions
+    private androidPermissions: AndroidPermissions,
+
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
 
     this.counsellor_id = localStorage.getItem("user_id");
 
-    // this.platform.ready().then(() => {
-    //   this.callLog
-    //     .hasReadPermission()
-    //     .then((hasPermission) => {
-    //       if (!hasPermission) {
-    //         this.callLog
-    //           .requestReadPermission()
-    //           .then((results) => {
-    //             // this.getContacts("type", "2", "==");
-    //           })
-    //           .catch((e) =>{
-    //             // alert(" requestReadPermission " + JSON.stringify(e))
-    //           }
+    this.platform.ready().then(() => {
+      this.callLog
+        .hasReadPermission()
+        .then((hasPermission) => {
+          if (!hasPermission) {
+            this.api.showWarning('Permission is denied,Please give permission')
+            
+            this.callLog
+              .requestReadPermission()
+              .then((results) => {
+                // this.getContacts("type", "2", "==");
+              })
+              .catch((e) =>{
+                // alert(" requestReadPermission " + JSON.stringify(e))
+              }
                
-    //           );
-    //       } else {
-    //         // this.getContacts("type", "5", "==");
-    //       }
-    //     })
-    //     .catch((e) => {
-    //       // alert(" hasReadPermission " + JSON.stringify(e))
-    //     }
-    //     );
-    // });
+              );
+          } else {
+            // this.getContacts("type", "5", "==");
+          }
+        })
+        .catch((e) => {
+          // alert(" hasReadPermission " + JSON.stringify(e))
+        }
+        );
+    });
   }
 
   ngOnInit(){
@@ -226,6 +230,26 @@ calledTime:any;
   }
 
   async callContact(number: string, id: any,item) {
+    const hasPermission=await
+
+    this.callLog
+        .hasReadPermission()
+        if (!hasPermission) {
+          NativeSettings.open({
+            optionAndroid: AndroidSettings.ApplicationDetails, 
+            optionIOS: IOSSettings.App
+          })
+          
+
+          this.api.showWarning('Permission is Required!')
+          
+          
+          this.callLog
+            .requestReadPermission()
+            .then((results) => {
+              // this.getContacts("type", "2", "==");
+            })}
+
     try {
       this.leadId = id;
       this.leadPhoneNumber = number;

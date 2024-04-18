@@ -9,6 +9,7 @@ import { BaseServiceService } from '../../service/base-service.service';
 import { ApiService } from '../../service/api/api.service';
 import { environment } from '../../../environments/environment';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings';
 declare var PhoneCallTrap: any;
 
 @Component({
@@ -88,6 +89,7 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
   
           if (!res.hasPermission) {
           //  this.diagnostic.switchToSettings();
+          this.api.showWarning('Permission is Required')
           }
         }
       } catch (error) {
@@ -97,7 +99,7 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
   
     async callLogPermission() {
       try {
-        const callLogResult = await this.androidPermissions.checkPermission(
+        const callLogResult = await this.androidPermissions.requestPermissions(
           this.androidPermissions.PERMISSION.READ_CALL_LOG
         );
         if (!callLogResult.hasPermission) {
@@ -108,6 +110,7 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
   
           if (!hasPermission) {
           //  this.diagnostic.switchToSettings();
+          this.api.showWarning('Permission is Required')
           }
         }
       } catch (error) {
@@ -239,7 +242,26 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
 
 
 
-  initializeCall(event) {
+async  initializeCall(event) {
+    const hasPermission=await
+
+    this.callLog
+        .hasReadPermission()
+        if (!hasPermission) {
+          NativeSettings.open({
+            optionAndroid: AndroidSettings.ApplicationDetails, 
+            optionIOS: IOSSettings.App
+          })
+          
+          this.api.showWarning('Permission is Required!')
+          
+          
+          this.callLog
+            .requestReadPermission()
+            .then((results) => {
+              // this.getContacts("type", "2", "==");
+            })}
+
     console.log(event);
     this.leadId = event.lead_id;
     this.leadPhoneNumber = event.phone_number;

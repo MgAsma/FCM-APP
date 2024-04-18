@@ -12,6 +12,7 @@ import { Storage } from '@ionic/storage-angular';
 
 import { UserData } from './providers/user-data';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { CallLog } from '@ionic-native/call-log/ngx';
 
 @Component({
   selector: 'app-root',
@@ -33,9 +34,32 @@ export class AppComponent implements OnInit {
     private swUpdate: SwUpdate,
     private toastCtrl: ToastController,
     private navCtrl:NavController,
-    private androidPermissions:AndroidPermissions
+    private androidPermissions:AndroidPermissions,
+    private callLog: CallLog,
+    // private platform: Platform,
   ) {
     this.initializeApp();
+
+     this.platform.ready().then(() => {
+        this.callLog
+          .hasReadPermission()
+          .then((hasPermission) => {
+            if (!hasPermission) {
+              this.callLog
+                .requestReadPermission()
+                .then((results) => {})
+                .catch((e) =>{
+  
+                }
+                  // alert(' requestReadPermission ' + JSON.stringify(e))
+                );
+            } else {
+            }
+          })
+          .catch((e) =>{
+            // alert(' hasReadPermission ' + JSON.stringify(e)
+          })
+      });
 
 
     let token = localStorage.getItem('token');
@@ -51,23 +75,25 @@ else{
 
   async checkPermissions() {
     try {
-      const phoneStateResult = await this.androidPermissions.checkPermission(
-        this.androidPermissions.PERMISSION.READ_PHONE_STATE
+      const phoneStateResult = await this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.READ_CONTACTS,this.androidPermissions.PERMISSION.READ_PHONE_STATE,this.androidPermissions.PERMISSION.READ_CALL_LOG]
+       
       );
-      if (!phoneStateResult.hasPermission) {
-        this.androidPermissions.requestPermission(
-          this.androidPermissions.PERMISSION.READ_PHONE_STATE
-        );
-      }
+      
+      // if (!phoneStateResult.hasPermission) {
+      //   this.androidPermissions.requestPermission(
+      //     this.androidPermissions.PERMISSION.READ_PHONE_STATE
+      //   );
+        
+      // }
 
-      const callLogResult = await this.androidPermissions.checkPermission(
-        this.androidPermissions.PERMISSION.READ_CALL_LOG
-      );
-      if (!callLogResult.hasPermission) {
-        this.androidPermissions.requestPermission(
-          this.androidPermissions.PERMISSION.READ_CALL_LOG
-        );
-      }
+      // const callLogResult = await this.androidPermissions.checkPermission(
+      //   this.androidPermissions.PERMISSION.READ_CALL_LOG
+      // );
+      // if (!callLogResult.hasPermission) {
+      //   this.androidPermissions.requestPermission(
+      //     this.androidPermissions.PERMISSION.READ_CALL_LOG
+      //   );
+      // }
     } catch (error) {
       console.log("Error!", error);
     }
