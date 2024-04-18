@@ -260,7 +260,9 @@ export class CallLogPage implements OnInit {
       if (this.statusFilter) {
         query += `&status=${this.status}`;
       }
-    
+      if (this.searchTerm) {
+        query += `&key=${this.searchTerm}`;
+      }
       // Add counsellor IDs filter to query if applicable
       if (this.counsellor_ids.length > 0) {
         query += `&counsellor_ids=${this.counsellor_ids}`;
@@ -318,6 +320,7 @@ export class CallLogPage implements OnInit {
       this.dateForm.reset();
       this.allocate.callLogStatus.next([]);
       this.addEmiter.callLogCounsellor.next([]);
+      this.allocate.searchBar.next(false)
       this.status = []
       this.counsellor_ids = []
       this.ngOnInit();
@@ -435,9 +438,9 @@ export class CallLogPage implements OnInit {
       }
     );
     }
-    // if(this.sdate != null && this.edate != null){
-    //   query += `&from_date=${this.sdate}&to_date=${this.edate}`
-    // }
+    if(this.dateForm.dirty && !this.dateForm.invalid){
+      query += `&from_date=${this.sdate}&to_date=${this.edate}`
+    }
    
      if (this.counsellor_ids.length >0) {
       query += `&counsellor_ids=${this.counsellor_ids}`
