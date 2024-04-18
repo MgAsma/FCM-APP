@@ -39,6 +39,7 @@ export class CheckoutComponent  implements OnInit {
         this.api.showSuccess('Logout successful')
         window.location.reload();
         this.router.navigate(['../outer'])
+        this.close()
       }
       else{
         this.api.showLoading()
