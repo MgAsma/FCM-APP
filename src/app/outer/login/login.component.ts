@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { jwtDecode } from "jwt-decode";
@@ -37,21 +37,50 @@ export class LoginComponent  implements OnInit {
   }
   initForm(){
     this.loginForm = this._fb.group({
-      email_or_phone:['' ,[Validators.required,Validators.pattern(this.commonService.mobilePattern)]],
+      email_or_phone: ['', [Validators.required, this.emailOrPhoneValidator]],
       password:['',[Validators.required,this.noSpaceValidator]],
       device_type:['',[Validators.required]]
     })
   }
+  emailOrPhoneValidator(control: AbstractControl): { [key: string]: any } | null {
+    const value = control.value;
+  
+    // Regular expression for email format
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
+    // Regular expression for 10-digit phone number format
+    const phoneRegex = /^\d{10}$/;
+  
+    if (!value) {
+      return null; // If value is empty, don't perform validation
+    }
+  
+    // Check if value matches email format
+    if (emailRegex.test(value)) {
+      return null; // Value is a valid email address
+    }
+  
+    // Check if value matches 10-digit phone number format
+    if (phoneRegex.test(value)) {
+      return null; // Value is a valid phone number
+    }
+  
+    // If neither email nor phone number format matches, return combined error object
+    return { 'invalidEmailOrPhone': true };
+  }
+  
+  
+  
   get f() {
     return this.loginForm.controls;
   }
-  get mobileNumber() {
-    return this.loginForm.get('email_or_phone');
-  }
+  // get mobileNumber() {
+  //   return this.loginForm.get('email_or_phone');
+  // }
 
-  get password() {
-    return this.loginForm.get('password');
-  }
+  // get password() {
+  //   return this.loginForm.get('password');
+  // }
   // Custom validator function
    noSpaceValidator = (control) => {
     const hasSpace = (control.value || '').includes(' ');

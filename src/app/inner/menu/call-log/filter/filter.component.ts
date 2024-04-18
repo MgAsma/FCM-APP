@@ -34,7 +34,7 @@ export class FilterComponent  implements OnInit {
           const matchingChip = this.data.find((chip: any) => chip.id === status);
           if (matchingChip) {
             matchingChip.selected = true;
-            this.selectedStatus.push(status);
+             this.selectedStatus.push(status);
           }
         });
       }
@@ -83,6 +83,13 @@ export class FilterComponent  implements OnInit {
     this.allocationEmit.callLogStatus.next(this.selectedStatus)
   }
   closeModel(){
+    this.allocationEmit.callLogStatus.subscribe((res: any) => {
+      this.selectedStatus = [];
+      if (res.length > 0 && this.data.length > 0) {
+        this.selectedStatus = res
+      }
+    })
+   
     this.allocationEmit.callLogStatus.next(this.selectedStatus)
     this.modalController.dismiss();
   }

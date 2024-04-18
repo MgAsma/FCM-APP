@@ -24,13 +24,12 @@
           </ion-item>
   
           <div class="error-msg mb-3" *ngIf="f['email_or_phone'].invalid && f['email_or_phone'].touched">
-            <div *ngIf="f['email_or_phone'].errors && f['email_or_phone'].errors['required']">
-              Email/Phone Number Is Required
+            <div *ngIf="loginForm.get('email_or_phone').hasError('invalidEmailOrPhone')" class="error-msg mb-3">
+              Invalid Email/Mobile Number
             </div>
-            <div *ngIf="f['email_or_phone'].errors && f['email_or_phone'].errors['pattern']">
-              Please Enter 10-Digit Phone Number.
-            </div>
+            <div *ngIf="loginForm.get('email_or_phone').hasError('required')">Email/Mobile Number Is Required</div>
           </div>
+        
           <div class="mt-3 mb-1" >Password</div>
           <ion-item >
             
