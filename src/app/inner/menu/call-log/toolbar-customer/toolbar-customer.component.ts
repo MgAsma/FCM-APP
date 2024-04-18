@@ -19,6 +19,8 @@ export class ToolbarCustomerComponent  implements OnInit {
   filteredData: any = [];
   private _inputData: any;
   selectedCounselorIds: any = [];
+  allSelectedData: any;
+  submitted: boolean;
   constructor(
     private modalController:ModalController,
     private addEmit:AddLeadEmitterService,
@@ -54,9 +56,11 @@ export class ToolbarCustomerComponent  implements OnInit {
     })
   }
   closeModal(event:any) {
-    if(event){
-      this.modalController.dismiss(this.selectedCounselorIds);
-    }  
+    if(this.submitted && this.allSelectedData.length > 0){
+      this.modalController.dismiss(this.allSelectedData);
+    }else{
+      this.modalController.dismiss()
+    } 
   }
   
   resetModel(){
@@ -80,18 +84,21 @@ export class ToolbarCustomerComponent  implements OnInit {
         // If the item is selected, add its id to the array
         if (!this.selectedCounselorIds.includes(item.id)) {
           this.selectedCounselorIds.push(item.id);
+          this.allSelectedData = this.selectedCounselorIds
         }
       } else {
         // If the item is deselected, remove its id from the array
         this.selectedCounselorIds = this.selectedCounselorIds.filter(id => id !== item.id);
+        this.allSelectedData = this.selectedCounselorIds
       }
      
     }
   }
   onSubmit(){
     if(this.selectedCounselorIds.length > 0){
-      this.addEmit.callLogCounsellor.next(this.selectedCounselorIds)
-      this.modalController.dismiss(this.selectedCounselorIds);
+      this.submitted = true
+      this.addEmit.callLogCounsellor.next(this.allSelectedData)
+      this.modalController.dismiss(this.allSelectedData);
     }else{
       this.api.showError('Please select at least one counselor')
     }
