@@ -58,7 +58,7 @@ export class EditLeadPage implements OnInit {
     private _addLeadEmitter:AddLeadEmitterService
    ) {
     let dob = new Date()
-    let minimum = new Date('1990-01-01')
+    let minimum = new Date('1900-01-01')
     this.minDateAdapter = this._datePipe.transform(dob,'yyyy-MM-dd')
     this.min = this._datePipe.transform(minimum,'yyyy-MM-dd')
     }

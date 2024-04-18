@@ -42,11 +42,14 @@
                   <!-- Mobile Number -->
                   <ion-label position="stacked">Mobile Number</ion-label><b class="star-symbol">*</b>
                   <ion-item>
+                    <ion-label *ngIf="f['mobile'].value">+91</ion-label>
                     <ion-input appFormSpace
                       type="tel"
+                      maxlength="10"
                       placeholder="Enter  Mobile Number"
                       formControlName="mobile"
                       required
+                      style="--padding-start: 0;"
                     ></ion-input>
                   </ion-item>
                   <ion-error *ngIf="f['mobile'].touched && f['mobile'].hasError('required')">
@@ -61,10 +64,13 @@
                     <!--Alternate Mobile Number -->
                     <ion-label position="stacked">Alternate Mobile Number</ion-label>
                     <ion-item>
+                      <ion-label *ngIf="f['alternateNumber'].value">+91</ion-label>
                       <ion-input appFormSpace
                         type="tel"
+                        maxlength="10"
                         placeholder="Enter  Alternate Mobile Number"
                         formControlName="alternateNumber"
+                        style="--padding-start: 0;"
                       ></ion-input>
                     </ion-item>
                     <ng-container *ngIf="f['alternateNumber'].touched && f['alternateNumber'].invalid">
