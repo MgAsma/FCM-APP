@@ -18,6 +18,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { RecFollowupListPage } from './shared-modules/rec-followup-list/rec-followup-list.page';
 import { MaterialModule } from './shared-modules/material/material/material.module';
 
+
 // import {
 //   NgxUiLoaderHttpModule, NgxUiLoaderModule,
 //   NgxUiLoaderConfig,
@@ -27,6 +28,7 @@ import { MaterialModule } from './shared-modules/material/material/material.modu
 // } from "ngx-ui-loader";
 import { ToastrModule } from 'ngx-toastr';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { CallLog } from '@ionic-native/call-log/ngx';
 // const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 //   bgsColor: "red",
 //   bgsPosition: POSITION.bottomCenter,
@@ -60,7 +62,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
     MaterialModule
   ],
   declarations: [AppComponent],
-  providers: [AndroidPermissions,
+  providers: [AndroidPermissions,CallLog,
     InAppBrowser,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
