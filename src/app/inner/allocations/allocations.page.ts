@@ -65,6 +65,7 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
   // allPaginator: any;
   @ViewChild('paginator', { static: true }) paginator: MatPaginator;
   pageIndex: number;
+  selectedLead: any;
 
   constructor(
     private allocate: AllocationEmittersService,
@@ -224,11 +225,12 @@ calledTime:any;
 
   }
 
-  async callContact(number: string, id: any) {
+  async callContact(number: string, id: any,item) {
     try {
       this.leadId = id;
       this.leadPhoneNumber = number;
       this.callStartTime = new Date();
+      this.selectedLead = item
       console.log( this.callStartTime," this.callStartTime");
       
       let data = {
@@ -248,7 +250,7 @@ calledTime:any;
         const that = this;
         this.callInitiated = true;
         
-        
+        this.editLead(this.selectedLead)
         // this.initiateCallStatus();
       }, 100);
     } catch (error) {
