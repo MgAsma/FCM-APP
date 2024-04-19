@@ -196,6 +196,7 @@ export class TeamLiveStatusPage implements OnInit {
       this.data = []
       this.statusFilter = false;
       this.totalNumberOfRecords = []
+      this.searchTerm = '';
       this.api.getTeamLiveStatus(query).subscribe(
         (resp:any)=>{
           this.followupDetails=resp.results

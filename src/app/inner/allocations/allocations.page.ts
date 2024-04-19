@@ -411,6 +411,7 @@ calledTime:any;
       this.allocate.allocationStatus.next('')
       this._addLeadEmitter.selectedCounsellor.next([])
       this.statusFilter = false;
+      this.searchTerm = '';
       this.allocate.searchBar.next(false)
       let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
       this.getLeadlist(query);

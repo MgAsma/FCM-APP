@@ -323,6 +323,7 @@ export class CallLogPage implements OnInit {
       this.allocate.searchBar.next(false)
       this.status = []
       this.counsellor_ids = []
+      this.searchTerm = '';
       this.ngOnInit();
      }
       
