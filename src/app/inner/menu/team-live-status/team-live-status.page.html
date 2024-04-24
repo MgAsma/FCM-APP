@@ -130,7 +130,7 @@
             <ion-row class="align-items-center">
               <ion-col class="text-start" size="1"><ion-icon  [name]="arr[0].icon2"></ion-icon></ion-col>
               <ion-col class="text-start" ><ion-card-subtitle>{{item.latest_status | titlecase}}</ion-card-subtitle></ion-col>
-              <ion-col class="text-end" ><ion-card-subtitle>Since : {{item.latest_start_time | date : 'h:mm a'}}</ion-card-subtitle></ion-col>
+              <ion-col class="text-end" ><ion-card-subtitle>Since : {{item.latest_start_time | date :'dd-MM-yyyy, h:mm a' }}</ion-card-subtitle></ion-col>
             </ion-row>
            
           </ion-card-content>
