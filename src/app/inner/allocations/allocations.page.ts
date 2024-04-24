@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from "@angular/core";
-import { ModalController, Platform } from "@ionic/angular";
+import { AlertController, ModalController, Platform } from "@ionic/angular";
 
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
@@ -23,7 +23,10 @@ import { AddLeadEmitterService } from "../../service/add-lead-emitter.service";
 import { EditLeadPage } from "../edit-lead/edit-lead.page";
 import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
 import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings';
-declare var PhoneCallTrap: any;
+import { Router } from "@angular/router";
+import { App as CapacitorApp } from '@capacitor/app';
+import { CallPermissionsService } from "../../service/api/call-permissions.service";
+// declare var PhoneCallTrap: any;
 @Component({
   selector: "app-allocations",
   templateUrl: "./allocations.page.html",
@@ -61,8 +64,7 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
   callStartTime!: Date;
   user_role: string;
   statusFilter: boolean = false;
-  isPhoneHalfHook: boolean = false;
-  isPhoneIdle: boolean = false;
+ 
   // allPaginator: any;
   @ViewChild('paginator', { static: true }) paginator: MatPaginator;
   pageIndex: number;
@@ -78,46 +80,29 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
     private _addLeadEmitter: AddLeadEmitterService,
     private modalController:ModalController,
     private androidPermissions: AndroidPermissions,
+    private alertController:AlertController,
+    private router:Router,
+    private callPermissionService:CallPermissionsService
 
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
 
     this.counsellor_id = localStorage.getItem("user_id");
 
-    this.platform.ready().then(() => {
-      this.callLog
-        .hasReadPermission()
-        .then((hasPermission) => {
-          if (!hasPermission) {
-            this.api.showWarning('Permission is denied,Please give permission')
-            
-            this.callLog
-              .requestReadPermission()
-              .then((results) => {
-                // this.getContacts("type", "2", "==");
-              })
-              .catch((e) =>{
-                // alert(" requestReadPermission " + JSON.stringify(e))
-              }
-               
-              );
-          } else {
-            // this.getContacts("type", "5", "==");
-          }
-        })
-        .catch((e) => {
-          // alert(" hasReadPermission " + JSON.stringify(e))
-        }
-        );
-    });
+   
   }
 
   ngOnInit(){
-    // this.checkPermissions();
-    this.initiateCallStatus();
-    this.isPhoneHalfHook = false;
-    this.isPhoneIdle = false;
+   
+this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this))
+    // this.initiateCallStatus();
+   
   }
+
+
+
+
+  
 
 
   getContacts(name, value, operator) {
@@ -180,49 +165,11 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
       });
   }
 
+  isCallInitiationCalled:boolean=false;
   
 calledTime:any;
-  private initiateCallStatus() {
-    const that = this;
-    console.log(PhoneCallTrap, "PhoneCallTrap");
 
-    PhoneCallTrap?.onCall(function (state: string) {
-      console.log("CHANGE STATE: " + state);
-      // alert(state);
-
-      switch (state) {
-        case "RINGING":
-          // alert("Phone is ringing");
-          console.log("Phone is ringing");
-          break;
-        case "OFFHOOK":
-          that.isPhoneHalfHook = true;
-       
-
-          // alert("Phone is off-hook");
-          console.log("Phone is off-hook");
-          break;
-
-        case "IDLE":
-          that.isPhoneIdle = true;
-          
-          if(that.isPhoneHalfHook == true){
-            setTimeout(()=>{
-              that.getContacktAndPostHistory()
-            },2000)
-
-           
-          }
-          that.isPhoneHalfHook=false;
-
-          // alert("Phone is idle");
-          console.log("Phone is idle");
-       
-
-          break;
-      }
-    });
-  }
+  
 
   getContacktAndPostHistory() {
     this.getContacts("type", "2", "==");
@@ -230,26 +177,55 @@ calledTime:any;
   }
 
   async callContact(number: string, id: any,item) {
-    const hasPermission=await
 
-    this.callLog
-        .hasReadPermission()
-        if (!hasPermission) {
-          NativeSettings.open({
-            optionAndroid: AndroidSettings.ApplicationDetails, 
-            optionIOS: IOSSettings.App
-          })
-          
 
-          this.api.showWarning('Permission is Required!')
-          
-          
-          this.callLog
-            .requestReadPermission()
-            .then((results) => {
-              // this.getContacts("type", "2", "==");
-            })}
 
+    const phoneStateResult= await this.androidPermissions.checkPermission(
+      this.androidPermissions.PERMISSION.READ_PHONE_STATE
+    );
+  
+      const readContacts = await this.androidPermissions.checkPermission(
+        this.androidPermissions.PERMISSION.READ_CONTACTS
+      );
+      
+
+      const readCallLogs= await this.androidPermissions.checkPermission(
+        this.androidPermissions.PERMISSION.READ_CALL_LOG
+      );
+      
+   
+    if(!phoneStateResult.hasPermission||!readContacts.hasPermission||!readCallLogs.hasPermission){
+     let  message:any='This app requires the following permissions to function properly '
+      if(!phoneStateResult.hasPermission){
+      message+=' Make Phone Calls'
+      }
+      if(!readContacts.hasPermission){
+        message+=' Read Phone Contacts'
+      }
+      if(!readCallLogs.hasPermission){
+        message+=' Access Call Logs'
+      }
+      message+='Would you like to grant these permissions?'
+       const confirmation = await this.warn(message);
+          
+            if (!confirmation) {
+              return;
+          }
+            
+
+        
+      
+
+      return
+
+    }
+    if(this.callPermissionService.isCallInitiationCalled===false)
+{
+this.api.showToast('Please restart your application!',5000);
+return
+}
+
+    
     try {
       this.leadId = id;
       this.leadPhoneNumber = number;
@@ -282,6 +258,11 @@ calledTime:any;
     }
   }
 
+
+
+
+
+  
   
 
   postTLStatus(data) {
@@ -619,5 +600,38 @@ calledTime:any;
     });
     return await modal.present();
   }
+
+
+  async warn(message) {
+    return new Promise(async (resolve) => {
+      const confirm = await this.alertController.create({
+      header: 'Permissions Required',
+    
+      message: message,
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+              return resolve(false);
+            },
+          },
+          {
+            text: 'OK',
+            handler: () => {
+              NativeSettings.open({
+                    optionAndroid: AndroidSettings.ApplicationDetails, 
+                    optionIOS: IOSSettings.App
+                  })
+              return resolve(true);
+            },
+          },
+        ],
+      });
+
+      await confirm.present();
+    });
+  }
+
  
 }

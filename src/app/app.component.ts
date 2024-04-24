@@ -40,26 +40,26 @@ export class AppComponent implements OnInit {
   ) {
     this.initializeApp();
 
-     this.platform.ready().then(() => {
-        this.callLog
-          .hasReadPermission()
-          .then((hasPermission) => {
-            if (!hasPermission) {
-              this.callLog
-                .requestReadPermission()
-                .then((results) => {})
-                .catch((e) =>{
+    //  this.platform.ready().then(() => {
+    //     this.callLog
+    //       .hasReadPermission()
+    //       .then((hasPermission) => {
+    //         if (!hasPermission) {
+    //           this.callLog
+    //             .requestReadPermission()
+    //             .then((results) => {})
+    //             .catch((e) =>{
   
-                }
-                  // alert(' requestReadPermission ' + JSON.stringify(e))
-                );
-            } else {
-            }
-          })
-          .catch((e) =>{
-            // alert(' hasReadPermission ' + JSON.stringify(e)
-          })
-      });
+    //             }
+    //               // alert(' requestReadPermission ' + JSON.stringify(e))
+    //             );
+    //         } else {
+    //         }
+    //       })
+    //       .catch((e) =>{
+    //         // alert(' hasReadPermission ' + JSON.stringify(e)
+    //       })
+    //   });
 
 
     let token = localStorage.getItem('token');

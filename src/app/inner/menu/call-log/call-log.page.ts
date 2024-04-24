@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ModalController, Platform, PopoverController } from '@ionic/angular';
+import { AlertController, ModalController, Platform, PopoverController } from '@ionic/angular';
 
 // import { RecurringFollowupComponent } from '../recurring-followup/recurring-followup.component';
 
@@ -13,7 +13,8 @@ import { DatePipe } from '@angular/common';
 import { CallLog } from '@ionic-native/call-log/ngx';
 import { GotoViewCustomerDetailsCallCustomerComponent } from '../../../shared-modules/goto-view-customer-details-call-customer/goto-view-customer-details-call-customer.component';
 import { AddLeadEmitterService } from '../../../service/add-lead-emitter.service';
-
+import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 @Component({
   selector: 'app-call-log',
   templateUrl: './call-log.page.html',
@@ -57,6 +58,8 @@ export class CallLogPage implements OnInit {
     private platform: Platform,
     private fb:FormBuilder,
     private addEmiter:AddLeadEmitterService,
+    private alertController:AlertController,
+    private androidPermissions:AndroidPermissions
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
     this.user_id = localStorage.getItem('user_id')
@@ -69,30 +72,13 @@ export class CallLogPage implements OnInit {
     this.getCOUNSELLOR();
     this.initForm()
 
-    this.platform.ready().then(() => {
-      this.callLog
-        .hasReadPermission()
-        .then((hasPermission) => {
-          if (!hasPermission) {
-            this.callLog
-              .requestReadPermission()
-              .then((results) => {})
-              .catch((e) =>{
-
-              }
-                // alert(' requestReadPermission ' + JSON.stringify(e))
-              );
-          } else {
-          }
-        })
-        .catch((e) =>{
-          // alert(' hasReadPermission ' + JSON.stringify(e)
-        })
-    });
+   
   }
  
   
   ngOnInit() {
+    // this.checkPermissions();
+
     if(this.refreshAll){
       this.dateForm.reset()
       this.allocate.callLogStatus.next([])
@@ -340,18 +326,56 @@ export class CallLogPage implements OnInit {
       });
     return await popover.present();
   }
-  getCallLogs(query:any){
-    this.baseService.getData(`${environment.call_logs}${query}`).subscribe((res:any)=>{
-      if(res){
-        this.callLogCards = []
-        this.data = []   
-       this.callLogCards = res.results;
-       this.data = new MatTableDataSource<any>(this.callLogCards);
-       this.totalNumberOfRecords = res.total_no_of_record 
-      }
-    },((error:any)=>{
-      this.api.showError(error?.error.message || 'GENREAL')
-    }))
+ async getCallLogs(query:any){
+    const readCallLogs= await this.androidPermissions.checkPermission(
+      this.androidPermissions.PERMISSION.READ_CALL_LOG
+    );
+    // const phoneStateResult= await this.androidPermissions.checkPermission(
+    //   this.androidPermissions.PERMISSION.READ_PHONE_STATE
+    // );
+    const readContacts = await this.androidPermissions.checkPermission(
+      this.androidPermissions.PERMISSION.READ_CONTACTS
+    );
+    if(!readContacts.hasPermission||!readCallLogs.hasPermission){
+      let  message:any='This app requires the following permissions to function properly : '
+      //  if(!phoneStateResult.hasPermission){
+      //  message+=' Read Phone Contacts'
+      //  }
+       if(!readContacts.hasPermission){
+         message+='/n Read Phone Contacts /n'
+       }
+       if(!readCallLogs.hasPermission){
+         message+='/n Access Call Logs /n'
+       }
+       message+='/n Would you like to grant these permissions?'
+        const confirmation = await this.warn(message);
+           
+             if (!confirmation) {
+               return;
+           }
+               
+ 
+       return
+ 
+     }
+ 
+          setTimeout(()=>{
+            this.baseService.getData(`${environment.call_logs}${query}`).subscribe((res:any)=>{
+              console.log(res,"call log response after given the permission");
+              
+              if(res){
+                this.callLogCards = []
+                this.data = []   
+               this.callLogCards = res.results;
+               this.data = new MatTableDataSource<any>(this.callLogCards);
+               this.totalNumberOfRecords = res.total_no_of_record 
+              }
+            },((error:any)=>{
+              this.api.showError(error?.error.message || 'GENREAL')
+            }))
+
+          },1000)
+   
   }
   
   onEmit(event:any){
@@ -458,4 +482,41 @@ export class CallLogPage implements OnInit {
       this.api.showError(error?.error.message)
     }))
   }
+
+
+
+ async  warn(message) {
+    return new Promise(async (resolve) => {
+      const confirm = await this.alertController.create({
+      header: 'Permissions Required',
+      message:message,
+      // message: 'This app requires the following permissions to function properly:\n- Access Call Logs\nWould you like to grant these permissions?',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+              return resolve(false);
+            },
+          },
+          {
+            text: 'OK',
+            handler: () => {
+              NativeSettings.open({
+                    optionAndroid: AndroidSettings.ApplicationDetails, 
+                    optionIOS: IOSSettings.App
+                  })
+              return resolve(true);
+            },
+          },
+        ],
+      });
+
+      await confirm.present();
+    });
+  }
+
+
+
+
 }

@@ -30,10 +30,10 @@ export class ApiService {
     await this.loadingCtrl.dismiss();
  }
 
- async showToast(message:any) {
+ async showToast(message:any,duration=2000) {
   await this.toastCtrl.create({
     message: message,
-    duration: 2000,
+    duration: duration,
     position: 'bottom',
     cssClass:'toaster'
   }).then((res:any) => res.present());
