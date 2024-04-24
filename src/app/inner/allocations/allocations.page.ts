@@ -364,6 +364,9 @@ calledTime:any;
         if(this.counsellor_ids.length > 0){
           query += `&counsellor_id=${this.counsellor_ids}`;
         }
+        if(this.searchTerm){
+          query +=`&key=${this.searchTerm}`
+        }
         this.leadCards = []
         this.data = []
         this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
@@ -383,10 +386,48 @@ calledTime:any;
     );
    
     this._addLeadEmitter.triggerGet$.subscribe((res:any) => {
-        let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
-        this.leadCards = [];
-        this.data = [];
-        this.totalNumberOfRecords = []
+      let query: any;
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
+
+     
+        this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
+          if(res){
+            this.counsellor_ids = res
+          } 
+        });
+        
+        this.allocate.allocationStatus.subscribe(
+          (res: any) => {
+         
+            if (res.length >0) {
+              this.statusFilter = true
+              query += `&status=${res}`;
+            }
+            if(this.counsellor_ids.length > 0){
+              query += `&counsellor_id=${this.counsellor_ids}`;
+            }
+            if(this.searchTerm){
+              query +=`&key=${this.searchTerm}`
+            }
+            this.leadCards = []
+            this.data = []
+            this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
+              if (res.results) {
+                this.leadCards = res.results;
+                this.data = new MatTableDataSource<any>(this.leadCards);
+                this.totalNumberOfRecords = res.total_no_of_record
+              }
+            }, (error: any) => {
+              this.api.showError(error.error.message);
+            });
+            
+          },
+          (error: any) => {
+            this.api.showError(error.error.message);
+          }
+        );
+      
+      
         this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
           if (res.results) {
          
