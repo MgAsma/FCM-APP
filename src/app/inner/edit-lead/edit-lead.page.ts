@@ -101,6 +101,10 @@ export class EditLeadPage implements OnInit {
       (res: any) => {
         if (res && res.result && res.result.length > 0) {
           const lead = res.result[0];
+          let courseId = [];
+          if(lead.course_looking_for.length >0){
+             courseId = lead.course_looking_for.map((m:any)=>m.id)
+          }
           this.editLead.patchValue({
             firstName: lead.user_data.first_name,
             mobile: lead.user_data.mobile_number,
@@ -123,7 +127,7 @@ export class EditLeadPage implements OnInit {
             degree: lead.degree_per,
             otherCourse: lead.others,
             entranceExam: lead.enterance_exam,
-            courseLookingfor: lead.course_looking_for_id,
+            courseLookingfor: courseId,
             preferredCollege1: lead.preferred_college1,
             preferredCollege2: lead.preferred_college2,
             preferredLocation1: lead.preferred_location1,

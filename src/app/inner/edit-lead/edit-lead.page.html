@@ -333,13 +333,13 @@
                  <!-- Course Looking For -->
                  <ion-label position="stacked">Course Looking For</ion-label>
                  <ion-item>
-                   <ion-select formControlName="courseLookingfor" placeholder="Select Course Looking For" >
+                   <ion-select formControlName="courseLookingfor" placeholder="Select Course Looking For" multiple>
                      <ion-select-option *ngFor="let option of courseOptions" [value]="option.id">{{ option.course_name }}</ion-select-option>
                    </ion-select>
                    <ion-button
                      fill="clear"
                      (click)="clearSelectField('courseLookingfor')"
-                     *ngIf="f['courseLookingfor']?.value"
+                     *ngIf="f['courseLookingfor']?.value && f['courseLookingfor']?.value.length > 0"
                    >
                      <ion-icon name="close-outline"></ion-icon>
                    </ion-button>

@@ -330,7 +330,7 @@
                 <!-- Course Looking For -->
                 <ion-label position="stacked">Course Looking For</ion-label>
                 <ion-item>
-                  <ion-select formControlName="courseLookingfor" placeholder="Select Course Looking For" >
+                  <ion-select formControlName="courseLookingfor" placeholder="Select Course Looking For" multiple>
                     <ion-select-option *ngFor="let option of courseOptions" [value]="option.id">{{ option.course_name }}</ion-select-option>
                   </ion-select>
                   <ion-button
