@@ -129,7 +129,7 @@
         <ion-card class="date-range">
           <mat-label class="label-log">Start Date</mat-label>
           <mat-form-field class="m-0 call-log">
-          <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="startDate" [min]="min" [max]="maxStartDate" (dateChange)="onStartDateChange($event)">
+          <input matInput [matDatepicker]="picker"  placeholder="MM/DD/YYYY" formControlName="startDate" [min]="min" [max]="maxStartDate" (dateChange)="onStartDateChange($event)" readonly>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -139,7 +139,7 @@
         <ion-card class="date-range">
           <mat-label class="label-log">End Date</mat-label>
           <mat-form-field class="m-0 call-log">
-            <input matInput [matDatepicker]="picker2"  formControlName="endDate" [min]="minEndDate || min" [max]="maxStartDate" placeholder="MM/DD/YYYY" >
+            <input matInput [matDatepicker]="picker2"   formControlName="endDate" [min]="minEndDate || min" [max]="maxStartDate" placeholder="MM/DD/YYYY" readonly>
             <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
@@ -149,7 +149,7 @@
      </form>
             
       <div class="text-center mt-2">
-        <ion-button type="button" (click)="onSubmit()">Submit</ion-button>
+        <ion-button type="button" (click)="onSubmit()" [disabled]="dateForm.invalid">Submit</ion-button>
       </div>
     
       <ion-row class="px-3 py-2">
@@ -169,7 +169,9 @@
                   </ion-col>
                   <ion-col  class="ml-4">
                     <ion-row >
-                      <small>{{items?.lead_name || 'Unknown'}}</small><span></span><p class="label">{{items?.call_status}}</p>
+                      <ion-col size="6"><small>{{items?.lead_name || 'Unknown' | titlecase }}</small></ion-col>
+                      <ion-col size="6"><small class="label">{{items?.call_status}}</small></ion-col>
+                      
                     </ion-row>
                     <ion-row>
                       <small>{{items?.phone_number}}</small>

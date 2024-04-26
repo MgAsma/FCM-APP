@@ -213,7 +213,8 @@ export class CallLogPage implements OnInit {
   }
   onSubmit() {
     // let query;
-    if(this.dateForm.invalid && !this.dateForm.dirty){
+    // if(this.dateForm.invalid && !this.dateForm.dirty){
+      if(this.dateForm.invalid){
       this.dateForm.markAllAsTouched()
       this.api.showError('Select start date and end date')
     }else{

@@ -94,7 +94,7 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
 
   ngOnInit(){
    
-this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this))
+    this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this))
     // this.initiateCallStatus();
    
   }
@@ -177,8 +177,6 @@ calledTime:any;
   }
 
   async callContact(number: string, id: any,item) {
-
-
 
     const phoneStateResult= await this.androidPermissions.checkPermission(
       this.androidPermissions.PERMISSION.READ_PHONE_STATE

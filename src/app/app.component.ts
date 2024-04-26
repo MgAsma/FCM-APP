@@ -107,6 +107,7 @@ else{
 
 
   async ngOnInit() {
+    this.appVersion()
     this.checkPermissions();
     await this.storage.create();
     this.checkLoginStatus();
@@ -214,4 +215,37 @@ else{
         
        
     });
+
+  appVersion(){
+    // Define your current application version
+const currentVersion = '1.0.0';
+
+// Check if local storage contains a version number
+const storedVersion = localStorage.getItem('appVersion');
+
+// If there's no stored version or it's different from the current version
+if (!storedVersion || storedVersion !== currentVersion) {
+    // Clear local storage
+    localStorage.clear();
+    
+    // Update stored version to current version
+    localStorage.setItem('appVersion', currentVersion);
+}
+
+// Listen for the update event
+window.addEventListener('appUpdated', function(event) {
+    // Check if the stored version matches the current version
+    if (localStorage.getItem('appVersion') !== currentVersion) {
+        // Clear local storage
+        localStorage.clear();
+        
+        // Update stored version to current version
+        localStorage.setItem('appVersion', currentVersion);
+    }
+});
+
+// Trigger the update event when the application is updated
+// Example: When a new version of the application is installed
+window.dispatchEvent(new Event('appUpdated'));
+  }
 }

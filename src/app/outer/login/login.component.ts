@@ -104,7 +104,8 @@ export class LoginComponent  implements OnInit {
           const formattedDate :any = this.datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss.SSSZ');
           localStorage.setItem('lastLoginDate', formattedDate);
           localStorage.setItem('token',resp.token.token)
-         
+          let appVersion = '1.0.0'
+          localStorage.setItem('appVersion',appVersion);
           let decodedToken:any = ''
           localStorage.setItem('device_token',resp.device_token)
           decodedToken = jwtDecode(resp.token.token);

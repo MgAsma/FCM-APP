@@ -15,6 +15,7 @@ export class FilterComponent  implements OnInit {
   sortingCards: SortingCard[] = sortingCards;
   
   selectedStatus: any = [] ;
+  submitted: boolean = false;
   constructor(
     private modalController:ModalController,
     private allocationEmit:AllocationEmittersService,
@@ -83,18 +84,22 @@ export class FilterComponent  implements OnInit {
     this.allocationEmit.callLogStatus.next(this.selectedStatus)
   }
   closeModel(){
+    let selectedStatus = [];
     this.allocationEmit.callLogStatus.subscribe((res: any) => {
-      this.selectedStatus = [];
+      
+      this.data.forEach((chip: any) => {
+        chip.selected = false;
+      });
+    
       if (res.length > 0 && this.data.length > 0) {
-        this.selectedStatus = res
+        selectedStatus = res
       }
-    })
-   
-    this.allocationEmit.callLogStatus.next(this.selectedStatus)
-    this.modalController.dismiss();
+    });
+    this.modalController.dismiss(selectedStatus)
   }
   onSubmit(){
     if(this.selectedStatus.length >0){
+      this.submitted = true
       this.allocationEmit.callLogStatus.next(this.selectedStatus)
       this.modalController.dismiss();
     }else{
