@@ -46,7 +46,7 @@
                      <ion-input appFormSpace
                        type="tel"
                        maxlength="10"
-                       placeholder="Enter  Mobile Number"
+                       placeholder="Enter Mobile Number"
                        formControlName="mobile"
                        required
                        style="--padding-start: 0;"
@@ -68,7 +68,7 @@
                        <ion-input appFormSpace
                          type="tel"
                          maxlength="10"
-                         placeholder="Enter  Alternate Mobile Number"
+                         placeholder="Enter Alternate Mobile Number"
                          formControlName="alternateNumber"
                          style="--padding-start: 0;"
                        ></ion-input>
@@ -81,7 +81,7 @@
                      </ng-container>
 
                      <div class="custom-errmsg" *ngIf="!f['mobile'].hasError('pattern') && f['alternateNumber'].value && f['mobile'].value == f['alternateNumber'].value">
-                      Mobile and Alternate Numbers cannot be the same
+                      Mobile And Alternate Numbers Cannot Be The Same
                     </div>
                      
                    <!-- Email -->
@@ -160,6 +160,7 @@
                  <ion-item>
                    <ion-input appFormSpace
                      type="tel"
+                     maxlength="6"
                      placeholder="Enter Pincode"
                      formControlName="pincode"
                    ></ion-input>
@@ -205,8 +206,10 @@
              <!---Reference Phone Number----->
              <ion-label position="stacked">Reference Phone Number</ion-label>
              <ion-item>
+              <ion-label *ngIf="f['referencePhoneNumber'].value">+91</ion-label>
                <ion-input appFormSpace
                  type="tel"
+                 maxlength="10"
                  placeholder="Enter Reference Phone Number"
                  formControlName="referencePhoneNumber"
                ></ion-input>
@@ -242,8 +245,10 @@
              <!----Father Phone Number -->
              <ion-label position="stacked">Father Phone Number</ion-label>
              <ion-item>
+              <ion-label *ngIf="f['fatherPhoneNumber'].value">+91</ion-label>
                <ion-input appFormSpace
                  type="tel"
+                 maxlength="10"
                  placeholder="Enter Father Phone Number"
                  formControlName="fatherPhoneNumber"
                ></ion-input>

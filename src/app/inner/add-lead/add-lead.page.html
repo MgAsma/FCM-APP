@@ -68,7 +68,7 @@
                       <ion-input appFormSpace
                         type="tel"
                         maxlength="10"
-                        placeholder="Enter  Alternate Mobile Number"
+                        placeholder="Enter Alternate Mobile Number"
                         formControlName="alternateNumber"
                         style="--padding-start: 0;"
                       ></ion-input>
@@ -79,14 +79,14 @@
                       </ion-error>
                     </ng-container>
                    <div class="custom-errmsg" *ngIf="!f['mobile'].hasError('pattern') && f['alternateNumber'].value && f['mobile'].value == f['alternateNumber'].value">
-                        Mobile and Alternate Numbers cannot be the same
+                    Mobile And Alternate Numbers Cannot Be The Same
                   </div>
                   <!-- Email -->
                   <ion-label position="stacked">Email Id</ion-label><b class="star-symbol">*</b>
                   <ion-item>
                     <ion-input appFormSpace
                       type="email"
-                      placeholder="Enter  Email Id"
+                      placeholder="Enter Email Id"
                       formControlName="email"
                     ></ion-input>
                   </ion-item>
@@ -157,6 +157,7 @@
                 <ion-item>
                   <ion-input appFormSpace
                     type="tel"
+                    maxlength="6"
                     placeholder="Enter Pincode"
                     formControlName="pincode"
                   ></ion-input>
