@@ -102,6 +102,7 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
 
 
 
+
   
 
 
@@ -313,7 +314,9 @@ return
       }
     );
   }
- 
+  ionViewWillEnter(){
+   this.ngAfterViewInit() 
+  }
   ngAfterViewInit() {
     this.pageIndex = 0
     this.user_id = localStorage.getItem('user_id')
