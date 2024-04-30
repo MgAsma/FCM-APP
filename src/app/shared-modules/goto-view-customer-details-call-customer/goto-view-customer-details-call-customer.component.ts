@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, Platform, PopoverController } from '@ionic/angular';
 
@@ -19,6 +19,7 @@ import { CallPermissionsService } from '../../service/api/call-permissions.servi
   styleUrls: ['./goto-view-customer-details-call-customer.component.scss'],
 })
 export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
+  @Input()data:any;
   selectedDetails: any = [];
   user_id: any;
   leadId: any;
@@ -45,16 +46,12 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     private callPermissionService:CallPermissionsService
     ) { 
       this.counsellor_id = localStorage.getItem('user_id');
-
+     
 
     }
-
-
-
-
-
-
+    ngOnChanges(){
     
+    }
 
   ngOnInit() {
   this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this))
@@ -69,7 +66,10 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     this.popoverController.dismiss();
     }
   goToDetails(){
+    this.allocate.logMemberDetails.next(this.data)
+    alert(this.data)
     this.close();
+    
     this.router.navigate(['/inner/customer-details'])
   }
   getContacts(name: any, value: any, operator: any) {

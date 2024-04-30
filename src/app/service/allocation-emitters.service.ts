@@ -10,7 +10,7 @@ export class AllocationEmittersService {
   callLogStatus = new BehaviorSubject([])
   tlsStatus = new BehaviorSubject('')
   callhistoryList = new BehaviorSubject([])
-
+  logMemberDetails = new BehaviorSubject('')
 
   private phoneStateSubject = new Subject<string>();
 

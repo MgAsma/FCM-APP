@@ -324,7 +324,13 @@ export class CallLogPage implements OnInit {
       component: GotoViewCustomerDetailsCallCustomerComponent,
       translucent: true,
       backdropDismiss: false,
+      componentProps: {
+        // Pass data to the component
+        data: event
+      }
       });
+      
+  
     return await popover.present();
   }
  async getCallLogs(query:any){

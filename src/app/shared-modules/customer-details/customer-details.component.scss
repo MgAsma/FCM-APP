@@ -12,8 +12,36 @@ small{
     margin: 5px;
 }
 .l-icon{
-    font-size: 25px;
+    font-size: 20px;
 }
 .s-icon{
     font-size: 16px;
+}
+.f-s{
+ font-size: 11px !important;
+}
+.align-self{
+ align-items: flex-end;
+}
+.main-container{
+    box-shadow: none;
+    background: #eeeeee;
+}
+.inner-container{
+   background: white;
+   display: flex; 
+   align-items: center;
+   padding: 8px;
+   border-radius: 5px;
+}
+
+.c-f{
+    font-size: 10px;
+}
+.c-ts{
+    font-size: 8px;
+}
+.g-2{
+    border: 1px solid #ebebeb;
+    border-radius: 4px;
 }
