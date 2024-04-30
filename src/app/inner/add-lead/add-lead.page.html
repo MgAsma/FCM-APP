@@ -202,8 +202,10 @@
             <!---Reference Phone Number----->
             <ion-label position="stacked">Reference Phone Number</ion-label>
             <ion-item>
+              <ion-label *ngIf="f['referencePhoneNumber'].value">+91</ion-label>
               <ion-input appFormSpace
                 type="tel"
+                maxlength="10"
                 placeholder="Enter Reference Phone Number"
                 formControlName="referencePhoneNumber"
               ></ion-input>
@@ -239,8 +241,10 @@
             <!----Father Phone Number -->
             <ion-label position="stacked">Father Phone Number</ion-label>
             <ion-item>
+              <ion-label *ngIf="f['fatherPhoneNumber'].value">+91</ion-label>
               <ion-input appFormSpace
                 type="tel"
+                maxlength="10"
                 placeholder="Enter Father Phone Number"
                 formControlName="fatherPhoneNumber"
               ></ion-input>
