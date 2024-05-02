@@ -23,7 +23,7 @@ export class CustomerDetailsComponent  implements OnInit {
         this.data = res
       }
     })
-    console.log(this.data,"DETAILS PAGE")
+    //console.log(this.data,"DETAILS PAGE")
   }
   goBack(){
     window.history.back();

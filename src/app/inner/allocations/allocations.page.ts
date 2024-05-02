@@ -136,22 +136,22 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        console.log(JSON.stringify(results[0]), "latest call log");
+        //console.log(JSON.stringify(results[0]), "latest call log");
         const calculateTime=Number(results[0].date)-Number(this.calledTime)
-        console.log(calculateTime,"calulatedTime");
+       // console.log(calculateTime,"calulatedTime");
         
         this.callDuration = results[0].duration;
-        console.log(JSON.stringify(this.callDuration), "latest call duration");
+        //console.log(JSON.stringify(this.callDuration), "latest call duration");
         if (this.callDuration > 0) {
           this.currentStatus = 1;
         } else {
           this.currentStatus = 3;
         }
 
-        console.log(
-          JSON.stringify(results),
-          "call log responseeeeeeeeeeeeeeeee"
-        );
+        // console.log(
+        //   JSON.stringify(results),
+        //   "call log responseeeeeeeeeeeeeeeee"
+        // );
         this.recordsFoundText = JSON.stringify(results);
         this.recordsFound = results; //JSON.stringify(results);
 
@@ -230,7 +230,7 @@ return
       this.leadPhoneNumber = number;
       this.callStartTime = new Date();
       this.selectedLead = item
-      console.log( this.callStartTime," this.callStartTime");
+     // console.log( this.callStartTime," this.callStartTime");
       
       let data = {
         user: this.user_id,
@@ -239,7 +239,7 @@ return
 
       this.postTLStatus(data);
       this.calledTime=new Date().getTime();
-      console.log(this.calledTime,"this.calledTime in allocation ");
+     // console.log(this.calledTime,"this.calledTime in allocation ");
       
       setTimeout(async () => {
     
@@ -253,7 +253,7 @@ return
         // this.initiateCallStatus();
       }, 100);
     } catch (error) {
-      console.log(error);
+     // console.log(error);
     }
   }
 

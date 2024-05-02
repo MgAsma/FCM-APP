@@ -95,7 +95,7 @@ else{
       //   );
       // }
     } catch (error) {
-      console.log("Error!", error);
+      //console.log("Error!", error);
     }
   }
 
@@ -218,7 +218,7 @@ else{
 
   appVersion(){
     // Define your current application version
-const currentVersion = '1.0.0';
+const currentVersion = '1.0.1';
 
 // Check if local storage contains a version number
 const storedVersion = localStorage.getItem('appVersion');

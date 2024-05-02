@@ -67,7 +67,6 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     }
   goToDetails(){
     this.allocate.logMemberDetails.next(this.data)
-    alert(this.data)
     this.close();
     
     this.router.navigate(['/inner/customer-details'])
@@ -103,24 +102,24 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        console.log(JSON.stringify(results[0]), "latest call log");
+       // console.log(JSON.stringify(results[0]), "latest call log");
         this.callDuration = results[0].duration;
         const calculateTime=Number(results[0].date)-Number(this.calledTime)
-        console.log(calculateTime,"calculateTime");
+       // console.log(calculateTime,"calculateTime");
         
-        console.log(JSON.stringify(this.callDuration), "latest call duration");
+       // console.log(JSON.stringify(this.callDuration), "latest call duration");
         if (this.callDuration > 0) {
           this.callStatus = 1;
         } else {
           this.callStatus = 3;
         }
 
-        console.log(
-          JSON.stringify(results),
-          "call log responseeeeeeeeeeeeeeeee"
-        );
+        // console.log(
+        //   JSON.stringify(results),
+        //   "call log responseeeeeeeeeeeeeeeee"
+        // );
         this.recordsFoundText = JSON.stringify(results);
-        console.log(this.recordsFoundText, "this.recordsFoundText");
+       // console.log(this.recordsFoundText, "this.recordsFoundText");
         this.recordsFound = results; //JSON.stringify(results);
 
         if (calculateTime > 0) {
@@ -196,11 +195,11 @@ async  initializeCall(event) {
 
   
 
-    console.log(event);
+   // console.log(event);
     this.leadId = event.lead_id;
     this.leadPhoneNumber = event.phone_number;
     this.callStartTime = new Date();
-    console.log(this.callStartTime, 'time');
+   // console.log(this.callStartTime, 'time');
     let data = {
       user: this.counsellor_id,
       status: 3,
@@ -232,7 +231,7 @@ async  initializeCall(event) {
         // this.initiateCallStatus();
       }, 100);
     } catch (error) {
-      console.log(error);
+     // console.log(error);
     }
 
     let data2 = {
