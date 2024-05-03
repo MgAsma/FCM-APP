@@ -16,6 +16,7 @@ export class AddLeadEmitterService {
   selectedCounsellor = new BehaviorSubject([])
   callLogCounsellor = new BehaviorSubject([])
   tlsCounsellor = new BehaviorSubject([])
+  customerCounsellor = new BehaviorSubject([])
   triggerGet() {
     this.triggerGetSource.next();
   }
