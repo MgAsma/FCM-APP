@@ -13,6 +13,7 @@ import { Storage } from '@ionic/storage-angular';
 import { UserData } from './providers/user-data';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { CallLog } from '@ionic-native/call-log/ngx';
+import { IdleDetectionService } from './service/idle-detection.service';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +37,7 @@ export class AppComponent implements OnInit {
     private navCtrl:NavController,
     private androidPermissions:AndroidPermissions,
     private callLog: CallLog,
+    private idleDetectionService:IdleDetectionService
     // private platform: Platform,
   ) {
     this.initializeApp();
@@ -132,6 +134,23 @@ else{
         .then(() => this.swUpdate.activateUpdate())
         .then(() => window.location.reload());
     });
+    this.idleDetectionService.userActivity.subscribe(isActive => {
+      if (!isActive) {
+       localStorage.clear()
+       window.location.reload()
+      }
+    });
+    // Subscribe to isActive to reset the timer
+    // this.idleDetectionService.isActive.subscribe(isActive => {
+    //   if (isActive) {
+    //     this.idleDetectionService.resetTimer();
+    //   } else {
+    //     localStorage.clear()
+    //     window.location.reload()
+    //   }
+      this.idleDetectionService.userActivity.subscribe(() => {
+        this.idleDetectionService.resetTimer();
+      });
   }
 
   initializeApp() {
