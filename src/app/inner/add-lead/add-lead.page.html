@@ -347,6 +347,21 @@
                   </ion-button>
                 </ion-item>
 
+                  <!-- Level Of Program -->
+                  <ion-label position="stacked">Level Of Program</ion-label>
+                  <ion-item>
+                    <ion-select formControlName="levelOfProgram" placeholder="Select Level Of Program">
+                      <ion-select-option *ngFor="let option of levelofProgram" [value]="option.id">{{ option.name }}</ion-select-option>
+                    </ion-select>
+                    <ion-button
+                      fill="clear"
+                      (click)="clearSelectField('levelOfProgram')"
+                      *ngIf="f['levelOfProgram']?.value"
+                    >
+                      <ion-icon name="close-outline"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+
                   <!----Preferred College 1 -->
               <ion-label position="stacked">Preferred College 1</ion-label>
               <ion-item>

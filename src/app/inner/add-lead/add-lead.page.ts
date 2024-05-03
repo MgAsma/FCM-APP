@@ -29,7 +29,6 @@ export class AddLeadPage implements OnInit {
   yearOfPassingOptions:any = [];
   campaignOptions:any = [];
   mediumOptions:any = [];
-  levelOfProgramOptions:any = [];
   subStatus: any = [];
   referredTo:any = [];
   stat_us:any= [];
@@ -48,6 +47,7 @@ export class AddLeadPage implements OnInit {
   formatedDate: string;
   type = 'text'
   min:string;
+  levelofProgram: any = [];
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -286,7 +286,7 @@ export class AddLeadPage implements OnInit {
   getLevelOfProgram(){
     this.api.getAllLevelOfProgram().subscribe((res:any)=>{
       if(res.results){
-        this.levelOfProgramOptions = res.results 
+        this.levelofProgram = res.results 
       } else{
         this.api.showToast('ERROR')
        }
@@ -361,7 +361,6 @@ export class AddLeadPage implements OnInit {
      this.api.showError(error.error.message)
     }))
    }
-  
   clearSelectField(fieldName: string) {
       this.addNewLead.get(fieldName)?.reset();
   }

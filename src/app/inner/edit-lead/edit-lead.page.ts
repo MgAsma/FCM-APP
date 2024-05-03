@@ -16,6 +16,7 @@ export class EditLeadPage implements OnInit {
    _inputData: any;
   showPicker: boolean = false;
   min:string;
+  levelofProgram: any = [];
   @Input() set data(value:any){
     this._inputData = value;
     //console.log(this._inputData,"ssdgdgg")
@@ -34,7 +35,6 @@ export class EditLeadPage implements OnInit {
   yearOfPassingOptions:any = [];
   campaignOptions:any = [];
   mediumOptions:any = [];
-  levelOfProgramOptions:any = [];
   subStatus: any = [];
   referredTo:any = [];
   stat_us:any= [];
@@ -336,7 +336,7 @@ export class EditLeadPage implements OnInit {
   getLevelOfProgram(){
     this.api.getAllLevelOfProgram().subscribe((res:any)=>{
       if(res.results){
-        this.levelOfProgramOptions = res.results 
+        this.levelofProgram = res.results 
       } else{
         this.api.showToast('ERROR')
        }
