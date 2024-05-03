@@ -6,6 +6,7 @@ import { ApiService } from '../../../service/api/api.service';
 import { BaseServiceService } from '../../../service/base-service.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { AddLeadEmitterService } from '../../../service/add-lead-emitter.service';
+import { IntervalService } from '../../../service/interval.service';
 
 
 @Component({
@@ -47,7 +48,8 @@ export class TeamLiveStatusPage implements OnInit {
     private modalController:ModalController,
     private api:ApiService,
     private baseService:BaseServiceService,
-    private addEmit:AddLeadEmitterService
+    private addEmit:AddLeadEmitterService,
+    private intervalService: IntervalService
     ) { 
     this.user_id=localStorage.getItem('user_id')
     this.user_role=localStorage.getItem('user_role')?.toUpperCase()
@@ -73,6 +75,12 @@ export class TeamLiveStatusPage implements OnInit {
         this.searchBar = false
       }
     })
+    this.initComponent()
+    this.intervalService.startInterval(() => {
+      this.initComponent()
+    }, 50000);
+  }
+  initComponent(){
     let query:any;
     this.addEmit.tlsCounsellor.subscribe((res) => {
       if(res.length > 0){
@@ -104,8 +112,6 @@ export class TeamLiveStatusPage implements OnInit {
     },((error:any)=>{
       this.api.showToast(error.error.message)
     }))
-   
-    
   }
   goBack(){
     window.history.back();
@@ -243,7 +249,10 @@ export class TeamLiveStatusPage implements OnInit {
      }
      this.getLiveStatus(query)
   }
-
+  ngOnDestroy(): void {
+    // Stop the interval when the component is destroyed
+    this.intervalService.stopInterval();
+  }
 }
 
 
