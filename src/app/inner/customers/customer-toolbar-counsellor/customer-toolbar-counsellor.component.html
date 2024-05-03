@@ -1,0 +1,32 @@
+
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <app-search-bar [placeholder]="placeholderText" (close)="closePopup()" (search)="searchTermChanged($event)"></app-search-bar>
+  </ion-toolbar>
+</ion-header>
+<ion-content *ngIf="filteredData?.length ==0">
+  <app-nodata></app-nodata>
+</ion-content>
+<ion-content *ngIf="filteredData?.length >0">
+  <div class="wrapper">
+    <ion-row>
+      <ion-col>
+        <p class="text-end">Selected Users {{ getSelectedListLength() }}</p>
+      </ion-col>
+    </ion-row>
+    <div class="customer-card">
+      <ion-list #customer>
+        <ion-item *ngFor="let item of filteredData" (click)="itemClicked(item)">
+          <label>{{ item?.first_name }}</label>
+          <ion-checkbox slot="end" aria-label="label"  [checked]="item.selected"></ion-checkbox>
+        </ion-item>
+      </ion-list>
+    </div>
+    <ion-row>
+      <ion-col class="text-center">
+        <ion-button shape="round" fill="outline" (click)="resetModal()">RESET</ion-button>
+        <ion-button shape="round" color="primary" (click)="onSubmit()">APPLY</ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

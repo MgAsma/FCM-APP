@@ -1,0 +1,72 @@
+
+.wrapper{
+    height: 97vh;
+    overflow-y: auto;
+    padding: 8px;
+
+}
+#close{
+    color:orange;
+  }
+
+    .scroll-x-sort{
+        flex-wrap: nowrap;
+        margin: 10px 0;
+    }
+  .sorting-section{
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    margin: 10px 0;
+    font-weight: 500;
+   .sorting-type{
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    ion-card-content{
+        padding: 0;
+        margin: 2px;
+        font-size: 9px;
+        .alert-outline{
+            color:#080808 !important;
+        }
+        .middle-text{
+         color:#080808;
+         font-size: 11px;
+        }
+    }
+   }
+  }
+  
+    .selected {
+    background-color: orange;
+    color:white !important;
+    .middle-text{
+        color:white !important;
+    }
+    
+}
+ion-chip ion-label{
+  font-size: 12px;
+  font-family: 'Roboto' !important;
+}
+.selected-chip{
+    background-color: orange;
+    color:white;
+}
+
+  .assign-to-class{
+    border: 1px solid #d3d3d3;
+    color:black;
+    text-align: center;
+    font-weight: 500;
+    padding: 15px;
+    height: 44px;
+    line-height: 11px;
+    cursor: pointer;
+  }
+  .selected-column {
+    background-color: orange; /* Setting the selected column color to orange */
+    color: white !important; /* Changing text color for better visibility */
+  }
+  

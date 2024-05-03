@@ -7,14 +7,31 @@ import { IonicModule } from '@ionic/angular';
 import { CustomersPageRoutingModule } from './customers-routing.module';
 
 import { CustomersPage } from './customers.page';
+import { CustomerToolbarTopComponent } from './customer-toolbar-top/customer-toolbar-top.component';
+import { CustomerToolbarCounsellorComponent } from './customer-toolbar-counsellor/customer-toolbar-counsellor.component';
+import { CustomerFilterComponent } from './customer-filter/customer-filter.component';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { CallLog } from '@ionic-native/call-log/ngx';
+import { CallNumber } from '@ionic-native/call-number/ngx';
+import { Device } from '@ionic-native/device/ngx';
+import { MaterialModule } from '../../shared-modules/material/material/material.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CustomersPageRoutingModule
+    CustomersPageRoutingModule,
+    MaterialModule
   ],
-  declarations: [CustomersPage]
+
+  declarations: [
+    CustomersPage,
+    CustomerToolbarTopComponent,
+    CustomerToolbarCounsellorComponent,
+    CustomerFilterComponent
+    ],
+    providers:[CallNumber,CallLog,Device,AndroidPermissions]
+  
 })
 export class CustomersPageModule {}
