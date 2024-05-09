@@ -71,13 +71,13 @@ export class CustomersPage implements OnInit {
   selectedLead: any;
 
   constructor(
-    private allocate: AllocationEmittersService,
+    private _customer: AllocationEmittersService,
     private api: ApiService,
     private _baseService: BaseServiceService,
     private callNumber: CallNumber,
     private callLog: CallLog,
     private platform: Platform,
-    private _addLeadEmitter: AddLeadEmitterService,
+    private _counsellorEmitter: AddLeadEmitterService,
     private modalController:ModalController,
     private androidPermissions: AndroidPermissions,
     private alertController:AlertController,
@@ -317,7 +317,7 @@ return
     this.pageIndex = 0
     this.user_id = localStorage.getItem('user_id')
     this.getStatus();
-    this.allocate.searchBar.subscribe((res) => {
+    this._customer.searchBar.subscribe((res) => {
       if (res === true) {
         this.searchBar = true;
       } else {
@@ -326,13 +326,13 @@ return
     });
     
     let query: any;
-    this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
+    this._counsellorEmitter.customerCounsellor.subscribe((res) => {
       if(res){
         this.counsellor_ids = res
       } 
     });
     
-    this.allocate.allocationStatus.subscribe(
+    this._customer.customerStatus.subscribe(
       (res: any) => {
       query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
         if (res.length >0) {
@@ -363,17 +363,17 @@ return
       }
     );
    
-    this._addLeadEmitter.triggerGet$.subscribe((res:any) => {
+    this._counsellorEmitter.triggerGet$.subscribe((res:any) => {
       let query: any;
       query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
      
-        this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
+        this._counsellorEmitter.customerCounsellor.subscribe((res) => {
           if(res){
             this.counsellor_ids = res
           } 
         });
         
-        this.allocate.allocationStatus.subscribe(
+        this._customer.customerStatus.subscribe(
           (res: any) => {
          
             if (res.length >0) {
@@ -426,11 +426,11 @@ return
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = 0
-      this.allocate.allocationStatus.next('')
-      this._addLeadEmitter.selectedCounsellor.next([])
+      this._customer.customerStatus.next('')
+      this._counsellorEmitter.customerCounsellor.next([])
       this.statusFilter = false;
       this.searchTerm = '';
-      this.allocate.searchBar.next(false)
+      this._customer.searchBar.next(false)
       let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' ||  this.user_role == 'SUPER ADMIN'? `?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
       this.getLeadlist(query);
       event.target.complete();
@@ -468,7 +468,7 @@ return
      
     
     if(this.statusFilter){
-      this.allocate.allocationStatus.subscribe(
+      this._customer.customerStatus.subscribe(
        (res: any) => {
          if (res) {
            query += `&status=${res}`;
@@ -515,13 +515,13 @@ return
     
     if(event){
       this.counsellor_ids = event
-      this._addLeadEmitter.selectedCounsellor.next(event)
+      this._counsellorEmitter.customerCounsellor.next(event)
      
         let params = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? 
         `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`:
         this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`
         if(this.statusFilter){
-          this.allocate.allocationStatus.subscribe(
+          this._customer.customerStatus.subscribe(
            (res: any) => {
              if (res) {
               params += `&status=${res}`;
@@ -553,18 +553,10 @@ return
     this.data = []
     let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&key=${event}`
     : this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10&key=${event}`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&key=${event}`
-    if(this.statusFilter){
-     this.allocate.callLogStatus.subscribe(
-      (res: any) => {
-        if (res) {
-          query += `&status=${res}`;
-        }
-      }
-    );
-    }
+    
    
     if(this.statusFilter){
-      this.allocate.allocationStatus.subscribe(
+      this._customer.customerStatus.subscribe(
        (res: any) => {
          if (res) {
            query += `&status=${res}`;
@@ -586,13 +578,13 @@ return
     });
   }
 
-  async editLead(allocate) {
+  async editLead(_customer) {
     const modal = await this.modalController.create({
       component: EditLeadPage, // Replace with your modal content page
       componentProps: {
         // You can pass data to the modal using componentProps
         key: 'value',
-        data:allocate
+        data:_customer
       }
     });
     return await modal.present();
