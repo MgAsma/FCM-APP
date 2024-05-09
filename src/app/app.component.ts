@@ -140,14 +140,7 @@ else{
        window.location.reload()
       }
     });
-    // Subscribe to isActive to reset the timer
-    // this.idleDetectionService.isActive.subscribe(isActive => {
-    //   if (isActive) {
-    //     this.idleDetectionService.resetTimer();
-    //   } else {
-    //     localStorage.clear()
-    //     window.location.reload()
-    //   }
+   
       this.idleDetectionService.userActivity.subscribe(() => {
         this.idleDetectionService.resetTimer();
       });
@@ -237,7 +230,7 @@ else{
 
   appVersion(){
     // Define your current application version
-const currentVersion = '1.0.2';
+const currentVersion = '1.0.4';
 
 // Check if local storage contains a version number
 const storedVersion = localStorage.getItem('appVersion');
