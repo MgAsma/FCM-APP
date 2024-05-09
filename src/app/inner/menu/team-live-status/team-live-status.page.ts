@@ -88,7 +88,9 @@ export class TeamLiveStatusPage implements OnInit {
       }
     })
     this.allocate.tlsStatus.subscribe((res:any)=>{
-      query = `page=1&page_size=10`
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?page=1&page_size=10`:`?user_id=${this.user_id}&page=1&page_size=10`
+     
+      // query = `page=1&page_size=10`
       if(res.length>0){
         this.statusFilter = true
         query += `&status_id=${res}`
@@ -98,8 +100,8 @@ export class TeamLiveStatusPage implements OnInit {
         this.followupDetails = []
         this.data = []
         this.totalNumberOfRecords = []
-        let query2 = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${query}`:`?${query}`
-      this.api.getTeamLiveStatus(query2).subscribe(
+        //let query2 = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${query}`:`?${query}`
+      this.api.getTeamLiveStatus(query).subscribe(
         (resp:any)=>{
           this.followupDetails=resp.results
           this.data = new MatTableDataSource<any>(this.followupDetails);
@@ -120,7 +122,7 @@ export class TeamLiveStatusPage implements OnInit {
     let query:any;
     if(event){
       this.currentPage = event.pageIndex + 1;
-      query = `page=${this.currentPage}&page_size=${event.pageSize}`
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?page=${this.currentPage}&page_size=${event.pageSize}`:`?user_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`
     } 
    
     if(this.statusFilter){
@@ -141,7 +143,8 @@ export class TeamLiveStatusPage implements OnInit {
     this.getLiveStatus(query)
   }
   getCounselor(){
-    this.baseService.getData(`${environment._user}?role_name=counsellor`).subscribe((res:any)=>{
+    let query = this.user_role === "COUNSELLOR" || this.user_role === "COUNSELOR"  || this.user_role === "ADMIN"  ?`?user_id=${this.user_id}&role_name=counsellor` : `?role_name=counsellor`
+    this.baseService.getData(`${environment._user}${query}`).subscribe((res:any)=>{
      if(res.results){    
        this.counselor = res.results 
      }
@@ -154,10 +157,9 @@ export class TeamLiveStatusPage implements OnInit {
    onEmit(event:any){ 
     let query: any;
     if (event) {
-       this.counsellor_ids = event;
-      this.addEmit.tlsCounsellor.next(event)
-      query = `page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`;
-  
+      this.counsellor_ids = event;
+      this.addEmit.tlsCounsellor.next(event)  
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`:`?user_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`
     if(this.statusFilter){
       this.allocate.tlsStatus.subscribe((res:any)=>{
        if(res.length>0){
@@ -173,8 +175,8 @@ export class TeamLiveStatusPage implements OnInit {
      this.followupDetails = []
      this.data = []
      this.totalNumberOfRecords = []
-     let query2 = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${query}`:`?${query}`
-     this.api.getTeamLiveStatus(query2).subscribe(
+    
+     this.api.getTeamLiveStatus(query).subscribe(
        (resp:any)=>{
          this.followupDetails=resp.results
          this.data = new MatTableDataSource<any>(this.followupDetails);
@@ -196,8 +198,10 @@ export class TeamLiveStatusPage implements OnInit {
       this.allocate.tlsStatus.next('')
       this.addEmit.tlsCounsellor.next([])
       this.allocate.searchBar.next(false)
-      let params = `page=1&page_size=10`
-      let query = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${params}`:`?${params}`
+      //let params = `page=1&page_size=10`
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?page=1&page_size=10`:`?user_id=${this.user_id}&page=1&page_size=10`
+     
+     // let query = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${params}`:`?${params}`
       this.followupDetails = []
       this.data = []
       this.statusFilter = false;
@@ -219,8 +223,7 @@ export class TeamLiveStatusPage implements OnInit {
   }
   
   getLiveStatus(params:any){
-    let query = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${params}`:`?${params}`
-      this.api.getTeamLiveStatus(query).subscribe(
+      this.api.getTeamLiveStatus(params).subscribe(
         (resp:any)=>{
           this.followupDetails=resp.results
           this.data = new MatTableDataSource<any>(this.followupDetails);
@@ -235,7 +238,7 @@ export class TeamLiveStatusPage implements OnInit {
  
   searchTermChanged(event:any) {
     let query:any;
-    query = `key=${event}&page=1&page_size=10`
+    query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&key=${event}&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?key=${event}&page=1&page_size=10`:`?user_id=${this.user_id}&key=${event}&page=1&page_size=10`
     this.searchTerm = event
     if(this.statusFilter){
       this.allocate.tlsStatus.subscribe((res:any)=>{

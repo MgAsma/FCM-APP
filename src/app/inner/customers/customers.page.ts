@@ -77,7 +77,7 @@ export class CustomersPage implements OnInit {
     private callNumber: CallNumber,
     private callLog: CallLog,
     private platform: Platform,
-    private _customerEmitter: AddLeadEmitterService,
+    private _addLeadEmitter: AddLeadEmitterService,
     private modalController:ModalController,
     private androidPermissions: AndroidPermissions,
     private alertController:AlertController,
@@ -100,10 +100,6 @@ export class CustomersPage implements OnInit {
   }
 
 
-
-
-
-  
 
 
   getContacts(name, value, operator) {
@@ -330,15 +326,15 @@ return
     });
     
     let query: any;
-    this._customerEmitter.customerCounsellor.subscribe((res) => {
+    this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
       if(res){
         this.counsellor_ids = res
       } 
     });
     
-    this.allocate.customerStatus.subscribe(
+    this.allocate.allocationStatus.subscribe(
       (res: any) => {
-      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
         if (res.length >0) {
           this.statusFilter = true
           query += `&status=${res}`;
@@ -367,18 +363,17 @@ return
       }
     );
    
-    this._customerEmitter.triggerGet$.subscribe((res:any) => {
+    this._addLeadEmitter.triggerGet$.subscribe((res:any) => {
       let query: any;
-      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
-
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
      
-        this._customerEmitter.customerCounsellor.subscribe((res) => {
+        this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
           if(res){
             this.counsellor_ids = res
           } 
         });
         
-        this.allocate.customerStatus.subscribe(
+        this.allocate.allocationStatus.subscribe(
           (res: any) => {
          
             if (res.length >0) {
@@ -431,12 +426,12 @@ return
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = 0
-      this.allocate.customerStatus.next('')
-      this._customerEmitter.customerCounsellor.next([])
+      this.allocate.allocationStatus.next('')
+      this._addLeadEmitter.selectedCounsellor.next([])
       this.statusFilter = false;
       this.searchTerm = '';
       this.allocate.searchBar.next(false)
-      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' ||  this.user_role == 'SUPER ADMIN'? `?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
       this.getLeadlist(query);
       event.target.complete();
     }, 2000);
@@ -464,9 +459,9 @@ return
       this.currentPage = event.pageIndex + 1;
       this.pageSize = event.pageSize;
     }
-   
-    let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:
-    `?page=${this.currentPage}&page_size=${this.pageSize}`
+    let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`:
+    this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`:`?user_id=${this.user_id}&allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`
+    
     if (this.searchTerm) {
       query += `&key=${this.searchTerm}`;
     }
@@ -520,12 +515,13 @@ return
     
     if(event){
       this.counsellor_ids = event
-      this._customerEmitter.customerCounsellor.next(event)
+      this._addLeadEmitter.selectedCounsellor.next(event)
+     
         let params = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? 
-        `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_id=${event}`:
-        `?page=1&page_size=10&counsellor_id=${event}`
+        `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`:
+        this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`
         if(this.statusFilter){
-          this.allocate.customerStatus.subscribe(
+          this.allocate.allocationStatus.subscribe(
            (res: any) => {
              if (res) {
               params += `&status=${res}`;
@@ -555,10 +551,10 @@ return
     this.searchTerm = event
     this.leadCards = []
     this.data = []
-    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`:
-    `?page=1&page_size=10&key=${event}`
+    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&key=${event}`
+    : this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10&key=${event}`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&key=${event}`
     if(this.statusFilter){
-     this.allocate.customerStatus.subscribe(
+     this.allocate.callLogStatus.subscribe(
       (res: any) => {
         if (res) {
           query += `&status=${res}`;
@@ -566,7 +562,16 @@ return
       }
     );
     }
-  
+   
+    if(this.statusFilter){
+      this.allocate.allocationStatus.subscribe(
+       (res: any) => {
+         if (res) {
+           query += `&status=${res}`;
+         }
+       }
+     );
+    }
      if (this.counsellor_ids.length >0) {
       query += `&counsellor_id=${this.counsellor_ids}`
     }
@@ -625,5 +630,4 @@ return
     });
   }
 
- 
 }
