@@ -85,7 +85,7 @@
                     </div>
                      
                    <!-- Email -->
-                   <ion-label position="stacked">Email Id</ion-label><b class="star-symbol">*</b>
+                   <ion-label position="stacked">Email Id</ion-label>
                    <ion-item>
                      <ion-input appFormSpace
                        type="email"
@@ -120,15 +120,9 @@
                     
                    <ng-multiselect-dropdown [placeholder]="'Select Country'"  [settings]="dropdownSettings"
                    [data]="countryOptions" 
-                    formControlName="countryId">
+                   [formControl]="editLead.get('countryId')" (onSelect)="onTagSelect($event,'countryId')" (onDeSelect)="onItemDeSelect($event,'countryId')">
                    </ng-multiselect-dropdown> 
-                     <!-- <ion-button
-                       fill="clear"
-                       (click)="clearSelectField('countryId')"
-                       *ngIf="f['countryId']?.value"
-                     >
-                       <ion-icon name="close-outline"></ion-icon>
-                     </ion-button> -->
+                    
                    </div>
                   
                   <!-- State -->
@@ -137,30 +131,18 @@
                   
                     <ng-multiselect-dropdown [placeholder]="'Select The State'"  [settings]="dropdownSettings"
                    [data]="stateOptions" 
-                    formControlName="state">
+                   [formControl]="editLead.get('state')" (onSelect)="onTagSelect($event,'state')" (onDeSelect)="onItemDeSelect($event,'state')">
                    </ng-multiselect-dropdown> 
-                    <!-- <ion-button
-                      fill="clear"
-                      (click)="clearSelectField('state')"
-                      *ngIf="f['state']?.value"
-                    >
-                      <ion-icon name="close-outline"></ion-icon>
-                    </ion-button> -->
+                    
                    </div>
                  <!-- City Name -->
                  <ion-label position="stacked">City Name</ion-label>
                  <div class="country-code">
                    <ng-multiselect-dropdown [placeholder]="'Select The City Name'"  [settings]="dropdownSettings"
                    [data]="cityOptions" 
-                    formControlName="cityName">
+                   [formControl]="editLead.get('cityName')" (onSelect)="onTagSelect($event,'cityName')" (onDeSelect)="onItemDeSelect($event,'cityName')">
                    </ng-multiselect-dropdown> 
-                   <!-- <ion-button
-                     fill="clear"
-                     (click)="clearSelectField('cityName')"
-                     *ngIf="f['cityName']?.value"
-                   >
-                     <ion-icon name="close-outline"></ion-icon>
-                   </ion-button> -->
+                   
                  </div>
                   <!-- Pincode -->
                   <ion-label position="stacked">Pincode</ion-label>
@@ -461,7 +443,7 @@
              </ion-item>
  
               <!-- Source -->
-              <ion-label position="stacked">Source</ion-label><b class="star-symbol">*</b>
+              <ion-label position="stacked">Source</ion-label>
               <ion-item>
                 <ion-select formControlName="leadSource" placeholder="Select Source" >
                   <ion-select-option *ngFor="let option of sources" [value]="option.id">{{ option?.source_name }}</ion-select-option>
@@ -478,7 +460,7 @@
                <ion-label color="danger">Source Is Required.</ion-label>
              </ion-error>
                <!-- Lead Stage -->
-             <ion-label position="stacked">Lead Stage</ion-label><b class="star-symbol">*</b>
+             <ion-label position="stacked">Lead Stage</ion-label>
              <ion-item>
                <ion-select formControlName="leadStages" placeholder="Select Lead Stage" >
                  <ion-select-option *ngFor="let option of leadStage" [value]="option.id">{{ option?.name }}</ion-select-option>
@@ -495,7 +477,7 @@
                <ion-label color="danger">Lead Stage Is Required.</ion-label>
              </ion-error>
               <!-- Status -->
-              <ion-label position="stacked">Status</ion-label>
+              <ion-label position="stacked">Status</ion-label><b class="star-symbol">*</b>
               <ion-item>
                 <ion-select formControlName="leadStatus" placeholder="Select Status" >
                   <ion-select-option *ngFor="let option of stat_us" [value]="option.id">{{ option?.name }}</ion-select-option>
@@ -510,7 +492,7 @@
               </ion-item>
  
                <!----Notes -->
-               <ion-label position="stacked">Notes</ion-label>
+               <ion-label position="stacked">Notes</ion-label><b class="star-symbol">*</b>
                <ion-item>
                  <ion-input appFormSpace
                    type="text"
@@ -525,20 +507,7 @@
                <ion-error *ngIf="f['notes'].hasError('pattern')">
                  <ion-label color="danger">Invalid Notes.Please Enter Characters.</ion-label>
                </ion-error>
-                <!----Remarks -->
-                <ion-label position="stacked">Remarks</ion-label>
-                <ion-item>
-                  <ion-input appFormSpace
-                    type="text"
-                    placeholder="Enter  Remarks"
-                    formControlName="remarks"
-                  ></ion-input>
-                </ion-item>
-                <ion-error *ngIf="f['remarks'].hasError('pattern')">
-                 <ion-label color="danger">Invalid Remarks.Please Enter Characters.</ion-label>
-               </ion-error>
              </div>
-           
          </ion-accordion>
      </ion-accordion-group>
    

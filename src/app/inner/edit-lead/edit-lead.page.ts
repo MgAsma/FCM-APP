@@ -18,6 +18,11 @@ export class EditLeadPage implements OnInit {
   min:string;
   levelofProgram: any = [];
   dropdownSettings: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
+  tagId: any;
+  selectedCountry: any;
+  selectedState: any;
+  selectedCity: any;
+  user_role: string;
   @Input() set data(value:any){
     this._inputData = value;
     //console.log(this._inputData,"ssdgdgg")
@@ -62,6 +67,9 @@ export class EditLeadPage implements OnInit {
     let minimum = new Date('1900-01-01')
     this.minDateAdapter = this._datePipe.transform(dob,'yyyy-MM-dd')
     this.min = this._datePipe.transform(minimum,'yyyy-MM-dd')
+    this.user_role = localStorage.getItem('user_role')?.toUpperCase()
+
+    this.user_id = localStorage.getItem("user_id");
     }
     dateChanged(value){
       this.editLead.patchValue({
@@ -115,18 +123,27 @@ export class EditLeadPage implements OnInit {
           if(lead.course_looking_for?.length >0){
              courseId = lead.course_looking_for.map((m:any)=>m.id)
           }
+          this.getCountry()
+          this.getState()
+          this.getCity()
+          const selectedCountry = this.countryOptions?.filter((m:any)=>m.id === lead.country)
+          const selectedState = this.stateOptions?.filter((m:any)=>m.id === lead.state)
+          const selectedCity = this.cityOptions?.filter((m:any)=>m.id === lead.city)
+          this.selectedCountry = lead.country
+          this.selectedCity = lead.city
+          this.selectedState = lead.state
           this.editLead.patchValue({
             firstName: lead.user_data.first_name,
             mobile: lead.user_data.mobile_number,
             alternateNumber: lead.alternate_mobile_number,
             email: lead.user_data.email,
             dateOfBirth: lead.date_of_birth,
-            state: lead.state,
+            state: selectedState,
             zone: lead.zone,
             course:lead.stream,
-            cityName: lead.city,
+            cityName: selectedCity,
             pincode: lead.pincode,
-            countryId: lead.country,
+            countryId: selectedCountry,
             referenceName: lead.reference_name,
             referencePhoneNumber: lead.reference_mobile_number,
             fatherName: lead.father_name,
@@ -162,13 +179,13 @@ export class EditLeadPage implements OnInit {
       firstName: ['', [Validators.required,Validators.pattern(this._commonService.namePattern)]],
       mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern)]],
       alternateNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-      email: ['', [Validators.required,Validators.pattern(this._commonService.emailPattern)]],
+      email: ['', [Validators.pattern(this._commonService.emailPattern)]],
       dateOfBirth:[''],
       state: [''],
       zone:[''],
       cityName: [''],
-      pincode:['',Validators.pattern(this._commonService.pincode)],
       countryId:[''],
+      pincode:['',Validators.pattern(this._commonService.pincode)],
       referenceName:['',Validators.pattern(this._commonService.namePattern)],
       referencePhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
       fatherName:['',Validators.pattern(this._commonService.namePattern)],
@@ -188,11 +205,11 @@ export class EditLeadPage implements OnInit {
       preferredLocation2:['',Validators.pattern(this._commonService.namePattern)],
       counsellor:['',[Validators.required]],
       counsellorAdmin:[''],
-      leadSource:['',[Validators.required]],
-      leadStages:['',[Validators.required]],
-      leadStatus:[''],
+      leadSource:[''],
+      leadStages:[''],
+      leadStatus:['',[Validators.required]],
       notes:['',[Validators.required,Validators.pattern(this._commonService.namePattern)]],
-      remarks:['',Validators.pattern(this._commonService.namePattern)]
+      // remarks:['',Validators.pattern(this._commonService.namePattern)]
     })
   }
   pincodeLengthValidator(control:FormControl) {
@@ -216,11 +233,38 @@ export class EditLeadPage implements OnInit {
 
     )
   }
-  
+  onTagSelect(event: any,controlName:any) {
+    if(controlName == 'countryId'){
+      this.selectedCountry = event.id
+    }else if(controlName == 'state'){
+      this.selectedState = event.id
+    }else if(controlName == 'cityName'){
+      this.selectedCity = event.id
+    }
+    // this.f['tags'].markAsUntouched()
+    console.log(controlName,"controlName.value")
+  }
+ 
+  onItemDeSelect(item: any,controlName:any) {
+    if(controlName == 'countryId'){
+      this.selectedCountry = null
+    }else if(controlName == 'state'){
+      this.selectedState =  null
+    }else if(controlName == 'cityName'){
+      this.selectedCity =  null
+    }
+   
+  }
+  toTitleCase(str: string): string {
+    return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  }
   getCountry(){
     this.api.getAllCountry().subscribe((res:any)=>{
       if(res.results){
-        this.countryOptions = res.results.sort((a, b) => a.name.localeCompare(b.name));
+        this.countryOptions = res.results.map((item: any) => ({
+          ...item,
+          name: this.toTitleCase(item.name)
+        })).sort((a: any, b: any) => a.name.localeCompare(b.name));
       }
     },(error:any)=>{
        this.api.showToast(error?.error?.message)
@@ -230,7 +274,10 @@ export class EditLeadPage implements OnInit {
   getState(){
     this.api.getAllState().subscribe((res:any)=>{
       if(res.results){
-        this.stateOptions = res.results.sort((a, b) => a.name.localeCompare(b.name));
+        this.stateOptions = res.results.map((item: any) => ({
+          ...item,
+          name: this.toTitleCase(item.name)
+        })).sort((a: any, b: any) => a.name.localeCompare(b.name));
       }
     },(error:any)=>{
        this.api.showToast(error?.error?.message)
@@ -240,11 +287,11 @@ export class EditLeadPage implements OnInit {
   getCity(){
     this.api.getAllCity().subscribe((res:any)=>{
       if(res.results){
-        this.cityOptions = res.results.sort((a, b) => a.name.localeCompare(b.name));
+        this.cityOptions = res.results.map((item: any) => ({
+          ...item,
+          name: this.toTitleCase(item.name)
+        })).sort((a: any, b: any) => a.name.localeCompare(b.name));
       }
-      else{
-        this.api.showToast('ERROR')
-       }
       },(error:any)=>{
          this.api.showToast(error?.error?.message)
         
@@ -395,7 +442,8 @@ export class EditLeadPage implements OnInit {
     })
   }
   getCounselor(){
-    this._baseService.getData(`${environment._user}/?role_name=counsellor`).subscribe((res:any)=>{
+    let query = this.user_role === "COUNSELLOR" || this.user_role === "COUNSELOR"  || this.user_role === "ADMIN"  ?`?user_id=${this.user_id}&role_name=counsellor` : `?role_name=counsellor`
+    this._baseService.getData(`${environment._user}${query}`).subscribe((res:any)=>{
       if(res.results){
       this.referredTo = res.results
       }
@@ -446,6 +494,7 @@ export class EditLeadPage implements OnInit {
     this.modalController.dismiss()
     this._addLeadEmitter.triggerGet();
   }
+
   onSubmit(){
   
   const formData = this.editLead.value;
@@ -457,11 +506,11 @@ export class EditLeadPage implements OnInit {
     date_of_birth: this._datePipe.transform(formData.dateOfBirth,'YYYY-MM-dd') || null,
     alternate_mobile_number: formData.alternateNumber || null,
     role: 5,
-    location:  formData.cityName,
+    location:null,
     pincode: formData.pincode || null,
-    country: formData.countryId,
-    state: formData.state, 
-    city: formData.cityName, 
+    country: this.selectedCountry,
+    state: this.selectedState, 
+    city: this.selectedCity, 
     zone: formData.zone,
     lead_list_status: formData.leadStatus,
     lead_list_substatus: 1,
@@ -505,7 +554,7 @@ export class EditLeadPage implements OnInit {
     let nonMandatoryFieldsInvalid = false;
   
     // Check if any mandatory fields are empty
-    const mandatoryFields = ['firstName', 'mobile', 'email', 'counsellor', 'leadSource', 'leadStages','alternateNumber'];
+    const mandatoryFields = ['firstName', 'mobile', 'counsellor','leadStatus','notes'];
     mandatoryFields.forEach(field => {
       if (!this.editLead.get(field).value) {
         mandatoryFieldsEmpty = true;
