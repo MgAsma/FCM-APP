@@ -102,10 +102,6 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
 
 
 
-
-  
-
-
   getContacts(name, value, operator) {
     if (value == "1") {
       this.listTyle = "Incoming Calls from yesterday";
@@ -338,7 +334,7 @@ return
     
     this.allocate.allocationStatus.subscribe(
       (res: any) => {
-      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&${this.currentPage}&page_size=${this.pageSize}`:`?user_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`
         if (res.length >0) {
           this.statusFilter = true
           query += `&status=${res}`;
@@ -369,8 +365,7 @@ return
    
     this._addLeadEmitter.triggerGet$.subscribe((res:any) => {
       let query: any;
-      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
-
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`:`?user_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`
      
         this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
           if(res){
@@ -391,8 +386,8 @@ return
             if(this.searchTerm){
               query +=`&key=${this.searchTerm}`
             }
-            this.leadCards = []
-            this.data = []
+            // this.leadCards = []
+            // this.data = []
             this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
               if (res.results) {
                 this.leadCards = res.results;
@@ -436,14 +431,13 @@ return
       this.statusFilter = false;
       this.searchTerm = '';
       this.allocate.searchBar.next(false)
-      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10`:this.user_role == 'SUPERADMIN' ||  this.user_role == 'SUPER ADMIN'? `?allocation_type=allocation&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10`
       this.getLeadlist(query);
       event.target.complete();
     }, 2000);
   }
  
   getLeadlist(query:any){
-   
    this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
      if (res.results) {
       this.leadCards = [];
@@ -464,9 +458,9 @@ return
       this.currentPage = event.pageIndex + 1;
       this.pageSize = event.pageSize;
     }
-   
-    let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:
-    `?page=${this.currentPage}&page_size=${this.pageSize}`
+    let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`:
+    this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`:`?user_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`
+    
     if (this.searchTerm) {
       query += `&key=${this.searchTerm}`;
     }
@@ -502,8 +496,9 @@ return
   
 
   getCounselor() {
+    let query = this.user_role === "COUNSELLOR" || this.user_role === "COUNSELOR"  || this.user_role === "ADMIN"  ?`?user_id=${this.user_id}&role_name=counsellor` : `?role_name=counsellor`
     this._baseService
-      .getData(`${environment._user}?role_name=counsellor`)
+      .getData(`${environment._user}${query}`)
       .subscribe(
         (res: any) => {
           if (res.results) {
@@ -521,9 +516,10 @@ return
     if(event){
       this.counsellor_ids = event
       this._addLeadEmitter.selectedCounsellor.next(event)
+     
         let params = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? 
-        `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_id=${event}`:
-        `?page=1&page_size=10&counsellor_id=${event}`
+        `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10&counsellor_id=${event}`:
+        this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&page=1&page_size=10&counsellor_id=${event}`:`?user_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10&counsellor_id=${event}`
         if(this.statusFilter){
           this.allocate.allocationStatus.subscribe(
            (res: any) => {
@@ -555,18 +551,9 @@ return
     this.searchTerm = event
     this.leadCards = []
     this.data = []
-    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`:
-    `?page=1&page_size=10&key=${event}`
-    if(this.statusFilter){
-     this.allocate.callLogStatus.subscribe(
-      (res: any) => {
-        if (res) {
-          query += `&status=${res}`;
-        }
-      }
-    );
-    }
-   
+    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10&key=${event}`
+    : this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&page=1&page_size=10&key=${event}`:`?user_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10&key=${event}`
+    
     if(this.statusFilter){
       this.allocate.allocationStatus.subscribe(
        (res: any) => {
