@@ -48,6 +48,8 @@ export class AddLeadPage implements OnInit {
   type = 'text'
   min:string;
   levelofProgram: any = [];
+  dropdownSettings: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
+ 
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -92,6 +94,15 @@ export class AddLeadPage implements OnInit {
     this.getCounselledBy();
     this.getLeadStage()
     this.initForm()
+    this.dropdownSettings = {
+      singleSelection: true,
+      idField: "id",
+      textField: "name",
+      selectAllText: "Select All",
+      unSelectAllText: "UnSelect All",
+      itemsShowLimit: 1,
+      allowSearchFilter: true
+    };
   }
   get f() {
     return this.addNewLead.controls;
@@ -128,6 +139,7 @@ export class AddLeadPage implements OnInit {
       counsellorAdmin:[''],
       leadSource:['',[Validators.required]],
       leadStages:['',[Validators.required]],
+      levelOfProgram:[''],
       leadStatus:[''],
       notes:['',Validators.pattern(this._commonService.namePattern)],
       remarks:['',Validators.pattern(this._commonService.namePattern)]
@@ -161,7 +173,7 @@ export class AddLeadPage implements OnInit {
   getCountry(){
     this.api.getAllCountry().subscribe((res:any)=>{
       if(res.results){
-      this.countryOptions = res.results
+        this.countryOptions = res.results.sort((a, b) => a.name.localeCompare(b.name));
       }
     },(error:any)=>{
        this.api.showToast(error?.error?.message)
@@ -171,12 +183,25 @@ export class AddLeadPage implements OnInit {
   getState(){
     this.api.getAllState().subscribe((res:any)=>{
       if(res.results){
-        this.stateOptions = res.results
+        this.stateOptions = res.results.sort((a, b) => a.name.localeCompare(b.name));
       }
     },(error:any)=>{
        this.api.showToast(error?.error?.message)
       
     })
+  }
+  getCity(){
+    this.api.getAllCity().subscribe((res:any)=>{
+      if(res.results){
+        this.cityOptions = res.results.sort((a, b) => a.name.localeCompare(b.name));
+      }
+      else{
+        this.api.showToast('ERROR')
+       }
+      },(error:any)=>{
+         this.api.showToast(error?.error?.message)
+        
+      })
   }
   getChannel(){
     this.api.getAllChannel().subscribe((resp:any)=>{
@@ -205,19 +230,6 @@ export class AddLeadPage implements OnInit {
        this.api.showToast(error?.error?.message)
       
     })
-  }
-  getCity(){
-    this.api.getAllCity().subscribe((res:any)=>{
-      if(res.results){
-        this.cityOptions = res.results;
-      }
-      else{
-        this.api.showToast('ERROR')
-       }
-      },(error:any)=>{
-         this.api.showToast(error?.error?.message)
-        
-      })
   }
   getCampign(){
     this.api.getAllCampign().subscribe((res:any)=>{
@@ -286,7 +298,7 @@ export class AddLeadPage implements OnInit {
   getLevelOfProgram(){
     this.api.getAllLevelOfProgram().subscribe((res:any)=>{
       if(res.results){
-        this.levelofProgram = res.results 
+        this.levelofProgram = res?.results 
       } else{
         this.api.showToast('ERROR')
        }
@@ -416,6 +428,7 @@ export class AddLeadPage implements OnInit {
       others: f["otherCourse"],
       enterance_exam: f["entranceExam"],
       course_looking_for: f["courseLookingfor"],
+      level_of_program:f["levelOfProgram"],
       lead_list_status:f['leadStatus'],
       lead_list_substatus: null,
       counselled_by:f['counsellorAdmin'],

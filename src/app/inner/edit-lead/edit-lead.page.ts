@@ -17,6 +17,7 @@ export class EditLeadPage implements OnInit {
   showPicker: boolean = false;
   min:string;
   levelofProgram: any = [];
+  dropdownSettings: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
   @Input() set data(value:any){
     this._inputData = value;
     //console.log(this._inputData,"ssdgdgg")
@@ -92,6 +93,15 @@ export class EditLeadPage implements OnInit {
     this.getLeadStage()
     this.initForm()
     this.getLeadById()
+    this.dropdownSettings = {
+      singleSelection: true,
+      idField: "id",
+      textField: "name",
+      selectAllText: "Select All",
+      unSelectAllText: "UnSelect All",
+      itemsShowLimit: 1,
+      allowSearchFilter: true
+    };
   }
   get f() {
     return this.editLead.controls;
@@ -171,6 +181,7 @@ export class EditLeadPage implements OnInit {
       otherCourse:[''],
       entranceExam:['',Validators.pattern(this._commonService.namePattern)],
       courseLookingfor:[''],
+      levelOfProgram:[''],
       preferredCollege1:['',Validators.pattern(this._commonService.namePattern)],
       preferredCollege2:['',Validators.pattern(this._commonService.namePattern)],
       preferredLocation1:['',Validators.pattern(this._commonService.namePattern)],
@@ -180,12 +191,10 @@ export class EditLeadPage implements OnInit {
       leadSource:['',[Validators.required]],
       leadStages:['',[Validators.required]],
       leadStatus:[''],
-      notes:['',Validators.pattern(this._commonService.namePattern)],
+      notes:['',[Validators.required,Validators.pattern(this._commonService.namePattern)]],
       remarks:['',Validators.pattern(this._commonService.namePattern)]
     })
   }
-   
-  
   pincodeLengthValidator(control:FormControl) {
     const value = control.value;
 
@@ -211,7 +220,7 @@ export class EditLeadPage implements OnInit {
   getCountry(){
     this.api.getAllCountry().subscribe((res:any)=>{
       if(res.results){
-      this.countryOptions = res.results
+        this.countryOptions = res.results.sort((a, b) => a.name.localeCompare(b.name));
       }
     },(error:any)=>{
        this.api.showToast(error?.error?.message)
@@ -221,12 +230,25 @@ export class EditLeadPage implements OnInit {
   getState(){
     this.api.getAllState().subscribe((res:any)=>{
       if(res.results){
-        this.stateOptions = res.results
+        this.stateOptions = res.results.sort((a, b) => a.name.localeCompare(b.name));
       }
     },(error:any)=>{
        this.api.showToast(error?.error?.message)
       
     })
+  }
+  getCity(){
+    this.api.getAllCity().subscribe((res:any)=>{
+      if(res.results){
+        this.cityOptions = res.results.sort((a, b) => a.name.localeCompare(b.name));
+      }
+      else{
+        this.api.showToast('ERROR')
+       }
+      },(error:any)=>{
+         this.api.showToast(error?.error?.message)
+        
+      })
   }
   getChannel(){
     this.api.getAllChannel().subscribe((resp:any)=>{
@@ -256,19 +278,7 @@ export class EditLeadPage implements OnInit {
       
     })
   }
-  getCity(){
-    this.api.getAllCity().subscribe((res:any)=>{
-      if(res.results){
-        this.cityOptions = res.results;
-      }
-      else{
-        this.api.showToast('ERROR')
-       }
-      },(error:any)=>{
-         this.api.showToast(error?.error?.message)
-        
-      })
-  }
+  
   getCampign(){
     this.api.getAllCampign().subscribe((res:any)=>{
       if(res.results){
@@ -470,6 +480,7 @@ export class EditLeadPage implements OnInit {
     others: formData.otherCourse,
     enterance_exam: formData.entranceExam,
     course_looking_for: formData.courseLookingfor,
+    level_of_program:formData.levelOfProgram,
       preferance_college_and_location: 
         {
           preferred_college1: formData.preferredCollege1,
