@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
@@ -36,7 +36,7 @@ export class AddLeadPage implements OnInit {
   zone:string[] = ['South','North', 'East', 'West'];
   seasons:any = [];
   @Output() addLead = new EventEmitter()
-  
+  @Input()pageTitle;
   minDateAdapter: string;
   streamList: any;
   adminList: any = [];
@@ -122,30 +122,30 @@ export class AddLeadPage implements OnInit {
       state: [''],
       zone:[''],
       cityName: [''],
-      pincode:['',Validators.pattern(this._commonService.pincode)],
-      referenceName:['',Validators.pattern(this._commonService.namePattern)],
-      referencePhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
-      fatherName:['',Validators.pattern(this._commonService.namePattern)],
-      fatherOccupation:['',Validators.pattern(this._commonService.namePattern)],
-      fatherPhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
-      tenthPercentage :['',Validators.pattern(this._commonService.nonNegativeValidator)],
-      twelthPercentage :['',Validators.pattern(this._commonService.nonNegativeValidator)],
-      degree:['',Validators.pattern(this._commonService.nonNegativeValidator)],
+      pincode:['',[Validators.pattern(this._commonService.pincode)]],
+      referenceName:['',[Validators.pattern(this._commonService.namePattern)]],
+      referencePhoneNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
+      fatherName:['',[Validators.pattern(this._commonService.namePattern)]],
+      fatherOccupation:['',[Validators.pattern(this._commonService.namePattern)]],
+      fatherPhoneNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
+      tenthPercentage :['',[Validators.pattern(this._commonService.nonNegativeValidator)]],
+      twelthPercentage :['',[Validators.pattern(this._commonService.nonNegativeValidator)]],
+      degree:['',[Validators.pattern(this._commonService.nonNegativeValidator)]],
       course:[''],
       otherCourse:[''],
-      entranceExam:['',Validators.pattern(this._commonService.namePattern)],
+      entranceExam:['',[Validators.pattern(this._commonService.namePattern)]],
       courseLookingfor:[''],
-      preferredCollege1:['',Validators.pattern(this._commonService.namePattern)],
-      preferredCollege2:['',Validators.pattern(this._commonService.namePattern)],
-      preferredLocation1:['',Validators.pattern(this._commonService.namePattern)],
-      preferredLocation2:['',Validators.pattern(this._commonService.namePattern)],
+      preferredCollege1:['',[Validators.pattern(this._commonService.namePattern)]],
+      preferredCollege2:['',[Validators.pattern(this._commonService.namePattern)]],
+      preferredLocation1:['',[Validators.pattern(this._commonService.namePattern)]],
+      preferredLocation2:['',[Validators.pattern(this._commonService.namePattern)]],
       counsellor:['',[Validators.required]],
       counsellorAdmin:[''],
       leadSource:[''],
-      leadStages:[''],
+      //leadStages:[''],
       levelOfProgram:[''],
-      leadStatus:['',[Validators.required]],
-      notes:['',[Validators.required,Validators.pattern(this._commonService.namePattern)]],
+      //leadStatus:['',[Validators.required]],
+      //notes:['',[Validators.required,Validators.pattern(this._commonService.namePattern)]],
       // remarks:['',Validators.pattern(this._commonService.namePattern)]
     })
   }
@@ -424,7 +424,7 @@ export class AddLeadPage implements OnInit {
       this.selectedCity = event.id
     }
     // this.f['tags'].markAsUntouched()
-    console.log(controlName,"controlName.value")
+    //console.log(controlName,"controlName.value")
   }
  
   onItemDeSelect(item: any,controlName:any) {
@@ -491,7 +491,7 @@ export class AddLeadPage implements OnInit {
       let nonMandatoryFieldsInvalid = false;
     
       // Check if any mandatory fields are empty
-      const mandatoryFields = ['firstName', 'mobile', 'counsellor','leadStatus','notes'];
+      const mandatoryFields = ['firstName', 'mobile', 'counsellor','leadStatus'];
       mandatoryFields.forEach(field => {
         if (!this.addNewLead.get(field).value) {
           mandatoryFieldsEmpty = true;
@@ -502,7 +502,7 @@ export class AddLeadPage implements OnInit {
       // Check if any non-mandatory fields are invalid
       Object.keys(this.addNewLead.controls).forEach(key => {
         const control = this.addNewLead.get(key);
-        if (control.invalid && !mandatoryFields.includes(key)) {
+        if (control.invalid && !mandatoryFields.includes(key)|| control.invalid && mandatoryFields.includes(key)) {
           nonMandatoryFieldsInvalid = true;
           this.addNewLead.markAllAsTouched()
         }
