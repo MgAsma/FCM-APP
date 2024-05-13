@@ -2,7 +2,7 @@
   <ion-toolbar color="primary">
     <ion-row>
       <ion-col size="10">
-        <ion-title>Add new lead </ion-title>
+        <ion-title>Add New Allocation </ion-title>
       </ion-col>
       <ion-col size="2">
         <ion-icon name="close" class="close" (click)="close()"></ion-icon>
@@ -454,7 +454,7 @@
               <ion-label color="danger">Source Is Required.</ion-label>
             </ion-error>
               <!-- Lead Stage -->
-            <ion-label position="stacked">Lead Stage</ion-label>
+            <!-- <ion-label position="stacked">Lead Stage</ion-label>
             <ion-item>
               <ion-select formControlName="leadStages" placeholder="Select Lead Stage" >
                 <ion-select-option *ngFor="let option of leadStage" [value]="option.id">{{ option?.name }}</ion-select-option>
@@ -469,9 +469,9 @@
             </ion-item>
             <ion-error *ngIf="f['leadStages'].touched && f['leadStages']?.hasError('required')">
               <ion-label color="danger">Lead Stage Is Required.</ion-label>
-            </ion-error>
+            </ion-error> -->
              <!-- Status -->
-             <ion-label position="stacked">Status</ion-label><b class="star-symbol">*</b>
+             <!-- <ion-label position="stacked">Status</ion-label><b class="star-symbol">*</b>
              <ion-item>
                <ion-select formControlName="leadStatus" placeholder="Select Status" >
                  <ion-select-option *ngFor="let option of stat_us" [value]="option.id">{{ option?.name }}</ion-select-option>
@@ -483,10 +483,10 @@
                >
                  <ion-icon name="close-outline"></ion-icon>
                </ion-button>
-             </ion-item>
+             </ion-item> -->
 
               <!----Notes -->
-              <ion-label position="stacked">Notes</ion-label>
+              <!-- <ion-label position="stacked">Notes</ion-label><b class="star-symbol">*</b>
               <ion-item>
                 <ion-input appFormSpace
                   type="text"
@@ -499,7 +499,7 @@
               </ion-error>
               <ion-error *ngIf="f['notes'].hasError('pattern')">
                 <ion-label color="danger">Invalid Notes.Please Enter Characters.</ion-label>
-              </ion-error>
+              </ion-error> -->
              
             </div>
           
