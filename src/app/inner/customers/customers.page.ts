@@ -69,6 +69,7 @@ export class CustomersPage implements OnInit {
   @ViewChild('paginator', { static: true }) paginator: MatPaginator;
   pageIndex: number;
   selectedLead: any;
+  refresh: boolean = false;
 
   constructor(
     private _customer: AllocationEmittersService,
@@ -324,45 +325,47 @@ return
         this.searchBar = false;
       }
     });
-    
-    let query: any;
-    this._counsellorEmitter.customerCounsellor.subscribe((res) => {
-      if(res){
-        this.counsellor_ids = res
-      } 
-    });
-    
-    this._customer.customerStatus.subscribe(
-      (res: any) => {
-      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
-        if (res.length >0) {
-          this.statusFilter = true
-          query += `&status=${res}`;
-        }
-        if(this.counsellor_ids.length > 0){
-          query += `&counsellor_id=${this.counsellor_ids}`;
-        }
-        if(this.searchTerm){
-          query +=`&key=${this.searchTerm}`
-        }
-        this.leadCards = []
-        this.data = []
-        this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
-          if (res.results) {
-            this.leadCards = res.results;
-            this.data = new MatTableDataSource<any>(this.leadCards);
-            this.totalNumberOfRecords = res.total_no_of_record
+    if(!this.refresh){
+      let query: any;
+      this._counsellorEmitter.customerCounsellor.subscribe((res) => {
+        if(res){
+          this.counsellor_ids = res
+        } 
+      });
+      
+      this._customer.customerStatus.subscribe(
+        (res: any) => {
+        query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
+          if (res.length >0) {
+            this.statusFilter = true
+            query += `&status=${res}`;
           }
-        }, (error: any) => {
+          if(this.counsellor_ids.length > 0){
+            query += `&counsellor_id=${this.counsellor_ids}`;
+          }
+          if(this.searchTerm){
+            query +=`&key=${this.searchTerm}`
+          }
+          this.leadCards = []
+          this.data = []
+          this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
+            if (res.results) {
+              this.leadCards = res.results;
+              this.data = new MatTableDataSource<any>(this.leadCards);
+              this.totalNumberOfRecords = res.total_no_of_record
+            }
+          }, (error: any) => {
+            this.api.showError(error.error.message);
+          });
+          
+        },
+        (error: any) => {
           this.api.showError(error.error.message);
-        });
-        
-      },
-      (error: any) => {
-        this.api.showError(error.error.message);
-      }
-    );
-   
+        }
+      );
+     
+    }
+    
     this._counsellorEmitter.triggerGet$.subscribe((res:any) => {
       let query: any;
       query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
@@ -423,6 +426,7 @@ return
  
   handleRefresh(event: any) {
     setTimeout(() => {
+      this.refresh = true
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = 0

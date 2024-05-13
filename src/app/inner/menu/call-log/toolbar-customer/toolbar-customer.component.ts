@@ -21,6 +21,7 @@ export class ToolbarCustomerComponent  implements OnInit {
   selectedCounselorIds: any = [];
   submitted: boolean;
   selectedState: any = [];
+  searchTerm: string;
   constructor(
     private modalController:ModalController,
     private addEmit:AddLeadEmitterService,
@@ -72,7 +73,19 @@ export class ToolbarCustomerComponent  implements OnInit {
    }
   
   }
-  
+  handleRefresh(event: any) {
+    setTimeout(() => {
+      this.addEmit.customerCounsellor.subscribe((res:any)=>{
+        this.selectedCounselorIds = [];
+        this.filteredData.forEach((chip: any) => {
+          chip.selected = false;
+        });
+      })
+      this.searchTerm = ''
+      this.searchTermChanged(this.searchTerm)
+      event.target.complete();
+    }, 2000);
+  }
   resetModel(){
     this.selectedCounselorIds = []
     this.addEmit.callLogCounsellor.next([])

@@ -18,6 +18,7 @@ export class CustomerToolbarCounsellorComponent implements OnInit {
   selectedCounselorIds: any = [];
  
   submitted: boolean = false;
+  searchTerm: string;
   
   constructor(
     private modalController:ModalController,
@@ -53,6 +54,19 @@ export class CustomerToolbarCounsellorComponent implements OnInit {
         });
       }
     })
+  }
+  handleRefresh(event: any) {
+    setTimeout(() => {
+      this.addEmit.customerCounsellor.subscribe((res:any)=>{
+        this.selectedCounselorIds = [];
+        this.filteredData.forEach((chip: any) => {
+          chip.selected = false;
+        });
+      })
+      this.searchTerm = ''
+      this.searchTermChanged(this.searchTerm)
+      event.target.complete();
+    }, 2000);
   }
   resetModal() {
   this.selectedCounselorIds = []

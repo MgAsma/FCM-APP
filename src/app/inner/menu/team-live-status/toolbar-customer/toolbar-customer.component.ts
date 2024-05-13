@@ -21,6 +21,7 @@ export class ToolbarCustomerComponent  implements OnInit {
   selectedCounselorIds: any = [];
  
   submitted: boolean = false;
+  searchTerm: string;
   constructor(
     private modalController:ModalController,
     private addEmit:AddLeadEmitterService,
@@ -108,7 +109,19 @@ export class ToolbarCustomerComponent  implements OnInit {
     );
   }
 }
-
+handleRefresh(event: any) {
+  setTimeout(() => {
+    this.addEmit.customerCounsellor.subscribe((res:any)=>{
+      this.selectedCounselorIds = [];
+      this.filteredData.forEach((chip: any) => {
+        chip.selected = false;
+      });
+    })
+    this.searchTerm = ''
+    this.searchTermChanged(this.searchTerm)
+    event.target.complete();
+  }, 2000);
+}
 // This function will be called when the search term changes
 searchTermChanged(event:any) {
    // Remove trailing spaces from the search term

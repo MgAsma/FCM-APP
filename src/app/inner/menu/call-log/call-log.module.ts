@@ -11,6 +11,7 @@ import { MaterialModule } from '../../../shared-modules/material/material/materi
 import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
 import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.component';
 import { FilterComponent } from './filter/filter.component';
+import { CalllogToolbarSearchComponent } from './toolbar-customer/calllog-toolbar-search/calllog-toolbar-search.component';
 
 // import { CallLog, CallLogObject } from '@ionic-native/call-log/ngx';
 
@@ -22,7 +23,12 @@ import { FilterComponent } from './filter/filter.component';
     CallLogPageRoutingModule,
     MaterialModule
   ],
-  declarations: [CallLogPage,ToolbarTopComponent,ToolbarCustomerComponent,FilterComponent],
+  declarations: [
+    CallLogPage,
+    ToolbarTopComponent,
+    ToolbarCustomerComponent,
+    FilterComponent,
+    CalllogToolbarSearchComponent],
   // providers:[CallLog]
 })
 export class CallLogPageModule {}

@@ -15,6 +15,7 @@ import { CallLog } from '@ionic-native/call-log/ngx';
 import { CallNumber } from '@ionic-native/call-number/ngx';
 import { Device } from '@ionic-native/device/ngx';
 import { MaterialModule } from '../../shared-modules/material/material/material.module';
+import { CustomerToolbarSearchComponent } from './customer-toolbar-counsellor/customer-toolbar-search/customer-toolbar-search.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { MaterialModule } from '../../shared-modules/material/material/material.
     CustomersPage,
     CustomerToolbarTopComponent,
     CustomerToolbarCounsellorComponent,
-    CustomerFilterComponent
+    CustomerFilterComponent,
+    CustomerToolbarSearchComponent
     ],
     providers:[CallNumber,CallLog,Device,AndroidPermissions]
   
