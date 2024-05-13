@@ -33,9 +33,9 @@ export class AuthService {
   }
 
   logout(): void {
+  this.addEmit.triggerGet()
    localStorage.clear();
    window.location.reload()
    this.api.showSuccess("Your Session Has Been Expired")
-  //  this.router.navigate(['/login']) 
   }
 }
