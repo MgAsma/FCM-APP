@@ -69,6 +69,7 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
   @ViewChild('paginator', { static: true }) paginator: MatPaginator;
   pageIndex: number;
   selectedLead: any;
+  refresh: any = false;
 
   constructor(
     private allocate: AllocationEmittersService,
@@ -324,7 +325,7 @@ return
         this.searchBar = false;
       }
     });
-    
+    if(!this.refresh){
     let query: any;
     this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
       if(res){
@@ -362,7 +363,7 @@ return
         this.api.showError(error.error.message);
       }
     );
-   
+  }
     this._addLeadEmitter.triggerGet$.subscribe((res:any) => {
       let query: any;
       query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`:`?user_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`
@@ -423,6 +424,7 @@ return
  
   handleRefresh(event: any) {
     setTimeout(() => {
+      this.refresh = true;
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = 0
