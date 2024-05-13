@@ -1,10 +1,14 @@
 
    <ion-header [translucent]="true">
     <ion-toolbar color="primary">
-      <app-search-bar [placeholder]="placeholderText" (close)="closePopup()" (search)="searchTermChanged($event)"></app-search-bar>
+      <app-counsellor-search-bar [placeholder]="placeholderText" [searchTerm]="searchTerm" (close)="closePopup()" (search)="searchTermChanged($event)"></app-counsellor-search-bar>
     </ion-toolbar>
   </ion-header>
   <ion-content *ngIf="filteredData?.length ==0">
+    <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <p class="refresh-text"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
     <app-nodata></app-nodata>
   </ion-content>
   <ion-content *ngIf="filteredData?.length >0">
