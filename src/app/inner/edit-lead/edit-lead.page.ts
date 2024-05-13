@@ -242,7 +242,7 @@ export class EditLeadPage implements OnInit {
       this.selectedCity = event.id
     }
     // this.f['tags'].markAsUntouched()
-    console.log(controlName,"controlName.value")
+    //console.log(controlName,"controlName.value")
   }
  
   onItemDeSelect(item: any,controlName:any) {
@@ -565,7 +565,7 @@ export class EditLeadPage implements OnInit {
     // Check if any non-mandatory fields are invalid
     Object.keys(this.editLead.controls).forEach(key => {
       const control = this.editLead.get(key);
-      if (control.invalid && !mandatoryFields.includes(key)) {
+      if (control.invalid && !mandatoryFields.includes(key) || control.invalid && mandatoryFields.includes(key)) {
         nonMandatoryFieldsInvalid = true;
         this.editLead.markAllAsTouched()
       }
