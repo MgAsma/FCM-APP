@@ -57,7 +57,7 @@ export class CheckoutComponent  implements OnInit {
           this.api.loaderDismiss()
           this.api.showError(error.error.message)
           localStorage.clear()
-          localStorage.clear()
+          // localStorage.clear()
           this.router.navigate(['../outer'])
         }
         )
