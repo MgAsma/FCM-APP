@@ -132,6 +132,7 @@ export class EditLeadPage implements OnInit {
           this.selectedCountry = lead.country
           this.selectedCity = lead.city
           this.selectedState = lead.state
+          alert(lead?.referred_to)
           this.editLead.patchValue({
             firstName: lead.user_data.first_name,
             mobile: lead.user_data.mobile_number,
@@ -155,11 +156,12 @@ export class EditLeadPage implements OnInit {
             otherCourse: lead.others,
             entranceExam: lead.enterance_exam,
             courseLookingfor: courseId,
+            levelOfProgram:lead.level_of_program,
             preferredCollege1: lead.preferred_college1,
             preferredCollege2: lead.preferred_college2,
             preferredLocation1: lead.preferred_location1,
             preferredLocation2: lead.preferred_location2,
-            counsellor: lead.referred_to,
+            counsellor: lead?.referred_to,
             counsellorAdmin: lead.counselled_by,
             leadSource: lead.source,
             leadStages: lead.lead_stage,

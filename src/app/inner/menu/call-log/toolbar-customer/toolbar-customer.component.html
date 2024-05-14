@@ -14,7 +14,7 @@
     <div class="wrapper">
       <ion-row>
         <ion-col>
-          <p class="text-end">Selected Users {{  getSelectedListLength() }}</p>
+          <p class="text-end my-2">Selected Users {{  getSelectedListLength() }}</p>
         </ion-col>
       </ion-row>
       <div class="customer-card">
@@ -27,8 +27,8 @@
       </div>
       <ion-row>
         <ion-col class="text-center">
-          <ion-button shape="round" fill="outline" (click)="resetModel()">RESET</ion-button>
-          <ion-button shape="round" color="primary" (click)="onSubmit()">APPLY</ion-button>
+          <ion-button shape="round" fill="outline" (click)="resetModel()" color="secondary">RESET</ion-button>
+          <ion-button shape="round"  (click)="onSubmit()" color="secondary">APPLY</ion-button>
         </ion-col>
       </ion-row>
     </div>

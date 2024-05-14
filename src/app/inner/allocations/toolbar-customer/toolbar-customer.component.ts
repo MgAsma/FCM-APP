@@ -41,7 +41,7 @@ export class ToolbarCustomerComponent  implements OnInit {
    
   ngOnInit() {
    
-    this.addEmit.customerCounsellor.subscribe((res:any)=>{
+    this.addEmit.selectedCounsellor.subscribe((res:any)=>{
       this.selectedCounselorIds = [];
       this.filteredData.forEach((chip: any) => {
         chip.selected = false;
@@ -60,7 +60,7 @@ export class ToolbarCustomerComponent  implements OnInit {
   }
   resetModal() {
   this.selectedCounselorIds = []
-  this.addEmit.customerCounsellor.next([])
+  this.addEmit.selectedCounsellor.next([])
     this.filteredData.forEach((chip: any) => {
       chip.selected = false;
     });
@@ -102,14 +102,14 @@ export class ToolbarCustomerComponent  implements OnInit {
     if(this.selectedCounselorIds.length > 0){
       this.submitted = true
       this.modalController.dismiss(this.selectedCounselorIds);
-      this.addEmit.customerCounsellor.next(this.selectedCounselorIds)
+      this.addEmit.selectedCounsellor.next(this.selectedCounselorIds)
     }else{
       this.api.showError('Please select at least one counselor')
     }
   }
   handleRefresh(event: any) {
     setTimeout(() => {
-      this.addEmit.customerCounsellor.subscribe((res:any)=>{
+      this.addEmit.selectedCounsellor.subscribe((res:any)=>{
         this.selectedCounselorIds = [];
         this.filteredData.forEach((chip: any) => {
           chip.selected = false;
@@ -142,7 +142,7 @@ getSelectedListLength(): number {
 }
 closePopup(){
   let selectedIds = [];
-  this.addEmit.customerCounsellor.subscribe((res:any)=>{
+  this.addEmit.selectedCounsellor.subscribe((res:any)=>{
     this.filteredData.forEach((chip: any) => {
       chip.selected = false;
     });

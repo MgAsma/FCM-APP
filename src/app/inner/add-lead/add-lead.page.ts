@@ -237,6 +237,7 @@ export class AddLeadPage implements OnInit {
   getSource(){
     this.api.getAllSource().subscribe((res:any)=>{
      if(res.results){
+      alert(res)
       this.sources = res.results
      }
      else{

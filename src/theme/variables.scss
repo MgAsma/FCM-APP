@@ -56,20 +56,20 @@ $app-theme: mat.define-light-theme((
  :root {
 
   /** primary **/
-  --ion-color-primary: #de8822;
-  --ion-color-primary-rgb: 56, 128, 255;
-  --ion-color-primary-contrast: #ffffff;
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary: rgb(245, 189, 100);
+  --ion-color-primary-rgb: rgb(245, 189, 100);
+  --ion-color-primary-contrast: rgb(18, 65, 106);
+  --ion-color-primary-contrast-rgb: rgb(245, 189, 100);
   --ion-color-primary-shade: #FFF2EB;
-  --ion-color-primary-tint: #de8822;
+  --ion-color-primary-tint: rgb(245, 189, 100);
 
   /** secondary **/
-  --ion-color-secondary: #3dc2ff;
+  --ion-color-secondary: rgb(18, 65, 106);
   --ion-color-secondary-rgb: 61, 194, 255;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
-  --ion-color-secondary-shade: #36abe0;
-  --ion-color-secondary-tint: #50c8ff;
+  --ion-color-secondary-shade: rgb(18, 65, 106);
+  --ion-color-secondary-tint: rgb(18, 65, 106);
 
   /** tertiary **/
   --ion-color-tertiary: #5260ff;

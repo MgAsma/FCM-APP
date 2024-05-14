@@ -42,19 +42,19 @@
 
 @import "./app/app";
 
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
 
-// html {
-//     --ion-font-family: 'Poppins', sans-serif !important;
-// }
+html {
+    --ion-font-family: 'Poppins', sans-serif !important;
+}
 html {
     *{
-        --ion-font-family: 'Roboto' !important;
+        --ion-font-family: 'Poppins' !important;
     }
-    --ion-font-family: 'Roboto' !important;
+    --ion-font-family: 'Poppins' !important;
 }
 *{
-  font-family: 'Roboto' !important;
+  font-family: 'Poppins' !important;
 }
 .popover{
     margin: 15px;
@@ -143,11 +143,11 @@ html {
   .refresh-text{
     font-size: 10px;
     text-align: center;
-    color: orange;
     margin-bottom: 5px;
   }
   #swipe-down{
     vertical-align: middle;
+    font-size: 10px;
     margin-right: 1px !important;
   }
   ion-modal.modal-default.show-modal ~ ion-modal.modal-default {
@@ -178,4 +178,10 @@ html {
   .dropdown-list li{
    font-size: 13px;
   }
+}
+#swipe-down,.refresh-text{
+  color:var(--ion-color-secondary) !important;
+}
+ion-toolbar ion-title{
+  font-size: 18px !important;
 }

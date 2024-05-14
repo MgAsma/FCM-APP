@@ -19,24 +19,24 @@
           <p>Hi Welcome, {{userName | uppercase}}</p>
         </ion-col>
         <ion-col size="2" class="text-end">
-          <ion-icon (click)="openStartBreak()" name="cafe"></ion-icon>
+          <ion-icon (click)="openStartBreak()" name="cafe" style="font-size: 20px;"></ion-icon>
         </ion-col>
         <ion-col size="2" class="text-center">
-          <ion-icon (click)="openCheckout()" name="power"></ion-icon>
+          <ion-icon (click)="openCheckout()" name="power" style="font-size: 20px;"></ion-icon>
         </ion-col>
        </ion-row>
-       <ion-row>
+       <!-- <ion-row>
         <ion-col>
           <small><ion-icon name="sync"></ion-icon> Default Process</small>
         </ion-col>
-       </ion-row>
+       </ion-row> -->
     </div>
   </ion-toolbar>
   
 </ion-header>
 <ion-content [fullscreen]="true">
 
-<ion-row  scrollX="true" class="scroll-items">
+<!-- <ion-row  scrollX="true" class="scroll-items">
   <app-filter-home></app-filter-home>
 </ion-row>
 <ion-row  scrollX="true" class="scroll-items">
@@ -57,5 +57,5 @@
   <ion-col>
     <app-open-followups></app-open-followups>
   </ion-col>
-</ion-row>
+</ion-row> -->
 </ion-content>

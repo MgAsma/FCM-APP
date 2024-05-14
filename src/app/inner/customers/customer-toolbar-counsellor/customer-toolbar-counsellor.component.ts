@@ -37,7 +37,7 @@ export class CustomerToolbarCounsellorComponent implements OnInit {
     }
    
   ngOnInit() {
-   
+ 
     this.addEmit.customerCounsellor.subscribe((res:any)=>{
       this.selectedCounselorIds = [];
       this.filteredData.forEach((chip: any) => {

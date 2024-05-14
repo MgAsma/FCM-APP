@@ -17,7 +17,7 @@ export class CustomerToolbarTopComponent implements OnInit {
   @Input()statusList:any=[]
   sortingCards: SortingCard[] = sortingCards;
   arrayOfObjects = arrayOfObjects
-  @Output()people = new EventEmitter();
+  @Output()peopleCustomer = new EventEmitter();
   user_role: string;
   constructor(private allocate:AllocationEmittersService,private modalController:ModalController) {
     this.user_role= localStorage.getItem('user_role').toLowerCase()
@@ -51,7 +51,7 @@ export class CustomerToolbarTopComponent implements OnInit {
       if (dataReturned !== null) {
         let uniqueArray = Array.from(new Set(dataReturned.data));
         // //console.log('Modal data:', uniqueArray);
-        this.people.emit(uniqueArray) 
+        this.peopleCustomer.emit(uniqueArray) 
       }
 
     });

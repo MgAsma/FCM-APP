@@ -350,7 +350,7 @@ return
           this.data = []
           this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
             if (res.results) {
-              this.leadCards = res.results;
+              this.leadCards = res.results.data;
               this.data = new MatTableDataSource<any>(this.leadCards);
               this.totalNumberOfRecords = res.total_no_of_record
             }
@@ -393,7 +393,7 @@ return
             this.data = []
             this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
               if (res.results) {
-                this.leadCards = res.results;
+                this.leadCards = res.results.data;
                 this.data = new MatTableDataSource<any>(this.leadCards);
                 this.totalNumberOfRecords = res.total_no_of_record
               }
@@ -411,7 +411,7 @@ return
         this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
           if (res.results) {
          
-            this.leadCards = res.results;
+            this.leadCards = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record
           }
@@ -448,7 +448,7 @@ return
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = []
-       this.leadCards = res.results;
+       this.leadCards = res.results.data;
        this.data = new MatTableDataSource<any>(this.leadCards);
        this.totalNumberOfRecords = res.total_no_of_record
      }
@@ -489,7 +489,7 @@ return
      
       this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
         if (res.results) {
-          this.leadCards = res.results;
+          this.leadCards = res.results.data;
           this.data = new MatTableDataSource<any>(this.leadCards);
           this.totalNumberOfRecords = res.total_no_of_record
         }
@@ -541,7 +541,7 @@ return
         this.totalNumberOfRecords = []
         this._baseService.getData(`${environment.lead_list}${params}`).subscribe((res: any) => {
           if (res.results) {
-            this.leadCards = res.results;
+            this.leadCards = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record
           }
@@ -573,7 +573,7 @@ return
     }
     this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
       if (res.results) {
-        this.leadCards = res.results;
+        this.leadCards = res.results.data;
         this.data = new MatTableDataSource<any>(this.leadCards);
         this.totalNumberOfRecords = res.total_no_of_record
       }
