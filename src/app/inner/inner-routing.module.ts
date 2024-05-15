@@ -9,18 +9,21 @@ const routes: Routes = [
     path: '',
     component: InnerPage,
     children:[
-    {
-      path: 'allocations',
-      loadChildren: () => import('./allocations/allocations.module').then( m => m.AllocationsPageModule)
-    },
-    {
-      path:'', redirectTo:'allocations', pathMatch:'full'
-    },
-  {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-  },
- 
+      
+      
+      {
+        path: 'home',
+        loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+      },
+    
+      {
+        path:'', redirectTo:'home', pathMatch:'full'
+      },
+      
+      {
+        path: 'allocations',
+        loadChildren: () => import('./allocations/allocations.module').then( m => m.AllocationsPageModule)
+      },
   
   {
     path: 'customers',
@@ -46,6 +49,7 @@ const routes: Routes = [
   
 
 ];
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

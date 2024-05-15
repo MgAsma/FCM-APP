@@ -94,7 +94,7 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
    
     setTimeout(() => {
       this.callPermissionService?.dataSubject.subscribe((res:any)=>{
-        console.log(res,"res from toggle");
+       // console.log(res,"res from toggle");
         this.isToggledEnabled=res;
         
       }) 

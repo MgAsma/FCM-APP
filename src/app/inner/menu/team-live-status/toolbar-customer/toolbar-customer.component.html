@@ -13,6 +13,10 @@
   </ion-content>
   <ion-content *ngIf="filteredData?.length >0">
     <div class="wrapper">
+      <ion-refresher  slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+      <p class="refresh-text my-2"><ion-icon name="arrow-down" id="swipe-down"></ion-icon>Swipe down to refresh.</p>
       <ion-row>
         <ion-col>
           <p class="text-end my-2">Selected Users {{  getSelectedListLength() }}</p>
