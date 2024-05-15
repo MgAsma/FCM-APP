@@ -408,16 +408,11 @@ this.lead_id=id;
           if (res.results) {
             this.leadCards = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
-            console.log(res.results,"responsssssssssssssss");
-            
-            this.phoneNumbers= res.results.filter((ele:any) =>(ele.user_data.mobile_number)
-              
-
-            
-            ).map((ele:any)=>ele.user_data.mobile_number)
-            console.log(this.phoneNumbers);
-            
             this.totalNumberOfRecords = res.total_no_of_record
+            this.phoneNumbers= res.results.filter((ele:any) =>(ele.user_data.mobile_number) 
+            ).map((ele:any)=>ele.user_data.mobile_number)
+           
+            
           }
         }, (error: any) => {
           this.api.showError(error.error.message);

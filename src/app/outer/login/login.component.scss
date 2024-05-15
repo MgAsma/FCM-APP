@@ -29,7 +29,7 @@
 ion-card{
   box-shadow: none;
   color: #000000;
-  height: 100%;
+  height: 94%;
   width: 96%;
   padding-bottom: 4em;
   margin: 6px;
@@ -62,4 +62,10 @@ ion-button{
 }
 .logo-tag{
   margin: 0.5em auto 0;
+}
+.logo-fcm{
+  height: 34vh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
