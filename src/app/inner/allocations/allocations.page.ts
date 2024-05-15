@@ -98,7 +98,7 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
       
     })
 
-    this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this));
+   
 
     
 
@@ -106,13 +106,15 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
   }
 
   ngOnInit(){
-   
+    this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this));
     this.callPermissionService.dataUpdated.subscribe((res:any)=>{
       console.log(res,"res from toolbar");
       
     })
 
     // this.initiateCallStatus();
+
+
    
   }
 
@@ -403,11 +405,11 @@ this.lead_id=id;
         this.data = []
         this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
           if (res.results) {
-            this.leadCards = res.results;
+            this.leadCards = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
-            console.log(res.results,"responsssssssssssssss");
+            console.log(res,"responsssssssssssssss");
             
-            this.phoneNumbers= res.results.filter((ele:any) =>(ele.user_data.mobile_number)
+            this.phoneNumbers= res.results?.data.filter((ele:any) =>(ele.user_data.mobile_number)
               
 
             
@@ -434,7 +436,7 @@ this.lead_id=id;
         this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
           if (res.results) {
          
-            this.leadCards = res.results;
+            this.leadCards = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record
           }
@@ -469,7 +471,7 @@ this.lead_id=id;
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = []
-       this.leadCards = res.results;
+       this.leadCards = res.results.data;
        this.data = new MatTableDataSource<any>(this.leadCards);
        this.totalNumberOfRecords = res.total_no_of_record
      }
@@ -510,7 +512,7 @@ this.lead_id=id;
      
       this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
         if (res.results) {
-          this.leadCards = res.results;
+          this.leadCards = res.results.data;
           this.data = new MatTableDataSource<any>(this.leadCards);
           this.totalNumberOfRecords = res.total_no_of_record
         }
@@ -561,7 +563,7 @@ this.lead_id=id;
         this.totalNumberOfRecords = []
         this._baseService.getData(`${environment.lead_list}${params}`).subscribe((res: any) => {
           if (res.results) {
-            this.leadCards = res.results;
+            this.leadCards = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record
           }
@@ -601,7 +603,7 @@ this.lead_id=id;
     }
     this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
       if (res.results) {
-        this.leadCards = res.results;
+        this.leadCards = res.results.data;
         this.data = new MatTableDataSource<any>(this.leadCards);
         this.totalNumberOfRecords = res.total_no_of_record
       }
