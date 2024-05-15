@@ -1,20 +1,17 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-
-
 import { IonModal, ModalController } from '@ionic/angular';
-
-import { ToolbarCustomerComponent } from '../toolbar-customer/toolbar-customer.component';
 import { AllocationEmittersService } from '../../../../service/allocation-emitters.service';
-import { SortingCard, arrayOfObjects, sortingCards } from '../../../../shared-modules/sample-data';
+import { SortingCard, sortingCards, arrayOfObjects } from '../../../../shared-modules/sample-data';
 import { FilterComponent } from '../filter/filter.component';
-
+import { ToolbarCustomerComponent } from '../toolbar-customer/toolbar-customer.component';
+import { AddLeadEmitterService } from '../../../../service/add-lead-emitter.service';
 
 @Component({
-  selector: 'app-toolbar-top',
-  templateUrl: './toolbar-top.component.html',
-  styleUrls: ['./toolbar-top.component.scss'],
+  selector: 'app-call-toolbar-top',
+  templateUrl: './call-toolbar-top.component.html',
+  styleUrls: ['./call-toolbar-top.component.scss'],
 })
-export class ToolbarTopComponent  implements OnInit {
+export class CallToolbarTopComponent implements OnInit {
   searchBar = false
   @ViewChild('modal')modal!:IonModal
   @Input()data:any = [];
@@ -23,16 +20,34 @@ export class ToolbarTopComponent  implements OnInit {
   arrayOfObjects = arrayOfObjects
   @Output()people = new EventEmitter();
   user_role: string;
+  counsellor_ids: any[];
+  selectedStatus: any= [];
   constructor(
     private allocate:AllocationEmittersService,
-    private modalController:ModalController
+    private modalController:ModalController,
+    private addEmiter:AddLeadEmitterService
     ) { 
       this.user_role= localStorage.getItem('user_role').toLowerCase()
     }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.addEmiter.callLogCounsellor.subscribe((res) => {
+      if (res.length > 0) {
+        this.counsellor_ids = res;
+      }else{
+        this.counsellor_ids = [];
+      }
+    });
+
+    // Subscribe to the callLogStatus event
+    this.allocate.callLogStatus.subscribe((res: any) => {
+      if(res){
+        this.selectedStatus = res
+      }
+      })
+  }
   enableSearchOption(){
-   this.allocate.searchBar.next(true)
+   this.allocate.callLogSearchBar.next(true)
   }
   toggleSelection(card: SortingCard): void {
     card.selected = !card.selected;

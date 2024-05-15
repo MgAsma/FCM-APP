@@ -185,3 +185,18 @@ html {
 ion-toolbar ion-title{
   font-size: 18px !important;
 }
+.position-rel{
+  position: relative;
+  display: flex;
+  justify-content: right;
+}
+
+.badge,.badge-1 {
+  font-size: 9px;
+  padding: 3px;
+  border-radius: 50%;
+  position: absolute;
+  top: -9px; 
+  right: 0px;
+  z-index: 1;
+}

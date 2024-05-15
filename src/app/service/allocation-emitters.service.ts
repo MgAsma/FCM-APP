@@ -6,6 +6,9 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 })
 export class AllocationEmittersService {
   searchBar = new BehaviorSubject(false)
+  customerSearchBar = new BehaviorSubject(false)
+  callLogSearchBar = new BehaviorSubject(false)
+  tlsSearchBar = new BehaviorSubject(false)
   allocationStatus = new BehaviorSubject('')
   callLogStatus = new BehaviorSubject([])
   tlsStatus = new BehaviorSubject('')

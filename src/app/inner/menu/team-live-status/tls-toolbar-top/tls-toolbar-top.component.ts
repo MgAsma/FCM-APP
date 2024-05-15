@@ -1,21 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-
-
 import { IonModal, ModalController } from '@ionic/angular';
-
-
+import { AllocationEmittersService } from '../../../../service/allocation-emitters.service';
+import { SortingCard, sortingCards, arrayOfObjects } from '../../../../shared-modules/sample-data';
 import { FilterComponent } from '../filter/filter.component';
 import { ToolbarCustomerComponent } from '../toolbar-customer/toolbar-customer.component';
-import { AllocationEmittersService } from '../../../../service/allocation-emitters.service';
-import { SortingCard, arrayOfObjects, sortingCards } from '../../../../shared-modules/sample-data';
-
+import { AddLeadEmitterService } from '../../../../service/add-lead-emitter.service';
 
 @Component({
-  selector: 'app-toolbar-top',
-  templateUrl: './toolbar-top.component.html',
-  styleUrls: ['./toolbar-top.component.scss'],
+  selector: 'app-tls-toolbar-top',
+  templateUrl: './tls-toolbar-top.component.html',
+  styleUrls: ['./tls-toolbar-top.component.scss'],
 })
-export class ToolbarTopComponent  implements OnInit {
+export class TlsToolbarTopComponent implements OnInit {
+
   searchBar = false
   @ViewChild('modal')modal!:IonModal
   @Input()data:any = [];
@@ -24,16 +21,31 @@ export class ToolbarTopComponent  implements OnInit {
   arrayOfObjects = arrayOfObjects
   @Output()people = new EventEmitter();
   user_role: string;
+  counsellor_ids: any= [];
+  selectedStatus: any = [];
   constructor(
     private allocate:AllocationEmittersService,
-    private modalController:ModalController
+    private modalController:ModalController,
+    private addEmit:AddLeadEmitterService
     ) { 
       this.user_role = localStorage.getItem('user_role').toLowerCase()
     }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.addEmit.tlsCounsellor.subscribe((res) => {
+      if (res.length > 0) {
+        this.counsellor_ids = res;
+      }else{
+        this.counsellor_ids = [];
+      }
+    });
+    this.allocate.tlsStatus.subscribe(
+      (res: any) => {
+        this.selectedStatus = res
+      })
+  }
   enableSearchOption(){
-   this.allocate.searchBar.next(true)
+   this.allocate.tlsSearchBar.next(true)
   }
   toggleSelection(card: SortingCard): void {
     card.selected = !card.selected;
@@ -77,4 +89,5 @@ export class ToolbarTopComponent  implements OnInit {
     return await modal.present();
    
   }
+
 }

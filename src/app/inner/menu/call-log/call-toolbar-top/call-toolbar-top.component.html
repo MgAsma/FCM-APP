@@ -1,9 +1,10 @@
 <ion-row>
+  
   <ion-col>
     <a><ion-icon name="search" (click)="enableSearchOption()"></ion-icon></a>
   </ion-col>
   <ion-col   class="position-rel">
-    <ion-badge color="danger" class="badge-1">{{ customerStatus?.length || '0' }}</ion-badge>
+    <ion-badge color="danger" class="badge-1">{{ selectedStatus?.length || '0' }}</ion-badge>
     <ion-icon name="options" id="open-custom-dialog" (click)="openFilter()"></ion-icon>
   </ion-col>
   <ion-col  *ngIf="user_role !== 'counsellor'" class="position-rel">

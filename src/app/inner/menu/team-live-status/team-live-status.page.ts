@@ -70,7 +70,7 @@ export class TeamLiveStatusPage implements OnInit {
   ngOnInit() {
     this.getStatus();
     this.getCounselor();
-    this.allocate.searchBar.subscribe((res) => {
+    this.allocate.tlsSearchBar.subscribe((res) => {
       if (res === true) {
         this.searchBar = true;
       } else {

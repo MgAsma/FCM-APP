@@ -10,8 +10,8 @@ import { TeamLiveStatusPage } from './team-live-status.page';
 import { MaterialModule } from '../../../shared-modules/material/material/material.module';
 import { FilterComponent } from './filter/filter.component';
 import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.component';
-import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
 import { TlsToolbarSearchComponent } from './toolbar-customer/tls-toolbar-search/tls-toolbar-search.component';
+import { TlsToolbarTopComponent } from './tls-toolbar-top/tls-toolbar-top.component';
 
 
 @NgModule({
@@ -26,8 +26,8 @@ import { TlsToolbarSearchComponent } from './toolbar-customer/tls-toolbar-search
     TeamLiveStatusPage,
     FilterComponent,
     ToolbarCustomerComponent,
-    ToolbarTopComponent,
-    TlsToolbarSearchComponent
+    TlsToolbarSearchComponent,
+    TlsToolbarTopComponent
   ]
 })
 export class TeamLiveStatusPageModule {}
