@@ -121,9 +121,6 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
    
   }
 
-
-
-
   getContacts(name, value, operator) {
     if (value == "1") {
       this.listTyle = "Incoming Calls from yesterday";

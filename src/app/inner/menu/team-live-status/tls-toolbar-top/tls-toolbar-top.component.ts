@@ -4,6 +4,7 @@ import { AllocationEmittersService } from '../../../../service/allocation-emitte
 import { SortingCard, sortingCards, arrayOfObjects } from '../../../../shared-modules/sample-data';
 import { FilterComponent } from '../filter/filter.component';
 import { ToolbarCustomerComponent } from '../toolbar-customer/toolbar-customer.component';
+import { AddLeadEmitterService } from '../../../../service/add-lead-emitter.service';
 
 @Component({
   selector: 'app-tls-toolbar-top',
@@ -20,14 +21,29 @@ export class TlsToolbarTopComponent implements OnInit {
   arrayOfObjects = arrayOfObjects
   @Output()people = new EventEmitter();
   user_role: string;
+  counsellor_ids: any= [];
+  selectedStatus: any = [];
   constructor(
     private allocate:AllocationEmittersService,
-    private modalController:ModalController
+    private modalController:ModalController,
+    private addEmit:AddLeadEmitterService
     ) { 
       this.user_role = localStorage.getItem('user_role').toLowerCase()
     }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.addEmit.tlsCounsellor.subscribe((res) => {
+      if (res.length > 0) {
+        this.counsellor_ids = res;
+      }else{
+        this.counsellor_ids = [];
+      }
+    });
+    this.allocate.tlsStatus.subscribe(
+      (res: any) => {
+        this.selectedStatus = res
+      })
+  }
   enableSearchOption(){
    this.allocate.tlsSearchBar.next(true)
   }

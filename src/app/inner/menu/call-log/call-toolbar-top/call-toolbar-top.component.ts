@@ -4,6 +4,7 @@ import { AllocationEmittersService } from '../../../../service/allocation-emitte
 import { SortingCard, sortingCards, arrayOfObjects } from '../../../../shared-modules/sample-data';
 import { FilterComponent } from '../filter/filter.component';
 import { ToolbarCustomerComponent } from '../toolbar-customer/toolbar-customer.component';
+import { AddLeadEmitterService } from '../../../../service/add-lead-emitter.service';
 
 @Component({
   selector: 'app-call-toolbar-top',
@@ -19,14 +20,32 @@ export class CallToolbarTopComponent implements OnInit {
   arrayOfObjects = arrayOfObjects
   @Output()people = new EventEmitter();
   user_role: string;
+  counsellor_ids: any[];
+  selectedStatus: any= [];
   constructor(
     private allocate:AllocationEmittersService,
-    private modalController:ModalController
+    private modalController:ModalController,
+    private addEmiter:AddLeadEmitterService
     ) { 
       this.user_role= localStorage.getItem('user_role').toLowerCase()
     }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.addEmiter.callLogCounsellor.subscribe((res) => {
+      if (res.length > 0) {
+        this.counsellor_ids = res;
+      }else{
+        this.counsellor_ids = [];
+      }
+    });
+
+    // Subscribe to the callLogStatus event
+    this.allocate.callLogStatus.subscribe((res: any) => {
+      if(res){
+        this.selectedStatus = res
+      }
+      })
+  }
   enableSearchOption(){
    this.allocate.callLogSearchBar.next(true)
   }

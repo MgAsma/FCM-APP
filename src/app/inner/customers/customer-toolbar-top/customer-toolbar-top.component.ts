@@ -6,6 +6,9 @@ import { CallPermissionsService } from '../../../service/api/call-permissions.se
 import { SortingCard, sortingCards, arrayOfObjects } from '../../../shared-modules/sample-data';
 import { ToolbarCustomerComponent } from '../../allocations/toolbar-customer/toolbar-customer.component';
 import { FilterComponent } from '../../home/filter/filter.component';
+import { AddLeadEmitterService } from '../../../service/add-lead-emitter.service';
+import { CustomerFilterComponent } from '../customer-filter/customer-filter.component';
+import { CustomerToolbarCounsellorComponent } from '../customer-toolbar-counsellor/customer-toolbar-counsellor.component';
 
 @Component({
   selector: 'app-customer-toolbar-top',
@@ -21,11 +24,28 @@ export class CustomerToolbarTopComponent implements OnInit {
   arrayOfObjects = arrayOfObjects
   @Output()people = new EventEmitter();
   user_role: string;
-  constructor(private allocate:AllocationEmittersService,private modalController:ModalController) {
+  counsellor_ids: any[];
+  customerStatus: any[];
+  constructor(private allocate:AllocationEmittersService,private modalController:ModalController,
+    private addEmit:AddLeadEmitterService
+  ) {
     this.user_role= localStorage.getItem('user_role').toLowerCase()
    }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.addEmit.customerCounsellor.subscribe((res) => {
+      if(res){
+        this.counsellor_ids = res
+      }else{
+        this.counsellor_ids = []
+      }
+    });
+    
+    this.allocate.customerStatus.subscribe(
+      (res: any) => {
+       this.customerStatus = res
+      })
+  }
   enableSearchOption(){
    this.allocate.customerSearchBar.next(true)
   }
@@ -43,7 +63,7 @@ export class CustomerToolbarTopComponent implements OnInit {
 
   async openModal() {
     const modal = await this.modalController.create({
-      component: ToolbarCustomerComponent, 
+      component: CustomerToolbarCounsellorComponent, 
       componentProps: {
         key: 'value',
         data:this.data
@@ -61,7 +81,7 @@ export class CustomerToolbarTopComponent implements OnInit {
   }
   async openFilter() {
     const modal = await this.modalController.create({
-      component: FilterComponent, 
+      component: CustomerFilterComponent, 
       componentProps: {
         key: 'value',
         data:this.statusList
