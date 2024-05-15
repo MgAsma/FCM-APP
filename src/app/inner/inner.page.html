@@ -1,13 +1,13 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content">
-      <!-- <ion-header>
+    <!-- <ion-menu contentId="main-content">
+      <ion-header>
         <ion-toolbar>
           <ion-title>Menu</ion-title>
         </ion-toolbar>
-      </ion-header> -->
+      </ion-header> 
       <ion-content>
-        <!-- Your menu items -->
+        
         <ion-list>
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
             <ion-item [routerLink]="[p.url]">
@@ -21,7 +21,7 @@
       </ion-content>
      
     </ion-menu>
-    
+     -->
       <ion-content id="main-content">
         <ion-router-outlet></ion-router-outlet>
         <!-- <ion-tabs>
