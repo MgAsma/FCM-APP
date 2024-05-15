@@ -1,11 +1,12 @@
 .active{
- color:orange;  
+ color:var(--ion-color-primary);  
 }
 ion-tabs{
 	ion-fab {
 		margin-bottom: env(safe-area-inset-bottom); /* fix notch ios*/
 		ion-fab-button {
 			--box-shadow: none;
+			--color:#fffff;
 		}
 	}
 	ion-tab-bar {
@@ -19,12 +20,13 @@ ion-tabs{
 			content: " ";
 			width: 100%;
 			bottom: 0;
-			background: var(--ion-color-light);
+			background: var(--ion-color-secondary);
 			height: env(safe-area-inset-bottom);
 			position: absolute;
 		}
 		ion-tab-button {
-			--background: var(--ion-color-light);
+			--background: var(--ion-color-secondary);
+			--color:#FFFFFF;
 		}
 		ion-tab-button.comments {
 			margin-right: 0px;
@@ -38,14 +40,14 @@ ion-tabs{
 			width: 72px;
 			margin-top: 19px;
 			path{
-				fill:  var(--ion-color-light);
+				fill:  var(--ion-color-secondary);
 			}		
 		}
 	}
 }
 ion-label.custom-tabs{
     font-size: 8px !important;
-    font-weight: bold;
+    // font-weight: bold;
     margin: 0 !important;
     padding: 0 !important;
 }

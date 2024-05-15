@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
@@ -29,7 +29,6 @@ export class AddLeadPage implements OnInit {
   yearOfPassingOptions:any = [];
   campaignOptions:any = [];
   mediumOptions:any = [];
-  levelOfProgramOptions:any = [];
   subStatus: any = [];
   referredTo:any = [];
   stat_us:any= [];
@@ -37,7 +36,7 @@ export class AddLeadPage implements OnInit {
   zone:string[] = ['South','North', 'East', 'West'];
   seasons:any = [];
   @Output() addLead = new EventEmitter()
-  
+  @Input()pageTitle;
   minDateAdapter: string;
   streamList: any;
   adminList: any = [];
@@ -48,6 +47,13 @@ export class AddLeadPage implements OnInit {
   formatedDate: string;
   type = 'text'
   min:string;
+  levelofProgram: any = [];
+  dropdownSettings: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
+  selectedCountry: any;
+  selectedState: any;
+  selectedCity: any;
+  user_role: string;
+ 
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -57,6 +63,8 @@ export class AddLeadPage implements OnInit {
     private modalController:ModalController,
     private _addLeadEmitter:AddLeadEmitterService
    ) {
+    this.user_id = localStorage.getItem('user_id')
+    this.user_role = localStorage.getItem('user_role')?.toUpperCase()
     let dob = new Date()
     let minimum = new Date('1900-01-01')
     this.minDateAdapter = this._datePipe.transform(dob,'yyyy-MM-dd')
@@ -71,6 +79,15 @@ export class AddLeadPage implements OnInit {
   }
   ngOnInit(): void {
     this.user_id = localStorage.getItem('user_id')
+    this.dropdownSettings = {
+      singleSelection: true,
+      idField: "id",
+      textField: "name",
+      selectAllText: "Select All",
+      unSelectAllText: "UnSelect All",
+      itemsShowLimit: 1,
+      allowSearchFilter: true
+    };
     this.getCountry();
     this.getState();
     this.getChannel();
@@ -92,47 +109,50 @@ export class AddLeadPage implements OnInit {
     this.getCounselledBy();
     this.getLeadStage()
     this.initForm()
-  }
-  get f() {
-    return this.addNewLead.controls;
+   
   }
   initForm(){
     this.addNewLead = this.fb.group({
       firstName: ['', [Validators.required,Validators.pattern(this._commonService.namePattern)]],
       mobile: ['', [Validators.required, Validators.pattern(this._commonService.mobilePattern)]],
       alternateNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
-      email: ['', [Validators.required,Validators.pattern(this._commonService.emailPattern)]],
+      email: ['', [Validators.pattern(this._commonService.emailPattern)]],
       dateOfBirth:[''],
+      countryId:[''],
       state: [''],
       zone:[''],
       cityName: [''],
-      pincode:['',Validators.pattern(this._commonService.pincode)],
-      countryId:[''],
-      referenceName:['',Validators.pattern(this._commonService.namePattern)],
-      referencePhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
-      fatherName:['',Validators.pattern(this._commonService.namePattern)],
-      fatherOccupation:['',Validators.pattern(this._commonService.namePattern)],
-      fatherPhoneNumber:['',Validators.pattern(this._commonService.mobilePattern)],
-      tenthPercentage :['',Validators.pattern(this._commonService.nonNegativeValidator)],
-      twelthPercentage :['',Validators.pattern(this._commonService.nonNegativeValidator)],
-      degree:['',Validators.pattern(this._commonService.nonNegativeValidator)],
+      pincode:['',[Validators.pattern(this._commonService.pincode)]],
+      referenceName:['',[Validators.pattern(this._commonService.namePattern)]],
+      referencePhoneNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
+      fatherName:['',[Validators.pattern(this._commonService.namePattern)]],
+      fatherOccupation:['',[Validators.pattern(this._commonService.namePattern)]],
+      fatherPhoneNumber:['',[Validators.pattern(this._commonService.mobilePattern)]],
+      tenthPercentage :['',[Validators.pattern(this._commonService.nonNegativeValidator)]],
+      twelthPercentage :['',[Validators.pattern(this._commonService.nonNegativeValidator)]],
+      degree:['',[Validators.pattern(this._commonService.nonNegativeValidator)]],
       course:[''],
       otherCourse:[''],
-      entranceExam:['',Validators.pattern(this._commonService.namePattern)],
+      entranceExam:['',[Validators.pattern(this._commonService.namePattern)]],
       courseLookingfor:[''],
-      preferredCollege1:['',Validators.pattern(this._commonService.namePattern)],
-      preferredCollege2:['',Validators.pattern(this._commonService.namePattern)],
-      preferredLocation1:['',Validators.pattern(this._commonService.namePattern)],
-      preferredLocation2:['',Validators.pattern(this._commonService.namePattern)],
+      preferredCollege1:['',[Validators.pattern(this._commonService.namePattern)]],
+      preferredCollege2:['',[Validators.pattern(this._commonService.namePattern)]],
+      preferredLocation1:['',[Validators.pattern(this._commonService.namePattern)]],
+      preferredLocation2:['',[Validators.pattern(this._commonService.namePattern)]],
       counsellor:['',[Validators.required]],
       counsellorAdmin:[''],
-      leadSource:['',[Validators.required]],
-      leadStages:['',[Validators.required]],
-      leadStatus:[''],
-      notes:['',Validators.pattern(this._commonService.namePattern)],
-      remarks:['',Validators.pattern(this._commonService.namePattern)]
+      leadSource:[''],
+      //leadStages:[''],
+      levelOfProgram:[''],
+      //leadStatus:['',[Validators.required]],
+      //notes:['',[Validators.required,Validators.pattern(this._commonService.namePattern)]],
+      // remarks:['',Validators.pattern(this._commonService.namePattern)]
     })
   }
+  get f() {
+    return this.addNewLead.controls;
+  }
+ 
   modifyType(){
     this.type = 'date'
   }
@@ -157,11 +177,16 @@ export class AddLeadPage implements OnInit {
 
     )
   }
-  
+   toTitleCase(str: string): string {
+    return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  }
   getCountry(){
     this.api.getAllCountry().subscribe((res:any)=>{
       if(res.results){
-      this.countryOptions = res.results
+        this.countryOptions = res.results.map((item: any) => ({
+          ...item,
+          name: this.toTitleCase(item.name)
+        })).sort((a: any, b: any) => a.name.localeCompare(b.name));
       }
     },(error:any)=>{
        this.api.showToast(error?.error?.message)
@@ -171,12 +196,28 @@ export class AddLeadPage implements OnInit {
   getState(){
     this.api.getAllState().subscribe((res:any)=>{
       if(res.results){
-        this.stateOptions = res.results
+        this.stateOptions = res.results.map((item: any) => ({
+          ...item,
+          name: this.toTitleCase(item.name)
+        })).sort((a: any, b: any) => a.name.localeCompare(b.name));
       }
     },(error:any)=>{
        this.api.showToast(error?.error?.message)
       
     })
+  }
+  getCity(){
+    this.api.getAllCity().subscribe((res:any)=>{
+      if(res.results){
+        this.cityOptions = res.results.map((item: any) => ({
+          ...item,
+          name: this.toTitleCase(item.name)
+        })).sort((a: any, b: any) => a.name.localeCompare(b.name));
+      }
+      },(error:any)=>{
+         this.api.showToast(error?.error?.message)
+        
+      })
   }
   getChannel(){
     this.api.getAllChannel().subscribe((resp:any)=>{
@@ -205,19 +246,6 @@ export class AddLeadPage implements OnInit {
        this.api.showToast(error?.error?.message)
       
     })
-  }
-  getCity(){
-    this.api.getAllCity().subscribe((res:any)=>{
-      if(res.results){
-        this.cityOptions = res.results;
-      }
-      else{
-        this.api.showToast('ERROR')
-       }
-      },(error:any)=>{
-         this.api.showToast(error?.error?.message)
-        
-      })
   }
   getCampign(){
     this.api.getAllCampign().subscribe((res:any)=>{
@@ -286,7 +314,7 @@ export class AddLeadPage implements OnInit {
   getLevelOfProgram(){
     this.api.getAllLevelOfProgram().subscribe((res:any)=>{
       if(res.results){
-        this.levelOfProgramOptions = res.results 
+        this.levelofProgram = res?.results 
       } else{
         this.api.showToast('ERROR')
        }
@@ -335,7 +363,8 @@ export class AddLeadPage implements OnInit {
     })
   }
   getCounselor(){
-    this._baseService.getData(`${environment._user}/?role_name=counsellor`).subscribe((res:any)=>{
+    let query = this.user_role === "COUNSELLOR" || this.user_role === "COUNSELOR"  || this.user_role === "ADMIN"  ?`?user_id=${this.user_id}&role_name=counsellor` : `?role_name=counsellor`
+    this._baseService.getData(`${environment._user}${query}`).subscribe((res:any)=>{
       if(res.results){
       this.referredTo = res.results
       }
@@ -361,7 +390,6 @@ export class AddLeadPage implements OnInit {
      this.api.showError(error.error.message)
     }))
    }
-  
   clearSelectField(fieldName: string) {
       this.addNewLead.get(fieldName)?.reset();
   }
@@ -387,6 +415,28 @@ export class AddLeadPage implements OnInit {
     this.modalController.dismiss()
     this._addLeadEmitter.triggerGet();
   }
+  onTagSelect(event: any,controlName:any) {
+    if(controlName == 'countryId'){
+      this.selectedCountry = event.id
+    }else if(controlName == 'state'){
+      this.selectedState = event.id
+    }else if(controlName == 'cityName'){
+      this.selectedCity = event.id
+    }
+    // this.f['tags'].markAsUntouched()
+    //console.log(controlName,"controlName.value")
+  }
+ 
+  onItemDeSelect(item: any,controlName:any) {
+    if(controlName == 'countryId'){
+      this.selectedCountry = null
+    }else if(controlName == 'state'){
+      this.selectedState =  null
+    }else if(controlName == 'cityName'){
+      this.selectedCity =  null
+    }
+   
+  }
   onSubmit(){
     let f = this.addNewLead.value;
     let data:any ={
@@ -401,9 +451,9 @@ export class AddLeadPage implements OnInit {
       refered_to: f['counsellor'],
       location:  null,
       pincode: f['pincode'] || null,
-      country:f['countryId'],
-      state: f['state'],
-      city: f['cityName'],
+      country:this.selectedCountry,
+      state: this.selectedState,
+      city: this.selectedCity,
       zone:f['zone'],
       reference_name:f['referenceName'],
       reference_mobile_number:f['referencePhoneNumber'] || null,
@@ -417,6 +467,7 @@ export class AddLeadPage implements OnInit {
       others: f["otherCourse"],
       enterance_exam: f["entranceExam"],
       course_looking_for: f["courseLookingfor"],
+      level_of_program:f["levelOfProgram"],
       lead_list_status:f['leadStatus'],
       lead_list_substatus: null,
       counselled_by:f['counsellorAdmin'],
@@ -440,7 +491,7 @@ export class AddLeadPage implements OnInit {
       let nonMandatoryFieldsInvalid = false;
     
       // Check if any mandatory fields are empty
-      const mandatoryFields = ['firstName', 'mobile', 'email', 'counsellor', 'leadSource', 'leadStages','alternateNumber'];
+      const mandatoryFields = ['firstName', 'mobile', 'counsellor','leadStatus'];
       mandatoryFields.forEach(field => {
         if (!this.addNewLead.get(field).value) {
           mandatoryFieldsEmpty = true;
@@ -451,7 +502,7 @@ export class AddLeadPage implements OnInit {
       // Check if any non-mandatory fields are invalid
       Object.keys(this.addNewLead.controls).forEach(key => {
         const control = this.addNewLead.get(key);
-        if (control.invalid && !mandatoryFields.includes(key)) {
+        if (control.invalid && !mandatoryFields.includes(key)|| control.invalid && mandatoryFields.includes(key)) {
           nonMandatoryFieldsInvalid = true;
           this.addNewLead.markAllAsTouched()
         }

@@ -55,6 +55,7 @@
     "core-js": "^3.6.4",
     "io.gvox.plugin.phonecalltrap": "^0.1.2",
     "jwt-decode": "^4.0.0",
+    "ng-multiselect-dropdown": "^1.0.0",
     "ngx-toastr": "^18.0.0",
     "rxjs": "^7.8.0",
     "sw-toolbox": "3.6.0",

@@ -2,7 +2,7 @@
   <ion-toolbar color="primary">
     <ion-row>
       <ion-col size="10">
-        <ion-title>Edit lead </ion-title>
+        <ion-title>Edit Allocation </ion-title>
       </ion-col>
       <ion-col size="2">
         <ion-icon name="close" class="close" (click)="close()"></ion-icon>
@@ -46,7 +46,7 @@
                      <ion-input appFormSpace
                        type="tel"
                        maxlength="10"
-                       placeholder="Enter  Mobile Number"
+                       placeholder="Enter Mobile Number"
                        formControlName="mobile"
                        required
                        style="--padding-start: 0;"
@@ -68,7 +68,7 @@
                        <ion-input appFormSpace
                          type="tel"
                          maxlength="10"
-                         placeholder="Enter  Alternate Mobile Number"
+                         placeholder="Enter Alternate Mobile Number"
                          formControlName="alternateNumber"
                          style="--padding-start: 0;"
                        ></ion-input>
@@ -81,11 +81,11 @@
                      </ng-container>
 
                      <div class="custom-errmsg" *ngIf="!f['mobile'].hasError('pattern') && f['alternateNumber'].value && f['mobile'].value == f['alternateNumber'].value">
-                      Mobile and Alternate Numbers cannot be the same
+                      Mobile And Alternate Numbers Cannot Be The Same
                     </div>
                      
                    <!-- Email -->
-                   <ion-label position="stacked">Email Id</ion-label><b class="star-symbol">*</b>
+                   <ion-label position="stacked">Email Id</ion-label>
                    <ion-item>
                      <ion-input appFormSpace
                        type="email"
@@ -109,21 +109,54 @@
                   <input type="date"  [min]="min" formControlName="dateOfBirth" [max]="minDateAdapter"/>
                   <span class="custom-placeholder" *ngIf="!f['dateOfBirth'].value">DD/MM/YYYY</span>
                 </ion-item>
-               <!-- State -->
-               <ion-label position="stacked">State</ion-label>
-               <ion-item>
-                 <ion-select formControlName="state" placeholder="Select The State" >
-                   <ion-select-option *ngFor="let option of stateOptions" [value]="option.id">{{ option.name }}</ion-select-option>
-                 </ion-select>
-                 <ion-button
-                   fill="clear"
-                   (click)="clearSelectField('state')"
-                   *ngIf="f['state']?.value"
-                 >
-                   <ion-icon name="close-outline"></ion-icon>
-                 </ion-button>
-               </ion-item>
- 
+              
+              
+               
+               
+               
+                   <!-- Country -->
+                   <ion-label position="stacked">Country Name</ion-label>
+                   <div class="country-code">
+                    
+                   <ng-multiselect-dropdown [placeholder]="'Select Country'"  [settings]="dropdownSettings"
+                   [data]="countryOptions" 
+                   [formControl]="editLead.get('countryId')" (onSelect)="onTagSelect($event,'countryId')" (onDeSelect)="onItemDeSelect($event,'countryId')">
+                   </ng-multiselect-dropdown> 
+                    
+                   </div>
+                  
+                  <!-- State -->
+                  <ion-label position="stacked">State</ion-label>
+                  <div class="country-code">
+                  
+                    <ng-multiselect-dropdown [placeholder]="'Select The State'"  [settings]="dropdownSettings"
+                   [data]="stateOptions" 
+                   [formControl]="editLead.get('state')" (onSelect)="onTagSelect($event,'state')" (onDeSelect)="onItemDeSelect($event,'state')">
+                   </ng-multiselect-dropdown> 
+                    
+                   </div>
+                 <!-- City Name -->
+                 <ion-label position="stacked">City Name</ion-label>
+                 <div class="country-code">
+                   <ng-multiselect-dropdown [placeholder]="'Select The City Name'"  [settings]="dropdownSettings"
+                   [data]="cityOptions" 
+                   [formControl]="editLead.get('cityName')" (onSelect)="onTagSelect($event,'cityName')" (onDeSelect)="onItemDeSelect($event,'cityName')">
+                   </ng-multiselect-dropdown> 
+                   
+                 </div>
+                  <!-- Pincode -->
+                  <ion-label position="stacked">Pincode</ion-label>
+                  <ion-item>
+                    <ion-input appFormSpace
+                      type="tel"
+                      maxlength="6"
+                      placeholder="Enter Pincode"
+                      formControlName="pincode"
+                    ></ion-input>
+                  </ion-item>
+                  <ion-error *ngIf="f['pincode'].hasError('pattern')">
+                    <ion-label color="danger">Please Enter 6-Digit Pincode.</ion-label>
+                  </ion-error>
                <!-- Zone -->
                <ion-label position="stacked">Zone</ion-label>
                <ion-item>
@@ -138,49 +171,6 @@
                    <ion-icon name="close-outline"></ion-icon>
                  </ion-button>
                </ion-item>
-               
-               
-                 <!-- City Name -->
-                 <ion-label position="stacked">City Name</ion-label>
-                 <ion-item>
-                   <ion-select formControlName="cityName" placeholder="Select The City Name">
-                     <ion-select-option *ngFor="let option of cityOptions" [value]="option.id">{{ option.name }}</ion-select-option>
-                   </ion-select>
-                   <ion-button
-                     fill="clear"
-                     (click)="clearSelectField('cityName')"
-                     *ngIf="f['cityName']?.value"
-                   >
-                     <ion-icon name="close-outline"></ion-icon>
-                   </ion-button>
-                 </ion-item>
-               
-                 <!-- Pincode -->
-                 <ion-label position="stacked">Pincode</ion-label>
-                 <ion-item>
-                   <ion-input appFormSpace
-                     type="tel"
-                     placeholder="Enter Pincode"
-                     formControlName="pincode"
-                   ></ion-input>
-                 </ion-item>
-                 <ion-error *ngIf="f['pincode'].hasError('pattern')">
-                   <ion-label color="danger">Please Enter 6-Digit Pincode.</ion-label>
-                 </ion-error>
-                 <!-- Country -->
-                 <ion-label position="stacked">Country Name</ion-label>
-                 <ion-item>
-                   <ion-select formControlName="countryId" placeholder="Select The Country Name">
-                     <ion-select-option *ngFor="let option of countryOptions" [value]="option.id">{{ option.name }}</ion-select-option>
-                   </ion-select>
-                   <ion-button
-                     fill="clear"
-                     (click)="clearSelectField('countryId')"
-                     *ngIf="f['countryId']?.value"
-                   >
-                     <ion-icon name="close-outline"></ion-icon>
-                   </ion-button>
-                 </ion-item>
                
            </ng-container>
            </div>
@@ -205,8 +195,10 @@
              <!---Reference Phone Number----->
              <ion-label position="stacked">Reference Phone Number</ion-label>
              <ion-item>
+              <ion-label *ngIf="f['referencePhoneNumber'].value">+91</ion-label>
                <ion-input appFormSpace
                  type="tel"
+                 maxlength="10"
                  placeholder="Enter Reference Phone Number"
                  formControlName="referencePhoneNumber"
                ></ion-input>
@@ -242,8 +234,10 @@
              <!----Father Phone Number -->
              <ion-label position="stacked">Father Phone Number</ion-label>
              <ion-item>
+              <ion-label *ngIf="f['fatherPhoneNumber'].value">+91</ion-label>
                <ion-input appFormSpace
                  type="tel"
+                 maxlength="10"
                  placeholder="Enter Father Phone Number"
                  formControlName="fatherPhoneNumber"
                ></ion-input>
@@ -344,7 +338,21 @@
                      <ion-icon name="close-outline"></ion-icon>
                    </ion-button>
                  </ion-item>
- 
+                  <!-- Level Of Program -->
+                  <ion-label position="stacked">Level Of Program</ion-label>
+                  <ion-item>
+                    <ion-select formControlName="levelOfProgram" placeholder="Select Level Of Program" >
+                      <ion-select-option *ngFor="let option of levelofProgram" [value]="option.id">{{ option.name }}</ion-select-option>
+                    </ion-select>
+                    <ion-button
+                      fill="clear"
+                      (click)="clearSelectField('levelOfProgram')"
+                      *ngIf="f['levelOfProgram']?.value"
+                    >
+                      <ion-icon name="close-outline"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+               
                    <!----Preferred College 1 -->
                <ion-label position="stacked">Preferred College 1</ion-label>
                <ion-item>
@@ -435,7 +443,7 @@
              </ion-item>
  
               <!-- Source -->
-              <ion-label position="stacked">Source</ion-label><b class="star-symbol">*</b>
+              <ion-label position="stacked">Source</ion-label>
               <ion-item>
                 <ion-select formControlName="leadSource" placeholder="Select Source" >
                   <ion-select-option *ngFor="let option of sources" [value]="option.id">{{ option?.source_name }}</ion-select-option>
@@ -452,7 +460,7 @@
                <ion-label color="danger">Source Is Required.</ion-label>
              </ion-error>
                <!-- Lead Stage -->
-             <ion-label position="stacked">Lead Stage</ion-label><b class="star-symbol">*</b>
+             <ion-label position="stacked">Lead Stage</ion-label>
              <ion-item>
                <ion-select formControlName="leadStages" placeholder="Select Lead Stage" >
                  <ion-select-option *ngFor="let option of leadStage" [value]="option.id">{{ option?.name }}</ion-select-option>
@@ -469,7 +477,7 @@
                <ion-label color="danger">Lead Stage Is Required.</ion-label>
              </ion-error>
               <!-- Status -->
-              <ion-label position="stacked">Status</ion-label>
+              <ion-label position="stacked">Status</ion-label><b class="star-symbol">*</b>
               <ion-item>
                 <ion-select formControlName="leadStatus" placeholder="Select Status" >
                   <ion-select-option *ngFor="let option of stat_us" [value]="option.id">{{ option?.name }}</ion-select-option>
@@ -484,38 +492,29 @@
               </ion-item>
  
                <!----Notes -->
-               <ion-label position="stacked">Notes</ion-label>
+               <ion-label position="stacked">Notes</ion-label><b class="star-symbol">*</b>
                <ion-item>
                  <ion-input appFormSpace
                    type="text"
                    placeholder="Enter  Notes"
                    formControlName="notes"
-                 ></ion-input>
+                  required></ion-input>
                </ion-item>
+               
+              <ion-error *ngIf="f['notes'].touched && f['notes']?.hasError('required')">
+                <ion-label color="danger">Note Is Required.</ion-label>
+              </ion-error>
                <ion-error *ngIf="f['notes'].hasError('pattern')">
                  <ion-label color="danger">Invalid Notes.Please Enter Characters.</ion-label>
                </ion-error>
-                <!----Remarks -->
-                <ion-label position="stacked">Remarks</ion-label>
-                <ion-item>
-                  <ion-input appFormSpace
-                    type="text"
-                    placeholder="Enter  Remarks"
-                    formControlName="remarks"
-                  ></ion-input>
-                </ion-item>
-                <ion-error *ngIf="f['remarks'].hasError('pattern')">
-                 <ion-label color="danger">Invalid Remarks.Please Enter Characters.</ion-label>
-               </ion-error>
              </div>
-           
          </ion-accordion>
      </ion-accordion-group>
    
  <ion-row class="my-2">
    <ion-col class="text-center">
-     <ion-button shape="round" fill="outline" (click)="closeModal()" >Close</ion-button>
-     <ion-button shape="round" color="primary" (click)="onSubmit()">Done</ion-button>
+     <ion-button shape="round" fill="outline" (click)="closeModal()" color="secondary">Close</ion-button>
+     <ion-button shape="round"  (click)="onSubmit()" color="secondary">Done</ion-button>
    </ion-col>
  </ion-row>
  </div>

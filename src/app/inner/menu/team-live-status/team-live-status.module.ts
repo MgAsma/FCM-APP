@@ -11,6 +11,7 @@ import { MaterialModule } from '../../../shared-modules/material/material/materi
 import { FilterComponent } from './filter/filter.component';
 import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.component';
 import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
+import { TlsToolbarSearchComponent } from './toolbar-customer/tls-toolbar-search/tls-toolbar-search.component';
 
 
 @NgModule({
@@ -21,6 +22,12 @@ import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
     TeamLiveStatusPageRoutingModule,
     MaterialModule
   ],
-  declarations: [TeamLiveStatusPage,FilterComponent,ToolbarCustomerComponent,ToolbarTopComponent]
+  declarations: [
+    TeamLiveStatusPage,
+    FilterComponent,
+    ToolbarCustomerComponent,
+    ToolbarTopComponent,
+    TlsToolbarSearchComponent
+  ]
 })
 export class TeamLiveStatusPageModule {}

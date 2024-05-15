@@ -25,7 +25,7 @@ import { GotoViewCustomerDetailsCallCustomerComponent } from '../../goto-view-cu
 import { CallLog } from '@ionic-native/call-log/ngx';
 import { CallNumber } from '@ionic-native/call-number/ngx';
 import { Device } from '@ionic-native/device/ngx';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 @NgModule({
   declarations: [
     // ToolbarTopComponent,
@@ -54,7 +54,8 @@ import { Device } from '@ionic-native/device/ngx';
     MatPaginatorModule,
     FormsModule,
     ReactiveFormsModule,
-    MatListModule
+    MatListModule,
+    NgMultiSelectDropDownModule,
   ],
   exports:[
     LeadrecurringFollowupComponent,
@@ -80,7 +81,8 @@ import { Device } from '@ionic-native/device/ngx';
     FormsModule,
     ReactiveFormsModule,
     MatListModule,
-    FormSpaceDirective
+    FormSpaceDirective,
+    NgMultiSelectDropDownModule
   ],
   providers:[CallLog,Device,CallNumber]
   

@@ -22,7 +22,7 @@ export class InnerPage implements OnInit {
     },
     {
       title: 'Allocation',
-      url: '/inner/allocations',
+      url: 'allocations',
       icon: 'information-circle'
     },
     {

@@ -13,6 +13,7 @@ import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.co
 import { FilterComponent } from './filter/filter.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
+import { CalllogToolbarSearchComponent } from './toolbar-customer/calllog-toolbar-search/calllog-toolbar-search.component';
 
 // import { CallLog, CallLogObject } from '@ionic-native/call-log/ngx';
 
@@ -25,7 +26,12 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MaterialModule,
     MatSlideToggleModule
   ],
-  declarations: [CallLogPage,ToolbarTopComponent,ToolbarCustomerComponent,FilterComponent],
+  declarations: [
+    CallLogPage,
+    ToolbarTopComponent,
+    ToolbarCustomerComponent,
+    FilterComponent,
+    CalllogToolbarSearchComponent],
   // providers:[CallLog]
 })
 export class CallLogPageModule {}

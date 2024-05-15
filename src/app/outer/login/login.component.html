@@ -1,11 +1,13 @@
 <div class="container-fluid">
   <ion-card>
     <ion-card-content>
-      <div class="login-form">
-        <ion-row class="justify-content-center m-2">
-          <img class="logo" src="assets/images/logo.png" alt="">
-        </ion-row>
-  
+      <div style="height: 34vh;">
+        <img class="logo"  src="https://firstclassmentor.com/wp-content/uploads/2023/06/Firstclassmentor-final-logo-01-4.png"  alt="">
+       
+      </div>
+       
+      
+        <h3 class="text-center"  style="font-size: 20px;margin-bottom: 10px;">Login</h3>
         <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
           <div class="my-1" >Email/Phone Number</div>
           <ion-item>
@@ -57,11 +59,26 @@
           </div>
   
         
-              <ion-button type="submit"expand="block" >Login <ion-icon name="log-in" class="mx-1"></ion-icon></ion-button>
-           
+              <ion-button color="secondary" type="submit"expand="block" >Login <ion-icon name="log-in" class="mx-1"></ion-icon></ion-button>
+              <h6 class="" style="color:  #12416A ;">FOLLOW US </h6>
+              <div class="row d-flex justify-content-center">
+                <div class="col-1" title="Facebook">
+                    <a  href="https://www.facebook.com/firstclassmentor2009/?show_switched_toast=0&show_invite_to_follow=0&show_switched_tooltip=0&show_podcast_settings=0&show_community_review_changes=0&show_community_rollback=0&show_follower_visibility_disclosure=0" target="_blank"><ion-icon name="logo-facebook" class="follow-up-icon"></ion-icon></a>    
+                </div>
+                <div class="col-1" title="Instagram">
+                   <a href="https://www.instagram.com/firstclassmentor2009/" target="_blank"> <ion-icon name="logo-instagram" class="follow-up-icon"></ion-icon></a>
+                </div>
+                <div class="col-1" title="Linkedin">
+                   <a href="https://www.linkedin.com/company/firstclass-mentor/" target="_blank"><ion-icon name="logo-linkedin" class="follow-up-icon"></ion-icon></a> 
+                </div>
+                <!-- <div class="col-1" title="Twitter">
+                    <i class="bi bi-twitter-x"></i>
+                </div> -->
+               
+            </div>
   
         </form>
-      </div>
+     
     </ion-card-content>
   </ion-card>
   
