@@ -12,11 +12,11 @@
 .logo{
   height: auto;
   width: 300px;
-  margin-left: 20px;
+  transform: scale(0.5);
 }
-// .login-form {
-//   padding: 16px;
-// }
+.login-form {
+  padding: 16px;
+}
 
 // ion-input {
 //   margin-bottom: 10px;
@@ -29,7 +29,10 @@
 ion-card{
   box-shadow: none;
   color: #000000;
-  height: 95%;
+  height: 94%;
+  width: 96%;
+  padding-bottom: 4em;
+  margin: 6px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,8 +40,7 @@ ion-card{
     padding: 0;
   }
   ion-item{
-    font-size: 14px !important;
-    font-size: 14px !important;
+    font-size: 13px !important;
     --background: #f7f7f7;
     border-radius: 3px;
 
@@ -53,4 +55,17 @@ ion-card{
 }
 ion-button{
   margin-top: 30px;
+}
+.follow-up-icon{
+  color:var(--ion-color-secondary);
+  font-size: 17px;
+}
+.logo-tag{
+  margin: 0.5em auto 0;
+}
+.logo-fcm{
+  height: 34vh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }

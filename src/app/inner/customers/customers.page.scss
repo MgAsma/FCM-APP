@@ -1,0 +1,45 @@
+
+
+.allocate-card{
+    padding: 0;
+    margin: 7px 0;
+    border-radius: 0px;
+   
+    ion-row,ion-col{
+        padding: 0;
+        margin: 0;
+    }
+    ion-card-subtitle{
+    font-size: 9px;
+    margin-bottom: 3px;
+    }
+    ion-card-title{
+        font-size: 12px;
+    }
+    .phone-col{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+    .phone-icon{
+        border: 1px solid;
+        border-radius: 50%;
+        padding: 3px;
+
+    }
+    p{
+        font-size: 10px;
+        text-align: right;
+        padding-right: 5px;
+    }
+    
+}
+mat-paginator{
+    padding-bottom: 56px !important;
+}
+.refresh-text{
+    font-size: 10px;
+    text-align: center;
+    color:orange;
+}
+

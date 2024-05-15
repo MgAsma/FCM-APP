@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { LeadrecurringFollowupComponent } from '../leadrecurring-followup/leadrecurring-followup.component';
+import { AllocationEmittersService } from '../../service/allocation-emitters.service';
 
 
 @Component({
@@ -9,10 +10,21 @@ import { LeadrecurringFollowupComponent } from '../leadrecurring-followup/leadre
   styleUrls: ['./customer-details.component.scss'],
 })
 export class CustomerDetailsComponent  implements OnInit {
-
-  constructor(private modalController:ModalController) { }
-
-  ngOnInit() {}
+  data: any;
+ 
+  constructor(
+    private modalController:ModalController,
+    private allocate:AllocationEmittersService
+  ) { }
+  
+  ngOnInit() {
+    this.allocate.logMemberDetails.subscribe((res:any)=>{
+      if(res){
+        this.data = res
+      }
+    })
+    //console.log(this.data,"DETAILS PAGE")
+  }
   goBack(){
     window.history.back();
   }

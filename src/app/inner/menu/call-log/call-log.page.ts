@@ -213,7 +213,8 @@ export class CallLogPage implements OnInit {
   }
   onSubmit() {
     // let query;
-    if(this.dateForm.invalid && !this.dateForm.dirty){
+    // if(this.dateForm.invalid && !this.dateForm.dirty){
+      if(this.dateForm.invalid){
       this.dateForm.markAllAsTouched()
       this.api.showError('Select start date and end date')
     }else{
@@ -309,6 +310,7 @@ export class CallLogPage implements OnInit {
       this.allocate.searchBar.next(false)
       this.status = []
       this.counsellor_ids = []
+      this.searchTerm = '';
       this.ngOnInit();
      }
       
@@ -322,45 +324,51 @@ export class CallLogPage implements OnInit {
       component: GotoViewCustomerDetailsCallCustomerComponent,
       translucent: true,
       backdropDismiss: false,
+      componentProps: {
+        // Pass data to the component
+        data: event
+      }
       });
+      
+  
     return await popover.present();
   }
  async getCallLogs(query:any){
-    const readCallLogs= await this.androidPermissions.checkPermission(
-      this.androidPermissions.PERMISSION.READ_CALL_LOG
-    );
-    // const phoneStateResult= await this.androidPermissions.checkPermission(
-    //   this.androidPermissions.PERMISSION.READ_PHONE_STATE
+    // const readCallLogs= await this.androidPermissions.checkPermission(
+    //   this.androidPermissions.PERMISSION.READ_CALL_LOG
     // );
-    const readContacts = await this.androidPermissions.checkPermission(
-      this.androidPermissions.PERMISSION.READ_CONTACTS
-    );
-    if(!readContacts.hasPermission||!readCallLogs.hasPermission){
-      let  message:any='This app requires the following permissions to function properly : '
-      //  if(!phoneStateResult.hasPermission){
-      //  message+=' Read Phone Contacts'
-      //  }
-       if(!readContacts.hasPermission){
-         message+='/n Read Phone Contacts /n'
-       }
-       if(!readCallLogs.hasPermission){
-         message+='/n Access Call Logs /n'
-       }
-       message+='/n Would you like to grant these permissions?'
-        const confirmation = await this.warn(message);
+    // // const phoneStateResult= await this.androidPermissions.checkPermission(
+    // //   this.androidPermissions.PERMISSION.READ_PHONE_STATE
+    // // );
+    // const readContacts = await this.androidPermissions.checkPermission(
+    //   this.androidPermissions.PERMISSION.READ_CONTACTS
+    // );
+    // if(!readContacts.hasPermission||!readCallLogs.hasPermission){
+    //   let  message:any='This app requires the following permissions to function properly : '
+    //   //  if(!phoneStateResult.hasPermission){
+    //   //  message+=' Read Phone Contacts'
+    //   //  }
+    //    if(!readContacts.hasPermission){
+    //      message+='/n Read Phone Contacts /n'
+    //    }
+    //    if(!readCallLogs.hasPermission){
+    //      message+='/n Access Call Logs /n'
+    //    }
+    //    message+='/n Would you like to grant these permissions?'
+    //     const confirmation = await this.warn(message);
            
-             if (!confirmation) {
-               return;
-           }
+    //          if (!confirmation) {
+    //            return;
+    //        }
                
  
-       return
+    //    return
  
-     }
+    //  }
  
-          setTimeout(()=>{
+    //       setTimeout(()=>{
             this.baseService.getData(`${environment.call_logs}${query}`).subscribe((res:any)=>{
-              console.log(res,"call log response after given the permission");
+             // console.log(res,"call log response after given the permission");
               
               if(res){
                 this.callLogCards = []
@@ -373,7 +381,7 @@ export class CallLogPage implements OnInit {
               this.api.showError(error?.error.message || 'GENREAL')
             }))
 
-          },1000)
+      //    },1000)
    
   }
   
@@ -444,7 +452,18 @@ export class CallLogPage implements OnInit {
      if (this.counsellor_ids.length >0) {
       query += `&counsellor_ids=${this.counsellor_ids}`
     }
-    this.getCallLogs(query);
+    this.baseService.getData(`${environment.call_logs}${query}`).subscribe((res:any)=>{
+     
+      if(res){
+        this.callLogCards = []
+        this.data = []   
+       this.callLogCards = res.results;
+       this.data = new MatTableDataSource<any>(this.callLogCards);
+       this.totalNumberOfRecords = res.total_no_of_record 
+      }
+    },((error:any)=>{
+      this.api.showError(error?.error.message)
+    }))
   }
  
   

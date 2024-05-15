@@ -71,6 +71,7 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
   @ViewChild('paginator', { static: true }) paginator: MatPaginator;
   pageIndex: number;
   selectedLead: any;
+  refresh: any = false;
 
   constructor(
     private allocate: AllocationEmittersService,
@@ -121,9 +122,6 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
 
 
 
-  
-
-
   getContacts(name, value, operator) {
     if (value == "1") {
       this.listTyle = "Incoming Calls from yesterday";
@@ -154,22 +152,22 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        console.log(JSON.stringify(results[0]), "latest call log");
+        //console.log(JSON.stringify(results[0]), "latest call log");
         const calculateTime=Number(results[0].date)-Number(this.calledTime)
-        console.log(calculateTime,"calulatedTime");
+       // console.log(calculateTime,"calulatedTime");
         
         this.callDuration = results[0].duration;
-        console.log(JSON.stringify(this.callDuration), "latest call duration");
+        //console.log(JSON.stringify(this.callDuration), "latest call duration");
         if (this.callDuration > 0) {
           this.currentStatus = 1;
         } else {
           this.currentStatus = 3;
         }
 
-        console.log(
-          JSON.stringify(results),
-          "call log responseeeeeeeeeeeeeeeee"
-        );
+        // console.log(
+        //   JSON.stringify(results),
+        //   "call log responseeeeeeeeeeeeeeeee"
+        // );
         this.recordsFoundText = JSON.stringify(results);
         this.recordsFound = results; //JSON.stringify(results);
 
@@ -277,7 +275,7 @@ this.lead_id=id;
       this.leadPhoneNumber = number;
       this.callStartTime = new Date();
       this.selectedLead = item
-      console.log( this.callStartTime," this.callStartTime");
+     // console.log( this.callStartTime," this.callStartTime");
       
       let data = {
         user: this.user_id,
@@ -286,7 +284,7 @@ this.lead_id=id;
 
       this.postTLStatus(data);
       this.calledTime=new Date().getTime();
-      console.log(this.calledTime,"this.calledTime in allocation ");
+     // console.log(this.calledTime,"this.calledTime in allocation ");
       
       setTimeout(async () => {
     
@@ -300,7 +298,7 @@ this.lead_id=id;
         // this.initiateCallStatus();
       }, 100);
     } catch (error) {
-      console.log(error);
+     // console.log(error);
     }
 
   }
@@ -371,7 +369,9 @@ this.lead_id=id;
       }
     );
   }
- 
+  ionViewWillEnter(){
+   this.ngAfterViewInit() 
+  }
   ngAfterViewInit() {
     this.pageIndex = 0
     this.user_id = localStorage.getItem('user_id')
@@ -383,7 +383,7 @@ this.lead_id=id;
         this.searchBar = false;
       }
     });
-    
+    if(!this.refresh){
     let query: any;
     this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
       if(res){
@@ -393,13 +393,16 @@ this.lead_id=id;
     
     this.allocate.allocationStatus.subscribe(
       (res: any) => {
-      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&${this.currentPage}&page_size=${this.pageSize}`:`?user_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`
         if (res.length >0) {
           this.statusFilter = true
           query += `&status=${res}`;
         }
         if(this.counsellor_ids.length > 0){
           query += `&counsellor_id=${this.counsellor_ids}`;
+        }
+        if(this.searchTerm){
+          query +=`&key=${this.searchTerm}`
         }
         this.leadCards = []
         this.data = []
@@ -414,9 +417,8 @@ this.lead_id=id;
 
             
             ).map((ele:any)=>ele.user_data.mobile_number)
-            console.log(this.phoneNumbers);
+           
             
-            this.totalNumberOfRecords = res.total_no_of_record
           }
         }, (error: any) => {
           this.api.showError(error.error.message);
@@ -427,12 +429,49 @@ this.lead_id=id;
         this.api.showError(error.error.message);
       }
     );
-   
+  }
     this._addLeadEmitter.triggerGet$.subscribe((res:any) => {
-        let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
-        this.leadCards = [];
-        this.data = [];
-        this.totalNumberOfRecords = []
+      let query: any;
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`:`?user_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`
+     
+        this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
+          if(res){
+            this.counsellor_ids = res
+          } 
+        });
+        
+        this.allocate.allocationStatus.subscribe(
+          (res: any) => {
+         
+            if (res.length >0) {
+              this.statusFilter = true
+              query += `&status=${res}`;
+            }
+            if(this.counsellor_ids.length > 0){
+              query += `&counsellor_id=${this.counsellor_ids}`;
+            }
+            if(this.searchTerm){
+              query +=`&key=${this.searchTerm}`
+            }
+            // this.leadCards = []
+            // this.data = []
+            this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
+              if (res.results) {
+                this.leadCards = res.results.data;
+                this.data = new MatTableDataSource<any>(this.leadCards);
+                this.totalNumberOfRecords = res.total_no_of_record
+              }
+            }, (error: any) => {
+              this.api.showError(error.error.message);
+            });
+            
+          },
+          (error: any) => {
+            this.api.showError(error.error.message);
+          }
+        );
+      
+      
         this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
           if (res.results) {
          
@@ -451,21 +490,22 @@ this.lead_id=id;
  
   handleRefresh(event: any) {
     setTimeout(() => {
+      this.refresh = true;
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = 0
       this.allocate.allocationStatus.next('')
       this._addLeadEmitter.selectedCounsellor.next([])
       this.statusFilter = false;
+      this.searchTerm = '';
       this.allocate.searchBar.next(false)
-      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:`?page=1&page_size=10`
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10`:this.user_role == 'SUPERADMIN' ||  this.user_role == 'SUPER ADMIN'? `?allocation_type=allocation&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10`
       this.getLeadlist(query);
       event.target.complete();
     }, 2000);
   }
  
   getLeadlist(query:any){
-   
    this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
      if (res.results) {
       this.leadCards = [];
@@ -486,9 +526,9 @@ this.lead_id=id;
       this.currentPage = event.pageIndex + 1;
       this.pageSize = event.pageSize;
     }
-   
-    let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:
-    `?page=${this.currentPage}&page_size=${this.pageSize}`
+    let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`:
+    this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`:`?user_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`
+    
     if (this.searchTerm) {
       query += `&key=${this.searchTerm}`;
     }
@@ -524,8 +564,9 @@ this.lead_id=id;
   
 
   getCounselor() {
+    let query = this.user_role === "COUNSELLOR" || this.user_role === "COUNSELOR"  || this.user_role === "ADMIN"  ?`?user_id=${this.user_id}&role_name=counsellor` : `?role_name=counsellor`
     this._baseService
-      .getData(`${environment._user}?role_name=counsellor`)
+      .getData(`${environment._user}${query}`)
       .subscribe(
         (res: any) => {
           if (res.results) {
@@ -543,9 +584,10 @@ this.lead_id=id;
     if(event){
       this.counsellor_ids = event
       this._addLeadEmitter.selectedCounsellor.next(event)
+     
         let params = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? 
-        `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_id=${event}`:
-        `?page=1&page_size=10&counsellor_id=${event}`
+        `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10&counsellor_id=${event}`:
+        this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&page=1&page_size=10&counsellor_id=${event}`:`?user_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10&counsellor_id=${event}`
         if(this.statusFilter){
           this.allocate.allocationStatus.subscribe(
            (res: any) => {
@@ -577,18 +619,9 @@ this.lead_id=id;
     this.searchTerm = event
     this.leadCards = []
     this.data = []
-    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&page=1&page_size=10&key=${event}`:
-    `?page=1&page_size=10&key=${event}`
-    if(this.statusFilter){
-     this.allocate.callLogStatus.subscribe(
-      (res: any) => {
-        if (res) {
-          query += `&status=${res}`;
-        }
-      }
-    );
-    }
-   
+    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10&key=${event}`
+    : this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=allocation&page=1&page_size=10&key=${event}`:`?user_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10&key=${event}`
+    
     if(this.statusFilter){
       this.allocate.allocationStatus.subscribe(
        (res: any) => {

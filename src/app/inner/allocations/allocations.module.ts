@@ -12,6 +12,7 @@ import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
 import { FilterComponent } from './filter/filter.component';
 import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.component';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { CounsellorSearchBarComponent } from './toolbar-customer/counsellor-search-bar/counsellor-search-bar.component';
 
 @NgModule({
   imports: [
@@ -25,7 +26,9 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
     AllocationsPage,
     ToolbarTopComponent,
     ToolbarCustomerComponent,
-    FilterComponent],
+    FilterComponent,
+    CounsellorSearchBarComponent
+  ],
     providers:[CallNumber,CallLog,Device,AndroidPermissions]
   
 })

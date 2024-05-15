@@ -17,7 +17,7 @@ import { DatePipe } from '@angular/common';
 import { RouteReuseStrategy } from '@angular/router';
 import { RecFollowupListPage } from './shared-modules/rec-followup-list/rec-followup-list.page';
 import { MaterialModule } from './shared-modules/material/material/material.module';
-
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 // import {
 //   NgxUiLoaderHttpModule, NgxUiLoaderModule,
@@ -58,8 +58,10 @@ import { CallLog } from '@ionic-native/call-log/ngx';
       preventDuplicates: true,
       // closeButton:true,
     }),
+    NgMultiSelectDropDownModule
   ],exports:[
-    MaterialModule
+    MaterialModule,
+    NgMultiSelectDropDownModule
   ],
   declarations: [AppComponent],
   providers: [AndroidPermissions,CallLog,

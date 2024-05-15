@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PopoverController } from '@ionic/angular';
 import { ApiService } from '../../../service/api/api.service';
+import { AddLeadEmitterService } from '../../../service/add-lead-emitter.service';
 
 
 @Component({
@@ -14,7 +15,12 @@ export class CheckoutComponent  implements OnInit {
   logoutForm!:FormGroup;
   id:any;
 
-  constructor(private popoverController:PopoverController,private api:ApiService,private _fb:FormBuilder,private router:Router) { }
+  constructor(
+    private popoverController:PopoverController,
+    private api:ApiService,
+    private _fb:FormBuilder,
+    private router:Router,
+    private _addLeadEmitter:AddLeadEmitterService) { }
 
   ngOnInit(): void {
     this.id=localStorage.getItem('user_id')
@@ -42,6 +48,13 @@ export class CheckoutComponent  implements OnInit {
         this.close()
       }
       else{
+        this._addLeadEmitter.triggerGet$.subscribe((res:any) => {
+          this.logOut()
+        })
+        this.logOut()
+      }
+      }
+      logOut(){
         this.api.showLoading()
         this.api.logout(this.logoutForm.value).subscribe(
         (resp:any)=>{
@@ -61,6 +74,5 @@ export class CheckoutComponent  implements OnInit {
           this.router.navigate(['../outer'])
         }
         )
-      }
       }
 }

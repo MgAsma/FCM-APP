@@ -17,26 +17,26 @@ export class CallPermissionsService {
   initiateCallStatus(callBack:any) {
     
     const that = this;
-    console.log(PhoneCallTrap, "PhoneCallTrap");
+   // console.log(PhoneCallTrap, "PhoneCallTrap");
 
     PhoneCallTrap?.onCall(function (state: string) {
     that.isCallInitiationCalled=true
      
 
-      console.log("CHANGE STATE: " + state);
+    //  console.log("CHANGE STATE: " + state);
       // alert(state);
 
       switch (state) {
         case "RINGING":
           // alert("Phone is ringing");
-          console.log("Phone is ringing");
+        //  console.log("Phone is ringing");
           break;
         case "OFFHOOK":
           that.isPhoneHalfHook = true;
        
 
           // alert("Phone is off-hook");
-          console.log("Phone is off-hook");
+        //  console.log("Phone is off-hook");
           break;
 
         case "IDLE":
@@ -52,7 +52,7 @@ export class CallPermissionsService {
           that.isPhoneHalfHook=false;
 
           // alert("Phone is idle");
-          console.log("Phone is idle");
+         // console.log("Phone is idle");
        
 
           break;

@@ -6,7 +6,8 @@
 
 }
 #close{
-    color:orange;
+    color:var(--ion-color-secondary);
+    text-align: right;
   }
 
     .scroll-x-sort{
@@ -48,11 +49,9 @@
 }
 ion-chip ion-label{
   font-size: 12px;
-  font-family: 'Roboto' !important;
 }
 .selected-chip{
-    background-color: orange;
-    color:white;
+    background-color: var(--ion-color-primary);
 }
 
   .assign-to-class{

@@ -15,6 +15,7 @@ export class FilterComponent  implements OnInit {
   sortingCards: SortingCard[] = sortingCards;
   
   selectedStatus: any = [] ;
+  submitted: boolean = false;
   constructor(
     private modalController:ModalController,
     private _baseService:BaseServiceService,
@@ -83,11 +84,23 @@ export class FilterComponent  implements OnInit {
     this.allocationEmit.tlsStatus.next(this.selectedStatus)
   }
   closeModel(){
-    this.allocationEmit.tlsStatus.next(this.selectedStatus)
-    this.modalController.dismiss();
+   
+    let selectedStatus = [];
+    this.allocationEmit.tlsStatus.subscribe((res: any) => {
+     
+      this.data.forEach((chip: any) => {
+        chip.selected = false;
+      });
+    
+      if (res.length > 0 && this.data.length > 0) {
+        selectedStatus = res
+      }
+    });
+    this.modalController.dismiss(selectedStatus)
   }
   onSubmit(){
     if(this.selectedStatus.length >0){
+      this.submitted = true
       this.allocationEmit.tlsStatus.next(this.selectedStatus)
       this.modalController.dismiss();
     }else{
