@@ -29,7 +29,10 @@ export class SearchBarComponent  implements OnInit {
   ngOnInit() {}
   pageReset(){
     this.allocation.searchBar.next(false)
-     this.router.navigate([this.router.url])
+    this.allocation.callLogSearchBar.next(false)
+    this.allocation.tlsSearchBar.next(false)
+    this.allocation.customerSearchBar.next(false)
+     //this.router.navigate([this.router.url])
      this.close.emit(true)
      this.search.emit('')
   }

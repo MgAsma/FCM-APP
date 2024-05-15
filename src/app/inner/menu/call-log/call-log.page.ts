@@ -189,7 +189,7 @@ export class CallLogPage implements OnInit {
     })
   }
    setupSearchBarSubscription() {
-    this.allocate.searchBar.subscribe((res) => {
+    this.allocate.callLogSearchBar.subscribe((res) => {
       this.searchBar = res === true
     });
    

@@ -1,21 +1,19 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-
-
-import { AlertController, IonModal, ModalController } from '@ionic/angular';
-import { SortingCard, arrayOfObjects, sortingCards } from '../../../shared-modules/sample-data';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { IonModal, ModalController, AlertController } from '@ionic/angular';
 import { AllocationEmittersService } from '../../../service/allocation-emitters.service';
+import { CallPermissionsService } from '../../../service/api/call-permissions.service';
+import { SortingCard, sortingCards, arrayOfObjects } from '../../../shared-modules/sample-data';
 import { FilterComponent } from '../filter/filter.component';
 import { ToolbarCustomerComponent } from '../toolbar-customer/toolbar-customer.component';
-import { CallPermissionsService } from '../../../service/api/call-permissions.service';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-
 
 @Component({
-  selector: 'app-toolbar-top',
-  templateUrl: './toolbar-top.component.html',
-  styleUrls: ['./toolbar-top.component.scss'],
+  selector: 'app-allocation-toolbar-top',
+  templateUrl: './allocation-toolbar-top.component.html',
+  styleUrls: ['./allocation-toolbar-top.component.scss'],
 })
-export class ToolbarTopComponent  implements OnInit {
+export class AllocationToolbarTopComponent implements OnInit {
+
   searchBar = false
   @ViewChild('modal')modal!:IonModal
   @Input()data:any = [];
@@ -55,7 +53,6 @@ export class ToolbarTopComponent  implements OnInit {
     modal.onDidDismiss().then((dataReturned) => {
       if (dataReturned !== null) {
         let uniqueArray = Array.from(new Set(dataReturned.data));
-        // //console.log('Modal data:', uniqueArray);
         this.people.emit(uniqueArray) 
       }
 
@@ -83,19 +80,8 @@ evValue:boolean;
     let prevVal=this.isToggled;
     this.enbaleAutoDiallingWarning(prevVal);
     this.isToggled=event.source.checked;
-    console.log(event);
     
-    console.log(this.evValue);
-    
-    
-    
- 
   }
-
-
-  
-  
-  
 
 
   async enbaleAutoDiallingWarning(ischecked:any) {
@@ -131,7 +117,6 @@ evValue:boolean;
       await confirm.present();
     });
   }
-
 
 
 

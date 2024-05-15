@@ -8,11 +8,11 @@ import { CallNumber } from '@ionic-native/call-number/ngx';
 import { MaterialModule } from '../../shared-modules/material/material/material.module';
 import { CallLog } from '@ionic-native/call-log/ngx';
 import { Device } from '@ionic-native/device/ngx'
-import { ToolbarTopComponent } from './toolbar-top/toolbar-top.component';
 import { FilterComponent } from './filter/filter.component';
 import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.component';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { CounsellorSearchBarComponent } from './toolbar-customer/counsellor-search-bar/counsellor-search-bar.component';
+import { AllocationToolbarTopComponent } from './allocation-toolbar-top/allocation-toolbar-top.component';
 
 @NgModule({
   imports: [
@@ -24,10 +24,10 @@ import { CounsellorSearchBarComponent } from './toolbar-customer/counsellor-sear
   ],
   declarations: [
     AllocationsPage,
-    ToolbarTopComponent,
     ToolbarCustomerComponent,
     FilterComponent,
-    CounsellorSearchBarComponent
+    CounsellorSearchBarComponent,
+    AllocationToolbarTopComponent
   ],
     providers:[CallNumber,CallLog,Device,AndroidPermissions]
   

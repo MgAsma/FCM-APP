@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { ToolbarTopComponent } from './toolbar-top.component';
+import { TlsToolbarTopComponent } from './tls-toolbar-top.component';
 
-describe('ToolbarTopComponent', () => {
-  let component: ToolbarTopComponent;
-  let fixture: ComponentFixture<ToolbarTopComponent>;
+describe('TlsToolbarTopComponent', () => {
+  let component: TlsToolbarTopComponent;
+  let fixture: ComponentFixture<TlsToolbarTopComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ToolbarTopComponent ],
+      declarations: [ TlsToolbarTopComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ToolbarTopComponent);
+    fixture = TestBed.createComponent(TlsToolbarTopComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

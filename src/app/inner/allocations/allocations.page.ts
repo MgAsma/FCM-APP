@@ -92,15 +92,19 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
 
     this.counsellor_id = localStorage.getItem("user_id");
    
+    setTimeout(() => {
+      this.callPermissionService?.dataSubject.subscribe((res:any)=>{
+        console.log(res,"res from toggle");
+        this.isToggledEnabled=res;
+        
+      }) 
+      this.callPermissionService?.initiateCallStatus(this.getContacktAndPostHistory.bind(this));
 
-    this.callPermissionService.dataSubject.subscribe((res:any)=>{
-      console.log(res,"res from toggle");
-      this.isToggledEnabled=res;
-      
-    })
+    }, 1000);
+    
 
-    this.callPermissionService?.initiateCallStatus(this.getContacktAndPostHistory.bind(this));
 
+  
     
 
    
@@ -150,22 +154,16 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        //console.log(JSON.stringify(results[0]), "latest call log");
         const calculateTime=Number(results[0].date)-Number(this.calledTime)
-       // console.log(calculateTime,"calulatedTime");
-        
+       
         this.callDuration = results[0].duration;
-        //console.log(JSON.stringify(this.callDuration), "latest call duration");
         if (this.callDuration > 0) {
           this.currentStatus = 1;
         } else {
           this.currentStatus = 3;
         }
 
-        // console.log(
-        //   JSON.stringify(results),
-        //   "call log responseeeeeeeeeeeeeeeee"
-        // );
+        
         this.recordsFoundText = JSON.stringify(results);
         this.recordsFound = results; //JSON.stringify(results);
 
@@ -194,18 +192,12 @@ calledTime:any;
 
   }
 
-
- 
   
-leadItem:any;
-lead_id:any;
+  leadItem:any;
+  lead_id:any;
 
 
   async callContact(number: string, id: any,item,index:any) {
-
-
-
-console.log(index,"phone number index");
 
     const phoneStateResult= await this.androidPermissions.checkPermission(
       this.androidPermissions.PERMISSION.READ_PHONE_STATE
@@ -247,10 +239,10 @@ console.log(index,"phone number index");
 
     }
     if(this.callPermissionService.isCallInitiationCalled===false)
-{
-this.api.showToast('Please restart your application!',5000);
-return
-}
+    {
+    this.api.showToast('Please restart your application!',5000);
+    return
+    }
 
     
   this.recursiveCall(number,id,item,index)
@@ -265,9 +257,9 @@ return
     if(index>=this.phoneNumbers.length){
       return
     }
-this.phoneNumberIndex=index;
-this.leadItem=item;
-this.lead_id=id;
+    this.phoneNumberIndex=index;
+    this.leadItem=item;
+    this.lead_id=id;
     try {
       this.leadId = id;
       this.leadPhoneNumber = number;

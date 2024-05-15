@@ -318,7 +318,7 @@ return
     this.pageIndex = 0
     this.user_id = localStorage.getItem('user_id')
     this.getStatus();
-    this._customer.searchBar.subscribe((res) => {
+    this._customer.customerSearchBar.subscribe((res) => {
       if (res === true) {
         this.searchBar = true;
       } else {
