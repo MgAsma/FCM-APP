@@ -64,6 +64,8 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
   callStartTime!: Date;
   user_role: string;
   statusFilter: boolean = false;
+  phoneNumbers:any=[];
+  isToggledEnabled:boolean=false;
  
   // allPaginator: any;
   @ViewChild('paginator', { static: true }) paginator: MatPaginator;
@@ -88,13 +90,28 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
 
     this.counsellor_id = localStorage.getItem("user_id");
+   
+
+    this.callPermissionService.dataSubject.subscribe((res:any)=>{
+      console.log(res,"res from toggle");
+      this.isToggledEnabled=res;
+      
+    })
+
+    this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this));
+
+    
 
    
   }
 
   ngOnInit(){
    
-this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this))
+    this.callPermissionService.dataUpdated.subscribe((res:any)=>{
+      console.log(res,"res from toolbar");
+      
+    })
+
     // this.initiateCallStatus();
    
   }
@@ -157,7 +174,10 @@ this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bin
 
         if(calculateTime>0){
           this.postCallHistory();
+        
+          
         }
+       
         
       })
       .catch((e) => {
@@ -176,9 +196,18 @@ calledTime:any;
 
   }
 
-  async callContact(number: string, id: any,item) {
+
+ 
+  
+leadItem:any;
+lead_id:any;
 
 
+  async callContact(number: string, id: any,item,index:any) {
+
+
+
+console.log(index,"phone number index");
 
     const phoneStateResult= await this.androidPermissions.checkPermission(
       this.androidPermissions.PERMISSION.READ_PHONE_STATE
@@ -226,6 +255,21 @@ return
 }
 
     
+  this.recursiveCall(number,id,item,index)
+
+
+  }
+
+  phoneNumberIndex:any
+
+  recursiveCall(number: string, id: any,item,index:any){
+    
+    if(index>=this.phoneNumbers.length){
+      return
+    }
+this.phoneNumberIndex=index;
+this.leadItem=item;
+this.lead_id=id;
     try {
       this.leadId = id;
       this.leadPhoneNumber = number;
@@ -256,8 +300,8 @@ return
     } catch (error) {
       console.log(error);
     }
-  }
 
+  }
 
 
 
@@ -295,7 +339,17 @@ return
           user: this.user_id,
           status: 3
         };
-        this.postTLStatus(tlsData)
+        this.postTLStatus(tlsData);
+        if(this.isToggledEnabled==true){
+          setTimeout(()=>{
+            let allocateItem:any=this.data.data[this.phoneNumberIndex+1];
+            this.recursiveCall(this.phoneNumbers[this.phoneNumberIndex+1],allocateItem.user_data.id,allocateItem,this.phoneNumberIndex+1)
+          },5000)
+
+        }
+
+        
+      
       },
       (error: any) => {
         this.api.showError(error.error.message);
@@ -354,6 +408,15 @@ return
           if (res.results) {
             this.leadCards = res.results;
             this.data = new MatTableDataSource<any>(this.leadCards);
+            console.log(res.results,"responsssssssssssssss");
+            
+            this.phoneNumbers= res.results.filter((ele:any) =>(ele.user_data.mobile_number)
+              
+
+            
+            ).map((ele:any)=>ele.user_data.mobile_number)
+            console.log(this.phoneNumbers);
+            
             this.totalNumberOfRecords = res.total_no_of_record
           }
         }, (error: any) => {
@@ -632,6 +695,11 @@ return
       await confirm.present();
     });
   }
+
+
+
+
+
 
  
 }

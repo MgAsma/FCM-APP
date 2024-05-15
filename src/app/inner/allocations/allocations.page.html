@@ -127,7 +127,7 @@
     refresh.
   </p>
   <ion-row>
-    <ion-col size="12" *ngFor="let allocate of data.data">
+    <ion-col size="12" *ngFor="let allocate of data.data;let i=index">
       <ion-card class="allocate-card">
         <ion-card-content
           [ngStyle]="allocate.color ? {'border-left': '3px solid ' + allocate.color} : {'border-left':'3px solid black'}"
@@ -169,7 +169,7 @@
               <ion-icon
                 name="call"
                 class="phone-icon"
-                (click)="callContact(allocate?.user_data.mobile_number,allocate?.user_data.id,allocate);"
+                (click)="callContact(allocate?.user_data.mobile_number,allocate?.user_data.id,allocate,i);"
               ></ion-icon>
             </ion-col>
           </ion-row>

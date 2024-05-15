@@ -3,7 +3,8 @@
     <a><ion-icon name="search" (click)="enableSearchOption()"></ion-icon></a>
   </ion-col>
   <ion-col>
-    <ion-icon name="call"></ion-icon>
+    <!-- <ion-icon name="call"></ion-icon> -->
+    <a><mat-slide-toggle [checked]="isToggled" (change)="setValue1($event)" title="Autodialer"></mat-slide-toggle></a>
   </ion-col>
   <ion-col>
     <ion-icon name="options" id="open-custom-dialog" (click)="openFilter()"></ion-icon>

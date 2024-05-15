@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 declare var PhoneCallTrap: any;
 
 @Injectable({
@@ -7,9 +8,12 @@ declare var PhoneCallTrap: any;
 export class CallPermissionsService {
   isPhoneHalfHook: boolean = false;
   isPhoneIdle: boolean = false;
-  isCallInitiationCalled:boolean=false
+  isCallInitiationCalled:boolean=false;
+
 
   constructor() { }
+
+ 
   initiateCallStatus(callBack:any) {
     
     const that = this;
@@ -55,6 +59,13 @@ export class CallPermissionsService {
       }
     });
   }
+
+
+  dataUpdated = new EventEmitter<any>(false);
+dataSubject = new BehaviorSubject<any>(false);
+  // public data$ = this.dataSubject.asObservable();
+
+
 
 }
 
