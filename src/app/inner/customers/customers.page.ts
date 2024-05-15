@@ -368,7 +368,7 @@ return
     
     this._counsellorEmitter.triggerGet$.subscribe((res:any) => {
       let query: any;
-      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
+      query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10`:`?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10`
      
         this._counsellorEmitter.customerCounsellor.subscribe((res) => {
           if(res){
@@ -435,7 +435,7 @@ return
       this.statusFilter = false;
       this.searchTerm = '';
       this._customer.searchBar.next(false)
-      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' ||  this.user_role == 'SUPER ADMIN'? `?allocation_type=customers&page=1&page_size=10`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`:this.user_role == 'SUPERADMIN' ||  this.user_role == 'SUPER ADMIN'? `?allocation_type=customers&page=1&page_size=10`:`?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10`
       this.getLeadlist(query);
       event.target.complete();
     }, 2000);
@@ -464,7 +464,7 @@ return
       this.pageSize = event.pageSize;
     }
     let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`:
-    this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`:`?user_id=${this.user_id}&allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`
+    this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`:`?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`
     
     if (this.searchTerm) {
       query += `&key=${this.searchTerm}`;
@@ -523,7 +523,7 @@ return
      
         let params = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? 
         `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`:
-        this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`
+        this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`:`?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`
         if(this.statusFilter){
           this._customer.customerStatus.subscribe(
            (res: any) => {
@@ -556,7 +556,7 @@ return
     this.leadCards = []
     this.data = []
     let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&key=${event}`
-    : this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10&key=${event}`:`?user_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&key=${event}`
+    : this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?allocation_type=customers&page=1&page_size=10&key=${event}`:`?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10&key=${event}`
     
    
     if(this.statusFilter){

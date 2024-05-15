@@ -87,7 +87,7 @@
     <ion-col size="12" *ngFor="let allocate of data.data;let i=index">
       <ion-card class="allocate-card">
         <ion-card-content
-          [ngStyle]="allocate.color ? {'border-left': '3px solid ' + allocate.color} : {'border-left':'3px solid black'}"
+          [ngStyle]="allocate.color ? {'border-left': '3px solid ' + allocate.color} : {'border-left':'3px solid rgb(18, 65, 106)'}"
         >
           <ion-row>
             <ion-col>
@@ -97,12 +97,17 @@
                     >{{allocate.lead_list_status_name ||
                     'NA'}}</ion-card-subtitle
                   >
+
+                  
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col size="12">
                   <ion-card-title
                   (click)="editLead(allocate)">{{(allocate.user_data.first_name | titlecase ) || 'NA'}}</ion-card-title
+                  >
+                  <ion-card-title
+                  (click)="editLead(allocate)">{{(allocate.user_data.mobile_number) || 'NA'}}</ion-card-title
                   >
                 </ion-col>
               </ion-row>

@@ -7,6 +7,7 @@ import { BaseServiceService } from '../../service/base-service.service';
 import { CommonServiceService } from '../../service/common-service.service';
 import { AddLeadEmitterService } from '../../service/add-lead-emitter.service';
 import { DatePipe } from '@angular/common';
+import { CallPermissionsService } from '../../service/api/call-permissions.service';
 @Component({
   selector: 'app-edit-lead',
   templateUrl: './edit-lead.page.html',
@@ -61,7 +62,8 @@ export class EditLeadPage implements OnInit {
     private _commonService:CommonServiceService,
     private _datePipe:DatePipe,
     private modalController:ModalController,
-    private _addLeadEmitter:AddLeadEmitterService
+    private _addLeadEmitter:AddLeadEmitterService,
+    private callPermissionService:CallPermissionsService
    ) {
     let dob = new Date()
     let minimum = new Date('1900-01-01')
@@ -132,7 +134,7 @@ export class EditLeadPage implements OnInit {
           this.selectedCountry = lead.country
           this.selectedCity = lead.city
           this.selectedState = lead.state
-          alert(lead?.referred_to)
+          // alert(lead?.referred_to)
           this.editLead.patchValue({
             firstName: lead.user_data.first_name,
             mobile: lead.user_data.mobile_number,
@@ -585,7 +587,8 @@ export class EditLeadPage implements OnInit {
       this._baseService.updateData(`${environment.lead_list}/${this._inputData.user_data.id}/`,data).subscribe((res:any)=>{
         if(res){
           this.addLead.emit('ADD')
-          this.api.showSuccess(res.message)
+          this.api.showSuccess(res.message);
+          this.callPermissionService.dataSubject.next(true)
           this._addLeadEmitter.triggerGet();
           this.initForm()
           this.modalController.dismiss()

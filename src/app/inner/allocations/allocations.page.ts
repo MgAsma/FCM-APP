@@ -94,7 +94,7 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
    
 
     this.callPermissionService.dataSubject.subscribe((res:any)=>{
-      console.log(res,"res from toggle");
+      // console.log(res,"res from toggle");
       this.isToggledEnabled=res;
       
     })
@@ -109,9 +109,22 @@ export class AllocationsPage implements AfterViewInit,OnInit  {
   ngOnInit(){
     this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this));
     this.callPermissionService.dataUpdated.subscribe((res:any)=>{
-      console.log(res,"res from toolbar");
+      // console.log(res,"res from toolbar");
       
     })
+    this.callPermissionService.dataSubject.subscribe((res:any)=>{
+      if(res==true){
+        if(this.isToggledEnabled==true){
+          setTimeout(()=>{
+            let allocateItem:any=this.data.data[this.phoneNumberIndex+1];
+            this.recursiveCall(this.phoneNumbers[this.phoneNumberIndex+1],allocateItem.user_data.id,allocateItem,this.phoneNumberIndex+1)
+           
+          },5000)
+    
+        }
+      }
+    })
+   
 
     // this.initiateCallStatus();
 
@@ -340,13 +353,7 @@ this.lead_id=id;
           status: 3
         };
         this.postTLStatus(tlsData);
-        if(this.isToggledEnabled==true){
-          setTimeout(()=>{
-            let allocateItem:any=this.data.data[this.phoneNumberIndex+1];
-            this.recursiveCall(this.phoneNumbers[this.phoneNumberIndex+1],allocateItem.user_data.id,allocateItem,this.phoneNumberIndex+1)
-          },5000)
-
-        }
+      
 
         
       
@@ -410,7 +417,8 @@ this.lead_id=id;
           if (res.results) {
             this.leadCards = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
-            console.log(res,"responsssssssssssssss");
+            this.totalNumberOfRecords = res.total_no_of_record
+            // console.log(res,"responsssssssssssssss");
             
             this.phoneNumbers= res.results?.data.filter((ele:any) =>(ele.user_data.mobile_number)
               
