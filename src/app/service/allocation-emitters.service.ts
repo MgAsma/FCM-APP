@@ -9,7 +9,7 @@ export class AllocationEmittersService {
   customerSearchBar = new BehaviorSubject(false)
   callLogSearchBar = new BehaviorSubject(false)
   tlsSearchBar = new BehaviorSubject(false)
-  allocationStatus = new BehaviorSubject('')
+  allocationStatus = new BehaviorSubject([])
   callLogStatus = new BehaviorSubject([])
   tlsStatus = new BehaviorSubject('')
   callhistoryList = new BehaviorSubject([])

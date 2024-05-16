@@ -485,7 +485,7 @@ calledTime:any;
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = 0
-      this.allocate.allocationStatus.next('')
+      this.allocate.allocationStatus.next([])
       this._addLeadEmitter.selectedCounsellor.next([])
       this.statusFilter = false;
       this.searchTerm = '';
