@@ -48,11 +48,13 @@ export class AddLeadPage implements OnInit {
   type = 'text'
   min:string;
   levelofProgram: any = [];
-  dropdownSettings: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
   selectedCountry: any;
   selectedState: any;
   selectedCity: any;
   user_role: string;
+  dropdownSettings1: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
+  dropdownSettings2: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
+  dropdownSettings3: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
  
   constructor(
     private fb: FormBuilder,
@@ -79,7 +81,25 @@ export class AddLeadPage implements OnInit {
   }
   ngOnInit(): void {
     this.user_id = localStorage.getItem('user_id')
-    this.dropdownSettings = {
+    this.dropdownSettings1 = {
+      singleSelection: true,
+      idField: "id",
+      textField: "name",
+      selectAllText: "Select All",
+      unSelectAllText: "UnSelect All",
+      itemsShowLimit: 1,
+      allowSearchFilter: true
+    };
+    this.dropdownSettings2 = {
+      singleSelection: true,
+      idField: "id",
+      textField: "name",
+      selectAllText: "Select All",
+      unSelectAllText: "UnSelect All",
+      itemsShowLimit: 1,
+      allowSearchFilter: true
+    };
+    this.dropdownSettings3 = {
       singleSelection: true,
       idField: "id",
       textField: "name",

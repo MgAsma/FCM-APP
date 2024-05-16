@@ -1,6 +1,6 @@
-<ion-row>
+<ion-row class="d-flex justify-content-center align-items-center px-1">
   <ion-col>
-    <a><ion-icon name="search" (click)="enableSearchOption()"></ion-icon></a>
+    <a><ion-icon name="search" class="search-icon"  (click)="enableSearchOption()"></ion-icon></a>
   </ion-col>
   <ion-col>
     <a><mat-slide-toggle [checked]="isToggled" (change)="setValue1($event)" title="Autodialer"></mat-slide-toggle></a>
@@ -12,7 +12,7 @@
   </ion-col>
   <ion-col   class="position-rel"*ngIf="user_role !== 'counsellor'" >
     <ion-badge color="danger" class="badge">{{ counsellor_ids?.length || '0' }}</ion-badge>
-    <ion-icon name="people" (click)="openModal()" style="font-size: 19px;"></ion-icon>
+    <ion-icon name="people" (click)="openModal()" ></ion-icon>
   </ion-col>
   
 </ion-row>

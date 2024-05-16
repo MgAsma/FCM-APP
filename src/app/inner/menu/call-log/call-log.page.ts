@@ -307,7 +307,7 @@ export class CallLogPage implements OnInit {
       this.dateForm.reset();
       this.allocate.callLogStatus.next([]);
       this.addEmiter.callLogCounsellor.next([]);
-      this.allocate.searchBar.next(false)
+      this.allocate.callLogSearchBar.next(false)
       this.status = []
       this.counsellor_ids = []
       this.searchTerm = '';

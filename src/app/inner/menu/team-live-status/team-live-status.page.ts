@@ -233,7 +233,7 @@ export class TeamLiveStatusPage implements OnInit {
       this.data = [];
       this.allocate.tlsStatus.next("");
       this.addEmit.tlsCounsellor.next([]);
-      this.allocate.searchBar.next(false);
+      this.allocate.tlsSearchBar.next(false);
       //let params = `page=1&page_size=10`
       let query =
         this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"

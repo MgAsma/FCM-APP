@@ -118,7 +118,7 @@
                    <ion-label position="stacked">Country Name</ion-label>
                    <div class="country-code">
                     
-                   <ng-multiselect-dropdown [placeholder]="'Select Country'"  [settings]="dropdownSettings"
+                   <ng-multiselect-dropdown [placeholder]="'Select Country'"  [settings]="dropdownSettings1"
                    [data]="countryOptions" 
                    [formControl]="editLead.get('countryId')" (onSelect)="onTagSelect($event,'countryId')" (onDeSelect)="onItemDeSelect($event,'countryId')">
                    </ng-multiselect-dropdown> 
@@ -129,7 +129,7 @@
                   <ion-label position="stacked">State</ion-label>
                   <div class="country-code">
                   
-                    <ng-multiselect-dropdown [placeholder]="'Select The State'"  [settings]="dropdownSettings"
+                    <ng-multiselect-dropdown [placeholder]="'Select The State'"  [settings]="dropdownSettings2"
                    [data]="stateOptions" 
                    [formControl]="editLead.get('state')" (onSelect)="onTagSelect($event,'state')" (onDeSelect)="onItemDeSelect($event,'state')">
                    </ng-multiselect-dropdown> 
@@ -138,7 +138,7 @@
                  <!-- City Name -->
                  <ion-label position="stacked">City Name</ion-label>
                  <div class="country-code">
-                   <ng-multiselect-dropdown [placeholder]="'Select The City Name'"  [settings]="dropdownSettings"
+                   <ng-multiselect-dropdown [placeholder]="'Select The City Name'"  [settings]="dropdownSettings3"
                    [data]="cityOptions" 
                    [formControl]="editLead.get('cityName')" (onSelect)="onTagSelect($event,'cityName')" (onDeSelect)="onItemDeSelect($event,'cityName')">
                    </ng-multiselect-dropdown> 

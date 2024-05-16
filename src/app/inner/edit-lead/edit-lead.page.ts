@@ -18,7 +18,9 @@ export class EditLeadPage implements OnInit {
   showPicker: boolean = false;
   min:string;
   levelofProgram: any = [];
-  dropdownSettings: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
+  dropdownSettings1: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
+  dropdownSettings2: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
+  dropdownSettings3: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
   tagId: any;
   selectedCountry: any;
   selectedState: any;
@@ -103,7 +105,25 @@ export class EditLeadPage implements OnInit {
     this.getLeadStage()
     this.initForm()
     this.getLeadById()
-    this.dropdownSettings = {
+    this.dropdownSettings1 = {
+      singleSelection: true,
+      idField: "id",
+      textField: "name",
+      selectAllText: "Select All",
+      unSelectAllText: "UnSelect All",
+      itemsShowLimit: 1,
+      allowSearchFilter: true
+    };
+    this.dropdownSettings2 = {
+      singleSelection: true,
+      idField: "id",
+      textField: "name",
+      selectAllText: "Select All",
+      unSelectAllText: "UnSelect All",
+      itemsShowLimit: 1,
+      allowSearchFilter: true
+    };
+    this.dropdownSettings3 = {
       singleSelection: true,
       idField: "id",
       textField: "name",
@@ -135,42 +155,80 @@ export class EditLeadPage implements OnInit {
           this.selectedCity = lead.city
           this.selectedState = lead.state
           // alert(lead?.referred_to)
+          // this.editLead.patchValue({
+          //   firstName: lead.user_data.first_name,
+          //   mobile: lead.user_data.mobile_number,
+          //   alternateNumber: lead.alternate_mobile_number,
+          //   email: lead.user_data.email,
+          //   dateOfBirth: lead.date_of_birth,
+          //   state: selectedState,
+          //   zone: lead.zone,
+          //   course:lead.stream,
+          //   cityName: selectedCity,
+          //   pincode: lead.pincode,
+          //   countryId: selectedCountry,
+          //   referenceName: lead.reference_name,
+          //   referencePhoneNumber: lead.reference_mobile_number,
+          //   fatherName: lead.father_name,
+          //   fatherOccupation: lead.father_occupation,
+          //   fatherPhoneNumber: lead.father_mobile_number,
+          //   tenthPercentage: lead.tenth_per,
+          //   twelthPercentage: lead.twelfth_per,
+          //   degree: lead.degree_per,
+          //   otherCourse: lead.others,
+          //   entranceExam: lead.enterance_exam,
+          //   courseLookingfor: courseId ,
+          //   levelOfProgram:lead.level_of_program !== null ? lead?.level_of_program : '',
+          //   preferredCollege1: lead.preferred_college1,
+          //   preferredCollege2: lead.preferred_college2,
+          //   preferredLocation1: lead.preferred_location1,
+          //   preferredLocation2: lead.preferred_location2,
+          //   counsellor: lead?.referred_to == null ? lead?.referred_to : '',
+          //   counsellorAdmin: lead.counselled_by == null ? lead.counselled_by : '',
+          //   leadSource: lead.source || '',
+          //   leadStages: lead.lead_stage || '',
+          //   leadStatus: lead.lead_list_status || '',
+          //   notes: lead.note_name,
+          //   remarks: lead.remark_name
+          // });
+
           this.editLead.patchValue({
-            firstName: lead.user_data.first_name,
-            mobile: lead.user_data.mobile_number,
-            alternateNumber: lead.alternate_mobile_number,
-            email: lead.user_data.email,
-            dateOfBirth: lead.date_of_birth,
-            state: selectedState,
-            zone: lead.zone,
-            course:lead.stream,
-            cityName: selectedCity,
-            pincode: lead.pincode,
-            countryId: selectedCountry,
-            referenceName: lead.reference_name,
-            referencePhoneNumber: lead.reference_mobile_number,
-            fatherName: lead.father_name,
-            fatherOccupation: lead.father_occupation,
-            fatherPhoneNumber: lead.father_mobile_number,
-            tenthPercentage: lead.tenth_per,
-            twelthPercentage: lead.twelfth_per,
-            degree: lead.degree_per,
-            otherCourse: lead.others,
-            entranceExam: lead.enterance_exam,
-            courseLookingfor: courseId,
-            levelOfProgram:lead.level_of_program,
-            preferredCollege1: lead.preferred_college1,
-            preferredCollege2: lead.preferred_college2,
-            preferredLocation1: lead.preferred_location1,
-            preferredLocation2: lead.preferred_location2,
-            counsellor: lead?.referred_to,
-            counsellorAdmin: lead.counselled_by,
-            leadSource: lead.source,
-            leadStages: lead.lead_stage,
-            leadStatus: lead.lead_list_status,
-            notes: lead.note_name,
-            remarks: lead.remark_name
+            firstName: lead.user_data?.first_name ?? '',
+            mobile: lead.user_data?.mobile_number ?? '',
+            alternateNumber: lead.alternate_mobile_number ?? '',
+            email: lead.user_data?.email ?? '',
+            dateOfBirth: lead.date_of_birth ?? '',
+            state: selectedState ?? '',
+            zone: lead.zone ?? '',
+            course: lead.stream ?? '',
+            cityName: selectedCity ?? '',
+            pincode: lead.pincode ?? '',
+            countryId: selectedCountry ?? '',
+            referenceName: lead.reference_name ?? '',
+            referencePhoneNumber: lead.reference_mobile_number ?? '',
+            fatherName: lead.father_name ?? '',
+            fatherOccupation: lead.father_occupation ?? '',
+            fatherPhoneNumber: lead.father_mobile_number ?? '',
+            tenthPercentage: lead.tenth_per ?? '',
+            twelthPercentage: lead.twelfth_per ?? '',
+            degree: lead.degree_per ?? '',
+            otherCourse: lead.others ?? '',
+            entranceExam: lead.enterance_exam ?? '',
+            courseLookingfor: courseId ?? '',
+            levelOfProgram: lead.level_of_program ?? '',
+            preferredCollege1: lead.preferred_college1 ?? '',
+            preferredCollege2: lead.preferred_college2 ?? '',
+            preferredLocation1: lead.preferred_location1 ?? '',
+            preferredLocation2: lead.preferred_location2 ?? '',
+            counsellor: lead.referred_to ?? '',
+            counsellorAdmin: lead.counselled_by ?? '',
+            leadSource: lead.source ?? '',
+            leadStages: lead.lead_stage ?? '',
+            leadStatus: lead.lead_list_status ?? '',
+            notes: lead.note_name ?? '',
+            remarks: lead.remark_name ?? ''
           });
+          
         }
       },
       (error) => {
@@ -545,10 +603,10 @@ export class EditLeadPage implements OnInit {
     },
     additional_info: {
       reference_name: formData.referenceName,
-      reference_mobile_number:formData.referencePhoneNumber,
+      reference_mobile_number:formData.referencePhoneNumber || null,
       father_name: formData.fatherName,
       father_occupation: formData.fatherOccupation,
-      father_mobile_number: formData.fatherPhoneNumber
+      father_mobile_number: formData.fatherPhoneNumber || null
     }
   }
 
@@ -584,7 +642,7 @@ export class EditLeadPage implements OnInit {
     }
   } 
     else{
-      this._baseService.updateData(`${environment.lead_list}/${this._inputData.user_data.id}/`,data).subscribe((res:any)=>{
+      this._baseService.updateData(`${environment.lead_list}${this._inputData.user_data.id}/`,data).subscribe((res:any)=>{
         if(res){
           this.addLead.emit('ADD')
           this.api.showSuccess(res.message);

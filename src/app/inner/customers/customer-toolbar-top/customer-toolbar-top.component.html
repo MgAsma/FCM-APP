@@ -1,6 +1,6 @@
-<ion-row>
+<ion-row class="d-flex justify-content-center align-items-center px-2">
   <ion-col>
-    <a><ion-icon name="search" (click)="enableSearchOption()"></ion-icon></a>
+    <a><ion-icon name="search" class="search-icon" (click)="enableSearchOption()"></ion-icon></a>
   </ion-col>
   <ion-col   class="position-rel">
     <ion-badge color="danger" class="badge-1">{{ customerStatus?.length || '0' }}</ion-badge>
