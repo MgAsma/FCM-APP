@@ -66,6 +66,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
   statusFilter: boolean = false;
   phoneNumbers:any=[];
   isToggledEnabled:boolean=false;
+  leadData:any;
  
   // allPaginator: any;
   @ViewChild('paginator', { static: true }) paginator: MatPaginator;
@@ -174,7 +175,10 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
       this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
         (res: any) => {
           if (res.results) {
+            
+            
             this.leadCards = res.results.data;
+            this.leadData=res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
           }
@@ -414,6 +418,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
   }
   ionViewWillEnter(){
    this.ngAfterViewInit() 
+  
   }
   ngAfterViewInit() {
     this.pageIndex = 0
@@ -468,14 +473,17 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
 
               // console.log(res,"resssssssssssssssssssss");
               if (res.results) {
+
+                
+                this.leadData=res.results.data;
+            
                 this.leadCards = res.results.data;
                 this.allocateItem=res.results.data[0]
                 this.data = new MatTableDataSource<any>(this.leadCards);
                 this.totalNumberOfRecords = res.total_no_of_record;
-
-                this.phoneNumbers= this.leadCards.filter((ele:any) =>(ele.user_data.mobile_number)
-                ).map((ele:any)=>ele.user_data.mobile_number)
-                // console.log(this.phoneNumbers,"phone numbers");
+                this.getPhoneNumbers();
+          
+                
               }
             },
             (error: any) => {
@@ -487,6 +495,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
           this.api.showError(error.error.message);
         }
       );
+      
     }else{
       this.totalNumberOfRecords = 0
       this.allocate.allocationStatus.next([])
@@ -513,6 +522,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
           // console.log(res,"resssssssssssssssssssss");
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData=res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
           }
@@ -521,6 +531,8 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
           this.api.showError(error.error.message);
         }
       );
+
+      
     
     }
     
@@ -565,6 +577,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
             (res: any) => {
               if (res.results) {
                 this.leadCards = res.results.data;
+                this.leadData=res.results.data;
                 this.data = new MatTableDataSource<any>(this.leadCards);
                 this.totalNumberOfRecords = res.total_no_of_record;
               }
@@ -587,6 +600,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
             
             
             this.leadCards = res.results.data;
+            this.leadData=res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
           }
@@ -599,13 +613,20 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
     
 
     this.getCounselor();
-    // this.getPhoneNumbers();
+  
   }
-  // getPhoneNumbers(){
+  getPhoneNumbers(){
+    // console.log(this.leadData,"leadcards in phno function"); 
+    
+    if(this.leadData?.length>0){
+      
+      this.phoneNumbers= this.leadData?.filter((ele:any) =>(ele.user_data?.mobile_number)
+      ).map((ele:any)=>ele.user_data?.mobile_number)
+    }
    
   
-    
-  // }
+     
+  }
  
   handleRefresh(event: any) {
     // setTimeout(() => {
@@ -628,6 +649,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
       this.data = [];
       this.totalNumberOfRecords = []
        this.leadCards = res.results.data;
+       this.leadData=res.results.data;
       
        
        this.data = new MatTableDataSource<any>(this.leadCards);
@@ -687,6 +709,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
           this.leadCards = res.results.data;
           this.data = new MatTableDataSource<any>(this.leadCards);
           this.totalNumberOfRecords = res.total_no_of_record;
+          this.leadData=res.results.data;
         }
       },
       (error: any) => {
@@ -753,6 +776,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData=res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
           }
@@ -803,6 +827,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
       (res: any) => {
         if (res.results) {
           this.leadCards = res.results.data;
+          this.leadData=res.results.data;
           this.data = new MatTableDataSource<any>(this.leadCards);
           this.totalNumberOfRecords = res.total_no_of_record;
         }
@@ -857,6 +882,8 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
       await confirm.present();
     });
   }
+
+
 
 
 }
