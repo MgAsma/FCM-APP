@@ -550,9 +550,11 @@ export class EditLeadPage implements OnInit {
     this.step--;
   }
   close(){
+    this.callPermissionService.closeCancelEditLeadPagedataSubject.next('close')
     this.modalController.dismiss()
   }
   closeModal(){
+    this.callPermissionService.closeCancelEditLeadPagedataSubject.next('cancel')
     this.modalController.dismiss()
     this._addLeadEmitter.triggerGet();
   }
@@ -646,7 +648,7 @@ export class EditLeadPage implements OnInit {
         if(res){
           this.addLead.emit('ADD')
           this.api.showSuccess(res.message);
-          this.callPermissionService.dataSubject.next(true)
+          this.callPermissionService.closeCancelEditLeadPagedataSubject.next('submit')
           this._addLeadEmitter.triggerGet();
           this.initForm()
           this.modalController.dismiss()

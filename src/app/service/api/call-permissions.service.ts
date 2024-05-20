@@ -63,6 +63,10 @@ export class CallPermissionsService {
 
   dataUpdated = new EventEmitter<any>(false);
 dataSubject = new BehaviorSubject<any>(false);
+isToggleddataSubject = new BehaviorSubject<any>(false);
+closeCancelEditLeadPagedataSubject = new BehaviorSubject<any>(false);
+// cancelEditLeadPagedataSubject = new BehaviorSubject<any>(false);
+
   // public data$ = this.dataSubject.asObservable();
 
 

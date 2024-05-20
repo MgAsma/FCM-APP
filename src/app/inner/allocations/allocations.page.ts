@@ -72,6 +72,8 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
   pageIndex: number;
   selectedLead: any;
   refresh: any = false;
+  cancelCloseEditRes:any;
+// closeEditRes:any;
 
   constructor(
     private allocate: AllocationEmittersService,
@@ -92,36 +94,46 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
 
     this.counsellor_id = localStorage.getItem("user_id");
    
-    setTimeout(() => {
-      this.callPermissionService?.dataSubject.subscribe((res:any)=>{
-       // console.log(res,"res from toggle");
-        this.isToggledEnabled=res;
-        
-      }) 
+    setTimeout(() => {  
       this.callPermissionService?.initiateCallStatus(this.getContacktAndPostHistory.bind(this));
 
     }, 1000);
+
+    this.callPermissionService?.isToggleddataSubject.subscribe((res:any)=>{
+      this.isToggledEnabled=res;
+      // console.log(this.isToggledEnabled,"  this.isToggledEnabled from toggle");
+    }) 
     
   }
 
   ngOnInit(){
-    this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this));
-    this.callPermissionService.dataUpdated.subscribe((res:any)=>{
-      // console.log(res,"res from toolbar");
+ 
+    this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe((res:any)=>{
+      this.cancelCloseEditRes=res;
+
+      console.log(this.cancelCloseEditRes,"cancelEditRes");
+
+  
+
+      if(this.isToggledEnabled==true){
+  
+    if(this.cancelCloseEditRes=='close' || this.cancelCloseEditRes=='cancel'){
+
+      return
+
+  }else{
+    setTimeout(()=>{
+      console.log(this.data.data[this.phoneNumberIndex+1],"this.data.data[this.phoneNumberIndex+1]");
+      let allocateItem:any=this.data.data[this.phoneNumberIndex+1];
+      this.recursiveCall(this.phoneNumbers[this.phoneNumberIndex+1],allocateItem.user_data.id,allocateItem,this.phoneNumberIndex+1)
+     
+    },5000)
+  }
+  }
       
     })
-    this.callPermissionService.dataSubject.subscribe((res:any)=>{
-      if(res==true){
-        if(this.isToggledEnabled==true){
-          setTimeout(()=>{
-            let allocateItem:any=this.data.data[this.phoneNumberIndex+1];
-            this.recursiveCall(this.phoneNumbers[this.phoneNumberIndex+1],allocateItem.user_data.id,allocateItem,this.phoneNumberIndex+1)
-           
-          },5000)
-    
-        }
-      }
-    })
+  
+   
    
     if(this.refresh){
     this.refreshAllState()
@@ -295,6 +307,8 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
   phoneNumberIndex:any
 
   recursiveCall(number: string, id: any,item,index:any){
+    console.log(this.phoneNumbers.length,"this.phoneNumbers.length recursive call");
+    console.log(index,"index in recursive call" );
     
     if(index>=this.phoneNumbers.length){
       return
@@ -444,10 +458,16 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
           this.data = [];
           this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
             (res: any) => {
+
+              // console.log(res,"resssssssssssssssssssss");
               if (res.results) {
                 this.leadCards = res.results.data;
                 this.data = new MatTableDataSource<any>(this.leadCards);
                 this.totalNumberOfRecords = res.total_no_of_record;
+
+                this.phoneNumbers= this.leadCards.filter((ele:any) =>(ele.user_data.mobile_number)
+                ).map((ele:any)=>ele.user_data.mobile_number)
+                // console.log(this.phoneNumbers,"phone numbers");
               }
             },
             (error: any) => {
@@ -482,6 +502,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
       }
       this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
         (res: any) => {
+          // console.log(res,"resssssssssssssssssssss");
           if (res.results) {
             this.leadCards = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
@@ -555,6 +576,8 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
       this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
         (res: any) => {
           if (res.results) {
+            
+            
             this.leadCards = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
@@ -568,13 +591,13 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
     
 
     this.getCounselor();
-    this.getPhoneNumbers();
+    // this.getPhoneNumbers();
   }
-  getPhoneNumbers(){
-    this.phoneNumbers= this.leadCards.filter((ele:any) =>(ele.user_data.mobile_number)
-  ).map((ele:any)=>ele.user_data.mobile_number)
+  // getPhoneNumbers(){
+   
+  
     
-  }
+  // }
  
   handleRefresh(event: any) {
     // setTimeout(() => {
@@ -591,11 +614,14 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
  
   getLeadlist(query:any){
    this._baseService.getData(`${environment.lead_list}${query}`).subscribe((res: any) => {
+  
      if (res.results) {
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = []
        this.leadCards = res.results.data;
+      
+       
        this.data = new MatTableDataSource<any>(this.leadCards);
        this.totalNumberOfRecords = res.total_no_of_record
      }
