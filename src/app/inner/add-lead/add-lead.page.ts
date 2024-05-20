@@ -80,7 +80,7 @@ export class AddLeadPage implements OnInit {
     this.showPicker = false
   }
   ngOnInit(): void {
-    this.user_id = localStorage.getItem('user_id')
+    this.user_id = localStorage.getItem('user_id').toUpperCase()
     this.dropdownSettings1 = {
       singleSelection: true,
       idField: "id",
@@ -129,7 +129,7 @@ export class AddLeadPage implements OnInit {
     this.getCounselledBy();
     this.getLeadStage()
     this.initForm()
-   
+    this.setCounsellorAdminState()
   }
   initForm(){
     this.addNewLead = this.fb.group({
@@ -162,11 +162,7 @@ export class AddLeadPage implements OnInit {
       counsellor:['',[Validators.required]],
       counsellorAdmin:[''],
       leadSource:[''],
-      //leadStages:[''],
-      levelOfProgram:[''],
-      //leadStatus:['',[Validators.required]],
-      //notes:['',[Validators.required,Validators.pattern(this._commonService.namePattern)]],
-      // remarks:['',Validators.pattern(this._commonService.namePattern)]
+      levelOfProgram:['']
     })
   }
   get f() {
@@ -383,7 +379,18 @@ export class AddLeadPage implements OnInit {
     })
   }
   getCounselor(){
-    let query = this.user_role === "COUNSELLOR" || this.user_role === "COUNSELOR"  || this.user_role === "ADMIN"  ?`?user_id=${this.user_id}&role_name=counsellor` : `?role_name=counsellor`
+    let query = ""
+    const counsellorRoles = ['COUNSELLOR', 'COUNSELOR'];
+      const superAdminRoles = ['SUPERADMIN', 'SUPER ADMIN'];
+      const adminRoles = ['ADMIN'];
+    
+      if (counsellorRoles.includes(this.user_role)) {
+       query = `?role_name=counsellor`
+      } else if (superAdminRoles.includes(this.user_role)) {
+        query = `?role_name=superadmin`
+      } else if (adminRoles.includes(this.user_role)) {
+        query = `?user_id=${this.user_id}`
+      } 
     this._baseService.getData(`${environment._user}${query}`).subscribe((res:any)=>{
       if(res.results){
       this.referredTo = res.results
@@ -393,7 +400,7 @@ export class AddLeadPage implements OnInit {
     }))
   }
   getCounselledBy(){
-    this._baseService.getData(`${environment._user}?role_name=Admin`).subscribe((res:any)=>{
+    this._baseService.getData(`${environment._user}`).subscribe((res:any)=>{
       if(res.results){
       this.adminList = res.results
       }
@@ -446,7 +453,14 @@ export class AddLeadPage implements OnInit {
     // this.f['tags'].markAsUntouched()
     //console.log(controlName,"controlName.value")
   }
- 
+  setCounsellorAdminState() {
+    if (this.user_role === 'SUPERADMIN') {
+      this.addNewLead.get('counsellorAdmin')?.enable();
+    } else {
+      this.addNewLead.get('counsellorAdmin')?.disable();
+    }
+  }
+
   onItemDeSelect(item: any,controlName:any) {
     if(controlName == 'countryId'){
       this.selectedCountry = null
@@ -511,7 +525,7 @@ export class AddLeadPage implements OnInit {
       let nonMandatoryFieldsInvalid = false;
     
       // Check if any mandatory fields are empty
-      const mandatoryFields = ['firstName', 'mobile', 'counsellor','leadStatus'];
+      const mandatoryFields = ['firstName', 'mobile', 'counsellor'];
       mandatoryFields.forEach(field => {
         if (!this.addNewLead.get(field).value) {
           mandatoryFieldsEmpty = true;

@@ -26,6 +26,7 @@ export class EditLeadPage implements OnInit {
   selectedState: any;
   selectedCity: any;
   user_role: string;
+  lead: any;
   @Input() set data(value:any){
     this._inputData = value;
     //console.log(this._inputData,"ssdgdgg")
@@ -140,20 +141,20 @@ export class EditLeadPage implements OnInit {
     this._baseService.getByID(`${environment.lead_list}${this._inputData.user_data.id}/`).subscribe(
       (res: any) => {
         if (res && res.result && res.result.length > 0) {
-          const lead = res.result[0];
+          this.lead = res.result[0];
           let courseId = [];
-          if(lead.course_looking_for?.length >0){
-             courseId = lead.course_looking_for.map((m:any)=>m.id)
+          if(this.lead.course_looking_for?.length >0){
+             courseId = this.lead.course_looking_for.map((m:any)=>m.id)
           }
           this.getCountry()
           this.getState()
           this.getCity()
-          const selectedCountry = this.countryOptions?.filter((m:any)=>m.id === lead.country)
-          const selectedState = this.stateOptions?.filter((m:any)=>m.id === lead.state)
-          const selectedCity = this.cityOptions?.filter((m:any)=>m.id === lead.city)
-          this.selectedCountry = lead.country
-          this.selectedCity = lead.city
-          this.selectedState = lead.state
+          const selectedCountry = this.countryOptions?.filter((m:any)=>m.id === this.lead.country)
+          const selectedState = this.stateOptions?.filter((m:any)=>m.id === this.lead.state)
+          const selectedCity = this.cityOptions?.filter((m:any)=>m.id === this.lead.city)
+          this.selectedCountry = this.lead.country
+          this.selectedCity = this.lead.city
+          this.selectedState = this.lead.state
           // alert(lead?.referred_to)
           // this.editLead.patchValue({
           //   firstName: lead.user_data.first_name,
@@ -193,40 +194,40 @@ export class EditLeadPage implements OnInit {
           // });
 
           this.editLead.patchValue({
-            firstName: lead.user_data?.first_name ?? '',
-            mobile: lead.user_data?.mobile_number ?? '',
-            alternateNumber: lead.alternate_mobile_number ?? '',
-            email: lead.user_data?.email ?? '',
-            dateOfBirth: lead.date_of_birth ?? '',
+            firstName: this.lead.user_data?.first_name ?? '',
+            mobile: this.lead.user_data?.mobile_number ?? '',
+            alternateNumber: this.lead.alternate_mobile_number ?? '',
+            email: this.lead.user_data?.email ?? '',
+            dateOfBirth: this.lead.date_of_birth ?? '',
             state: selectedState ?? '',
-            zone: lead.zone ?? '',
-            course: lead.stream ?? '',
+            zone: this.lead.zone ?? '',
+            course: this.lead.stream ?? '',
             cityName: selectedCity ?? '',
-            pincode: lead.pincode ?? '',
+            pincode: this.lead.pincode ?? '',
             countryId: selectedCountry ?? '',
-            referenceName: lead.reference_name ?? '',
-            referencePhoneNumber: lead.reference_mobile_number ?? '',
-            fatherName: lead.father_name ?? '',
-            fatherOccupation: lead.father_occupation ?? '',
-            fatherPhoneNumber: lead.father_mobile_number ?? '',
-            tenthPercentage: lead.tenth_per ?? '',
-            twelthPercentage: lead.twelfth_per ?? '',
-            degree: lead.degree_per ?? '',
-            otherCourse: lead.others ?? '',
-            entranceExam: lead.enterance_exam ?? '',
+            referenceName: this.lead.reference_name ?? '',
+            referencePhoneNumber: this.lead.reference_mobile_number ?? '',
+            fatherName: this.lead.father_name ?? '',
+            fatherOccupation: this.lead.father_occupation ?? '',
+            fatherPhoneNumber: this.lead.father_mobile_number ?? '',
+            tenthPercentage: this.lead.tenth_per ?? '',
+            twelthPercentage: this.lead.twelfth_per ?? '',
+            degree: this.lead.degree_per ?? '',
+            otherCourse: this.lead.others ?? '',
+            entranceExam: this.lead.enterance_exam ?? '',
             courseLookingfor: courseId ?? '',
-            levelOfProgram: lead.level_of_program ?? '',
-            preferredCollege1: lead.preferred_college1 ?? '',
-            preferredCollege2: lead.preferred_college2 ?? '',
-            preferredLocation1: lead.preferred_location1 ?? '',
-            preferredLocation2: lead.preferred_location2 ?? '',
-            counsellor: lead.referred_to ?? '',
-            counsellorAdmin: lead.counselled_by ?? '',
-            leadSource: lead.source ?? '',
-            leadStages: lead.lead_stage ?? '',
-            leadStatus: lead.lead_list_status ?? '',
-            notes: lead.note_name ?? '',
-            remarks: lead.remark_name ?? ''
+            levelOfProgram: this.lead.level_of_program ?? '',
+            preferredCollege1: this.lead.preferred_college1 ?? '',
+            preferredCollege2: this.lead.preferred_college2 ?? '',
+            preferredLocation1: this.lead.preferred_location1 ?? '',
+            preferredLocation2: this.lead.preferred_location2 ?? '',
+            counsellor: this.lead.referred_to ?? '',
+            counsellorAdmin: this.lead.counselled_by ?? '',
+            leadSource: this.lead.source ?? '',
+            leadStages: this.lead.lead_stage ?? '',
+            leadStatus: this.lead.lead_list_status ?? '',
+            notes: this.lead.note_name ?? '',
+            remarks: this.lead.remark_name ?? ''
           });
           
         }
@@ -504,7 +505,18 @@ export class EditLeadPage implements OnInit {
     })
   }
   getCounselor(){
-    let query = this.user_role === "COUNSELLOR" || this.user_role === "COUNSELOR"  || this.user_role === "ADMIN"  ?`?user_id=${this.user_id}&role_name=counsellor` : `?role_name=counsellor`
+    let query = ""
+    const counsellorRoles = ['COUNSELLOR', 'COUNSELOR'];
+      const superAdminRoles = ['SUPERADMIN', 'SUPER ADMIN'];
+      const adminRoles = ['ADMIN'];
+    
+      if (counsellorRoles.includes(this.user_role)) {
+       query = `?role_name=counsellor`
+      } else if (superAdminRoles.includes(this.user_role)) {
+        query = `?role_name=superadmin`
+      } else if (adminRoles.includes(this.user_role)) {
+        query = `?user_id=${this.user_id}`
+      } 
     this._baseService.getData(`${environment._user}${query}`).subscribe((res:any)=>{
       if(res.results){
       this.referredTo = res.results
@@ -514,7 +526,7 @@ export class EditLeadPage implements OnInit {
     }))
   }
   getCounselledBy(){
-    this._baseService.getData(`${environment._user}?role_name=Admin`).subscribe((res:any)=>{
+    this._baseService.getData(`${environment._user}`).subscribe((res:any)=>{
       if(res.results){
       this.adminList = res.results
       }

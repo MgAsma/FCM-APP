@@ -422,10 +422,12 @@
             </ion-error>
 
             <!-- Counselled By -->
-            <ion-label position="stacked">Counselled By</ion-label>
+            <ion-label position="stacked" >Counselled By</ion-label>
             <ion-item>
-              <ion-select formControlName="counsellorAdmin" placeholder="Select Counselled By" >
-                <ion-select-option *ngFor="let option of adminList" [value]="option.id">{{ option?.first_name }}</ion-select-option>
+              <ion-select  formControlName="counsellorAdmin" placeholder="Select Counselled By">
+                <ion-select-option *ngFor="let option of adminList" [value]="option.id">
+                  {{ option?.first_name }}
+                </ion-select-option>
               </ion-select>
               <ion-button
                 fill="clear"
@@ -435,6 +437,7 @@
                 <ion-icon name="close-outline"></ion-icon>
               </ion-button>
             </ion-item>
+
 
              <!-- Source -->
              <ion-label position="stacked">Source</ion-label>
