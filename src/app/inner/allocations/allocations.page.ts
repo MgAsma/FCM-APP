@@ -101,11 +101,16 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
 
     this.callPermissionService?.isToggleddataSubject.subscribe((res:any)=>{
       this.isToggledEnabled=res;
+
+      if(res==true){
+        this.phoneNumberIndex=0
+        this.callContact(this.phoneNumbers[0],this.allocateItem.user_data.id,this.allocateItem,this.phoneNumberIndex)
+      }
       // console.log(this.isToggledEnabled,"  this.isToggledEnabled from toggle");
     }) 
     
   }
-
+  allocateItem:any
   ngOnInit(){
  
     this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe((res:any)=>{
@@ -123,9 +128,11 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
 
   }else{
     setTimeout(()=>{
-      console.log(this.data.data[this.phoneNumberIndex+1],"this.data.data[this.phoneNumberIndex+1]");
-      let allocateItem:any=this.data.data[this.phoneNumberIndex+1];
-      this.recursiveCall(this.phoneNumbers[this.phoneNumberIndex+1],allocateItem.user_data.id,allocateItem,this.phoneNumberIndex+1)
+       this.allocateItem=this.data.data[this.phoneNumberIndex+1];
+      // 
+      // console.log(this.data.data[this.phoneNumberIndex+1],"this.data.data[this.phoneNumberIndex+1]");
+      
+      this.recursiveCall(this.phoneNumbers[this.phoneNumberIndex+1],this.allocateItem.user_data.id,this.allocateItem,this.phoneNumberIndex+1)
      
     },5000)
   }
@@ -462,6 +469,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
               // console.log(res,"resssssssssssssssssssss");
               if (res.results) {
                 this.leadCards = res.results.data;
+                this.allocateItem=res.results.data[0]
                 this.data = new MatTableDataSource<any>(this.leadCards);
                 this.totalNumberOfRecords = res.total_no_of_record;
 

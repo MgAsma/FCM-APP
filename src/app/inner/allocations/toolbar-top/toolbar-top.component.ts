@@ -78,19 +78,19 @@ export class ToolbarTopComponent  implements OnInit {
   isToggled:boolean=false;
 
   
-evValue:boolean;
-  setValue1(event: MatSlideToggleChange){
-    let prevVal=this.isToggled;
-    this.enbaleAutoDiallingWarning(prevVal);
-    this.isToggled=event.source.checked;
-    console.log(event);
+// evValue:boolean;
+//   setValue1(event: MatSlideToggleChange){
+//     let prevVal=this.isToggled;
+//     this.enbaleAutoDiallingWarning(prevVal);
+//     this.isToggled=event.source.checked;
+//     console.log(event);
     
-    console.log(this.evValue);
+//     console.log(this.evValue);
     
     
     
  
-  }
+//   }
 
 
   
@@ -98,40 +98,40 @@ evValue:boolean;
   
 
 
-  async enbaleAutoDiallingWarning(ischecked:any) {
-    const that=this;
-    return new Promise(async (resolve) => {
-      const confirm = await this.alertController.create({
-      header: 'Begin Auto Dialler',
+  // async enbaleAutoDiallingWarning(ischecked:any) {
+  //   const that=this;
+  //   return new Promise(async (resolve) => {
+  //     const confirm = await this.alertController.create({
+  //     header: 'Begin Auto Dialler',
     
-      message: this.isToggled? 'Do you want to disable Auto Dialling ? ':'Do you want to enable Auto Dialling ?',
-        buttons: [
-          {
-            text: 'Cancel',
-            role: 'cancel',
-            handler: () => {
+  //     message: this.isToggled? 'Do you want to disable Auto Dialling ? ':'Do you want to enable Auto Dialling ?',
+  //       buttons: [
+  //         {
+  //           text: 'Cancel',
+  //           role: 'cancel',
+  //           handler: () => {
               
-             that.isToggled=ischecked;
-             that.callPermissionService.isToggleddataSubject.next(that.isToggled)
-             return resolve(ischecked)
+  //            that.isToggled=ischecked;
+  //            that.callPermissionService.isToggleddataSubject.next(that.isToggled)
+  //            return resolve(ischecked)
               
-            },
-          },
-          {
-            text: 'OK',
-            handler: () => {
+  //           },
+  //         },
+  //         {
+  //           text: 'OK',
+  //           handler: () => {
 
-             that.isToggled=!ischecked;
-             that.callPermissionService.isToggleddataSubject.next(that.isToggled)
-              return resolve(!ischecked);
-            },
-          },
-        ],
-      });
+  //            that.isToggled=!ischecked;
+  //            that.callPermissionService.isToggleddataSubject.next(that.isToggled)
+  //             return resolve(!ischecked);
+  //           },
+  //         },
+  //       ],
+  //     });
 
-      await confirm.present();
-    });
-  }
+  //     await confirm.present();
+  //   });
+  // }
 
 
 

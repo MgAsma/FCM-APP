@@ -35,6 +35,16 @@ export class AllocationToolbarTopComponent implements OnInit {
    }
 
   ngOnInit() {
+
+
+    this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe((res:any)=>{
+      console.log(res,"res form edit lead");
+      
+      if(res=='close'||res=='cancel'){
+        this.isToggled=false;
+      }
+     
+    })
     this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
       if(res){
         this.counsellor_ids = res
@@ -128,7 +138,8 @@ evValue:boolean;
             handler: () => {
 
              this.isToggled=!ischecked;
-             this.callPermissionService.isToggleddataSubject.next(this.isToggled)
+             this.callPermissionService.isToggleddataSubject.next(this.isToggled);
+             
               return resolve(!ischecked);
             },
           },
