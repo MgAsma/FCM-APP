@@ -73,7 +73,6 @@ export class EditLeadPage implements OnInit {
     this.minDateAdapter = this._datePipe.transform(dob,'yyyy-MM-dd')
     this.min = this._datePipe.transform(minimum,'yyyy-MM-dd')
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
-
     this.user_id = localStorage.getItem("user_id");
     }
     dateChanged(value){
@@ -83,7 +82,6 @@ export class EditLeadPage implements OnInit {
       this.showPicker = false
     }
   ngOnInit(): void {
-    this.user_id = localStorage.getItem('user_id')
     this.getCountry();
     this.getState();
     this.getChannel();
@@ -133,6 +131,14 @@ export class EditLeadPage implements OnInit {
       itemsShowLimit: 1,
       allowSearchFilter: true
     };
+    this.setCounsellorAdminState()
+  }
+  setCounsellorAdminState() {
+    if (this.user_role === 'SUPERADMIN') {
+      this.editLead.get('counsellorAdmin')?.enable();
+    } else {
+      this.editLead.get('counsellorAdmin')?.disable();
+    }
   }
   get f() {
     return this.editLead.controls;
