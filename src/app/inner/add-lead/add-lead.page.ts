@@ -473,10 +473,55 @@ export class AddLeadPage implements OnInit {
   }
   onSubmit(){
     let f = this.addNewLead.value;
+    // let data:any ={
+    //   first_name: f['firstName'],
+    //   last_name: "",
+    //   email: f['email'] || null,
+    //   mobile_number:f['mobile'],
+    //   date_of_birth:this._datePipe.transform(f['dateOfBirth'],'YYYY-MM-dd') || null,
+    //   alternate_mobile_number:f['alternateNumber'] || null,
+    //   role: 5,
+    //   created_by: this.user_id,
+    //   refered_to: f['counsellor'],
+    //   location:  null,
+    //   pincode: f['pincode'] || null,
+    //   country:this.selectedCountry,
+    //   state: this.selectedState,
+    //   city: this.selectedCity,
+    //   zone:f['zone'],
+    //   reference_name:f['referenceName'],
+    //   reference_mobile_number:f['referencePhoneNumber'] || null,
+    //   father_name:f['fatherName'],
+    //   father_occupation:f['fatherOccupation'],
+    //   father_mobile_number:f['fatherPhoneNumber'] || null,
+    //   tenth_per: f['tenthPercentage'] || null,
+    //   twelfth_per: f['twelthPercentage'] || null,
+    //   degree_per: f['degree'] || null,
+    //   stream: f["course"],
+    //   others: f["otherCourse"],
+    //   enterance_exam: f["entranceExam"],
+    //   course_looking_for: f["courseLookingfor"],
+    //   level_of_program:f["levelOfProgram"],
+    //   lead_list_status:f['leadStatus'],
+    //   lead_list_substatus: null,
+    //   counselled_by:f['counsellorAdmin'],
+    //   lead_stage: f['leadStages'],
+    //   source: f['leadSource'],
+    //   preferance_college_and_location: 
+    //           {
+    //             preferred_college1: f["preferredCollege1"],
+    //             preferred_college2: f["preferredCollege2"],
+    //             preferred_location1: f["preferredLocation1"],
+    //             preferred_location2: f["preferredLocation2"]
+    //           },
+    //   note_name:f['notes'],
+    //   created_note_remark_by:this.user_id,
+    //   remark_name:f['remarks']
+    // }
     let data:any ={
       first_name: f['firstName'],
       last_name: "",
-      email: f['email'] || null,
+      email: f['email'],
       mobile_number:f['mobile'],
       date_of_birth:this._datePipe.transform(f['dateOfBirth'],'YYYY-MM-dd') || null,
       alternate_mobile_number:f['alternateNumber'] || null,
@@ -500,13 +545,11 @@ export class AddLeadPage implements OnInit {
       stream: f["course"],
       others: f["otherCourse"],
       enterance_exam: f["entranceExam"],
-      course_looking_for: f["courseLookingfor"],
-      level_of_program:f["levelOfProgram"],
-      lead_list_status:f['leadStatus'],
+      course_looking_for: f["courseLookingfor"] || [],
       lead_list_substatus: null,
       counselled_by:f['counsellorAdmin'],
-      lead_stage: f['leadStages'],
       source: f['leadSource'],
+      level_of_program:f['levelOfProgram'],
       preferance_college_and_location: 
               {
                 preferred_college1: f["preferredCollege1"],
@@ -514,11 +557,8 @@ export class AddLeadPage implements OnInit {
                 preferred_location1: f["preferredLocation1"],
                 preferred_location2: f["preferredLocation2"]
               },
-      note_name:f['notes'],
       created_note_remark_by:this.user_id,
-      remark_name:f['remarks']
     }
-  
      data = JSON.parse(JSON.stringify(data));
      if (this.addNewLead.invalid) {
       let mandatoryFieldsEmpty = false;
