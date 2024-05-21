@@ -117,9 +117,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
     this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe((res:any)=>{
       this.cancelCloseEditRes=res;
 
-      console.log(this.cancelCloseEditRes,"cancelEditRes");
-
-  
+    
 
       if(this.isToggledEnabled==true){
   
@@ -164,13 +162,13 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
       const adminRoles = ['ADMIN'];
       
       if (counsellorRoles.includes(this.user_role)) {
-        query = `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10`;
+        query = `?counsellor_id=${this.user_id}&user_type=allocation&page=1&page_size=10`;
       } else if (superAdminRoles.includes(this.user_role)) {
-        query = `?allocation_type=allocation&page=1&page_size=10`;
+        query = `?user_type=allocation&page=1&page_size=10`;
       } else if (adminRoles.includes(this.user_role)) {
-        query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=allocation&page=1&page_size=10`;
+        query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=allocation&page=1&page_size=10`;
       } else {
-        query = `?allocation_type=allocation&page=1&page_size=10`;
+        query = `?user_type=allocation&page=1&page_size=10`;
       }
       this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
         (res: any) => {
@@ -318,8 +316,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
   phoneNumberIndex:any
 
   recursiveCall(number: string, id: any,item,index:any){
-    console.log(this.phoneNumbers.length,"this.phoneNumbers.length recursive call");
-    console.log(index,"index in recursive call" );
+  
     
     if(index>=this.phoneNumbers.length){
       return
@@ -446,13 +443,13 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
           const superAdminRoles = ['SUPERADMIN', 'SUPER ADMIN'];
           const adminRoles = ['ADMIN'];
           if (counsellorRoles.includes(this.user_role)) {
-            query = `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10`;
+            query = `?counsellor_id=${this.user_id}&user_type=allocation&page=1&page_size=10`;
           } else if (superAdminRoles.includes(this.user_role)) {
-            query = `?allocation_type=allocation&page=1&page_size=10`;
+            query = `?user_type=allocation&page=1&page_size=10`;
           }  else if (adminRoles.includes(this.user_role)) {
-            query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=allocation&page=1&page_size=10`;
+            query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=allocation&page=1&page_size=10`;
           }else{
-            query = `?allocation_type=allocation&page=1&page_size=10`;
+            query = `?user_type=allocation&page=1&page_size=10`;
           }
     
           if (res.length > 0) {
@@ -509,13 +506,13 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
       const adminRoles = ['ADMIN'];
       
       if (counsellorRoles.includes(this.user_role)) {
-        query = `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10`;
+        query = `?counsellor_id=${this.user_id}&user_type=allocation&page=1&page_size=10`;
       } else if (superAdminRoles.includes(this.user_role)) {
-        query = `?allocation_type=allocation&page=1&page_size=10`;
+        query = `?user_type=allocation&page=1&page_size=10`;
       } else if (adminRoles.includes(this.user_role)) {
-        query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=allocation&page=1&page_size=10`;
+        query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=allocation&page=1&page_size=10`;
       } else {
-        query = `?allocation_type=allocation&page=1&page_size=10`;
+        query = `?user_type=allocation&page=1&page_size=10`;
       }
       this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
         (res: any) => {
@@ -545,13 +542,13 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
       const adminRoles = ['ADMIN'];
     
       if (counsellorRoles.includes(this.user_role)) {
-        query = `?counsellor_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
+        query = `?counsellor_id=${this.user_id}&user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
       } else if (superAdminRoles.includes(this.user_role)) {
-        query = `?allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
+        query = `?user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
       } else if (adminRoles.includes(this.user_role)) {
-        query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
+        query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
       } else {
-        query = `?allocation_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
+        query = `?user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
       }
     
       this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
@@ -673,13 +670,13 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
     const adminRoles = ['ADMIN'];
   
     if (counsellorRoles.includes(this.user_role)) {
-      query = `?counsellor_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?counsellor_id=${this.user_id}&user_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`;
     } else if (superAdminRoles.includes(this.user_role)) {
-      query = `?allocation_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?user_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`;
     } else if (adminRoles.includes(this.user_role)) {
-      query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`;
     } else {
-      query = `?user_id=${this.user_id}&allocation_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?user_id=${this.user_id}&user_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`;
     }
   
     if (this.searchTerm) {
@@ -747,13 +744,13 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
       const adminRoles = ['ADMIN'];
   
       if (counsellorRoles.includes(this.user_role)) {
-        params = `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?counsellor_id=${this.user_id}&user_type=allocation&page=1&page_size=10&counsellor_id=${event}`;
       } else if (superAdminRoles.includes(this.user_role)) {
-        params = `?allocation_type=allocation&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?user_type=allocation&page=1&page_size=10&counsellor_id=${event}`;
       } else if (adminRoles.includes(this.user_role)) {
-        params = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=allocation&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=allocation&page=1&page_size=10&counsellor_id=${event}`;
       } else {
-        params = `?allocation_type=allocation&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?user_type=allocation&page=1&page_size=10&counsellor_id=${event}`;
       }
   
       if (this.statusFilter) {
@@ -800,13 +797,13 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
     const adminRoles = ['ADMIN'];
   
     if (counsellorRoles.includes(this.user_role)) {
-      query = `?counsellor_id=${this.user_id}&allocation_type=allocation&page=1&page_size=10&key=${event}`;
+      query = `?counsellor_id=${this.user_id}&user_type=allocation&page=1&page_size=10&key=${event}`;
     } else if (superAdminRoles.includes(this.user_role)) {
-      query = `?allocation_type=allocation&page=1&page_size=10&key=${event}`;
+      query = `?user_type=allocation&page=1&page_size=10&key=${event}`;
     } else if (adminRoles.includes(this.user_role)) {
-      query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=allocation&page=1&page_size=10&key=${event}`;
+      query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=allocation&page=1&page_size=10&key=${event}`;
     } else {
-      query = `?allocation_type=allocation&page=1&page_size=10&key=${event}`;
+      query = `?user_type=allocation&page=1&page_size=10&key=${event}`;
     }
   
     if (this.statusFilter) {

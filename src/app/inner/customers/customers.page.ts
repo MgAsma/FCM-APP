@@ -333,13 +333,13 @@ return
       this._customer.customerStatus.subscribe(
         (res: any) => {
           if (counsellorRoles.includes(this.user_role)) {
-            query = `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`;
+            query = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10`;
           } else if (superAdminRoles.includes(this.user_role)) {
-            query = `?allocation_type=customers&page=1&page_size=10`;
+            query = `?user_type=customers&page=1&page_size=10`;
           } else if (adminRoles.includes(this.user_role)) {
-            query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10`;
+            query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=customers&page=1&page_size=10`;
           } else {
-            query = `?allocation_type=customers&page=1&page_size=10`;
+            query = `?user_type=customers&page=1&page_size=10`;
           }
     
           if (res.length > 0) {
@@ -390,13 +390,13 @@ return
       this._customer.customerStatus.subscribe(
         (statusRes: any) => {
           if (counsellorRoles.includes(this.user_role)) {
-            query = `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`;
+            query = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10`;
           } else if (superAdminRoles.includes(this.user_role)) {
-            query = `?allocation_type=customers&page=1&page_size=10`;
+            query = `?user_type=customers&page=1&page_size=10`;
           } else if (adminRoles.includes(this.user_role)) {
-            query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10`;
+            query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=customers&page=1&page_size=10`;
           } else {
-            query = `?allocation_type=customers&page=1&page_size=10`;
+            query = `?user_type=customers&page=1&page_size=10`;
           }
     
           if (statusRes.length > 0) {
@@ -450,13 +450,13 @@ return
       const adminRoles = ['ADMIN'];
       
       if (counsellorRoles.includes(this.user_role)) {
-        query = `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`;
+        query = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10`;
       } else if (superAdminRoles.includes(this.user_role)) {
-        query = `?allocation_type=customers&page=1&page_size=10`;
+        query = `?user_type=customers&page=1&page_size=10`;
       } else if (adminRoles.includes(this.user_role)) {
-        query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10`;
+        query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=customers&page=1&page_size=10`;
       } else {
-        query = `?allocation_type=customers&page=1&page_size=10`;
+        query = `?user_type=customers&page=1&page_size=10`;
       }
       
       this.getLeadlist(query);
@@ -494,13 +494,13 @@ return
     const adminRoles = ['ADMIN'];
   
     if (counsellorRoles.includes(this.user_role)) {
-      query = `?counsellor_id=${this.user_id}&allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?counsellor_id=${this.user_id}&user_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
     } else if (superAdminRoles.includes(this.user_role)) {
-      query = `?allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?user_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
     } else if (adminRoles.includes(this.user_role)) {
-      query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
     } else {
-      query = `?allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?user_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
     }
   
     if (this.searchTerm) {
@@ -568,13 +568,13 @@ return
       const adminRoles = ['ADMIN'];
   
       if (counsellorRoles.includes(this.user_role)) {
-        params = `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10&counsellor_id=${event}`;
       } else if (superAdminRoles.includes(this.user_role)) {
-        params = `?allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?user_type=customers&page=1&page_size=10&counsellor_id=${event}`;
       } else if (adminRoles.includes(this.user_role)) {
-        params = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=customers&page=1&page_size=10&counsellor_id=${event}`;
       } else {
-        params = `?allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?user_type=customers&page=1&page_size=10&counsellor_id=${event}`;
       }
   
       if (this.statusFilter) {
@@ -620,13 +620,13 @@ return
     const adminRoles = ['ADMIN'];
   
     if (counsellorRoles.includes(this.user_role)) {
-      query = `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&key=${event}`;
+      query = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10&key=${event}`;
     } else if (superAdminRoles.includes(this.user_role)) {
-      query = `?allocation_type=customers&page=1&page_size=10&key=${event}`;
+      query = `?user_type=customers&page=1&page_size=10&key=${event}`;
     } else if (adminRoles.includes(this.user_role)) {
-      query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10&key=${event}`;
+      query = `?admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}&user_type=customers&page=1&page_size=10&key=${event}`;
     } else {
-      query = `?allocation_type=customers&page=1&page_size=10&key=${event}`;
+      query = `?user_type=customers&page=1&page_size=10&key=${event}`;
     }
   
     if (this.statusFilter) {
