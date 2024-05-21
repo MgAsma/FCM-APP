@@ -15,7 +15,7 @@
   <form [formGroup]="editLead">
     <div class="container">
   
-      <ion-accordion-group>
+      <ion-accordion-group value="first">
          <ion-accordion value="first">
            <ion-item slot="header" color="light">
              <ion-label> Basic Information</ion-label>
@@ -103,13 +103,7 @@
                    </ng-container>
                    
                
-                 <!-----  Date Of Birth ---->
-                 <ion-label position="stacked">Date Of Birth</ion-label>
-                 <ion-item class="label">
-                  <input type="date"  [min]="min" formControlName="dateOfBirth" [max]="minDateAdapter"/>
-                  <span class="custom-placeholder" *ngIf="!f['dateOfBirth'].value">DD/MM/YYYY</span>
-                </ion-item>
-              
+               
               
                
                
@@ -171,7 +165,13 @@
                    <ion-icon name="close-outline"></ion-icon>
                  </ion-button>
                </ion-item>
-               
+                 <!-----  Date Of Birth ---->
+                 <ion-label position="stacked">Date Of Birth</ion-label>
+                 <ion-item class="label">
+                  <input type="date"  [min]="min" formControlName="dateOfBirth" [max]="minDateAdapter"/>
+                  <span class="custom-placeholder" *ngIf="!f['dateOfBirth'].value">DD/MM/YYYY</span>
+                </ion-item>
+              
            </ng-container>
            </div>
          </ion-accordion>

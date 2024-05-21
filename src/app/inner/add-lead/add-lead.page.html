@@ -15,7 +15,7 @@
   <form [formGroup]="addNewLead">
 <div class="container">
   
-     <ion-accordion-group>
+     <ion-accordion-group value="first">
         <ion-accordion value="first">
           <ion-item slot="header" color="light">
             <ion-label> Basic Information</ion-label>
@@ -100,17 +100,11 @@
                   </ng-container>
                   
               
-                <!-----  Date Of Birth ---->
-                <ion-label position="stacked">Date Of Birth</ion-label>
-                  <ion-item class="label">
-                    <input type="date"  [min]="min" formControlName="dateOfBirth" [max]="minDateAdapter" />
-                    <span class="custom-placeholder" *ngIf="!f['dateOfBirth'].value">DD/MM/YYYY</span>
-                  </ion-item>
-             
+               
                 <!-- Country -->
                 <ion-label position="stacked">Country Name</ion-label>
                 <div class="country-code">
-                <ng-multiselect-dropdown [placeholder]="'Select Country'"  [settings]="dropdownSettings1"
+                <ng-multiselect-dropdown style="height: 40vh;" [placeholder]="'Select Country'"  [settings]="dropdownSettings1"
                 [data]="countryOptions" 
                 [formControl]="addNewLead.get('countryId')" (onSelect)="onTagSelect($event,'countryId')" (onDeSelect)="onItemDeSelect($event,'countryId')">
                 </ng-multiselect-dropdown> 
@@ -132,7 +126,7 @@
               <div class="country-code">
                 <ng-multiselect-dropdown [placeholder]="'Select The City Name'"  [settings]="dropdownSettings3"
                 [data]="cityOptions" 
-                [formControl]="addNewLead.get('cityName')" (onSelect)="onTagSelect($event,'cityName')" (onDeSelect)="onItemDeSelect($event,'cityName')">
+                [formControl]="addNewLead.get('cityName')"  (onSelect)="onTagSelect($event,'cityName')" (onDeSelect)="onItemDeSelect($event,'cityName')">
                 </ng-multiselect-dropdown> 
               </div>
               <!-- Pincode -->
@@ -163,13 +157,19 @@
                   <ion-icon name="close-outline"></ion-icon>
                 </ion-button>
               </ion-item>
-              
+               <!-----  Date Of Birth ---->
+               <ion-label position="stacked">Date Of Birth</ion-label>
+               <ion-item class="label">
+                 <input type="date"  [min]="min" formControlName="dateOfBirth" [max]="minDateAdapter" />
+                 <span class="custom-placeholder" *ngIf="!f['dateOfBirth'].value">DD/MM/YYYY</span>
+               </ion-item>
+          
               
           </ng-container>
           </div>
         </ion-accordion>
         <ion-accordion value="second">
-          <ion-item slot="header" color="light">
+          <ion-item slot="header" color="light" >
             <ion-label>Candidate Details</ion-label>
           </ion-item>
           <div slot="content" class="p-3">

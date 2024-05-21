@@ -45,7 +45,7 @@ export class AddLeadPage implements OnInit {
   showPicker = false;
   dateOfBirth = new Date()
   formatedDate: string;
-  type = 'text'
+  type = 'text';
   min:string;
   levelofProgram: any = [];
   selectedCountry: any;
@@ -521,7 +521,7 @@ export class AddLeadPage implements OnInit {
     let data:any ={
       first_name: f['firstName'],
       last_name: "",
-      email: f['email'],
+      email: f['email'] || null,
       mobile_number:f['mobile'],
       date_of_birth:this._datePipe.transform(f['dateOfBirth'],'YYYY-MM-dd') || null,
       alternate_mobile_number:f['alternateNumber'] || null,
