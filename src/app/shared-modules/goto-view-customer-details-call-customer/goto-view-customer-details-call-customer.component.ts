@@ -253,59 +253,7 @@ async  initializeCall(event) {
   }
 
   
-  // initializeCall(event) {
-  //   //console.log(event)
-  //   this.leadId = event.lead_id;
-  //   this.leadPhoneNumber = event.phone_number;
-  //   this.callStartTime = new Date();
-  //   // //console.log(this.callStartTime, 'time');
-  //    let data = {
-  //     user:this.counsellor_id,
-  //     status:3
-  //   }
-  //   this._baseService.postData(`${environment.counsellor_status}`,data).subscribe((res:any)=>{
-  //     if(res){
-  //       // this.api.showToast(res.message)  
-  //     }
-  //   },((error:any)=>{
-  //     // this.api.showToast(error?.error?.message)
-  //   }))
-  //   this.callNumber
-  //     .callNumber(event.phone_number, true)
-  //     .then(() => {
-  //       this.callInitiated = true;
-  //       ////console.log('Dialer Launched!');
-  //       // setTimeout(() => {
-  //       //   this.getContacts('type', '2', '==');
-  //       //   // this.getContacts('type', '5', '==');
-  //       // }, 10000);
-  //       // setTimeout(() => {
-  //       //   this.postCallHistory();
-  //       // }, 40000);
-
-  //       setTimeout(() => {
-  //         this.getContacts("type", "2", "==");
-  //         // this.getContacts("type", "5", "==");
-  //       }, 70000);
-  //       setTimeout(() => {
-  //         this.postCallHistory();
-  //       }, 90000);
-  //     })
-  //     .catch(() => {
-  //       //console.log('Error launching dialer');
-  //     });
-  //      let data2 = {
-  //       user:this.counsellor_id,
-  //       status:6
-  //     }
-  //     this._baseService.postData(`${environment.counsellor_status}`,data2).subscribe((res:any)=>{
-  //       if(res){
-  //         // this.api.showToast(res.message)  
-  //       }
-  //     },((error:any)=>{
-  //       //this.api.showToast(error?.error?.message)
-  //     }))
-  // }
+ 
   postCallHistory() {
     let data = {
       lead_id: this.leadId,
