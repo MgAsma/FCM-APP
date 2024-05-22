@@ -8,6 +8,7 @@ import { Storage } from '@capacitor/storage';
 import { ApiService } from '../../../service/api/api.service';
 import { OnBreakComponent } from '../../../shared-modules/on-break/on-break.component';
 import { MeetingComponent } from '../../../shared-modules/meeting/meeting.component';
+import { CallPermissionsService } from '../../../service/api/call-permissions.service';
 
 @Component({
   selector: 'app-start-break',
@@ -20,7 +21,7 @@ export class StartBreakComponent  implements OnInit {
   id:any;
   lastLoginDate:any;
 
-  constructor(private popoverController:PopoverController,private api:ApiService,private _fb:FormBuilder,private router:Router) { }
+  constructor(private popoverController:PopoverController,private api:ApiService,private _fb:FormBuilder,private router:Router,private callPermissionService:CallPermissionsService) { }
 
   ngOnInit(): void {
     this.id=localStorage.getItem('user_id')
@@ -62,6 +63,9 @@ export class StartBreakComponent  implements OnInit {
             this.api.showLoading()
             this.api.break(this.breakForm.value).subscribe(
             (resp:any)=>{
+
+              let setBreakTime=new Date()
+              this.callPermissionService.setBreakTime(setBreakTime)
               this.api.loaderDismiss()
               this.close()
               Storage.set({ key: 'break', value: 'on_break' });
