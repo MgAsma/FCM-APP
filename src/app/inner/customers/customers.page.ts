@@ -98,7 +98,10 @@ export class CustomersPage implements OnInit {
    
     this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this))
     // this.initiateCallStatus();
-    this.refreshAllState()
+    if(this.refresh){
+      this.refreshAllState()
+    }
+   
   }
 
 
@@ -358,6 +361,7 @@ return
       
             this.leadCards = [];
             this.data = [];
+            alert
             this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
               (res: any) => {
                 if (res.results) {

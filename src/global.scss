@@ -199,7 +199,11 @@ html {
     cursor: pointer;
     transition: transform .2s ease;
 }
-
+.multiselect-dropdown .dropdown-btn .selected-item-container .selected-item {
+  background: var(--ion-color-primary);
+  color: #fff;
+  max-width: fit-content !important;
+}
 #swipe-down,.refresh-text{
   color:var(--ion-color-secondary) !important;
 }

@@ -319,7 +319,7 @@ export class EditLeadPage implements OnInit {
           ...item,
           name: this.toTitleCase(item.name)
         })).sort((a: any, b: any) => a.name.localeCompare(b.name));
-         this.getState(this.lead.country,this.countryOptions)
+         this.getState(this.lead?.country,this.countryOptions)
           
       }
     },(error:any)=>{
@@ -347,7 +347,7 @@ export class EditLeadPage implements OnInit {
           ...item,
           name: this.toTitleCase(item.name)
         })).sort((a: any, b: any) => a.name.localeCompare(b.name));
-        this.getCity(this.lead.state,this.stateOptions)
+        this.getCity(this.lead?.state,this.stateOptions)
 
       }
     },(error:any)=>{
@@ -662,7 +662,7 @@ export class EditLeadPage implements OnInit {
     date_of_birth: this._datePipe.transform(formData.dateOfBirth,'YYYY-MM-dd') || null,
     alternate_mobile_number: formData.alternateNumber || null,
     role: 5,
-    location:  formData.cityName,
+    location:null,
     pincode: formData.pincode || null,
     country: this.selectedCountry,
     state: this.selectedState, 

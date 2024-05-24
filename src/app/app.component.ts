@@ -230,7 +230,7 @@ else{
 
   appVersion(){
     // Define your current application version
-const currentVersion = '1.0.17';
+const currentVersion = '1.0.18';
 
 // Check if local storage contains a version number
 const storedVersion = localStorage.getItem('appVersion');
