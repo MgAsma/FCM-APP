@@ -74,19 +74,11 @@ export class EditLeadPage implements OnInit {
     this.min = this._datePipe.transform(minimum,'yyyy-MM-dd')
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
     this.user_id = localStorage.getItem("user_id");
-    }
-    dateChanged(value){
-      this.editLead.patchValue({
-        dateOfBirth:this._datePipe.transform(value,'yyyy-MM-dd')
-      })
-      this.showPicker = false
-    }
-  ngOnInit(): void {
     this.getCountry();
-    this.getState();
+    // this.getState();
     this.getChannel();
     this.getSource();
-    this.getCity();
+    // this.getCity();
     this.getCampign();
     this.getNewChannel();
     this.getDepartment();
@@ -103,6 +95,15 @@ export class EditLeadPage implements OnInit {
     this.getCounselledBy();
     this.getLeadStage()
     this.initForm()
+    }
+    dateChanged(value){
+      this.editLead.patchValue({
+        dateOfBirth:this._datePipe.transform(value,'yyyy-MM-dd')
+      })
+      this.showPicker = false
+    }
+  ngOnInit(): void {
+ 
     this.getLeadById()
     this.dropdownSettings1 = {
       singleSelection: true,
@@ -137,22 +138,7 @@ export class EditLeadPage implements OnInit {
     return this.editLead.controls;
   }
    getLeadById() {
-    let selectedCity:any = []
-    this.api.getAllCity().subscribe((res:any)=>{
-      if(res.results){
-        this.cityOptions = res.results
-          if(this.cityOptions.length > 0){
-            selectedCity = this.cityOptions?.filter((m:any)=>m.id === this.lead?.city)
-            this.editLead.patchValue({
-              cityName: selectedCity ?? '',
-            })
-          }
-         
-      }
-      },(error:any)=>{
-         this.api.showToast(error?.error?.message)
-        
-      })
+   
       this._baseService.getByID(`${environment.lead_list}${this._inputData.user_data.id}/`).subscribe(
         (res: any) => {
          if (res && res.result && res.result.length > 0) {
@@ -161,13 +147,35 @@ export class EditLeadPage implements OnInit {
            if(this.lead.course_looking_for?.length >0){
               courseId = this.lead.course_looking_for.map((m:any)=>m.id)
            }
-           this.getCountry()
-           this.getState()
-
-          
-         
+          this.getCountry()
+          let selectedCity:any = []
+          let stateOptions:any = []
+          this.api.getAllCity().subscribe((res:any)=>{
+            if(res.results){
+              this.cityOptions = res.results
+                if(this.cityOptions.length > 0){
+                  selectedCity = this.cityOptions?.filter((m:any)=>m.id === this.lead?.city)
+                  this.editLead.patchValue({
+                    cityName: selectedCity ?? '',
+                  })
+                }
+               
+            }
+            },(error:any)=>{
+               this.api.showToast(error?.error?.message) 
+            })
+          this.api.getAllState().subscribe((res:any)=>{
+            if(res.results){ 
+              this.stateOptions = res.results
+              stateOptions = this.stateOptions?.filter((m:any)=>m.id === this.lead.state)
+              this.editLead.patchValue({
+                state: stateOptions ?? '',
+              })
+              }})
+     
+      
            const selectedCountry = this.countryOptions?.filter((m:any)=>m.id === this.lead.country)
-           const selectedState = this.stateOptions?.filter((m:any)=>m.id === this.lead.state)
+          // const selectedState = this.stateOptions?.filter((m:any)=>m.id === this.lead.state)
            
            this.selectedCountry = this.lead.country
            this.selectedCity = this.lead.city
@@ -180,7 +188,7 @@ export class EditLeadPage implements OnInit {
              alternateNumber: this.lead.alternate_mobile_number ?? '',
              email: this.lead.user_data?.email ?? '',
              dateOfBirth: this.lead.date_of_birth ?? '',
-             state: selectedState ?? '',
+            // state: selectedState ?? '',
              zone: this.lead.zone ?? '',
              course: this.lead.stream ?? '',
              // cityName: selectedCity ?? '',
@@ -304,34 +312,66 @@ export class EditLeadPage implements OnInit {
   toTitleCase(str: string): string {
     return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   }
-  getCountry(){
+   getCountry(){
     this.api.getAllCountry().subscribe((res:any)=>{
       if(res.results){
         this.countryOptions = res.results.map((item: any) => ({
           ...item,
           name: this.toTitleCase(item.name)
         })).sort((a: any, b: any) => a.name.localeCompare(b.name));
+         this.getState(this.lead.country,this.countryOptions)
+          
       }
     },(error:any)=>{
        this.api.showToast(error?.error?.message)
       
     })
   }
-  getState(){
-    this.api.getAllState().subscribe((res:any)=>{
+  getState(event,countryOptions){
+    let selectedCountryName:any;
+    if(event.id && countryOptions.length >0){
+     countryOptions.forEach((f:any)=>{
+      if(f.id == event.id){
+        selectedCountryName = f.name
+      }
+      
+    })
+      
+    }
+    
+    let country = selectedCountryName
+      let params = `?country_name=${country}`
+    this.api.getAllState(params).subscribe((res:any)=>{
       if(res.results){
         this.stateOptions = res.results.map((item: any) => ({
           ...item,
           name: this.toTitleCase(item.name)
         })).sort((a: any, b: any) => a.name.localeCompare(b.name));
+        this.getCity(this.lead.state,this.stateOptions)
+
       }
     },(error:any)=>{
        this.api.showToast(error?.error?.message)
       
     })
   }
-  getCity(){
-    this.api.getAllCity().subscribe((res:any)=>{
+  getCity(event,stateOptions){
+    let selectedStateName:any;
+    if(event && stateOptions.length >0){
+    stateOptions.forEach((f:any)=>{
+      if(f.id == event.id){
+        selectedStateName = f.name
+      }
+      
+    })
+      
+    }
+    
+    let state = selectedStateName
+      let params = `?state_name=${state}`
+   
+    
+    this.api.getAllCity(params).subscribe((res:any)=>{
       if(res.results){
         this.cityOptions = res.results.map((item: any) => ({
           ...item,
@@ -342,7 +382,6 @@ export class EditLeadPage implements OnInit {
          this.api.showToast(error?.error?.message)
         
       })
-      console.log(this.cityOptions,"sfsdfsd----------------")
       return this.cityOptions;
   }
   getChannel(){

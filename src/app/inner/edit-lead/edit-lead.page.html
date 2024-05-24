@@ -114,7 +114,7 @@
                     
                    <ng-multiselect-dropdown [placeholder]="'Select Country'"  [settings]="dropdownSettings1"
                    [data]="countryOptions" 
-                   [formControl]="editLead.get('countryId')" (onSelect)="onTagSelect($event,'countryId')" (onDeSelect)="onItemDeSelect($event,'countryId')">
+                   [formControl]="editLead.get('countryId')" (onSelect)="onTagSelect($event,'countryId');getState($event,countryOptions)" (onDeSelect)="onItemDeSelect($event,'countryId')">
                    </ng-multiselect-dropdown> 
                     
                    </div>
@@ -125,7 +125,7 @@
                   
                     <ng-multiselect-dropdown [placeholder]="'Select The State'"  [settings]="dropdownSettings2"
                    [data]="stateOptions" 
-                   [formControl]="editLead.get('state')" (onSelect)="onTagSelect($event,'state')" (onDeSelect)="onItemDeSelect($event,'state')">
+                   [formControl]="editLead.get('state')" (onSelect)="onTagSelect($event,'state');getCity($event,stateOptions)" (onDeSelect)="onItemDeSelect($event,'state')">
                    </ng-multiselect-dropdown> 
                     
                    </div>

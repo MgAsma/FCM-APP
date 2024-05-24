@@ -106,7 +106,7 @@
                 <div class="country-code">
                 <ng-multiselect-dropdown style="height: 40vh;" [placeholder]="'Select Country'"  [settings]="dropdownSettings1"
                 [data]="countryOptions" 
-                [formControl]="addNewLead.get('countryId')" (onSelect)="onTagSelect($event,'countryId')" (onDeSelect)="onItemDeSelect($event,'countryId')">
+                [formControl]="addNewLead.get('countryId')" (onSelect)="onTagSelect($event,'countryId');getState($event,countryOptions)" (onDeSelect)="onItemDeSelect($event,'countryId')">
                 </ng-multiselect-dropdown> 
                   
                 </div>
@@ -117,7 +117,7 @@
                
                  <ng-multiselect-dropdown [placeholder]="'Select The State'"  [settings]="dropdownSettings2"
                 [data]="stateOptions" 
-                [formControl]="addNewLead.get('state')" (onSelect)="onTagSelect($event,'state')" (onDeSelect)="onItemDeSelect($event,'state')">
+                [formControl]="addNewLead.get('state')" (onSelect)="onTagSelect($event,'state');getCity($event,stateOptions)" (onDeSelect)="onItemDeSelect($event,'state')">
                 </ng-multiselect-dropdown> 
                 
                 </div>
