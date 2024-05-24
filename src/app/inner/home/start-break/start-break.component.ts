@@ -65,6 +65,8 @@ export class StartBreakComponent  implements OnInit {
             (resp:any)=>{
 
               let setBreakTime=new Date()
+              var dateString = new Date().toISOString();
+              localStorage.setItem('storedDate', dateString);
               this.callPermissionService.setBreakTime(setBreakTime)
               this.api.loaderDismiss()
               this.close()

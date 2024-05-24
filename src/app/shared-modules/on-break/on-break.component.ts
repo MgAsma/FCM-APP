@@ -20,7 +20,7 @@ export class OnBreakComponent implements OnInit {
 
   
   
-  breakTime:Date;
+  breakTime:any;
   breakTime1:any;
   constructor(
     private popoverController: PopoverController,
@@ -30,7 +30,10 @@ export class OnBreakComponent implements OnInit {
     private datePipe: DatePipe,
     private callPermissionService:CallPermissionsService
   ) {
-    this.breakTime=this.callPermissionService.getBreakTime();
+    // this.breakTime=this.callPermissionService.getBreakTime();
+    this.breakTime=localStorage.getItem('storedDate')
+    console.log(this.breakTime,"breaktime");
+    
    
     
   }
@@ -64,7 +67,9 @@ export class OnBreakComponent implements OnInit {
         (resp: any) => {
           this.api.loaderDismiss();
           this.close();
+
           Storage.remove({ key: 'break' });
+          localStorage.removeItem('storedDate')
           this.api.showToast('Break Ended Sucessfully!');
         },
         (error: any) => {
