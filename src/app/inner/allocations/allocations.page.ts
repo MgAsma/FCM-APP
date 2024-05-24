@@ -175,7 +175,6 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
             
             
             this.leadCards = res.results.data;
-            this.leadData=res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
           }
@@ -550,7 +549,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
                 this.allocateItem=res.results.data[0]
                 this.data = new MatTableDataSource<any>(this.leadCards);
                 this.totalNumberOfRecords = res.total_no_of_record;
-                this.getPhoneNumbers();
+                this.getPhoneNumbers(this.leadCards);
           
                 
               }
@@ -576,12 +575,11 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
     this.getCounselor();
   
   }
-  getPhoneNumbers(){
-    // console.log(this.leadData,"leadcards in phno function"); 
-    
-    if(this.leadData?.length>0){
+  getPhoneNumbers(leadData){
+    alert(leadData)
+    if(leadData?.length>0){
       
-      this.phoneNumbers= this.leadData?.filter((ele:any) =>(ele.user_data?.mobile_number)
+      this.phoneNumbers= leadData?.filter((ele:any) =>(ele.user_data?.mobile_number)
       ).map((ele:any)=>ele.user_data?.mobile_number)
     }
    

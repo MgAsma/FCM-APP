@@ -19,7 +19,7 @@
           <p >Hi Welcome, {{userName | uppercase}}</p>
         </ion-col>
         
-        <ion-col class="d-flex align-items-center py-0" ><p>Role <strong class="roles">{{user_role}}</strong></p></ion-col>
+        <ion-col class="d-flex align-items-center py-0" ><p>Role <strong class="roles">{{user_role | uppercase || 'NA'}}</strong></p></ion-col>
         <ion-col size="2" class="text-end">
           <ion-icon (click)="openStartBreak()" name="cafe" style="font-size: 20px;"></ion-icon>
         </ion-col>
@@ -27,11 +27,7 @@
           <ion-icon (click)="openCheckout()" name="power" style="font-size: 20px;"></ion-icon>
         </ion-col>
        </ion-row>
-       <!-- <ion-row>
-        <ion-col>
-          <small><ion-icon name="sync"></ion-icon> Default Process</small>
-        </ion-col>
-       </ion-row> -->
+       
     </div>
   </ion-toolbar>
   
