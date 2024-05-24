@@ -578,6 +578,7 @@ export class EditLeadPage implements OnInit {
     this.callPermissionService.closeCancelEditLeadPagedataSubject.next('cancel')
     this.modalController.dismiss()
     this._addLeadEmitter.triggerGet();
+    
   }
 
   onSubmit(){
