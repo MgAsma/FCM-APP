@@ -68,7 +68,7 @@
 <ion-content
   [fullscreen]="true"
   class="ion-padding"
-  *ngIf="data.data?.length > 0"
+  *ngIf="data?.data?.length > 0"
 >
 
 
@@ -81,7 +81,7 @@
     refresh.
   </p>
   <ion-row>
-    <ion-col size="12" *ngFor="let allocate of data.data;let i=index">
+    <ion-col size="12" *ngFor="let allocate of data?.data;let i=index">
       <ion-card class="allocate-card">
         <ion-card-content
           [ngStyle]="allocate.color ? {'border-left': '3px solid ' + allocate.color} : {'border-left':'3px solid rgb(18, 65, 106)'}"

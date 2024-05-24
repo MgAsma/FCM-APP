@@ -57,7 +57,7 @@ export class CustomersPage implements OnInit {
   callDuration: number;
   leadId: any;
   leadPhoneNumber: any;
-  counsellor_id: any;
+
 
   currentStatus: any;
   callInitiated: boolean = false;
@@ -70,6 +70,7 @@ export class CustomersPage implements OnInit {
   pageIndex: number;
   selectedLead: any;
   refresh: boolean = false;
+  resCounsellors:any = [];
 
   constructor(
     private _customer: AllocationEmittersService,
@@ -88,8 +89,8 @@ export class CustomersPage implements OnInit {
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
 
-    this.counsellor_id = localStorage.getItem("user_id");
-
+    this.user_id = localStorage.getItem("user_id");
+    this.resCounsellors = localStorage.getItem("counsellor_ids")
    
   }
 
@@ -97,7 +98,7 @@ export class CustomersPage implements OnInit {
    
     this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this))
     // this.initiateCallStatus();
-   
+    this.refreshAllState()
   }
 
 
@@ -274,7 +275,7 @@ return
       lead_id: this.leadId,
       phone_number: this.leadPhoneNumber,
       call_status: this.currentStatus,
-      counsellor: this.counsellor_id,
+      counsellor: this.user_id,
       call_start_time: this.callStartTime,
     };
     this.api.sendingCallHistory(data).subscribe(
@@ -318,7 +319,63 @@ return
         this.searchBar = false;
       }
     });
+   
+    
     if (!this.refresh) {
+      this._counsellorEmitter.triggerGet$.subscribe((res: any) => {
+        let query: string;
+        const counsellorRoles = ['COUNSELLOR', 'COUNSELOR'];
+        const superAdminRoles = ['SUPERADMIN', 'SUPER ADMIN'];
+        const adminRoles = ['ADMIN'];
+      
+        this._counsellorEmitter.customerCounsellor.subscribe((res) => {
+          if (res) {
+            this.counsellor_ids = res;
+          }
+        });
+      
+        this._customer.customerStatus.subscribe(
+          (statusRes: any) => {
+            if (counsellorRoles.includes(this.user_role)) {
+              query = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10`;
+            } else if (superAdminRoles.includes(this.user_role)) {
+              query = `?user_type=customers&page=1&page_size=10`;
+            } else if (adminRoles.includes(this.user_role)) {
+              query = `?admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}&user_type=customers&page=1&page_size=10`;
+            } else {
+              query = `?user_type=customers&page=1&page_size=10`;
+            }
+            if (this.counsellor_ids.length > 0) {
+              query += `&counsellor_id=${this.counsellor_ids}`;
+            }
+            if (statusRes.length > 0) {
+              this.statusFilter = true;
+              query += `&status=${statusRes}`;
+            }
+            if (this.searchTerm) {
+              query += `&key=${this.searchTerm}`;
+            }
+      
+            this.leadCards = [];
+            this.data = [];
+            this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
+              (res: any) => {
+                if (res.results) {
+                  this.leadCards = res.results.data;
+                  this.data = new MatTableDataSource<any>(this.leadCards);
+                  this.totalNumberOfRecords = res.total_no_of_record;
+                }
+              },
+              (error: any) => {
+                this.api.showError(error.error.message);
+              }
+            );
+          },
+          (error: any) => {
+            this.api.showError(error.error.message);
+          }
+        );
+      });
       let query: string;
       const counsellorRoles = ['COUNSELLOR', 'COUNSELOR'];
       const superAdminRoles = ['SUPERADMIN', 'SUPER ADMIN'];
@@ -333,13 +390,13 @@ return
       this._customer.customerStatus.subscribe(
         (res: any) => {
           if (counsellorRoles.includes(this.user_role)) {
-            query = `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`;
+            query = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10`;
           } else if (superAdminRoles.includes(this.user_role)) {
-            query = `?allocation_type=customers&page=1&page_size=10`;
+            query = `?user_type=customers&page=1&page_size=10`;
           } else if (adminRoles.includes(this.user_role)) {
-            query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10`;
+            query = `?admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}&user_type=customers&page=1&page_size=10`;
           } else {
-            query = `?allocation_type=customers&page=1&page_size=10`;
+            query = `?user_type=customers&page=1&page_size=10`;
           }
     
           if (res.length > 0) {
@@ -372,67 +429,45 @@ return
           this.api.showError(error.error.message);
         }
       );
+    }else{
+      this.refreshAllState()
     }
     
     
-    this._counsellorEmitter.triggerGet$.subscribe((res: any) => {
-      let query: string;
-      const counsellorRoles = ['COUNSELLOR', 'COUNSELOR'];
-      const superAdminRoles = ['SUPERADMIN', 'SUPER ADMIN'];
-      const adminRoles = ['ADMIN'];
-    
-      this._counsellorEmitter.customerCounsellor.subscribe((res) => {
-        if (res) {
-          this.counsellor_ids = res;
-        }
-      });
-    
-      this._customer.customerStatus.subscribe(
-        (statusRes: any) => {
-          if (counsellorRoles.includes(this.user_role)) {
-            query = `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`;
-          } else if (superAdminRoles.includes(this.user_role)) {
-            query = `?allocation_type=customers&page=1&page_size=10`;
-          } else if (adminRoles.includes(this.user_role)) {
-            query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10`;
-          } else {
-            query = `?allocation_type=customers&page=1&page_size=10`;
-          }
-    
-          if (statusRes.length > 0) {
-            this.statusFilter = true;
-            query += `&status=${statusRes}`;
-          }
-          if (this.searchTerm) {
-            query += `&key=${this.searchTerm}`;
-          }
-    
-          this.leadCards = [];
-          this.data = [];
-          this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
-            (res: any) => {
-              if (res.results) {
-                this.leadCards = res.results.data;
-                this.data = new MatTableDataSource<any>(this.leadCards);
-                this.totalNumberOfRecords = res.total_no_of_record;
-              }
-            },
-            (error: any) => {
-              this.api.showError(error.error.message);
-            }
-          );
-        },
-        (error: any) => {
-          this.api.showError(error.error.message);
-        }
-      );
-    });
-    
+   
 
     this.getCounselor();
    
   }
- 
+  refreshAllState(){
+    this.refresh = true
+      this.leadCards = [];
+      this.data = [];
+      this.totalNumberOfRecords = 0
+      this._customer.customerStatus.next('')
+      this._counsellorEmitter.customerCounsellor.next([])
+      this.counsellor_ids = []
+      this.statusFilter = false;
+      this.searchTerm = '';
+      this._customer.customerSearchBar.next(false)
+      let query: string;
+      const counsellorRoles = ['COUNSELLOR', 'COUNSELOR'];
+      const superAdminRoles = ['SUPERADMIN', 'SUPER ADMIN'];
+      const adminRoles = ['ADMIN'];
+      
+      if (counsellorRoles.includes(this.user_role)) {
+        query = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10`;
+      } else if (superAdminRoles.includes(this.user_role)) {
+        query = `?user_type=customers&page=1&page_size=10`;
+      } else if (adminRoles.includes(this.user_role)) {
+        query = `?admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}&user_type=customers&page=1&page_size=10`;
+      } else {
+        query = `?user_type=customers&page=1&page_size=10`;
+      }
+      
+      this.getLeadlist(query);
+      
+  }
   handleRefresh(event: any) {
    // setTimeout(() => {
       this.refresh = true
@@ -450,13 +485,13 @@ return
       const adminRoles = ['ADMIN'];
       
       if (counsellorRoles.includes(this.user_role)) {
-        query = `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10`;
+        query = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10`;
       } else if (superAdminRoles.includes(this.user_role)) {
-        query = `?allocation_type=customers&page=1&page_size=10`;
+        query = `?user_type=customers&page=1&page_size=10`;
       } else if (adminRoles.includes(this.user_role)) {
-        query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10`;
+        query = `?admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}&user_type=customers&page=1&page_size=10`;
       } else {
-        query = `?allocation_type=customers&page=1&page_size=10`;
+        query = `?user_type=customers&page=1&page_size=10`;
       }
       
       this.getLeadlist(query);
@@ -494,13 +529,13 @@ return
     const adminRoles = ['ADMIN'];
   
     if (counsellorRoles.includes(this.user_role)) {
-      query = `?counsellor_id=${this.user_id}&allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?counsellor_id=${this.user_id}&user_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
     } else if (superAdminRoles.includes(this.user_role)) {
-      query = `?allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?user_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
     } else if (adminRoles.includes(this.user_role)) {
-      query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}&user_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
     } else {
-      query = `?allocation_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
+      query = `?user_type=customers&page=${this.currentPage}&page_size=${event.pageSize}`;
     }
   
     if (this.searchTerm) {
@@ -541,7 +576,7 @@ return
   
 
   getCounselor() {
-    let query = this.user_role === "COUNSELLOR" || this.user_role === "COUNSELOR"  || this.user_role === "ADMIN"  ?`?user_id=${this.user_id}&role_name=counsellor` : `?role_name=counsellor`
+    let query = this.user_role === "COUNSELLOR" || this.user_role === "COUNSELOR"  || this.user_role === "ADMIN"  ?`?user_id=${this.user_id}` : ``
     this._baseService
       .getData(`${environment._user}${query}`)
       .subscribe(
@@ -568,13 +603,13 @@ return
       const adminRoles = ['ADMIN'];
   
       if (counsellorRoles.includes(this.user_role)) {
-        params = `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10&counsellor_id=${event}`;
       } else if (superAdminRoles.includes(this.user_role)) {
-        params = `?allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?user_type=customers&page=1&page_size=10&counsellor_id=${event}`;
       } else if (adminRoles.includes(this.user_role)) {
-        params = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}&user_type=customers&page=1&page_size=10&counsellor_id=${event}`;
       } else {
-        params = `?allocation_type=customers&page=1&page_size=10&counsellor_id=${event}`;
+        params = `?user_type=customers&page=1&page_size=10&counsellor_id=${event}`;
       }
   
       if (this.statusFilter) {
@@ -620,13 +655,13 @@ return
     const adminRoles = ['ADMIN'];
   
     if (counsellorRoles.includes(this.user_role)) {
-      query = `?counsellor_id=${this.user_id}&allocation_type=customers&page=1&page_size=10&key=${event}`;
+      query = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10&key=${event}`;
     } else if (superAdminRoles.includes(this.user_role)) {
-      query = `?allocation_type=customers&page=1&page_size=10&key=${event}`;
+      query = `?user_type=customers&page=1&page_size=10&key=${event}`;
     } else if (adminRoles.includes(this.user_role)) {
-      query = `?admin_id=${this.user_id}&counsellor_ids=${this.counsellor_ids}&allocation_type=customers&page=1&page_size=10&key=${event}`;
+      query = `?admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}&user_type=customers&page=1&page_size=10&key=${event}`;
     } else {
-      query = `?allocation_type=customers&page=1&page_size=10&key=${event}`;
+      query = `?user_type=customers&page=1&page_size=10&key=${event}`;
     }
   
     if (this.statusFilter) {

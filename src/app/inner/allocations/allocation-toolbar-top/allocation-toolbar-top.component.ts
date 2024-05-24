@@ -38,8 +38,7 @@ export class AllocationToolbarTopComponent implements OnInit {
 
 
     this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe((res:any)=>{
-      console.log(res,"res form edit lead");
-      
+     
       if(res=='close'||res=='cancel'){
         this.isToggled=false;
       }

@@ -15,7 +15,7 @@
   <form [formGroup]="editLead">
     <div class="container">
   
-      <ion-accordion-group>
+      <ion-accordion-group value="first">
          <ion-accordion value="first">
            <ion-item slot="header" color="light">
              <ion-label> Basic Information</ion-label>
@@ -75,7 +75,7 @@
                      </ion-item>
                      <ng-container *ngIf="f['alternateNumber'].touched && f['alternateNumber'].invalid">
                        <ion-error *ngIf="f['alternateNumber'].hasError('pattern')">
-                         <ion-label color="danger">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
+                         <ion-label color="danger" style="color:#EB445A;">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
                        </ion-error>
                       
                      </ng-container>
@@ -103,13 +103,7 @@
                    </ng-container>
                    
                
-                 <!-----  Date Of Birth ---->
-                 <ion-label position="stacked">Date Of Birth</ion-label>
-                 <ion-item class="label">
-                  <input type="date"  [min]="min" formControlName="dateOfBirth" [max]="minDateAdapter"/>
-                  <span class="custom-placeholder" *ngIf="!f['dateOfBirth'].value">DD/MM/YYYY</span>
-                </ion-item>
-              
+               
               
                
                
@@ -171,7 +165,13 @@
                    <ion-icon name="close-outline"></ion-icon>
                  </ion-button>
                </ion-item>
-               
+                 <!-----  Date Of Birth ---->
+                 <ion-label position="stacked">Date Of Birth</ion-label>
+                 <ion-item class="label">
+                  <input type="date"  [min]="min" formControlName="dateOfBirth" [max]="minDateAdapter"/>
+                  <span class="custom-placeholder" *ngIf="!f['dateOfBirth'].value">DD/MM/YYYY</span>
+                </ion-item>
+              
            </ng-container>
            </div>
          </ion-accordion>
@@ -428,6 +428,20 @@
              </ion-error>
  
              <!-- Counselled By -->
+             <!-- <ion-label position="stacked">Counselled By</ion-label>
+             <ion-item>
+               <ion-select formControlName="counsellorAdmin" placeholder="Select Counselled By" >
+                 <ion-select-option *ngFor="let option of adminList" [value]="option.id">{{ option?.first_name }}</ion-select-option>
+               </ion-select>
+               <ion-button
+                 fill="clear"
+                 (click)="clearSelectField('counsellorAdmin')"
+                 *ngIf="f['counsellorAdmin']?.value"
+               >
+                 <ion-icon name="close-outline"></ion-icon>
+               </ion-button>
+             </ion-item> -->
+ 
              <ion-label position="stacked">Counselled By</ion-label>
              <ion-item>
                <ion-select formControlName="counsellorAdmin" placeholder="Select Counselled By" >
@@ -441,7 +455,7 @@
                  <ion-icon name="close-outline"></ion-icon>
                </ion-button>
              </ion-item>
- 
+
               <!-- Source -->
               <ion-label position="stacked">Source</ion-label>
               <ion-item>

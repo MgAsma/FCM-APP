@@ -131,117 +131,94 @@ export class EditLeadPage implements OnInit {
       itemsShowLimit: 1,
       allowSearchFilter: true
     };
-    this.setCounsellorAdminState()
   }
-  setCounsellorAdminState() {
-    if (this.user_role === 'SUPERADMIN') {
-      this.editLead.get('counsellorAdmin')?.enable();
-    } else {
-      this.editLead.get('counsellorAdmin')?.disable();
-    }
-  }
+ 
   get f() {
     return this.editLead.controls;
   }
-  getLeadById() {
-    this._baseService.getByID(`${environment.lead_list}${this._inputData.user_data.id}/`).subscribe(
-      (res: any) => {
-        if (res && res.result && res.result.length > 0) {
-          this.lead = res.result[0];
-          let courseId = [];
-          if(this.lead.course_looking_for?.length >0){
-             courseId = this.lead.course_looking_for.map((m:any)=>m.id)
+   getLeadById() {
+    let selectedCity:any = []
+    this.api.getAllCity().subscribe((res:any)=>{
+      if(res.results){
+        this.cityOptions = res.results
+          if(this.cityOptions.length > 0){
+            selectedCity = this.cityOptions?.filter((m:any)=>m.id === this.lead?.city)
+            this.editLead.patchValue({
+              cityName: selectedCity ?? '',
+            })
           }
-          this.getCountry()
-          this.getState()
-          this.getCity()
-          const selectedCountry = this.countryOptions?.filter((m:any)=>m.id === this.lead.country)
-          const selectedState = this.stateOptions?.filter((m:any)=>m.id === this.lead.state)
-          const selectedCity = this.cityOptions?.filter((m:any)=>m.id === this.lead.city)
-          this.selectedCountry = this.lead.country
-          this.selectedCity = this.lead.city
-          this.selectedState = this.lead.state
-          // alert(lead?.referred_to)
-          // this.editLead.patchValue({
-          //   firstName: lead.user_data.first_name,
-          //   mobile: lead.user_data.mobile_number,
-          //   alternateNumber: lead.alternate_mobile_number,
-          //   email: lead.user_data.email,
-          //   dateOfBirth: lead.date_of_birth,
-          //   state: selectedState,
-          //   zone: lead.zone,
-          //   course:lead.stream,
-          //   cityName: selectedCity,
-          //   pincode: lead.pincode,
-          //   countryId: selectedCountry,
-          //   referenceName: lead.reference_name,
-          //   referencePhoneNumber: lead.reference_mobile_number,
-          //   fatherName: lead.father_name,
-          //   fatherOccupation: lead.father_occupation,
-          //   fatherPhoneNumber: lead.father_mobile_number,
-          //   tenthPercentage: lead.tenth_per,
-          //   twelthPercentage: lead.twelfth_per,
-          //   degree: lead.degree_per,
-          //   otherCourse: lead.others,
-          //   entranceExam: lead.enterance_exam,
-          //   courseLookingfor: courseId ,
-          //   levelOfProgram:lead.level_of_program !== null ? lead?.level_of_program : '',
-          //   preferredCollege1: lead.preferred_college1,
-          //   preferredCollege2: lead.preferred_college2,
-          //   preferredLocation1: lead.preferred_location1,
-          //   preferredLocation2: lead.preferred_location2,
-          //   counsellor: lead?.referred_to == null ? lead?.referred_to : '',
-          //   counsellorAdmin: lead.counselled_by == null ? lead.counselled_by : '',
-          //   leadSource: lead.source || '',
-          //   leadStages: lead.lead_stage || '',
-          //   leadStatus: lead.lead_list_status || '',
-          //   notes: lead.note_name,
-          //   remarks: lead.remark_name
-          // });
-
-          this.editLead.patchValue({
-            firstName: this.lead.user_data?.first_name ?? '',
-            mobile: this.lead.user_data?.mobile_number ?? '',
-            alternateNumber: this.lead.alternate_mobile_number ?? '',
-            email: this.lead.user_data?.email ?? '',
-            dateOfBirth: this.lead.date_of_birth ?? '',
-            state: selectedState ?? '',
-            zone: this.lead.zone ?? '',
-            course: this.lead.stream ?? '',
-            cityName: selectedCity ?? '',
-            pincode: this.lead.pincode ?? '',
-            countryId: selectedCountry ?? '',
-            referenceName: this.lead.reference_name ?? '',
-            referencePhoneNumber: this.lead.reference_mobile_number ?? '',
-            fatherName: this.lead.father_name ?? '',
-            fatherOccupation: this.lead.father_occupation ?? '',
-            fatherPhoneNumber: this.lead.father_mobile_number ?? '',
-            tenthPercentage: this.lead.tenth_per ?? '',
-            twelthPercentage: this.lead.twelfth_per ?? '',
-            degree: this.lead.degree_per ?? '',
-            otherCourse: this.lead.others ?? '',
-            entranceExam: this.lead.enterance_exam ?? '',
-            courseLookingfor: courseId ?? '',
-            levelOfProgram: this.lead.level_of_program ?? '',
-            preferredCollege1: this.lead.preferred_college1 ?? '',
-            preferredCollege2: this.lead.preferred_college2 ?? '',
-            preferredLocation1: this.lead.preferred_location1 ?? '',
-            preferredLocation2: this.lead.preferred_location2 ?? '',
-            counsellor: this.lead.referred_to ?? '',
-            counsellorAdmin: this.lead.counselled_by ?? '',
-            leadSource: this.lead.source ?? '',
-            leadStages: this.lead.lead_stage ?? '',
-            leadStatus: this.lead.lead_list_status ?? '',
-            notes: this.lead.note_name ?? '',
-            remarks: this.lead.remark_name ?? ''
-          });
-          
-        }
-      },
-      (error) => {
-        this.api.showError(error.error.message);
+         
       }
-    );
+      },(error:any)=>{
+         this.api.showToast(error?.error?.message)
+        
+      })
+      this._baseService.getByID(`${environment.lead_list}${this._inputData.user_data.id}/`).subscribe(
+        (res: any) => {
+         if (res && res.result && res.result.length > 0) {
+           this.lead = res.result[0];
+           let courseId = [];
+           if(this.lead.course_looking_for?.length >0){
+              courseId = this.lead.course_looking_for.map((m:any)=>m.id)
+           }
+           this.getCountry()
+           this.getState()
+
+          
+         
+           const selectedCountry = this.countryOptions?.filter((m:any)=>m.id === this.lead.country)
+           const selectedState = this.stateOptions?.filter((m:any)=>m.id === this.lead.state)
+           
+           this.selectedCountry = this.lead.country
+           this.selectedCity = this.lead.city
+           this.selectedState = this.lead.state
+          
+          
+           this.editLead.patchValue({
+             firstName: this.lead.user_data?.first_name ?? '',
+             mobile: this.lead.user_data?.mobile_number ?? '',
+             alternateNumber: this.lead.alternate_mobile_number ?? '',
+             email: this.lead.user_data?.email ?? '',
+             dateOfBirth: this.lead.date_of_birth ?? '',
+             state: selectedState ?? '',
+             zone: this.lead.zone ?? '',
+             course: this.lead.stream ?? '',
+             // cityName: selectedCity ?? '',
+             pincode: this.lead.pincode ?? '',
+             countryId: selectedCountry ?? '',
+             referenceName: this.lead.reference_name ?? '',
+             referencePhoneNumber: this.lead.reference_mobile_number ?? '',
+             fatherName: this.lead.father_name ?? '',
+             fatherOccupation: this.lead.father_occupation ?? '',
+             fatherPhoneNumber: this.lead.father_mobile_number ?? '',
+             tenthPercentage: this.lead.tenth_per ?? '',
+             twelthPercentage: this.lead.twelfth_per ?? '',
+             degree: this.lead.degree_per ?? '',
+             otherCourse: this.lead.others ?? '',
+             entranceExam: this.lead.enterance_exam ?? '',
+             courseLookingfor: courseId ?? '',
+             levelOfProgram: this.lead.level_of_program ?? '',
+             preferredCollege1: this.lead.preferred_college1 ?? '',
+             preferredCollege2: this.lead.preferred_college2 ?? '',
+             preferredLocation1: this.lead.preferred_location1 ?? '',
+             preferredLocation2: this.lead.preferred_location2 ?? '',
+             counsellor: this.lead.referred_to ?? '',
+             counsellorAdmin: this.lead.counselled_by ?? '',
+             leadSource: this.lead.source ?? '',
+             leadStages: this.lead.lead_stage ?? '',
+             leadStatus: this.lead.lead_list_status ?? '',
+             notes: this.lead.note_name ?? '',
+             remarks: this.lead.remark_name ?? ''
+           });
+           
+         }
+       },
+       (error) => {
+         this.api.showError(error.error.message);
+       }
+     );
+  
+ 
   }
   initForm(){
     this.editLead = this.fb.group({
@@ -365,6 +342,8 @@ export class EditLeadPage implements OnInit {
          this.api.showToast(error?.error?.message)
         
       })
+      console.log(this.cityOptions,"sfsdfsd----------------")
+      return this.cityOptions;
   }
   getChannel(){
     this.api.getAllChannel().subscribe((resp:any)=>{
@@ -517,12 +496,12 @@ export class EditLeadPage implements OnInit {
       const adminRoles = ['ADMIN'];
     
       if (counsellorRoles.includes(this.user_role)) {
-       query = `?role_name=counsellor`
+       query = `?user_id=${this.user_id}`
       } else if (superAdminRoles.includes(this.user_role)) {
-        query = `?role_name=superadmin`
+        query = ``
       } else if (adminRoles.includes(this.user_role)) {
         query = `?user_id=${this.user_id}`
-      } 
+      }  
     this._baseService.getData(`${environment._user}${query}`).subscribe((res:any)=>{
       if(res.results){
       this.referredTo = res.results
@@ -532,7 +511,9 @@ export class EditLeadPage implements OnInit {
     }))
   }
   getCounselledBy(){
-    this._baseService.getData(`${environment._user}`).subscribe((res:any)=>{
+    let query = `?role_name=superadmin`
+    
+    this._baseService.getData(`${environment._user}${query}`).subscribe((res:any)=>{
       if(res.results){
       this.adminList = res.results
       }
@@ -583,20 +564,71 @@ export class EditLeadPage implements OnInit {
 
   onSubmit(){
   
-  const formData = this.editLead.value;
+  // const formData = this.editLead.value;
+  // let data ={
+  //   first_name: formData.firstName,
+  //   last_name:"",
+  //   email: formData.email,
+  //   mobile_number: formData.mobile ,
+  //   date_of_birth: this._datePipe.transform(formData.dateOfBirth,'YYYY-MM-dd') || null,
+  //   alternate_mobile_number: formData.alternateNumber || null,
+  //   role: 5,
+  //   location:null,
+  //   pincode: formData.pincode || null,
+  //   country: this.selectedCountry,
+  //   state: this.selectedState, 
+  //   city: this.selectedCity, 
+  //   zone: formData.zone,
+  //   lead_list_status: formData.leadStatus,
+  //   lead_list_substatus: 1,
+  //   counselled_by: formData.counsellorAdmin,
+  //   lead_stage: formData.leadStages,
+  //   updated_by:this.user_id,
+  //   note: formData.notes,
+  //   remark: formData.remarks,
+  //   source: formData.leadSource,
+  //   refered_to: formData.counsellor,
+  //   education_details: {
+  //   tenth_per: formData.tenthPercentage || null,
+  //   twelfth_per: formData.twelthPercentage || null,
+  //   degree_per: formData.degree || null,
+  //   stream: formData.course,
+  //   others: formData.otherCourse,
+  //   enterance_exam: formData.entranceExam,
+  //   course_looking_for: formData.courseLookingfor,
+  //   level_of_program:formData.levelOfProgram,
+  //     preferance_college_and_location: 
+  //       {
+  //         preferred_college1: formData.preferredCollege1,
+  //         preferred_college2: formData.preferredCollege2,
+  //         preferred_location1: formData.preferredLocation1,
+  //         preferred_location2: formData.preferredLocation2
+  //       }
+      
+  //   },
+  //   additional_info: {
+  //     reference_name: formData.referenceName,
+  //     reference_mobile_number:formData.referencePhoneNumber || null,
+  //     father_name: formData.fatherName,
+  //     father_occupation: formData.fatherOccupation,
+  //     father_mobile_number: formData.fatherPhoneNumber || null
+  //   }
+  // }
+
+  let formData = this.editLead.value;
   let data ={
     first_name: formData.firstName,
     last_name:"",
-    email: formData.email,
-    mobile_number: formData.mobile ,
+    email: formData.email || '',
+    mobile_number: formData.mobile || null,
     date_of_birth: this._datePipe.transform(formData.dateOfBirth,'YYYY-MM-dd') || null,
     alternate_mobile_number: formData.alternateNumber || null,
     role: 5,
-    location:null,
+    location:  formData.cityName,
     pincode: formData.pincode || null,
     country: this.selectedCountry,
     state: this.selectedState, 
-    city: this.selectedCity, 
+    city: this.selectedCity,  
     zone: formData.zone,
     lead_list_status: formData.leadStatus,
     lead_list_substatus: 1,
@@ -604,9 +636,10 @@ export class EditLeadPage implements OnInit {
     lead_stage: formData.leadStages,
     updated_by:this.user_id,
     note: formData.notes,
-    remark: formData.remarks,
+    remark: formData.remarks || null,
     source: formData.leadSource,
     refered_to: formData.counsellor,
+    level_of_program:formData.levelOfProgram,
     education_details: {
     tenth_per: formData.tenthPercentage || null,
     twelfth_per: formData.twelthPercentage || null,
@@ -614,8 +647,7 @@ export class EditLeadPage implements OnInit {
     stream: formData.course,
     others: formData.otherCourse,
     enterance_exam: formData.entranceExam,
-    course_looking_for: formData.courseLookingfor,
-    level_of_program:formData.levelOfProgram,
+    course_looking_for: formData.courseLookingfor || [],
       preferance_college_and_location: 
         {
           preferred_college1: formData.preferredCollege1,
@@ -632,7 +664,7 @@ export class EditLeadPage implements OnInit {
       father_occupation: formData.fatherOccupation,
       father_mobile_number: formData.fatherPhoneNumber || null
     }
-  }
+}
 
    data = JSON.parse(JSON.stringify(data));
    if (this.editLead.invalid) {

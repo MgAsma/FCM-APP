@@ -94,7 +94,7 @@ export class TeamLiveStatusPage implements OnInit {
         query = `?page=1&page_size=10`;
 
         if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
-          query += `&counsellor_id=${this.user_id}`;
+          query += `&user_id=${this.user_id}`;
         } else {
           if (
             ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
@@ -147,7 +147,7 @@ export class TeamLiveStatusPage implements OnInit {
       this.currentPage = event.pageIndex + 1;
       query =
         this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
-          ? `?counsellor_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`
+          ? `?user_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`
           : this.user_role == "SUPERADMIN" || this.user_role == "SUPER ADMIN"
           ? `?page=${this.currentPage}&page_size=${event.pageSize}`
           : `?user_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`;
@@ -174,8 +174,8 @@ export class TeamLiveStatusPage implements OnInit {
       this.user_role === "COUNSELLOR" ||
       this.user_role === "COUNSELOR" ||
       this.user_role === "ADMIN"
-        ? `?user_id=${this.user_id}&role_name=counsellor`
-        : `?role_name=counsellor`;
+        ? `?user_id=${this.user_id}`
+        : ``;
     this.baseService.getData(`${environment._user}${query}`).subscribe(
       (res: any) => {
         if (res.results) {
@@ -194,7 +194,7 @@ export class TeamLiveStatusPage implements OnInit {
       this.addEmit.tlsCounsellor.next(event);
       query =
         this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
-          ? `?counsellor_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`
+          ? `?user_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`
           : this.user_role == "SUPERADMIN" || this.user_role == "SUPER ADMIN"
           ? `?page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`
           : `?user_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`;
@@ -237,7 +237,7 @@ export class TeamLiveStatusPage implements OnInit {
       //let params = `page=1&page_size=10`
       let query =
         this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
-          ? `?counsellor_id=${this.user_id}&page=1&page_size=10`
+          ? `?user_id=${this.user_id}&page=1&page_size=10`
           : this.user_role == "SUPERADMIN" || this.user_role == "SUPER ADMIN"
           ? `?page=1&page_size=10`
           : `?user_id=${this.user_id}&page=1&page_size=10`;
@@ -280,7 +280,7 @@ export class TeamLiveStatusPage implements OnInit {
     let query: any;
     query =
       this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
-        ? `?counsellor_id=${this.user_id}&key=${event}&page=1&page_size=10`
+        ? `?user_id=${this.user_id}&key=${event}&page=1&page_size=10`
         : this.user_role == "SUPERADMIN" || this.user_role == "SUPER ADMIN"
         ? `?key=${event}&page=1&page_size=10`
         : `?user_id=${this.user_id}&key=${event}&page=1&page_size=10`;

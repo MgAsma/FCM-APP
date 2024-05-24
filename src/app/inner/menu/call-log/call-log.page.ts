@@ -87,9 +87,17 @@ export class CallLogPage implements OnInit {
       this.addEmiter.callLogCounsellor.next([])
       this.status = []
       this.counsellor_ids = []
-      let query = (this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR') ?
-      `?counsellor_ids=${this.user_id}&page=1&page_size=10` :
-      '?page=1&page_size=10';
+      let query = `?page=1&page_size=10`;
+
+      if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
+        query += `&user_id=${this.user_id}`;
+      } else {
+        if (
+          ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+        ) {
+          query += `&user_id=${this.user_id}`;
+        }
+      }
       this.callLogCards = [];
       this.data = [];
       this.totalNumberOfRecords = [];
@@ -117,9 +125,17 @@ export class CallLogPage implements OnInit {
     this.allocate.callLogStatus.subscribe((res: any) => {
       if(res){
         // Reset query
-      let query = (this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR') ?
-      `?counsellor_ids=${this.user_id}&page=1&page_size=10` :
-      '?page=1&page_size=10';
+        let query = `?page=1&page_size=10`;
+
+        if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
+          query += `&user_id=${this.user_id}`;
+        } else {
+          if (
+            ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+          ) {
+            query += `&user_id=${this.user_id}`;
+          }
+        }
         if (res.length > 0) {
           this.statusFilter = true;
           this.status = res;
@@ -157,9 +173,17 @@ export class CallLogPage implements OnInit {
         this.api.showError(error?.error.message);
       }));
       }else{
-        let query = (this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR') ?
-        `?counsellor_ids=${this.user_id}&page=1&page_size=10` :
-        '?page=1&page_size=10';
+        let query = `?page=1&page_size=10`;
+
+        if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
+          query += `&user_id=${this.user_id}`;
+        } else {
+          if (
+            ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+          ) {
+            query += `&user_id=${this.user_id}`;
+          }
+        }
         this.callLogCards = [];
         this.data = [];
         this.totalNumberOfRecords = [];
@@ -226,7 +250,7 @@ export class CallLogPage implements OnInit {
         this.edate = this.datepipe.transform(this.dateForm.value.endDate, 'yyyy-MM-dd');
      
         // Reset query
-      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ?  `?counsellor_ids=${this.user_id}&from_date=${this.sdate}&to_date=${this.edate}&page=1&page_size=10`
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ?  `?user_id=${this.user_id}&from_date=${this.sdate}&to_date=${this.edate}&page=1&page_size=10`
       :`?from_date=${this.sdate}&to_date=${this.edate}&page=1&page_size=10`;
       this.addEmiter.callLogCounsellor.subscribe((res) => {
         if (res.length > 0) {
@@ -288,8 +312,9 @@ export class CallLogPage implements OnInit {
       );
   }
   getCOUNSELLOR() {
+    let query = this.user_role === "COUNSELLOR" || this.user_role === "COUNSELOR"  || this.user_role === "ADMIN"  ?`?user_id=${this.user_id}` : ``
     this.baseService
-      .getData(`${environment._user}?role_name=counsellor`)
+      .getData(`${environment._user}${query}`)
       .subscribe(
         (res: any) => {
           if (res.results) {
@@ -378,7 +403,7 @@ export class CallLogPage implements OnInit {
                this.totalNumberOfRecords = res.total_no_of_record 
               }
             },((error:any)=>{
-              this.api.showError(error?.error.message || 'GENREAL')
+              this.api.showError(error?.error.message)
             }))
 
       //    },1000)
@@ -389,9 +414,19 @@ export class CallLogPage implements OnInit {
     if(event){
     this.counsellor_ids = event
     this.addEmiter.callLogCounsellor.next(event)
-      let params = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? 
-      `?page=1&page_size=10&counsellor_ids=${event}`:
-      `?page=1&page_size=10&counsellor_ids=${event}`
+
+    let params = `?page=1&page_size=10&counsellor_ids=${event}`;
+
+      if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
+        params += `&user_id=${this.user_id}`;
+      } else {
+        if (
+          ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+        ) {
+          params += `&user_id=${this.user_id}`;
+        }
+      }
+     
       if(this.statusFilter){
         this.allocate.callLogStatus.subscribe(
          (res: any) => {
@@ -427,9 +462,18 @@ export class CallLogPage implements OnInit {
       this.currentPage = event.pageIndex + 1;
       this.pageSize = event.pageSize;
     }
-  
-    let query: string =   this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR'? `?counsellor_ids=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`:
-    `?page=${this.currentPage}&page_size=${event.pageSize}`
+    let query = `?page=${this.currentPage}&page_size=${event.pageSize}`;
+
+    if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
+      query += `&user_id=${this.user_id}`;
+    } else {
+      if (
+        ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+      ) {
+        query += `&user_id=${this.user_id}`;
+      }
+    }
+    
     if (this.searchTerm) {
       query += `&key=${this.searchTerm}`;
     }
@@ -470,8 +514,18 @@ export class CallLogPage implements OnInit {
   
   searchTermChanged(event: any) {
     this.searchTerm = event
-    let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ? `?counsellor_ids=${this.user_id}&page=1&page_size=10&key=${event}`:
-    `?page=1&page_size=10&key=${event}`
+    let query = `?page=1&page_size=10&key=${event}`;
+
+    if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
+      query += `&user_id=${this.user_id}`;
+    } else {
+      if (
+        ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+      ) {
+        query += `&user_id=${this.user_id}`;
+      }
+    }
+    
     if(this.statusFilter){
      this.allocate.callLogStatus.subscribe(
       (res: any) => {
