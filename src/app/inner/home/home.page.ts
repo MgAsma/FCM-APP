@@ -10,10 +10,12 @@ import { StartBreakComponent } from './start-break/start-break.component';
 })
 export class HomePage implements OnInit,AfterViewInit {
 userName:any = ''
+  user_role: string;
   constructor(private popoverController:PopoverController) {
   }
   ngAfterViewInit(): void {
     this.userName=localStorage.getItem('username')
+    this.user_role=localStorage.getItem('user_role')
   }
 
   ngOnInit() {

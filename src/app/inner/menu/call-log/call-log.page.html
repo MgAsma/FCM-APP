@@ -48,9 +48,12 @@
           <ng-container *ngIf="!statusFilter && counsellor_ids.length === 0 && searchTerm">
             Filter by Search Applied - {{ totalNumberOfRecords || 0 }}
           </ng-container>
+          <ng-container *ngIf="!statusFilter && !counsellor_ids.length && !searchTerm">
+            No data found.
+          </ng-container>
         </ion-label>
       </ion-col>
-      <ion-col size="12" class="nodata-filter">
+      <ion-col size="12" class="nodata-filter d-flex justify-content-center align-items-center h-75">
         <app-nodata></app-nodata>
       </ion-col>
     </ion-row>

@@ -75,7 +75,7 @@
                      </ion-item>
                      <ng-container *ngIf="f['alternateNumber'].touched && f['alternateNumber'].invalid">
                        <ion-error *ngIf="f['alternateNumber'].hasError('pattern')">
-                         <ion-label color="danger">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
+                         <ion-label color="danger" style="color:#EB445A;">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
                        </ion-error>
                       
                      </ng-container>
@@ -428,6 +428,20 @@
              </ion-error>
  
              <!-- Counselled By -->
+             <!-- <ion-label position="stacked">Counselled By</ion-label>
+             <ion-item>
+               <ion-select formControlName="counsellorAdmin" placeholder="Select Counselled By" >
+                 <ion-select-option *ngFor="let option of adminList" [value]="option.id">{{ option?.first_name }}</ion-select-option>
+               </ion-select>
+               <ion-button
+                 fill="clear"
+                 (click)="clearSelectField('counsellorAdmin')"
+                 *ngIf="f['counsellorAdmin']?.value"
+               >
+                 <ion-icon name="close-outline"></ion-icon>
+               </ion-button>
+             </ion-item> -->
+ 
              <ion-label position="stacked">Counselled By</ion-label>
              <ion-item>
                <ion-select formControlName="counsellorAdmin" placeholder="Select Counselled By" >
@@ -441,7 +455,7 @@
                  <ion-icon name="close-outline"></ion-icon>
                </ion-button>
              </ion-item>
- 
+
               <!-- Source -->
               <ion-label position="stacked">Source</ion-label>
               <ion-item>

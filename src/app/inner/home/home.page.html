@@ -15,9 +15,11 @@
         </ion-col>
        </ion-row>
        <ion-row>
-        <ion-col class="d-flex align-items-center">
+        <ion-col size="12" >
           <p >Hi Welcome, {{userName | uppercase}}</p>
         </ion-col>
+        
+        <ion-col class="d-flex align-items-center py-0" ><p>Role <strong class="roles">{{user_role}}</strong></p></ion-col>
         <ion-col size="2" class="text-end">
           <ion-icon (click)="openStartBreak()" name="cafe" style="font-size: 20px;"></ion-icon>
         </ion-col>
@@ -35,27 +37,17 @@
   
 </ion-header>
 <ion-content [fullscreen]="true">
-
-<!-- <ion-row  scrollX="true" class="scroll-items">
-  <app-filter-home></app-filter-home>
-</ion-row>
-<ion-row  scrollX="true" class="scroll-items">
-  <app-inbound></app-inbound>
-  <app-outbound></app-outbound>
-</ion-row>
-<ion-row >
-  <ion-col>
-    <app-time-list></app-time-list>
+  <ion-row class="d-flex justify-content-center align-items-center">
+    <ion-col size="12" class="text-center p-2"></ion-col>
+    <ion-col size="12" class="text-center p-3">
+      <ng-container >
+        No data found.
+      </ng-container>
+    </ion-col>
+  <ion-col size="12" class="nodata-filter">
+   
+    <app-nodata></app-nodata>
   </ion-col>
-</ion-row>
-<ion-row >
-  <ion-col>
-    <app-status></app-status>
-  </ion-col>
-</ion-row>
-<ion-row class="pb-5">
-  <ion-col>
-    <app-open-followups></app-open-followups>
-  </ion-col>
-</ion-row> -->
+  </ion-row>
+  
 </ion-content>

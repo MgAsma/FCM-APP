@@ -8,22 +8,19 @@ const routes: Routes = [
   {
     path: '',
     component: InnerPage,
-    children:[
-      
-      
-      {
-        path: 'home',
-        loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-      },
-    
-      {
-        path:'', redirectTo:'home', pathMatch:'full'
-      },
-      
+    children:[   
       {
         path: 'allocations',
         loadChildren: () => import('./allocations/allocations.module').then( m => m.AllocationsPageModule)
       },
+      {
+        path:'', redirectTo:'allocations', pathMatch:'full'
+      },
+      {
+        path: 'home',
+        loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+      },
+      
   
   {
     path: 'customers',
