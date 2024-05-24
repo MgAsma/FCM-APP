@@ -576,7 +576,7 @@ export class AllocationsPage implements AfterViewInit, OnInit  {
   
   }
   getPhoneNumbers(leadData){
-    alert(leadData)
+    //alert(leadData)
     if(leadData?.length>0){
       
       this.phoneNumbers= leadData?.filter((ele:any) =>(ele.user_data?.mobile_number)
