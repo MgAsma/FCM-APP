@@ -549,10 +549,13 @@ export class EditLeadPage implements OnInit {
     this.step--;
   }
   close(){
+    this.callPermissionService.isToggleddataSubject.next(false)
     this.callPermissionService.closeCancelEditLeadPagedataSubject.next('close')
+   
     this.modalController.dismiss()
   }
   closeModal(){
+    this.callPermissionService.isToggleddataSubject.next(false)
     this.callPermissionService.closeCancelEditLeadPagedataSubject.next('cancel')
     this.modalController.dismiss()
     this._addLeadEmitter.triggerGet();

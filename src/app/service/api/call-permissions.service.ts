@@ -65,6 +65,17 @@ export class CallPermissionsService {
 dataSubject = new BehaviorSubject<any>(false);
 isToggleddataSubject = new BehaviorSubject<any>(false);
 closeCancelEditLeadPagedataSubject = new BehaviorSubject<any>(false);
+
+
+breakTime:Date;
+setBreakTime(date:Date){
+
+this.breakTime=date
+}
+
+getBreakTime(){
+  return this.breakTime;
+}
 // cancelEditLeadPagedataSubject = new BehaviorSubject<any>(false);
 
   // public data$ = this.dataSubject.asObservable();

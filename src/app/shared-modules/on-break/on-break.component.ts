@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { timer, Subject } from 'rxjs';
 import { map, takeUntil, takeWhile } from 'rxjs/operators';
 import { ApiService } from '../../service/api/api.service';
+import { CallPermissionsService } from '../../service/api/call-permissions.service';
 @Component({
   selector: 'app-on-break',
   templateUrl: './on-break.component.html',
@@ -17,15 +18,22 @@ export class OnBreakComponent implements OnInit {
   id: any;
   lastLoginDate: any;
 
-  breakTime = new Date();
-
+  
+  
+  breakTime:Date;
+  breakTime1:any;
   constructor(
     private popoverController: PopoverController,
     private api: ApiService,
     private _fb: FormBuilder,
     private router: Router,
-    private datePipe: DatePipe
-  ) {}
+    private datePipe: DatePipe,
+    private callPermissionService:CallPermissionsService
+  ) {
+    this.breakTime=this.callPermissionService.getBreakTime();
+   
+    
+  }
 
   ngOnInit() {
     this.id = localStorage.getItem('user_id');
@@ -41,10 +49,12 @@ export class OnBreakComponent implements OnInit {
     this.popoverController.dismiss();
   }
   break() {
+   
     this.breakForm.patchValue({ user: this.id });
     this.breakForm.patchValue({ status: 1 });
 
     //console.log(this.breakForm.value);
+    
 
     if (this.breakForm.invalid) {
       //console.log('Invalid');
