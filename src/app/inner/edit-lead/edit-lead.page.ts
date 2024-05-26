@@ -289,11 +289,11 @@ export class EditLeadPage implements OnInit {
   }
   onTagSelect(event: any,controlName:any) {
     if(controlName == 'countryId'){
-      this.selectedCountry = event.id
+      this.selectedCountry = event?.id
     }else if(controlName == 'state'){
-      this.selectedState = event.id
+      this.selectedState = event?.id
     }else if(controlName == 'cityName'){
-      this.selectedCity = event.id
+      this.selectedCity = event?.id
     }
     // this.f['tags'].markAsUntouched()
     //console.log(controlName,"controlName.value")
@@ -329,9 +329,9 @@ export class EditLeadPage implements OnInit {
   }
   getState(event,countryOptions){
     let selectedCountryName:any;
-    if(event.id && countryOptions.length >0){
+    if(event?.id && countryOptions.length >0){
      countryOptions.forEach((f:any)=>{
-      if(f.id == event.id){
+      if(f.id == event?.id){
         selectedCountryName = f.name
       }
       
@@ -359,7 +359,7 @@ export class EditLeadPage implements OnInit {
     let selectedStateName:any;
     if(event && stateOptions.length >0){
     stateOptions.forEach((f:any)=>{
-      if(f.id == event.id){
+      if(f?.id == event?.id){
         selectedStateName = f.name
       }
       
@@ -590,15 +590,12 @@ export class EditLeadPage implements OnInit {
   close(){
     this.callPermissionService.isToggleddataSubject.next(false)
     this.callPermissionService.closeCancelEditLeadPagedataSubject.next('close')
-   
     this.modalController.dismiss()
   }
   closeModal(){
     this.callPermissionService.isToggleddataSubject.next(false)
     this.callPermissionService.closeCancelEditLeadPagedataSubject.next('cancel')
     this.modalController.dismiss()
-    this._addLeadEmitter.triggerGet();
-    
   }
 
   onSubmit(){

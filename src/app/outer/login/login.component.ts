@@ -105,7 +105,7 @@ export class LoginComponent  implements OnInit {
           localStorage.setItem('lastLoginDate', formattedDate);
           localStorage.setItem('token',resp.token.token)
           localStorage.setItem('counsellor_ids',resp.counsellor_ids);
-          let appVersion = '1.0.18'
+          let appVersion = '1.0.21'
           localStorage.setItem('appVersion',appVersion);
           let decodedToken:any = ''
           localStorage.setItem('device_token',resp.device_token)

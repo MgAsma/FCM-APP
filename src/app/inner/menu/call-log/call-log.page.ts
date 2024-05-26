@@ -87,6 +87,8 @@ export class CallLogPage implements OnInit {
       this.addEmiter.callLogCounsellor.next([])
       this.status = []
       this.counsellor_ids = []
+      this.searchTerm = "";
+      this.allocate.callLogSearchBar.next(false)
       let query = `?page=1&page_size=10`;
 
       if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
@@ -411,11 +413,11 @@ export class CallLogPage implements OnInit {
   }
   
   onEmit(event:any){
-    if(event){
-    this.counsellor_ids = event
-    this.addEmiter.callLogCounsellor.next(event)
+  
+    this.counsellor_ids = this.counsellor_ids
+    this.addEmiter.callLogCounsellor.next(this.counsellor_ids)
 
-    let params = `?page=1&page_size=10&counsellor_ids=${event}`;
+    let params = `?page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`;
 
       if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
         params += `&user_id=${this.user_id}`;
@@ -453,7 +455,7 @@ export class CallLogPage implements OnInit {
       },((error:any)=>{
         this.api.showError(error?.error.message)
       }))
-    } 
+  
 
   }
   
