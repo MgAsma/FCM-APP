@@ -341,69 +341,7 @@ export class CustomersPage implements  OnInit {
    
   }
   
-  // getEmitters(){
-  //   if(this.triggerGet){
-  //   this._counsellorEmitter.triggerGet$.subscribe((res: any) => {
-  //     let query: string;
-  //     const counsellorRoles = ['COUNSELLOR', 'COUNSELOR'];
-  //     const superAdminRoles = ['SUPERADMIN', 'SUPER ADMIN'];
-  //     const adminRoles = ['ADMIN'];
-    
-  //     this._counsellorEmitter.customerCounsellor.subscribe((res) => {
-  //       if (res) {
-  //         this.counsellor_ids = res;
-  //       }
-  //     });
-    
-  //     this._customer.customerStatus.subscribe(
-  //       (statusRes: any) => {
-  //         if (counsellorRoles.includes(this.user_role)) {
-  //           query = `?counsellor_id=${this.user_id}&user_type=customers&page=1&page_size=10`;
-  //         } else if (superAdminRoles.includes(this.user_role)) {
-  //           query = `?user_type=customers&page=1&page_size=10`;
-  //         } else if (adminRoles.includes(this.user_role)) {
-  //           query = `?admin_id=${this.user_id}&user_type=customers&page=1&page_size=10`;
-  //         } else {
-  //           query = `?user_type=customers&page=1&page_size=10`;
-  //         }
-  //         if (this.counsellor_ids.length > 0) {
-  //           query += `&counsellor_id=${this.counsellor_ids}`;
-  //         }
-  //         // if(this.counsellor_ids.length ===0){
-  //         //   query += `&counsellor_id=${this.resCounsellors}`;
-  //         // }
-  //         if (statusRes.length > 0) {
-  //           this.statusFilter = true;
-  //           query += `&status=${statusRes}`;
-  //         }
-         
-  //         if (this.searchTerm) {
-  //           query += `&key=${this.searchTerm}`;
-  //         }
-    
-  //         this.leadCards = [];
-  //         this.data = [];
-          
-  //         this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
-  //           (res: any) => {
-  //             if (res.results) {
-  //               this.leadCards = res.results.data;
-  //               this.data = new MatTableDataSource<any>(this.leadCards);
-  //               this.totalNumberOfRecords = res.total_no_of_record;
-  //             }
-  //           },
-  //           (error: any) => {
-  //             this.api.showError(error.error.message);
-  //           }
-  //         );
-  //       },
-  //       (error: any) => {
-  //         this.api.showError(error.error.message);
-  //       }
-  //     );
-  //   });
-  // }
-  // }
+  
   getEmitters() {
     if (this.triggerGet) {
      
@@ -420,10 +358,14 @@ export class CustomersPage implements  OnInit {
       } else if (adminRoles.includes(this.user_role)) {
         if (this.counsellor_ids.length > 0) {
           // Admin filtering by counsellor
-          query += `&counsellor_id=${this.counsellor_ids}`;
+          query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
         } else {
-          // Admin not filtering by counsellor
-          query += `&counsellor_id=${this.resCounsellors}`;
+              // Admin not filtering by counsellor
+          if(this.resCounsellors !== ''){
+            query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
+          }else{
+            query += `&admin_id=${this.user_id}`;
+          }
         }
       }
 
@@ -503,10 +445,14 @@ export class CustomersPage implements  OnInit {
         } else if (adminRoles.includes(this.user_role)) {
           if (this.counsellor_ids.length > 0) {
             // Admin filtering by counsellor
-            query += `&counsellor_id=${this.counsellor_ids}`;
+            query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
           } else {
             // Admin not filtering by counsellor
-            query += `&counsellor_id=${this.resCounsellors}`;
+            if(this.resCounsellors !== ''){
+              query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
+            }else{
+              query += `&admin_id=${this.user_id}`;
+            }
           }
         }
 
@@ -560,7 +506,10 @@ export class CustomersPage implements  OnInit {
     } else if (superAdminRoles.includes(this.user_role)) {
       query = `?user_type=customers&page=1&page_size=10`;
     } else if (adminRoles.includes(this.user_role)) {
-      query = `?admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}&user_type=customers&page=1&page_size=10`;
+      query = `?admin_id=${this.user_id}&user_type=customers&page=1&page_size=10`;
+      if(this.resCounsellors !== ''){
+        query +=`&counsellor_id=${this.resCounsellors}`
+      }
     } else {
       query = `?user_type=customers&page=1&page_size=10`;
     }
@@ -674,14 +623,16 @@ export class CustomersPage implements  OnInit {
     } else if (adminRoles.includes(this.user_role)) {
       if (this.counsellor_ids.length > 0) {
         // Admin filtering by counsellor
-        query += `&counsellor_id=${this.counsellor_ids}`;
+        query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
       } else {
         // Admin not filtering by counsellor
-        query += `&counsellor_id=${this.resCounsellors}`;
+        if(this.resCounsellors !== ''){
+          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
+        }else{
+          query += `&admin_id=${this.user_id}`;
+        }
       }
-    } else {
-      query += `&user_id=${this.user_id}`;
-    }
+    } 
 
     // Add search term filter
     if (this.searchTerm) {
@@ -788,10 +739,14 @@ export class CustomersPage implements  OnInit {
       } else if (adminRoles.includes(this.user_role)) {
         if (this.counsellor_ids.length > 0) {
           // Admin filtering by counsellor
-          params += `&counsellor_id=${this.counsellor_ids}`;
+          params += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
         } else {
           // Admin not filtering by counsellor
-          params += `&counsellor_id=${this.resCounsellors}`;
+          if(this.resCounsellors !== ''){
+            params += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
+          }else{
+            params += `&admin_id=${this.user_id}`;
+          }
         }
       } else {
         params += `&user_id=${this.user_id}`;
@@ -879,15 +834,17 @@ export class CustomersPage implements  OnInit {
   } else if (adminRoles.includes(this.user_role)) {
     if (this.counsellor_ids.length > 0) {
       // Admin filtering by counsellor
-      query += `&counsellor_id=${this.counsellor_ids}`;
+      query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
     } else {
       // Admin not filtering by counsellor
-      query += `&counsellor_id=${this.resCounsellors}`;
+      if(this.resCounsellors !== ''){
+        query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
+      }else{
+        query += `&admin_id=${this.user_id}`;
+      }
     }
-    query += `&admin_id=${this.user_id}`;
-  } else {
-    query += `&user_id=${this.user_id}`;
-  }
+    
+  } 
 
    // Add counsellor filter for non-admin roles if filtering by counsellor
    if (
