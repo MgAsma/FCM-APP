@@ -87,13 +87,15 @@ export class CallLogPage implements OnInit {
       this.addEmiter.callLogCounsellor.next([])
       this.status = []
       this.counsellor_ids = []
+      this.searchTerm = "";
+      this.allocate.callLogSearchBar.next(false)
       let query = `?page=1&page_size=10`;
 
       if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
         query += `&user_id=${this.user_id}`;
       } else {
         if (
-          ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+          ["ADMIN"].includes(this.user_role) === true
         ) {
           query += `&user_id=${this.user_id}`;
         }
@@ -131,7 +133,7 @@ export class CallLogPage implements OnInit {
           query += `&user_id=${this.user_id}`;
         } else {
           if (
-            ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+            ["ADMIN"].includes(this.user_role) === true
           ) {
             query += `&user_id=${this.user_id}`;
           }
@@ -179,7 +181,7 @@ export class CallLogPage implements OnInit {
           query += `&user_id=${this.user_id}`;
         } else {
           if (
-            ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+            ["ADMIN"].includes(this.user_role) === true
           ) {
             query += `&user_id=${this.user_id}`;
           }
@@ -250,7 +252,7 @@ export class CallLogPage implements OnInit {
         this.edate = this.datepipe.transform(this.dateForm.value.endDate, 'yyyy-MM-dd');
      
         // Reset query
-      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' ?  `?user_id=${this.user_id}&from_date=${this.sdate}&to_date=${this.edate}&page=1&page_size=10`
+      let query = this.user_role == 'COUNSELLOR' || this.user_role == 'COUNSELOR' || this.user_role == 'ADMIN' ?  `?user_id=${this.user_id}&from_date=${this.sdate}&to_date=${this.edate}&page=1&page_size=10`
       :`?from_date=${this.sdate}&to_date=${this.edate}&page=1&page_size=10`;
       this.addEmiter.callLogCounsellor.subscribe((res) => {
         if (res.length > 0) {
@@ -411,21 +413,20 @@ export class CallLogPage implements OnInit {
   }
   
   onEmit(event:any){
-    if(event){
-    this.counsellor_ids = event
-    this.addEmiter.callLogCounsellor.next(event)
+  
+    this.addEmiter.callLogCounsellor.next(this.counsellor_ids)
 
-    let params = `?page=1&page_size=10&counsellor_ids=${event}`;
+    let params = `?page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`;
 
       if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
         params += `&user_id=${this.user_id}`;
-      } else {
+      } 
         if (
-          ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+          ["ADMIN"].includes(this.user_role) === true
         ) {
           params += `&user_id=${this.user_id}`;
         }
-      }
+      
      
       if(this.statusFilter){
         this.allocate.callLogStatus.subscribe(
@@ -453,7 +454,7 @@ export class CallLogPage implements OnInit {
       },((error:any)=>{
         this.api.showError(error?.error.message)
       }))
-    } 
+  
 
   }
   
@@ -466,13 +467,13 @@ export class CallLogPage implements OnInit {
 
     if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
       query += `&user_id=${this.user_id}`;
-    } else {
+    }
       if (
-        ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+        ["ADMIN"].includes(this.user_role) === true
       ) {
         query += `&user_id=${this.user_id}`;
       }
-    }
+    
     
     if (this.searchTerm) {
       query += `&key=${this.searchTerm}`;
@@ -518,13 +519,13 @@ export class CallLogPage implements OnInit {
 
     if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
       query += `&user_id=${this.user_id}`;
-    } else {
-      if (
-        ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
-      ) {
-        query += `&user_id=${this.user_id}`;
-      }
     }
+    if (
+      ["ADMIN"].includes(this.user_role) === true
+    ) {
+      query += `&user_id=${this.user_id}`;
+    }
+    
     
     if(this.statusFilter){
      this.allocate.callLogStatus.subscribe(

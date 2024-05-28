@@ -288,8 +288,13 @@ export class ApiService {
     getStateSearch(search:any,size:any,pageNo:any){
       return this.http.get(`${this.baseurl}/api/state/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
-    getAllState(){
-      return this.http.get(`${this.baseurl}/api/state/`)
+    getAllState(params?:any){
+      if(params){
+        return this.http.get(`${this.baseurl}/api/state/${params}`)
+      }else{
+        return this.http.get(`${this.baseurl}/api/state/`)
+      }
+      
     }
     getStateById(id:any){
       return this.http.get(`${this.baseurl}/api/state/${id}/`)
@@ -308,8 +313,13 @@ export class ApiService {
     getCitySearch(search:any,size:any,pageNo:any){
       return this.http.get(`${this.baseurl}/api/city/?page_size=${size}&page=${pageNo}&key=${search}`)
     }
-    getAllCity(){
-      return this.http.get(`${this.baseurl}/api/city/`)
+    getAllCity(params?:any){
+      if(params){
+        return this.http.get(`${this.baseurl}/api/city/${params}`)
+      }else{
+        return this.http.get(`${this.baseurl}/api/city/`)
+      }
+      
     }
     getCityById(id:any){
       return this.http.get(`${this.baseurl}/api/city/${id}/`)

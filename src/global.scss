@@ -165,20 +165,44 @@ html {
 //   padding: 13px 20px !important;
 //   font-weight: 500 !important;
 // }
-.country-code{
-  background: #f3f3f3;
-  padding: 7px 0;
-  border-bottom: 1px solid #dadada;
-  color: #616161;
-  margin-bottom: 5px;
+
+ 
   .multiselect-dropdown .dropdown-btn {
+    display: inline-flex !important;
+    align-items: center !important;
     border: 0px !important;
-    font-size: 14px;
+    font-size: 13px;
     width: 80%;
+    background: #f3f3f3;
+    padding: 7px 0;
+    border-bottom: 1px solid #dadada !important;
+    color: #616161;
+    margin-bottom: 5px;
+    height: 50px;
   }
   .dropdown-list li{
    font-size: 13px;
   }
+  .multiselect-dropdown .dropdown-btn .dropdown-multiselect__caret {
+    line-height: 16px;
+    display: block;
+    position: absolute;
+    box-sizing: border-box;
+    width: 40px;
+    height: 38px;
+    right: 1px;
+    top: 8px !important;
+    padding: 4px 8px;
+    margin: 0;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: transform .2s ease;
+}
+.multiselect-dropdown .dropdown-btn .selected-item-container .selected-item {
+  background: var(--ion-color-primary);
+  color: #fff;
+  max-width: fit-content !important;
 }
 #swipe-down,.refresh-text{
   color:var(--ion-color-secondary) !important;

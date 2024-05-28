@@ -43,6 +43,7 @@ export class TeamLiveStatusPage implements OnInit {
   statusFilter: boolean = false;
   searchTerm: any;
   defaultData: boolean = false;
+  refresh: boolean = false;
   constructor(
     private allocate: AllocationEmittersService,
     private modalController: ModalController,
@@ -77,10 +78,28 @@ export class TeamLiveStatusPage implements OnInit {
         this.searchBar = false;
       }
     });
-    this.initComponent();
-    this.intervalService.startInterval(() => {
+    if(this.refresh){
+      this.resetAll()
+      let query = `?page=1&page_size=10`;
+
+      if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
+        query += `&user_id=${this.user_id}`;
+      } else {
+        if (
+          ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
+        ) {
+          query += `&user_id=${this.user_id}`;
+        }
+      }
+      this.getLiveStatus(query);
+    }else{
       this.initComponent();
-    }, 50000);
+      this.intervalService.startInterval(() => {
+        this.initComponent();
+      }, 50000);
+    }
+   
+   
   }
   initComponent() {
     let query: any;
@@ -103,9 +122,7 @@ export class TeamLiveStatusPage implements OnInit {
           }
         }
 
-        // this.user_role === ('COUNSELLOR' || this.user_role === 'COUNSELOR') ? `?counsellor_id=${this.user_id}&page=1&page_size=10`:this.user_role == 'SUPERADMIN' || this.user_role == 'SUPER ADMIN' ?`?page=1&page_size=10`:`?user_id=${this.user_id}&page=1&page_size=10`
-
-        // query = `page=1&page_size=10`
+       
         if (res.length > 0) {
           this.statusFilter = true;
           query += `&status_id=${res}`;
@@ -189,9 +206,7 @@ export class TeamLiveStatusPage implements OnInit {
   }
   onEmit(event: any) {
     let query: any;
-    if (event) {
-      this.counsellor_ids = event;
-      this.addEmit.tlsCounsellor.next(event);
+      this.addEmit.tlsCounsellor.next(this.counsellor_ids);
       query =
         this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
           ? `?user_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`
@@ -223,44 +238,27 @@ export class TeamLiveStatusPage implements OnInit {
           this.api.showError(error?.error.message);
         }
       );
-    }
+   
   }
-
+  resetAll(){
+    this.followupDetails = [];
+    this.data = [];
+    this.allocate.tlsStatus.next("");
+    this.addEmit.tlsCounsellor.next([]);
+    this.allocate.tlsSearchBar.next(false);
+    this.counsellor_ids = []
+    this.searchTerm = '';
+  }
   handleRefresh(event: any) {
+    if(event && event.target){
     setTimeout(() => {
-      // Any calls to load data go here
-      this.followupDetails = [];
-      this.data = [];
-      this.allocate.tlsStatus.next("");
-      this.addEmit.tlsCounsellor.next([]);
-      this.allocate.tlsSearchBar.next(false);
-      //let params = `page=1&page_size=10`
-      let query =
-        this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
-          ? `?user_id=${this.user_id}&page=1&page_size=10`
-          : this.user_role == "SUPERADMIN" || this.user_role == "SUPER ADMIN"
-          ? `?page=1&page_size=10`
-          : `?user_id=${this.user_id}&page=1&page_size=10`;
-
-      // let query = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${params}`:`?${params}`
-      this.followupDetails = [];
-      this.data = [];
-      this.statusFilter = false;
-      this.totalNumberOfRecords = [];
-      this.searchTerm = "";
-      this.api.getTeamLiveStatus(query).subscribe(
-        (resp: any) => {
-          this.followupDetails = resp.results;
-          this.data = new MatTableDataSource<any>(this.followupDetails);
-          this.totalNumberOfRecords = resp.total_no_of_record;
-        },
-        (error: any) => {
-          this.api.showError(error?.error.message);
-        }
-      );
-
-      event.target.complete();
+    this.refresh = true
+    this.ngOnInit()
+    event.target.complete();
     }, 2000);
+  }else{
+    this.refresh = false
+  }
   }
 
   getLiveStatus(params: any) {

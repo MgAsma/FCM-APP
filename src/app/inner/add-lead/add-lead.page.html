@@ -78,7 +78,7 @@
                         <ion-label color="danger" style="color:#EB445A;">Please Enter A 10-Digit Alternate Mobile Number.</ion-label>
                       </ion-error>
                     </ng-container>
-                   <div class="custom-errmsg"  style="color:#EB445A;" *ngIf="!f['mobile'].hasError('pattern') && f['alternateNumber'].value && f['mobile'].value == f['alternateNumber'].value">
+                   <div class="custom-errmsg"  style="color:#EB445A !important;" *ngIf="!f['mobile'].hasError('pattern') && f['alternateNumber'].value && f['mobile'].value == f['alternateNumber'].value">
                     Mobile And Alternate Numbers Cannot Be The Same
                   </div>
                   <!-- Email -->
@@ -103,32 +103,31 @@
                
                 <!-- Country -->
                 <ion-label position="stacked">Country Name</ion-label>
-                <div class="country-code">
+               
                 <ng-multiselect-dropdown style="height: 40vh;" [placeholder]="'Select Country'"  [settings]="dropdownSettings1"
                 [data]="countryOptions" 
-                [formControl]="addNewLead.get('countryId')" (onSelect)="onTagSelect($event,'countryId')" (onDeSelect)="onItemDeSelect($event,'countryId')">
+                [formControl]="addNewLead.get('countryId')" (onSelect)="onTagSelect($event,'countryId');getState($event,countryOptions)" (onDeSelect)="onItemDeSelect($event,'countryId')">
                 </ng-multiselect-dropdown> 
                   
-                </div>
+               
                
                <!-- State -->
                <ion-label position="stacked">State</ion-label>
-               <div class="country-code">
                
                  <ng-multiselect-dropdown [placeholder]="'Select The State'"  [settings]="dropdownSettings2"
                 [data]="stateOptions" 
-                [formControl]="addNewLead.get('state')" (onSelect)="onTagSelect($event,'state')" (onDeSelect)="onItemDeSelect($event,'state')">
+                [formControl]="addNewLead.get('state')" (onSelect)="onTagSelect($event,'state');getCity($event,stateOptions)" (onDeSelect)="onItemDeSelect($event,'state')">
                 </ng-multiselect-dropdown> 
                 
-                </div>
+              
               <!-- City Name -->
               <ion-label position="stacked">City Name</ion-label>
-              <div class="country-code">
+             
                 <ng-multiselect-dropdown [placeholder]="'Select The City Name'"  [settings]="dropdownSettings3"
                 [data]="cityOptions" 
-                [formControl]="addNewLead.get('cityName')"  (onSelect)="onTagSelect($event,'cityName')" (onDeSelect)="onItemDeSelect($event,'cityName')">
+                [formControl]="addNewLead.get('cityName')"  (onSelect)="onTagSelect($event,'cityName')" (onDeSelect)="onItemDeSelect($event,'cityName')" >
                 </ng-multiselect-dropdown> 
-              </div>
+             
               <!-- Pincode -->
               <ion-label position="stacked">Pincode</ion-label>
               <ion-item>
