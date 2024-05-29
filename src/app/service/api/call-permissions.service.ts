@@ -17,10 +17,12 @@ export class CallPermissionsService {
   initiateCallStatus(callBack:any) {
     
     const that = this;
-   // console.log(PhoneCallTrap, "PhoneCallTrap");
+  //  console.log(that.isCallInitiationCalled, " that.isCallInitiationCalled");
+  //  console.log(PhoneCallTrap, " PhoneCallTrap");
 
     PhoneCallTrap?.onCall(function (state: string) {
     that.isCallInitiationCalled=true
+    //  console.log("phone call trap called");
      
 
     //  console.log("CHANGE STATE: " + state);
@@ -57,7 +59,11 @@ export class CallPermissionsService {
 
           break;
       }
+    },function(event:any){
+      console.log(event,"event in calltrap");
+      
     });
+
   }
 
 

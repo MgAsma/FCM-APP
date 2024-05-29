@@ -30,6 +30,7 @@ import {
 import { Router } from "@angular/router";
 import { App as CapacitorApp } from "@capacitor/app";
 import { CallPermissionsService } from "../../service/api/call-permissions.service";
+
 // declare var PhoneCallTrap: any;
 @Component({
   selector: "app-allocations",
@@ -109,6 +110,8 @@ export class AllocationsPage implements OnInit {
       this.callPermissionService?.initiateCallStatus(
         this.getContacktAndPostHistory.bind(this)
       );
+      // console.log("callstatus should call");
+      
     }, 1000);
 
     this.callPermissionService?.isToggleddataSubject.subscribe((res: any) => {
@@ -128,6 +131,7 @@ export class AllocationsPage implements OnInit {
   }
   allocateItem: any;
   ngOnInit() {
+    
     this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe(
       (res: any) => {
         this.cancelCloseEditRes = res;
