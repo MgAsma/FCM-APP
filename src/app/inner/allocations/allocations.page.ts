@@ -385,13 +385,13 @@ export class AllocationsPage implements OnInit {
   viewInit() {
     
     this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
-      if (res) {
+      if(res){
         this.selectedCounsellor = true
       }
     });
 
     this.allocate.allocationStatus.subscribe((res: any) => {
-      if(res){
+      if(res.length >0){
         this.statusFilter = true
     }})
 
@@ -607,7 +607,7 @@ export class AllocationsPage implements OnInit {
       this.leadCards = [];
       this.data = [];
       this.getAllAllocation();
-      window.location.reload();
+      this.router.navigate(['/inner/allocations']);
       event.target.complete();
       // },100);
     } else {
@@ -845,9 +845,74 @@ export class AllocationsPage implements OnInit {
       query += `&counsellor_id=${this.counsellor_ids}`;
     }
     // Add status filter
-    if (this.statusFilter) {
+    if (this.statusFilter === true) {
       this.allocate.allocationStatus.subscribe((res: any) => {
-        if (res) {
+        if (res.length >0) {
+          query += `&status=${res}`;
+        }
+      });
+    }
+
+   
+
+    // API call
+    this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
+      (res: any) => {
+        if (res.results) {
+          this.leadCards = res.results.data;
+          this.leadData = res.results.data;
+          this.data = new MatTableDataSource<any>(this.leadCards);
+          this.totalNumberOfRecords = res.total_no_of_record;
+        }
+      },
+      (error: any) => {
+        this.api.showError(error.error.message);
+      }
+    );
+  }else{
+    this.searchTerm = event;
+    this.leadCards = [];
+    this.data = [];
+
+    let query: string;
+    const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
+    const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
+    const adminRoles = ["ADMIN"];
+
+    // Base query setup
+    query = `?user_type=allocation&page=1&page_size=10`;
+
+    // Role-specific query parameters
+    if (counsellorRoles.includes(this.user_role)) {
+      query += `&counsellor_id=${this.user_id}`;
+    } else if (superAdminRoles.includes(this.user_role)) {
+      // Superadmin case already covered by base query
+    } else if (adminRoles.includes(this.user_role)) {
+      if (this.counsellor_ids.length > 0) {
+        // Admin filtering by counsellor
+        query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
+      } else {
+        // Admin not filtering by counsellor
+        if(this.resCounsellors !== ''){
+          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
+        }else{
+          query += `&admin_id=${this.user_id}`;
+        }
+      }
+      
+    } 
+
+     // Add counsellor filter for non-admin roles if filtering by counsellor
+     if (
+      !adminRoles.includes(this.user_role) &&
+      this.counsellor_ids.length > 0
+    ) {
+      query += `&counsellor_id=${this.counsellor_ids}`;
+    }
+    // Add status filter
+    if (this.statusFilter === true) {
+      this.allocate.allocationStatus.subscribe((res: any) => {
+        if (res.length >0) {
           query += `&status=${res}`;
         }
       });
