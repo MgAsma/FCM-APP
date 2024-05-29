@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
@@ -57,7 +57,9 @@ export class EditLeadPage implements OnInit {
   adminList: any = [];
   leadStage: any = [];
   user_id: any;
- 
+  @ViewChild('countryDropdown') countryDropdown: any;
+  @ViewChild('stateDropdown') stateDropdown: any;
+  @ViewChild('cityDropdown') cityDropdown: any;
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -133,7 +135,30 @@ export class EditLeadPage implements OnInit {
       allowSearchFilter: true
     };
   }
- 
+  focusedDropdown: string | null = null;
+
+  onFocus(dropdown: string) {
+    this.focusedDropdown = dropdown;
+    this.closeOtherDropdowns(dropdown);
+  }
+
+  onBlur(dropdown: string) {
+    if (this.focusedDropdown === dropdown) {
+      this.focusedDropdown = null;
+    }
+  }
+
+  closeOtherDropdowns(except: string) {
+    if (except !== 'country' && this.countryDropdown) {
+      this.countryDropdown.closeDropdown();
+    }
+    if (except !== 'state' && this.stateDropdown) {
+      this.stateDropdown.closeDropdown();
+    }
+    if (except !== 'city' && this.cityDropdown) {
+      this.cityDropdown.closeDropdown();
+    }
+  }
   get f() {
     return this.editLead.controls;
   }
@@ -599,58 +624,6 @@ export class EditLeadPage implements OnInit {
   }
 
   onSubmit(){
-  
-  // const formData = this.editLead.value;
-  // let data ={
-  //   first_name: formData.firstName,
-  //   last_name:"",
-  //   email: formData.email,
-  //   mobile_number: formData.mobile ,
-  //   date_of_birth: this._datePipe.transform(formData.dateOfBirth,'YYYY-MM-dd') || null,
-  //   alternate_mobile_number: formData.alternateNumber || null,
-  //   role: 5,
-  //   location:null,
-  //   pincode: formData.pincode || null,
-  //   country: this.selectedCountry,
-  //   state: this.selectedState, 
-  //   city: this.selectedCity, 
-  //   zone: formData.zone,
-  //   lead_list_status: formData.leadStatus,
-  //   lead_list_substatus: 1,
-  //   counselled_by: formData.counsellorAdmin,
-  //   lead_stage: formData.leadStages,
-  //   updated_by:this.user_id,
-  //   note: formData.notes,
-  //   remark: formData.remarks,
-  //   source: formData.leadSource,
-  //   refered_to: formData.counsellor,
-  //   education_details: {
-  //   tenth_per: formData.tenthPercentage || null,
-  //   twelfth_per: formData.twelthPercentage || null,
-  //   degree_per: formData.degree || null,
-  //   stream: formData.course,
-  //   others: formData.otherCourse,
-  //   enterance_exam: formData.entranceExam,
-  //   course_looking_for: formData.courseLookingfor,
-  //   level_of_program:formData.levelOfProgram,
-  //     preferance_college_and_location: 
-  //       {
-  //         preferred_college1: formData.preferredCollege1,
-  //         preferred_college2: formData.preferredCollege2,
-  //         preferred_location1: formData.preferredLocation1,
-  //         preferred_location2: formData.preferredLocation2
-  //       }
-      
-  //   },
-  //   additional_info: {
-  //     reference_name: formData.referenceName,
-  //     reference_mobile_number:formData.referencePhoneNumber || null,
-  //     father_name: formData.fatherName,
-  //     father_occupation: formData.fatherOccupation,
-  //     father_mobile_number: formData.fatherPhoneNumber || null
-  //   }
-  // }
-
   let formData = this.editLead.value;
   let data ={
     first_name: formData.firstName,

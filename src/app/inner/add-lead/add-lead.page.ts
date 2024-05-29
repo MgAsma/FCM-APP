@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
@@ -47,6 +47,7 @@ export class AddLeadPage implements OnInit {
   formatedDate: string;
   type = 'text';
   min:string;
+  dropDownSelect:boolean = false
   levelofProgram: any = [];
   selectedCountry: any;
   selectedState: any;
@@ -56,6 +57,9 @@ export class AddLeadPage implements OnInit {
   dropdownSettings2: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
   dropdownSettings3: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
  
+  @ViewChild('countryDropdown') countryDropdown: any;
+  @ViewChild('stateDropdown') stateDropdown: any;
+  @ViewChild('cityDropdown') cityDropdown: any;
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -79,6 +83,31 @@ export class AddLeadPage implements OnInit {
     })
     this.showPicker = false
   }
+  focusedDropdown: string | null = null;
+
+  onFocus(dropdown: string) {
+    this.focusedDropdown = dropdown;
+    this.closeOtherDropdowns(dropdown);
+  }
+
+  onBlur(dropdown: string) {
+    if (this.focusedDropdown === dropdown) {
+      this.focusedDropdown = null;
+    }
+  }
+
+  closeOtherDropdowns(except: string) {
+    if (except !== 'country' && this.countryDropdown) {
+      this.countryDropdown.closeDropdown();
+    }
+    if (except !== 'state' && this.stateDropdown) {
+      this.stateDropdown.closeDropdown();
+    }
+    if (except !== 'city' && this.cityDropdown) {
+      this.cityDropdown.closeDropdown();
+    }
+  }
+
   ngOnInit(): void {
     this.user_id = localStorage.getItem('user_id').toUpperCase()
     this.dropdownSettings1 = {

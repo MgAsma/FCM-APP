@@ -225,3 +225,15 @@ ion-toolbar ion-title{
   right: 0px;
   z-index: 1;
 }
+.ng-multiselect-dropdown {
+  position: relative;
+  z-index: 10;
+}
+
+.ng-multiselect-dropdown.state-dropdown {
+  z-index: 20;
+}
+
+.ng-multiselect-dropdown.city-dropdown {
+  z-index: 30;
+}
