@@ -20,7 +20,7 @@ import { AllocationToolbarTopComponent } from './allocation-toolbar-top/allocati
     CommonModule,
     FormsModule,
     IonicModule,
-    AllocationsPageRoutingModule,
+    AllocationsPageRoutingModule
   ],
   declarations: [
     AllocationsPage,

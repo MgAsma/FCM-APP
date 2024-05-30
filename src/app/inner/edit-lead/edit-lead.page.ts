@@ -18,9 +18,9 @@ export class EditLeadPage implements OnInit {
   showPicker: boolean = false;
   min:string;
   levelofProgram: any = [];
-  dropdownSettings1: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
-  dropdownSettings2: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
-  dropdownSettings3: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
+  dropdownSettings1:any;
+  dropdownSettings2:any;
+  dropdownSettings3:any;
   tagId: any;
   selectedCountry: any;
   selectedState: any;
@@ -111,6 +111,7 @@ export class EditLeadPage implements OnInit {
       singleSelection: true,
       idField: "id",
       textField: "name",
+      defaultOpen:false,
       selectAllText: "Select All",
       unSelectAllText: "UnSelect All",
       itemsShowLimit: 1,
@@ -120,6 +121,7 @@ export class EditLeadPage implements OnInit {
       singleSelection: true,
       idField: "id",
       textField: "name",
+      defaultOpen:false,
       selectAllText: "Select All",
       unSelectAllText: "UnSelect All",
       itemsShowLimit: 1,
@@ -129,6 +131,7 @@ export class EditLeadPage implements OnInit {
       singleSelection: true,
       idField: "id",
       textField: "name",
+      defaultOpen:false,
       selectAllText: "Select All",
       unSelectAllText: "UnSelect All",
       itemsShowLimit: 1,

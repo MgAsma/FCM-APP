@@ -1,42 +1,13 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <!-- <ion-menu contentId="main-content">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Menu</ion-title>
-        </ion-toolbar>
-      </ion-header> 
-      <ion-content>
-        
-        <ion-list>
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <ion-item [routerLink]="[p.url]">
-              <ion-icon [name]="p.icon" slot="start"></ion-icon>
-              <ion-label>
-                {{ p.title }}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ion-list>
-      </ion-content>
-     
-    </ion-menu>
-     -->
+    
       <ion-content id="main-content">
         <ion-router-outlet></ion-router-outlet>
-        <!-- <ion-tabs>
-          <ion-tab-bar slot="bottom">
-            <ion-tab-button *ngFor="let page of appPages" [tab]="page.title" routerLinkActive="active" [routerLink]="[page.url]" >
-              <ion-icon [name]="page.icon" ></ion-icon>
-              <ion-label>{{ page.title }}</ion-label>
-            </ion-tab-button>
-          </ion-tab-bar>
-        </ion-tabs>
-        <ion-tabs>   -->
+        
          
          <ion-tabs>
-          <ion-fab vertical="bottom" horizontal="center" translucent="true">
-            <ion-fab-button (click)="openAddLead()" color="primary">
+          <ion-fab vertical="bottom" horizontal="center" translucent="true" >
+            <ion-fab-button (click)="openAddLead()" color="primary" [disabled]="currentUrl !== '/inner/allocations'">
               <ion-icon name="add"></ion-icon>
             </ion-fab-button>
           </ion-fab>

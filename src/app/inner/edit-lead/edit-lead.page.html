@@ -113,7 +113,8 @@
                       (onSelect)="onTagSelect($event, 'countryId'); getState($event, countryOptions)" 
                       (onDeSelect)="onItemDeSelect($event, 'countryId')"
                       (focus)="onFocus('country')"
-                      (blur)="onBlur('country')">
+                      (blur)="onBlur('country')"
+                      >
                     </ng-multiselect-dropdown>
 
                     <!-- State -->
@@ -127,7 +128,8 @@
                       (onSelect)="onTagSelect($event, 'state'); getCity($event, stateOptions)" 
                       (onDeSelect)="onItemDeSelect($event, 'state')"
                       (focus)="onFocus('state')"
-                      (blur)="onBlur('state')">
+                      (blur)="onBlur('state')"
+                      >
                     </ng-multiselect-dropdown>
 
                     <!-- City Name -->
@@ -141,6 +143,7 @@
                       [formControl]="editLead.get('cityName')"  
                       (onSelect)="onTagSelect($event, 'cityName')" 
                       (onDeSelect)="onItemDeSelect($event, 'cityName')"
+                      
                       (focus)="onFocus('city')"
                       (blur)="onBlur('city')">
                     </ng-multiselect-dropdown>

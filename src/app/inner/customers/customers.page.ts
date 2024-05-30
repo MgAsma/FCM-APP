@@ -27,6 +27,7 @@ import { Router } from "@angular/router";
 import { App as CapacitorApp } from '@capacitor/app';
 import { CallPermissionsService } from "../../service/api/call-permissions.service";
 import { templateSettings } from "cypress/types/lodash";
+import { Location } from "@angular/common";
 
 @Component({
   selector: 'app-customers',
@@ -87,7 +88,8 @@ export class CustomersPage implements  OnInit {
     private androidPermissions: AndroidPermissions,
     private alertController:AlertController,
     private router:Router,
-    private callPermissionService:CallPermissionsService
+    private callPermissionService:CallPermissionsService,
+    private location :Location
 
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
@@ -314,34 +316,14 @@ export class CustomersPage implements  OnInit {
   }
   
   viewInit(){
-    this._counsellorEmitter.customerCounsellor.subscribe((res) => {
-      if (res.length >0) {
-        this.selectedCounsellor = true;
-      }
-    });
-  
-    this._customer.customerStatus.subscribe(
-      (res: any) => {
-        if(res.length >0){
-          this.statusFilter = true;
-        }
-       
-      })
+    
   
     this._counsellorEmitter.triggerGet$.subscribe((res: any) => {
       this.triggerGet = true
       this.getEmitters()
     })
-    if(this.refresh ){
-      if(!this.selectedCounsellor && !this.statusFilter){
-      this.resetFilters()
-      this.getAllCustomers()
-      }
-    }else{
-      this.getCustomersWithFilters()
-    }
- 
     
+      this.getCustomersWithFilters()
    
   }
   
@@ -404,7 +386,7 @@ export class CustomersPage implements  OnInit {
   
   
   getCustomersWithFilters() {
-    if(!this.triggerGet){
+  
       let query: string;
       const counsellorRoles = ['COUNSELLOR', 'COUNSELOR'];
       const superAdminRoles = ['SUPERADMIN', 'SUPER ADMIN'];
@@ -418,31 +400,37 @@ export class CustomersPage implements  OnInit {
     
       this._customer.customerStatus.subscribe(
         (res: any) => {
-         
+         if(res.length > 0 || this.counsellor_ids.length > 0){
         // Base query setup
         query = `?user_type=customers&page=1&page_size=10`;
 
         if (counsellorRoles.includes(this.user_role)) {
           query += `&counsellor_id=${this.user_id}`;
         } else if (adminRoles.includes(this.user_role)) {
-          if (this.counsellor_ids.length > 0) {
-            // Admin filtering by counsellor
-            query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
-          } else {
-            // Admin not filtering by counsellor
-            if(this.resCounsellors !== ''){
-              query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
-            }else{
-              query += `&admin_id=${this.user_id}`;
+          
+             // Add status filter
+             if(res.length > 0 && this.counsellor_ids.length === 0){
+              query += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors} `;
             }
-          }
+            if(res.length > 0 && this.counsellor_ids.length > 0){
+              query += `&status=${res}&counsellor_id=${this.counsellor_ids}`
+            }if(res.length === 0 && this.counsellor_ids.length > 0){
+              query += `&counsellor_id=${this.counsellor_ids} `
+            }
+            if(res.length === 0 && this.counsellor_ids.length === 0){
+              query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `
+            }
+          
+              
+            
         }
 
-        // Add status filter
-        if (res.length > 0) {
-          this.statusFilter = true;
-          query += `&status=${res}`;
-        }
+       // Add status filter
+      if ( !adminRoles.includes(this.user_role) && res.length > 0 ) {
+        this.statusFilter = true;
+        query += `&status=${res}`;
+      }
+      
 
         // For roles other than admin, add counsellor filter if filtering by counsellor
         if (
@@ -470,9 +458,13 @@ export class CustomersPage implements  OnInit {
                 this.api.showError(error.error.message);
               }
             );
+          }else{
+            this.getAllCustomers()
           }
+        }
         );
-    }
+      
+    
   }
  
   
@@ -492,9 +484,7 @@ export class CustomersPage implements  OnInit {
       if(this.resCounsellors !== ''){
         query +=`&counsellor_id=${this.resCounsellors}`
       }
-    } else {
-      query = `?user_type=customers&page=1&page_size=10`;
-    }
+    } 
     this.leadCards = [];
     this.data = [];
 
@@ -537,11 +527,13 @@ export class CustomersPage implements  OnInit {
         this._customer.customerStatus.next('')
         this._counsellorEmitter.customerCounsellor.next([])
         this.counsellor_ids = []
+        this.selectedCounsellor = false
         this.statusFilter = false;
         this.searchTerm = '';
         this._customer.customerSearchBar.next(false)
-        this.getAllCustomers()
-        this.router.navigate(['/inner/customers']);
+       this.getAllCustomers()
+       
+       this.location.isCurrentPathEqualTo('/inner/customers')
         event.target.complete();
       // }, 2000);
     }else{
@@ -568,17 +560,23 @@ export class CustomersPage implements  OnInit {
     if (counsellorRoles.includes(this.user_role)) {
       query += `&counsellor_id=${this.user_id}`;
     } else if (adminRoles.includes(this.user_role)) {
-      if (this.counsellor_ids.length > 0) {
-        // Admin filtering by counsellor
-        query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
-      } else {
-        // Admin not filtering by counsellor
-        if(this.resCounsellors !== ''){
-          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
-        }else{
-          query += `&admin_id=${this.user_id}`;
+      this._customer.customerStatus.subscribe(
+        (res: any) => {
+        // Add status filter
+        if(res.length > 0 && this.counsellor_ids.length === 0){
+          query += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors} `;
+        }
+        if(res.length > 0 && this.counsellor_ids.length > 0){
+          query += `&status=${res}&counsellor_id=${this.counsellor_ids}`
+        }if(res.length === 0 && this.counsellor_ids.length > 0){
+          query += `&counsellor_id=${this.counsellor_ids} `
+        }
+        if(res.length === 0 && this.counsellor_ids.length === 0){
+          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `
         }
       }
+
+      );
     } 
 
     // Add search term filter
@@ -587,7 +585,7 @@ export class CustomersPage implements  OnInit {
     }
 
     // Add status filter
-   if (this.statusFilter === true) {
+   if (!adminRoles.includes(this.user_role) && this.statusFilter === true) {
       this._customer.customerStatus.subscribe(
         (res: any) => {
           if (res) {
@@ -655,22 +653,28 @@ export class CustomersPage implements  OnInit {
       } else if (superAdminRoles.includes(this.user_role)) {
         // Superadmin case already covered by base query
       } else if (adminRoles.includes(this.user_role)) {
-        if (this.counsellor_ids.length > 0) {
-          // Admin filtering by counsellor
-          params += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
-        } else {
-          // Admin not filtering by counsellor
-          if(this.resCounsellors !== ''){
-            params += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
-          }else{
-            params += `&admin_id=${this.user_id}`;
+        this._customer.customerStatus.subscribe(
+          (res: any) => {
+           
+          // Add status filter
+          if(res.length > 0 && this.counsellor_ids.length === 0){
+            params += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors} `;
+          }
+          if(res.length > 0 && this.counsellor_ids.length > 0){
+            params += `&status=${res}&counsellor_id=${this.counsellor_ids}`
+          }if(res.length === 0 && this.counsellor_ids.length > 0){
+            params += `&counsellor_id=${this.counsellor_ids} `
+          }
+          if(res.length === 0 && this.counsellor_ids.length === 0){
+            params += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `
           }
         }
-      } else {
-        params += `&user_id=${this.user_id}`;
-      }
+      
+        );
+      
+      } 
 
-     if (this.statusFilter) {
+     if (!adminRoles.includes(this.user_role) && this.statusFilter) {
         this._customer.customerStatus.subscribe(
           (res: any) => {
             if (res) {
@@ -738,18 +742,24 @@ export class CustomersPage implements  OnInit {
   } else if (superAdminRoles.includes(this.user_role)) {
     // Superadmin case already covered by base query
   } else if (adminRoles.includes(this.user_role)) {
-    if (this.counsellor_ids.length > 0) {
-      // Admin filtering by counsellor
-      query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
-    } else {
-      // Admin not filtering by counsellor
-      if(this.resCounsellors !== ''){
-        query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
-      }else{
-        query += `&admin_id=${this.user_id}`;
-      }
-    }
     
+    this._customer.customerStatus.subscribe(
+      (res: any) => {
+      
+     // Add status filter
+     if(res.length > 0 && this.counsellor_ids.length === 0){
+      query += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors} `;
+    }
+    else if(res.length > 0 && this.counsellor_ids.length > 0){
+      query += `&status=${res}&counsellor_id=${this.counsellor_ids}`
+    }else if(res.length === 0 && this.counsellor_ids.length > 0){
+      query += `&counsellor_id=${this.counsellor_ids} `
+    }
+    else if(res.length === 0 && this.counsellor_ids.length === 0){
+      query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `
+    }
+  }
+  );
   } 
 
    // Add counsellor filter for non-admin roles if filtering by counsellor
@@ -759,7 +769,7 @@ export class CustomersPage implements  OnInit {
   ) {
     query += `&counsellor_id=${this.counsellor_ids}`;
   }
-    if (this.statusFilter === true) {
+    if (!adminRoles.includes(this.user_role) && this.statusFilter === true) {
       this._customer.customerStatus.subscribe(
         (res: any) => {
           if (res.length >0) {
@@ -801,17 +811,22 @@ export class CustomersPage implements  OnInit {
   } else if (superAdminRoles.includes(this.user_role)) {
     // Superadmin case already covered by base query
   } else if (adminRoles.includes(this.user_role)) {
-    if (this.counsellor_ids.length > 0) {
-      // Admin filtering by counsellor
-      query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
-    } else {
-      // Admin not filtering by counsellor
-      if(this.resCounsellors !== ''){
-        query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
-      }else{
-        query += `&admin_id=${this.user_id}`;
-      }
+    this._customer.customerStatus.subscribe(
+      (res: any) => {
+     // Add status filter
+     if(res.length > 0 && this.counsellor_ids.length === 0){
+      query += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors} `;
     }
+    else if(res.length > 0 && this.counsellor_ids.length > 0){
+      query += `&status=${res}&counsellor_id=${this.counsellor_ids}`
+    }else if(res.length === 0 && this.counsellor_ids.length > 0){
+      query += `&counsellor_id=${this.counsellor_ids} `
+    }
+    else if(res.length === 0 && this.counsellor_ids.length === 0){
+      query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `
+    }
+  }
+  );
     
   } 
 
@@ -822,7 +837,7 @@ export class CustomersPage implements  OnInit {
   ) {
     query += `&counsellor_id=${this.counsellor_ids}`;
   }
-    if (this.statusFilter === true) {
+    if (!adminRoles.includes(this.user_role) && this.statusFilter === true) {
       this._customer.customerStatus.subscribe(
         (res: any) => {
           if (res.length >0) {

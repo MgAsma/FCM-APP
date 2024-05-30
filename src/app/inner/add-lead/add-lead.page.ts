@@ -8,7 +8,6 @@ import { BaseServiceService } from '../../service/base-service.service';
 import { CommonServiceService } from '../../service/common-service.service';
 import { AddLeadEmitterService } from '../../service/add-lead-emitter.service';
 
-
 @Component({
   selector: 'app-add-lead',
   templateUrl: './add-lead.page.html',
@@ -53,9 +52,9 @@ export class AddLeadPage implements OnInit {
   selectedState: any;
   selectedCity: any;
   user_role: string;
-  dropdownSettings1: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
-  dropdownSettings2: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
-  dropdownSettings3: { singleSelection: boolean; idField: string; textField: string; selectAllText: string; unSelectAllText: string; itemsShowLimit: number; allowSearchFilter: boolean; };
+  dropdownSettings1:any;
+  dropdownSettings2:any;
+  dropdownSettings3:any;
  
   @ViewChild('countryDropdown') countryDropdown: any;
   @ViewChild('stateDropdown') stateDropdown: any;
@@ -117,6 +116,8 @@ export class AddLeadPage implements OnInit {
       selectAllText: "Select All",
       unSelectAllText: "UnSelect All",
       itemsShowLimit: 1,
+      closeDropDownOnSelection:true,
+      closeDropDownOnClick:true,
       allowSearchFilter: true
     };
     this.dropdownSettings2 = {

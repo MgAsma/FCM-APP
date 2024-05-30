@@ -383,31 +383,12 @@ export class AllocationsPage implements OnInit {
     );
   }
   viewInit() {
-    
-    this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
-      if(res){
-        this.selectedCounsellor = true
-      }
-    });
-
-    this.allocate.allocationStatus.subscribe((res: any) => {
-      if(res.length >0){
-        this.statusFilter = true
-    }})
-
     this._addLeadEmitter.triggerGet$.subscribe((res: any) => {
       this.triggerGet = true;
       this.getEmitters();
     });
-    
-
-      if(!this.selectedCounsellor && !this.statusFilter){
-      this.resetFilters()
-      this.getAllAllocation()
-      }
-    else{
       this.getAllocationWithFilters()
-    }
+   
     
   }
   ionViewWillEnter() {
@@ -517,9 +498,9 @@ export class AllocationsPage implements OnInit {
     });
 
     this.allocate.allocationStatus.subscribe((res: any) => {
-      if(res){
+      if(res.length > 0 ||  this.counsellor_ids.length >0){
         this.selectedFilter = res;
-      }
+      
    
       let query: string;
       const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
@@ -532,24 +513,25 @@ export class AllocationsPage implements OnInit {
       if (counsellorRoles.includes(this.user_role)) {
         query += `&counsellor_id=${this.user_id}`;
       } else if (adminRoles.includes(this.user_role)) {
-        if (this.counsellor_ids.length > 0) {
-          // Admin filtering by counsellor
-          query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
-        } else {
-          if(this.resCounsellors !== ''){
-            query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
-          }else{
-            query += `&admin_id=${this.user_id}`;
-          }
+        if(res.length > 0 && this.counsellor_ids.length === 0){
+          query += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors}  `;
+        }
+        if(res.length > 0 && this.counsellor_ids.length > 0){
+          query += `&status=${res}&counsellor_id=${this.counsellor_ids}`
+        }if(res.length === 0 && this.counsellor_ids.length > 0){
+          query += `&counsellor_id=${this.counsellor_ids} `
+        }
+        if(res.length === 0 && this.counsellor_ids.length === 0){
+          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `
         }
       }
 
-      // Add status filter
-      if (res.length > 0) {
-        this.statusFilter = true;
-        query += `&status=${res}`;
-      }
-
+     
+        // Add status filter
+        if ( !adminRoles.includes(this.user_role) && res.length > 0 ) {
+          this.statusFilter = true;
+          query += `&status=${res}`;
+        }
       // For roles other than admin, add counsellor filter if filtering by counsellor
       if (
         !adminRoles.includes(this.user_role) &&
@@ -583,6 +565,9 @@ export class AllocationsPage implements OnInit {
           this.api.showError(error.error.message);
         }
       );
+    }else{
+      this.getAllAllocation()
+    }
     });
   }
   getPhoneNumbers(leadData) {
@@ -607,7 +592,7 @@ export class AllocationsPage implements OnInit {
       this.leadCards = [];
       this.data = [];
       this.getAllAllocation();
-      this.router.navigate(['/inner/allocations']);
+      window.location.reload()
       event.target.complete();
       // },100);
     } else {
@@ -615,25 +600,7 @@ export class AllocationsPage implements OnInit {
     }
   }
 
-  getLeadlist(query: any) {
-    this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
-      (res: any) => {
-        if (res.results) {
-          this.leadCards = [];
-          this.data = [];
-          this.totalNumberOfRecords = [];
-          this.leadCards = res.results.data;
-          this.leadData = res.results.data;
-
-          this.data = new MatTableDataSource<any>(this.leadCards);
-          this.totalNumberOfRecords = res.total_no_of_record;
-        }
-      },
-      (error: any) => {
-        this.api.showError(error.error.message);
-      }
-    );
-  }
+  
 
   onPageChange(event: any, dataSource: MatTableDataSource<any>, type?: any) {
     if (event) {
@@ -653,16 +620,25 @@ export class AllocationsPage implements OnInit {
     if (counsellorRoles.includes(this.user_role)) {
       query += `&counsellor_id=${this.user_id}`;
     } else if (adminRoles.includes(this.user_role)) {
-      if (this.counsellor_ids.length > 0) {
-        // Admin filtering by counsellor
-        query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
-      } else {
-        if(this.resCounsellors !== ''){
-          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
-        }else{
-          query += `&admin_id=${this.user_id}`;
+      this.allocate.allocationStatus.subscribe(
+        (res: any) => {
+          if (res) {
+        // Add status filter
+        if(res.length > 0 && this.counsellor_ids.length === 0){
+          query += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors}  `;
+        }
+        if(res.length > 0 && this.counsellor_ids.length > 0){
+          query += `&status=${res}&counsellor_id=${this.counsellor_ids}`
+        }if(res.length === 0 && this.counsellor_ids.length > 0){
+          query += `&counsellor_id=${this.counsellor_ids} `
+        }
+        if(res.length === 0 && this.counsellor_ids.length === 0){
+          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `
         }
       }
+    }
+      );
+      
     } 
     // Add search term filter
     if (this.searchTerm) {
@@ -670,15 +646,12 @@ export class AllocationsPage implements OnInit {
     }
 
     // Add status filter
-    if (this.statusFilter) {
+    if (!adminRoles.includes(this.user_role) && this.statusFilter) {
       this.allocate.allocationStatus.subscribe(
         (res: any) => {
           if (res) {
             query += `&status=${res}`;
           }
-        },
-        (error: any) => {
-          this.api.showError(error.error.message);
         }
       );
     }
@@ -744,20 +717,27 @@ export class AllocationsPage implements OnInit {
       } else if (superAdminRoles.includes(this.user_role)) {
         // Superadmin case already covered by base query
       } else if (adminRoles.includes(this.user_role)) {
-        if (this.counsellor_ids.length > 0) {
-          // Admin filtering by counsellor
-          params += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
-        } else {
-          // Admin not filtering by counsellor
-          if(this.resCounsellors !== ''){
-            params += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
-          }else{
-            params += `&admin_id=${this.user_id}`;
+        this.allocate.allocationStatus.subscribe(
+          (res: any) => {
+           
+          // Add status filter
+          if(res.length > 0 && this.counsellor_ids.length === 0){
+            params += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors} `;
+          }
+          if(res.length > 0 && this.counsellor_ids.length > 0){
+            params += `&status=${res}&counsellor_id=${this.counsellor_ids}`
+          }if(res.length === 0 && this.counsellor_ids.length > 0){
+            params += `&counsellor_id=${this.counsellor_ids} `
+          }
+          if(res.length === 0 && this.counsellor_ids.length === 0){
+            params += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `
           }
         }
+
+        );
       } 
       // Add status filter
-      if (this.statusFilter) {
+      if (!adminRoles.includes(this.user_role) && this.statusFilter) {
         this.allocate.allocationStatus.subscribe(
           (res: any) => {
             if (res) {
@@ -823,17 +803,23 @@ export class AllocationsPage implements OnInit {
     } else if (superAdminRoles.includes(this.user_role)) {
       // Superadmin case already covered by base query
     } else if (adminRoles.includes(this.user_role)) {
-      if (this.counsellor_ids.length > 0) {
-        // Admin filtering by counsellor
-        query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
-      } else {
-        // Admin not filtering by counsellor
-        if(this.resCounsellors !== ''){
-          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
-        }else{
-          query += `&admin_id=${this.user_id}`;
+
+      this.allocate.allocationStatus.subscribe(
+        (res: any) => {
+        // Add status filter
+        if(res.length > 0 && this.counsellor_ids.length === 0){
+          query += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors}  `;
+        }
+        if(res.length > 0 && this.counsellor_ids.length > 0){
+          query += `&status=${res}&counsellor_id=${this.counsellor_ids}`
+        }if(res.length === 0 && this.counsellor_ids.length > 0){
+          query += `&counsellor_id=${this.counsellor_ids} `
+        }
+        if(res.length === 0 && this.counsellor_ids.length === 0){
+          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `
         }
       }
+      );
       
     } 
 
@@ -845,7 +831,7 @@ export class AllocationsPage implements OnInit {
       query += `&counsellor_id=${this.counsellor_ids}`;
     }
     // Add status filter
-    if (this.statusFilter === true) {
+    if (!adminRoles.includes(this.user_role) && this.statusFilter === true) {
       this.allocate.allocationStatus.subscribe((res: any) => {
         if (res.length >0) {
           query += `&status=${res}`;
@@ -888,18 +874,22 @@ export class AllocationsPage implements OnInit {
     } else if (superAdminRoles.includes(this.user_role)) {
       // Superadmin case already covered by base query
     } else if (adminRoles.includes(this.user_role)) {
-      if (this.counsellor_ids.length > 0) {
-        // Admin filtering by counsellor
-        query += `&admin_id=${this.user_id}&counsellor_id=${this.counsellor_ids}`;
-      } else {
-        // Admin not filtering by counsellor
-        if(this.resCounsellors !== ''){
-          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}`;
-        }else{
-          query += `&admin_id=${this.user_id}`;
+      this.allocate.allocationStatus.subscribe(
+        (res: any) => {
+        // Add status filter
+        if(res.length > 0 && this.counsellor_ids.length === 0){
+          query += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors}  `;
+        }
+        if(res.length > 0 && this.counsellor_ids.length > 0){
+          query += `&status=${res}&counsellor_id=${this.counsellor_ids}`
+        }if(res.length === 0 && this.counsellor_ids.length > 0){
+          query += `&counsellor_id=${this.counsellor_ids} `
+        }
+        if(res.length === 0 && this.counsellor_ids.length === 0){
+          query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `
         }
       }
-      
+      );
     } 
 
      // Add counsellor filter for non-admin roles if filtering by counsellor
@@ -910,7 +900,7 @@ export class AllocationsPage implements OnInit {
       query += `&counsellor_id=${this.counsellor_ids}`;
     }
     // Add status filter
-    if (this.statusFilter === true) {
+    if (!adminRoles.includes(this.user_role) && this.statusFilter === true) {
       this.allocate.allocationStatus.subscribe((res: any) => {
         if (res.length >0) {
           query += `&status=${res}`;

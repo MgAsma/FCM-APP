@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Routes } from '@angular/router';
+import { NavigationEnd, Router, Routes } from '@angular/router';
 import { ModalController, Platform, PopoverController } from '@ionic/angular';
 import { AddLeadPage } from './add-lead/add-lead.page';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Storage } from '@capacitor/storage';
 import { OnBreakComponent } from '../shared-modules/on-break/on-break.component';
 import { MeetingComponent } from '../shared-modules/meeting/meeting.component';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: 'app-inner',
   templateUrl: './inner.page.html',
@@ -36,15 +37,28 @@ export class InnerPage implements OnInit {
       icon: 'menu'
     },
   ];
+  path:any;
+  currentRoute: string;
+  currentUrl: any;
   
-  constructor(private modalController:ModalController,private platform: Platform,private popoverController:PopoverController) {
+  constructor(
+    private modalController:ModalController,
+    private platform: Platform,
+    private popoverController:PopoverController,
+    private router: Router) {
     this.initializeApp();
 
    }
 
   ngOnInit() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.currentUrl = event.urlAfterRedirects;
+      console.log(this.currentUrl); // Do something with the URL
+    });
   }
-  
+ 
   async openAddLead() {
     const modal = await this.modalController.create({
       component: AddLeadPage, // Replace with your modal content page
