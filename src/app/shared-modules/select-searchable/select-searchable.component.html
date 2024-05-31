@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ title }}</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar animated="true" (ionInput)="searchbarInput($event)" placeholder="Search"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light" class="p-2">
+  <ion-list id="modal-list" [inset]="true">
+    <ion-item *ngFor="let item of filteredItems; trackBy: trackItems">
+      <ion-checkbox [value]="item"  [checked]="isChecked(item)" (ionChange)="checkboxChange($event)"
+        >{{ item.name }}</ion-checkbox
+      >
+    </ion-item>
+  </ion-list>
+
+  
+</ion-content>
+<ion-toolbar class="footer-toolbar" >
+  
+  <ion-button color="secondary" shape="round" fill="outline" (click)="cancelChanges()">Cancel</ion-button>
+
+  <ion-button color="secondary" shape="round"  (click)="confirmChanges()">Done</ion-button>
+
+</ion-toolbar>
+

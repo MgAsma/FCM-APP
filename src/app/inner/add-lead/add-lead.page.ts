@@ -7,15 +7,19 @@ import { ApiService } from '../../service/api/api.service';
 import { BaseServiceService } from '../../service/base-service.service';
 import { CommonServiceService } from '../../service/common-service.service';
 import { AddLeadEmitterService } from '../../service/add-lead-emitter.service';
-
+import { IonModal } from '@ionic/angular';
 @Component({
   selector: 'app-add-lead',
   templateUrl: './add-lead.page.html',
   styleUrls: ['./add-lead.page.scss'],
 })
 export class AddLeadPage implements OnInit {
+  @ViewChild('modal', { static: true }) modalC!: IonModal;
+  @ViewChild('modal2', { static: true }) modalC2!: IonModal;
+  @ViewChild('modal3', { static: true }) modalC3!: IonModal;
   addNewLead!: FormGroup;
- 
+  
+  isOpen = false;
   countryOptions:any = [];
   stateOptions:any = [];
   cityOptions:any = [];
@@ -52,13 +56,19 @@ export class AddLeadPage implements OnInit {
   selectedState: any;
   selectedCity: any;
   user_role: string;
-  dropdownSettings1:any;
-  dropdownSettings2:any;
-  dropdownSettings3:any;
+  // dropdownSettings1:any;
+  // dropdownSettings2:any;
+  // dropdownSettings3:any;
  
-  @ViewChild('countryDropdown') countryDropdown: any;
-  @ViewChild('stateDropdown') stateDropdown: any;
-  @ViewChild('cityDropdown') cityDropdown: any;
+  // @ViewChild('countryDropdown') countryDropdown: any;
+  // @ViewChild('stateDropdown') stateDropdown: any;
+  // @ViewChild('cityDropdown') cityDropdown: any;
+  selectedCountryName: any;
+  selectedCountryId: any;
+  selectedStateName:any;
+  selectedStateId:any;
+  selectedCityName:any;
+  selectedCityId:any;
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -76,68 +86,100 @@ export class AddLeadPage implements OnInit {
     this.formatedDate = this._datePipe.transform(this.dateOfBirth,'dd/MM/YYYY')
     this.min = this._datePipe.transform(minimum,'yyyy-MM-dd')
     }
+    countrySelectionChanged(event){
+      this.selectedCountryId = event?.[0]['id']
+      this.selectedCountryName = event?.[0]['name']
+      this.addNewLead.patchValue({
+        countryId:this.selectedCountryId
+      })
+      this.model2Close(event)
+      this.model3Close(event)
+      this.getState(this.selectedCountryName, this.countryOptions);
+      this.modalC.dismiss();
+    }
+    stateSelectionChanged(event){
+      this.selectedStateId = event?.[0]['id']
+      this.selectedStateName = event?.[0]['name']
+      this.addNewLead.patchValue({
+        state:this.selectedStateId
+      })
+      this.model3Close(event)
+      this.getCity(this.selectedStateName, this.stateOptions)
+      this.modalC2.dismiss();
+    }
+    citySelectionChanged(event){
+      this.selectedCityId = event?.[0]['id']
+      this.selectedCityName = event?.[0]['name']
+      this.addNewLead.patchValue({
+        cityName:this.selectedCityId
+      })
+      this.modalC3.dismiss();
+    }
+    modelClose(event){
+      this.selectedCountryId = ''
+      this.selectedCountryName = ''
+      this.addNewLead.patchValue({
+        countryId:null
+      })
+      this.modalC.dismiss();
+    }
+    model2Close(event){
+      this.selectedStateId = ''
+      this.selectedStateName = ''
+      this.addNewLead.patchValue({
+        state:null
+      })
+      this.modalC2.dismiss();
+    }
+    model3Close(event){
+      this.selectedCityId = ''
+      this.selectedCityName = ''
+      this.addNewLead.patchValue({
+        cityName:null
+      })
+      this.modalC3.dismiss();
+    }
   dateChanged(value){
     this.addNewLead.patchValue({
       dateOfBirth:this._datePipe.transform(value,'yyyy-MM-dd')
     })
     this.showPicker = false
   }
-  focusedDropdown: string | null = null;
+  
 
-  onFocus(dropdown: string) {
-    this.focusedDropdown = dropdown;
-    this.closeOtherDropdowns(dropdown);
-  }
-
-  onBlur(dropdown: string) {
-    if (this.focusedDropdown === dropdown) {
-      this.focusedDropdown = null;
-    }
-  }
-
-  closeOtherDropdowns(except: string) {
-    if (except !== 'country' && this.countryDropdown) {
-      this.countryDropdown.closeDropdown();
-    }
-    if (except !== 'state' && this.stateDropdown) {
-      this.stateDropdown.closeDropdown();
-    }
-    if (except !== 'city' && this.cityDropdown) {
-      this.cityDropdown.closeDropdown();
-    }
-  }
+  
 
   ngOnInit(): void {
     this.user_id = localStorage.getItem('user_id').toUpperCase()
-    this.dropdownSettings1 = {
-      singleSelection: true,
-      idField: "id",
-      textField: "name",
-      selectAllText: "Select All",
-      unSelectAllText: "UnSelect All",
-      itemsShowLimit: 1,
-      closeDropDownOnSelection:true,
-      closeDropDownOnClick:true,
-      allowSearchFilter: true
-    };
-    this.dropdownSettings2 = {
-      singleSelection: true,
-      idField: "id",
-      textField: "name",
-      selectAllText: "Select All",
-      unSelectAllText: "UnSelect All",
-      itemsShowLimit: 1,
-      allowSearchFilter: true
-    };
-    this.dropdownSettings3 = {
-      singleSelection: true,
-      idField: "id",
-      textField: "name",
-      selectAllText: "Select All",
-      unSelectAllText: "UnSelect All",
-      itemsShowLimit: 1,
-      allowSearchFilter: true
-    };
+    // this.dropdownSettings1 = {
+    //   singleSelection: true,
+    //   idField: "id",
+    //   textField: "name",
+    //   selectAllText: "Select All",
+    //   unSelectAllText: "UnSelect All",
+    //   itemsShowLimit: 1,
+    //   closeDropDownOnSelection:true,
+    //   closeDropDownOnClick:true,
+    //   allowSearchFilter: true
+    // };
+    // this.dropdownSettings2 = {
+    //   singleSelection: true,
+    //   idField: "id",
+    //   textField: "name",
+    //   selectAllText: "Select All",
+    //   unSelectAllText: "UnSelect All",
+    //   itemsShowLimit: 1,
+    //   allowSearchFilter: true
+    // };
+    // this.dropdownSettings3 = {
+    //   singleSelection: true,
+    //   idField: "id",
+    //   textField: "name",
+    //   selectAllText: "Select All",
+    //   unSelectAllText: "UnSelect All",
+    //   itemsShowLimit: 1,
+    //   allowSearchFilter: true
+    // };
     this.getCountry();
     //this.getState();
     this.getChannel();
@@ -240,14 +282,14 @@ export class AddLeadPage implements OnInit {
   }
   getState(event,countryOptions){
     let selectedCountryName:any;
-    if(event.id && countryOptions.length >0){
-     countryOptions.forEach((f:any)=>{
-      if(f.id == event.id){
-        selectedCountryName = f.name
-      }
+    if(event && countryOptions.length >0){
+    //  countryOptions.forEach((f:any)=>{
+    //   if(f.id == event.id){
+    //     selectedCountryName = f.name
+    //   }
       
-    })
-      
+    // })
+    selectedCountryName = event
     }
     
     let country = selectedCountryName
@@ -268,13 +310,7 @@ export class AddLeadPage implements OnInit {
   getCity(event,stateOptions){
     let selectedStateName:any;
     if(event && stateOptions.length >0){
-    stateOptions.forEach((f:any)=>{
-      if(f.id == event.id){
-        selectedStateName = f.name
-      }
-      
-    })
-      
+      selectedStateName = event
     }
     
     let state = selectedStateName
@@ -540,9 +576,9 @@ export class AddLeadPage implements OnInit {
       refered_to: f['counsellor'],
       location:  null,
       pincode: f['pincode'] || null,
-      country:this.selectedCountry,
-      state: this.selectedState,
-      city: this.selectedCity,
+      country:f['countryId'] || null,
+      state: f['state'] || null,
+      city: f['cityName'] || null,
       zone:f['zone'],
       reference_name:f['referenceName'],
       reference_mobile_number:f['referencePhoneNumber'] || null,

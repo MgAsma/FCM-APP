@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
+import { IonModal, ModalController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
 import { ApiService } from '../../service/api/api.service';
 import { BaseServiceService } from '../../service/base-service.service';
@@ -14,22 +14,33 @@ import { CallPermissionsService } from '../../service/api/call-permissions.servi
   styleUrls: ['./edit-lead.page.scss'],
 })
 export class EditLeadPage implements OnInit {
+  @ViewChild('modal', { static: true }) modalC!: IonModal;
+  @ViewChild('modal2', { static: true }) modalC2!: IonModal;
+  @ViewChild('modal3', { static: true }) modalC3!: IonModal;
    _inputData: any;
   showPicker: boolean = false;
   min:string;
   levelofProgram: any = [];
-  dropdownSettings1:any;
-  dropdownSettings2:any;
-  dropdownSettings3:any;
+  // dropdownSettings1:any;
+  // dropdownSettings2:any;
+  // dropdownSettings3:any;
   tagId: any;
-  selectedCountry: any;
-  selectedState: any;
-  selectedCity: any;
+  // selectedCountry: any;
+  // selectedState: any;
+  // selectedCity: any;
   user_role: string;
   lead: any;
+  selectedCountryId: any;
+  selectedCountryName: any;
+  
+  selectedStateId: any;
+  selectedStateName: any;
+ 
+  selectedCityId: any;
+  selectedCityName: any;
+ 
   @Input() set data(value:any){
     this._inputData = value;
-    //console.log(this._inputData,"ssdgdgg")
   }
   editLead!: FormGroup;
  
@@ -57,9 +68,9 @@ export class EditLeadPage implements OnInit {
   adminList: any = [];
   leadStage: any = [];
   user_id: any;
-  @ViewChild('countryDropdown') countryDropdown: any;
-  @ViewChild('stateDropdown') stateDropdown: any;
-  @ViewChild('cityDropdown') cityDropdown: any;
+  // @ViewChild('countryDropdown') countryDropdown: any;
+  // @ViewChild('stateDropdown') stateDropdown: any;
+  // @ViewChild('cityDropdown') cityDropdown: any;
   constructor(
     private fb: FormBuilder,
     private _baseService:BaseServiceService,
@@ -85,7 +96,6 @@ export class EditLeadPage implements OnInit {
     this.getNewChannel();
     this.getDepartment();
     this.getCourse();
-    //this.getLocation();
     this.getMedium();
     this.getLevelOfProgram();
     this.getPriority();
@@ -107,61 +117,61 @@ export class EditLeadPage implements OnInit {
   ngOnInit(): void {
  
     this.getLeadById()
-    this.dropdownSettings1 = {
-      singleSelection: true,
-      idField: "id",
-      textField: "name",
-      defaultOpen:false,
-      selectAllText: "Select All",
-      unSelectAllText: "UnSelect All",
-      itemsShowLimit: 1,
-      allowSearchFilter: true
-    };
-    this.dropdownSettings2 = {
-      singleSelection: true,
-      idField: "id",
-      textField: "name",
-      defaultOpen:false,
-      selectAllText: "Select All",
-      unSelectAllText: "UnSelect All",
-      itemsShowLimit: 1,
-      allowSearchFilter: true
-    };
-    this.dropdownSettings3 = {
-      singleSelection: true,
-      idField: "id",
-      textField: "name",
-      defaultOpen:false,
-      selectAllText: "Select All",
-      unSelectAllText: "UnSelect All",
-      itemsShowLimit: 1,
-      allowSearchFilter: true
-    };
+    // this.dropdownSettings1 = {
+    //   singleSelection: true,
+    //   idField: "id",
+    //   textField: "name",
+    //   defaultOpen:false,
+    //   selectAllText: "Select All",
+    //   unSelectAllText: "UnSelect All",
+    //   itemsShowLimit: 1,
+    //   allowSearchFilter: true
+    // };
+    // this.dropdownSettings2 = {
+    //   singleSelection: true,
+    //   idField: "id",
+    //   textField: "name",
+    //   defaultOpen:false,
+    //   selectAllText: "Select All",
+    //   unSelectAllText: "UnSelect All",
+    //   itemsShowLimit: 1,
+    //   allowSearchFilter: true
+    // };
+    // this.dropdownSettings3 = {
+    //   singleSelection: true,
+    //   idField: "id",
+    //   textField: "name",
+    //   defaultOpen:false,
+    //   selectAllText: "Select All",
+    //   unSelectAllText: "UnSelect All",
+    //   itemsShowLimit: 1,
+    //   allowSearchFilter: true
+    // };
   }
-  focusedDropdown: string | null = null;
+  // focusedDropdown: string | null = null;
 
-  onFocus(dropdown: string) {
-    this.focusedDropdown = dropdown;
-    this.closeOtherDropdowns(dropdown);
-  }
+  // onFocus(dropdown: string) {
+  //   this.focusedDropdown = dropdown;
+  //   this.closeOtherDropdowns(dropdown);
+  // }
 
-  onBlur(dropdown: string) {
-    if (this.focusedDropdown === dropdown) {
-      this.focusedDropdown = null;
-    }
-  }
+  // onBlur(dropdown: string) {
+  //   if (this.focusedDropdown === dropdown) {
+  //     this.focusedDropdown = null;
+  //   }
+  // }
 
-  closeOtherDropdowns(except: string) {
-    if (except !== 'country' && this.countryDropdown) {
-      this.countryDropdown.closeDropdown();
-    }
-    if (except !== 'state' && this.stateDropdown) {
-      this.stateDropdown.closeDropdown();
-    }
-    if (except !== 'city' && this.cityDropdown) {
-      this.cityDropdown.closeDropdown();
-    }
-  }
+  // closeOtherDropdowns(except: string) {
+  //   if (except !== 'country' && this.countryDropdown) {
+  //     this.countryDropdown.closeDropdown();
+  //   }
+  //   if (except !== 'state' && this.stateDropdown) {
+  //     this.stateDropdown.closeDropdown();
+  //   }
+  //   if (except !== 'city' && this.cityDropdown) {
+  //     this.cityDropdown.closeDropdown();
+  //   }
+  // }
   get f() {
     return this.editLead.controls;
   }
@@ -175,53 +185,59 @@ export class EditLeadPage implements OnInit {
            if(this.lead.course_looking_for?.length >0){
               courseId = this.lead.course_looking_for.map((m:any)=>m.id)
            }
-          this.getCountry()
-          let selectedCity:any = []
-          let stateOptions:any = []
+           this.getCountry()
+           
+          // let selectedCity:any = []
+          // let stateOptions:any = []
           this.api.getAllCity().subscribe((res:any)=>{
-            if(res.results){
+          if(res.results){
               this.cityOptions = res.results
                 if(this.cityOptions.length > 0){
-                  selectedCity = this.cityOptions?.filter((m:any)=>m.id === this.lead?.city)
-                  this.editLead.patchValue({
-                    cityName: selectedCity ?? '',
-                  })
+                //  selectedCity = this.cityOptions?.filter((m:any)=>m.id === this.lead?.city)
+                  // this.editLead.patchValue({
+                  //   cityName: selectedCity ?? '',
+                  // })
+                  this.getState(this.lead.country_name,this.countryOptions)
                 }
                
             }
-            },(error:any)=>{
-               this.api.showToast(error?.error?.message) 
             })
           this.api.getAllState().subscribe((res:any)=>{
             if(res.results){ 
               this.stateOptions = res.results
-              stateOptions = this.stateOptions?.filter((m:any)=>m.id === this.lead.state)
-              this.editLead.patchValue({
-                state: stateOptions ?? '',
-              })
+             // stateOptions = this.stateOptions?.filter((m:any)=>m.id === this.lead.state)
+              // this.editLead.patchValue({
+              //   state: stateOptions ?? '',
+              
+          
+           this.getCity(this.lead.state_name,this.stateOptions)
+              // })
               }})
      
       
-           const selectedCountry = this.countryOptions?.filter((m:any)=>m.id === this.lead.country)
+         //  const selectedCountry = this.countryOptions?.filter((m:any)=>m.id === this.lead.country)
           // const selectedState = this.stateOptions?.filter((m:any)=>m.id === this.lead.state)
            
-           this.selectedCountry = this.lead.country
-           this.selectedCity = this.lead.city
-           this.selectedState = this.lead.state
-          
-          
+           this.selectedCountryId = this.lead.country
+           this.selectedCityId = this.lead.city
+           this.selectedStateId = this.lead.state
+           
+           this.selectedCountryName = this.lead.country_name
+           this.selectedCityName = this.lead.city_name
+           this.selectedStateName = this.lead.state_name
+           
            this.editLead.patchValue({
              firstName: this.lead.user_data?.first_name ?? '',
              mobile: this.lead.user_data?.mobile_number ?? '',
              alternateNumber: this.lead.alternate_mobile_number ?? '',
              email: this.lead.user_data?.email ?? '',
              dateOfBirth: this.lead.date_of_birth ?? '',
-            // state: selectedState ?? '',
+             state: this.lead.state ?? '',
              zone: this.lead.zone ?? '',
              course: this.lead.stream ?? '',
-             // cityName: selectedCity ?? '',
+             cityName: this.lead.city ?? '',
              pincode: this.lead.pincode ?? '',
-             countryId: selectedCountry ?? '',
+             countryId: this.lead.country ?? '',
              referenceName: this.lead.reference_name ?? '',
              referencePhoneNumber: this.lead.reference_mobile_number ?? '',
              fatherName: this.lead.father_name ?? '',
@@ -315,28 +331,94 @@ export class EditLeadPage implements OnInit {
 
     )
   }
-  onTagSelect(event: any,controlName:any) {
-    if(controlName == 'countryId'){
-      this.selectedCountry = event?.id
-    }else if(controlName == 'state'){
-      this.selectedState = event?.id
-    }else if(controlName == 'cityName'){
-      this.selectedCity = event?.id
-    }
-    // this.f['tags'].markAsUntouched()
-    //console.log(controlName,"controlName.value")
+  countrySelectionChanged(event){
+    this.selectedCountryId = event?.[0]['id']
+    this.selectedCountryName = event?.[0]['name']
+    this.editLead.patchValue({
+      countryId:this.selectedCountryId
+    })
+    
+    
+    this.getState(this.selectedCountryName, this.countryOptions);
+    this.selectedStateId = ''
+    this.selectedStateName = ''
+    this.selectedCityId = ''
+    this.selectedCityName = ''
+    this.editLead.patchValue({
+      state:null,
+      cityName:null
+    })
+    this.modalC.dismiss();
   }
- 
-  onItemDeSelect(item: any,controlName:any) {
-    if(controlName == 'countryId'){
-      this.selectedCountry = null
-    }else if(controlName == 'state'){
-      this.selectedState =  null
-    }else if(controlName == 'cityName'){
-      this.selectedCity =  null
-    }
+  stateSelectionChanged(event){
+    this.selectedStateId = event?.[0]['id']
+    this.selectedStateName = event?.[0]['name']
+    this.editLead.patchValue({
+      state:this.selectedStateId
+    })
    
+    this.selectedCityId = ''
+    this.selectedCityName = ''
+    this.editLead.patchValue({
+      cityName:null
+    })
+    this.getCity(this.selectedStateName, this.stateOptions)
+    this.modalC2.dismiss();
   }
+  citySelectionChanged(event){
+    this.selectedCityId = event?.[0]['id']
+    this.selectedCityName = event?.[0]['name']
+    this.editLead.patchValue({
+      cityName:this.selectedCityId
+    })
+    this.modalC3.dismiss();
+  }
+  modelClose(event){
+    this.selectedCountryId = ''
+    this.selectedCountryName = ''
+    this.editLead.patchValue({
+      countryId:null
+    })
+    this.modalC.dismiss();
+  }
+  model2Close(event){
+    this.selectedStateId = ''
+    this.selectedStateName = ''
+    this.editLead.patchValue({
+      state:null
+    })
+    this.modalC2.dismiss();
+  }
+  model3Close(event){
+    this.selectedCityId = ''
+    this.selectedCityName = ''
+    this.editLead.patchValue({
+      cityName:null
+    })
+    this.modalC3.dismiss();
+  }
+  // onTagSelect(event: any,controlName:any) {
+  //   if(controlName == 'countryId'){
+  //     this.selectedCountry = event?.id
+  //   }else if(controlName == 'state'){
+  //     this.selectedState = event?.id
+  //   }else if(controlName == 'cityName'){
+  //     this.selectedCity = event?.id
+  //   }
+  //   // this.f['tags'].markAsUntouched()
+  //   //console.log(controlName,"controlName.value")
+  // }
+ 
+  // onItemDeSelect(item: any,controlName:any) {
+  //   if(controlName == 'countryId'){
+  //     this.selectedCountry = null
+  //   }else if(controlName == 'state'){
+  //     this.selectedState =  null
+  //   }else if(controlName == 'cityName'){
+  //     this.selectedCity =  null
+  //   }
+   
+  // }
   toTitleCase(str: string): string {
     return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   }
@@ -347,7 +429,7 @@ export class EditLeadPage implements OnInit {
           ...item,
           name: this.toTitleCase(item.name)
         })).sort((a: any, b: any) => a.name.localeCompare(b.name));
-         this.getState(this.lead?.country,this.countryOptions)
+         //this.getState(this.lead?.country,this.countryOptions)
           
       }
     },(error:any)=>{
@@ -357,13 +439,9 @@ export class EditLeadPage implements OnInit {
   }
   getState(event,countryOptions){
     let selectedCountryName:any;
-    if(event?.id && countryOptions.length >0){
-     countryOptions.forEach((f:any)=>{
-      if(f.id == event?.id){
-        selectedCountryName = f.name
-      }
+    if(event && countryOptions.length >0){
+        selectedCountryName = event
       
-    })
       
     }
     
@@ -375,7 +453,7 @@ export class EditLeadPage implements OnInit {
           ...item,
           name: this.toTitleCase(item.name)
         })).sort((a: any, b: any) => a.name.localeCompare(b.name));
-        this.getCity(this.lead?.state,this.stateOptions)
+       // this.getCity(this.lead?.state,this.stateOptions)
 
       }
     },(error:any)=>{
@@ -386,13 +464,7 @@ export class EditLeadPage implements OnInit {
   getCity(event,stateOptions){
     let selectedStateName:any;
     if(event && stateOptions.length >0){
-    stateOptions.forEach((f:any)=>{
-      if(f?.id == event?.id){
-        selectedStateName = f.name
-      }
-      
-    })
-      
+        selectedStateName = event
     }
     
     let state = selectedStateName
@@ -638,9 +710,9 @@ export class EditLeadPage implements OnInit {
     role: 5,
     location:null,
     pincode: formData.pincode || null,
-    country: this.selectedCountry,
-    state: this.selectedState, 
-    city: this.selectedCity,  
+    country: formData.countryId,
+    state: formData.state, 
+    city: formData.cityName,  
     zone: formData.zone,
     lead_list_status: formData.leadStatus,
     lead_list_substatus: 1,

@@ -228,3 +228,8 @@ ion-toolbar ion-title{
 .ionic-selectable {
   width: 92% !important;
 }
+app-select-searchable{
+  .searchbar-input.sc-ion-searchbar-md, .searchbar-input.sc-ion-searchbar-ios {
+    --box-shadow:unset !important;
+}
+}

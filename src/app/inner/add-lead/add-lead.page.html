@@ -79,32 +79,99 @@
                 </ion-error>
               </ng-container>
 
-              
+              <ion-label>Country</ion-label>
+              <ion-item [button]="true" [detail]="false" id="select-country">
+                <ion-label   style="color: gray;" *ngIf="!selectedCountryName">Select The Country</ion-label>
+                <div *ngIf="selectedCountryName"  id="selected-country">{{ selectedCountryName }}</div>
+                <ion-icon slot="end" name="caret-down-outline" *ngIf="!selectedCountryName"></ion-icon>
+                
+                <ion-button slot="end" fill="clear" *ngIf="selectedCountryName" (click)="modelClose()">
+                  <ion-icon  name="close-outline" ></ion-icon>
+                </ion-button>
+              </ion-item>
+              <ion-modal trigger="select-country" #modal >
+                <ng-template>
+                  <app-select-searchable
+                    class="ion-page"
+                    title="Country"
+                    [items]="countryOptions"
+                    [selectedItems]="selectedCountryId"
+                    (selectionChange)="countrySelectionChanged($event);"
+                    (selectionCancel)="modelClose()"
+                  ></app-select-searchable>
+                </ng-template>
+              </ion-modal>
 
+              <ion-label>State</ion-label>
+              <ion-item [button]="true" [detail]="false" id="select-state" [ngClass]="!addNewLead.value['countryId'] ? 'bg-color':''" [disabled]="!addNewLead.value['countryId']">
+                <ion-label   style="color: gray;" *ngIf="!selectedStateName">Select The State</ion-label>
+                <div *ngIf="selectedStateName"  id="selected-state">{{selectedStateName }}</div>
+                <ion-icon slot="end" name="caret-down-outline" *ngIf="!selectedStateName"></ion-icon>
+                <ion-button slot="end" fill="clear" *ngIf="selectedStateName" (click)="model2Close()">
+                  <ion-icon slot="end" name="close-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+              <ion-modal trigger="select-state" #modal2 >
+                <ng-template>
+                  <app-select-searchable
+                    class="ion-page"
+                    title="State"
+                    [items]="stateOptions"
+                    [selectedItems]="selectedStateId"
+                    (selectionChange)="stateSelectionChanged($event)"
+                    (selectionCancel)="model2Close()"
+                  ></app-select-searchable>
+                </ng-template>
+              </ion-modal>
+
+              <ion-label>City</ion-label>
+              <ion-item [button]="true" [detail]="false" id="select-city" [ngClass]="!addNewLead.value['state'] ? 'bg-color':''" [disabled]="!addNewLead.value['state']">
+                <ion-label   style="color: gray;" *ngIf="!selectedCityName">Select The City</ion-label>
+                <div *ngIf="selectedCityName"  id="selected-city">{{selectedCityName }}</div>
+                <ion-icon slot="end" name="caret-down-outline" *ngIf="!selectedCityName"></ion-icon>
+                <ion-button slot="end" fill="clear" *ngIf="selectedCityName" (click)="model3Close()">
+                  <ion-icon  name="close-outline" ></ion-icon>
+                </ion-button>
+               
+              </ion-item>
+              <ion-modal trigger="select-city" #modal3 >
+                <ng-template>
+                  <app-select-searchable
+                    class="ion-page"
+                    title="City"
+                    [items]="cityOptions"
+                    [selectedItems]="selectedCityId"
+                    (selectionChange)="citySelectionChanged($event)"
+                    (selectionCancel)="model3Close()"
+                  ></app-select-searchable>
+                </ng-template>
+              </ion-modal>
+
+              
               <!-- Country -->
-              <ion-label position="stacked">Country Name</ion-label>
-              <ng-multiselect-dropdown #countryDropdown style="height: 40vh;" [placeholder]="'Select Country'"
+              <!-- <ion-label position="stacked">Country Name</ion-label>
+              <ng-multiselect-dropdown #countryDropdown  [placeholder]="'Select Country'"
                 [settings]="dropdownSettings1" [data]="countryOptions" [formControl]="addNewLead.get('countryId')"
                 (onSelect)="onTagSelect($event, 'countryId'); getState($event, countryOptions)"
-                (onDeSelect)="onItemDeSelect($event, 'countryId')" (focus)="onFocus('country')"
+                (onDeSelect)="onItemDeSelect($event,'countryId')" (focus)="onFocus('country')"
                 (blur)="onBlur('country')">
-              </ng-multiselect-dropdown>
+              </ng-multiselect-dropdown> -->
 
               <!-- State -->
-              <ion-label position="stacked">State</ion-label>
-              <ng-multiselect-dropdown #stateDropdown [placeholder]="'Select The State'" [settings]="dropdownSettings2"
+              <!-- <ion-label position="stacked">State</ion-label>
+              <ng-multiselect-dropdown #stateDropdown   [placeholder]="'Select The State'" [settings]="dropdownSettings2"
                 [data]="stateOptions" [formControl]="addNewLead.get('state')"
                 (onSelect)="onTagSelect($event, 'state'); getCity($event, stateOptions)"
                 (onDeSelect)="onItemDeSelect($event, 'state')" (focus)="onFocus('state')" (blur)="onBlur('state')">
-              </ng-multiselect-dropdown>
+              </ng-multiselect-dropdown> -->
 
               <!-- City Name -->
-              <ion-label position="stacked">City Name</ion-label>
-              <ng-multiselect-dropdown #cityDropdown [placeholder]="'Select The City Name'"
+              <!-- <ion-label position="stacked">City Name</ion-label>
+              <ng-multiselect-dropdown #cityDropdown   [placeholder]="'Select The City Name'"
                 [settings]="dropdownSettings3" [data]="cityOptions" [formControl]="addNewLead.get('cityName')"
                 (onSelect)="onTagSelect($event, 'cityName')" (onDeSelect)="onItemDeSelect($event, 'cityName')"
                 (focus)="onFocus('city')" (blur)="onBlur('city')">
-              </ng-multiselect-dropdown>
+              </ng-multiselect-dropdown> -->
 
 
               <!-- Pincode -->
