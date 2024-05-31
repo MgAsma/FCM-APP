@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { App as CapacitorApp } from '@capacitor/app';
 
@@ -14,7 +14,9 @@ import { UserData } from './providers/user-data';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { CallLog } from '@ionic-native/call-log/ngx';
 import { IdleDetectionService } from './service/idle-detection.service';
-
+import { ApiService } from './service/api/api.service';
+import { filter } from 'rxjs/operators';
+import { Subscription, combineLatest } from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,7 +27,8 @@ export class AppComponent implements OnInit {
   
   loggedIn = false;
   dark = false;
-
+  id: string;
+  private subscriptions: Subscription = new Subscription();
   constructor(
     private menu: MenuController,
     private platform: Platform,
@@ -37,7 +40,8 @@ export class AppComponent implements OnInit {
     private navCtrl:NavController,
     private androidPermissions:AndroidPermissions,
     private callLog: CallLog,
-    private idleDetectionService:IdleDetectionService
+    private idleDetectionService:IdleDetectionService,
+    private api:ApiService
     // private platform: Platform,
   ) {
     this.initializeApp();
@@ -102,13 +106,8 @@ else{
   }
 
 
-
-
-
-
-
-
   async ngOnInit() {
+    this.id = localStorage.getItem('user_id')
     this.appVersion()
     this.checkPermissions();
     await this.storage.create();
@@ -134,16 +133,49 @@ else{
         .then(() => this.swUpdate.activateUpdate())
         .then(() => window.location.reload());
     });
-    this.idleDetectionService.userActivity.subscribe(isActive => {
-      if (!isActive) {
-       localStorage.clear()
-       window.location.reload()
-      }
-    });
+    // this.idleDetectionService.userActivity.subscribe(isActive => {
+    //   this.router.events.pipe(
+    //     filter(event => event instanceof NavigationEnd)
+    //   ).subscribe((event: NavigationEnd) => {
+    //     this.currentUrl = event.urlAfterRedirects;
+    //     alert(this.currentUrl); // Do something with the URL
+    //     if (!isActive && this.currentUrl !== '/outer/login') {
+    //       alert(this.currentUrl);
+    //       debugger;
+    //       this.logOut()
+    //     }
+    //   });
    
-      this.idleDetectionService.userActivity.subscribe(() => {
-        this.idleDetectionService.resetTimer();
-      });
+    // });
+  
+   
+    //   this.idleDetectionService.userActivity.subscribe(isActive => {
+    //     if(isActive && this.currentUrl !== undefined){
+    //       this.idleDetectionService.resetTimer();
+    //     }
+        
+    //   });
+
+       // Combine the router events and user activity observables
+    const routerEvents$ = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
+    const userActivity$ = this.idleDetectionService.userActivity;
+
+    this.subscriptions.add(
+      combineLatest([routerEvents$, userActivity$]).subscribe(([event, isActive]) => {
+        this.currentUrl = (event as NavigationEnd).urlAfterRedirects;
+        if (!isActive && this.currentUrl !== '/outer/login') {
+          this.logOut();
+        }
+      })
+    );
+
+    this.subscriptions.add(
+      userActivity$.subscribe(isActive => {
+        if (isActive && this.currentUrl !== undefined) {
+          this.idleDetectionService.resetTimer();
+        }
+      })
+    );
   }
 
   initializeApp() {
@@ -154,7 +186,33 @@ else{
       }
     });
   }
-
+  logOut(){
+    
+    let data = {
+      user_id:this.id,
+      logged_in_from:'mobile'
+    }
+   
+      this.api.logout(data).subscribe(
+        (resp:any)=>{
+          
+          localStorage.clear()
+          this.api.showSuccess(resp.message)
+          //window.location.reload();
+          this.router.navigate(['../outer'])
+         
+        },
+        (error:any)=>{
+          
+          this.api.showError(error.error.message)
+          // localStorage.clear()
+          // // localStorage.clear()
+          // this.router.navigate(['../outer'])
+        }
+        )
+    
+   
+  }
   checkLoginStatus() {
     return this.userData.isLoggedIn().then(loggedIn => {
       return this.updateLoggedInStatus(loggedIn);

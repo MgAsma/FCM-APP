@@ -23,6 +23,7 @@ export class CheckoutComponent  implements OnInit {
     private _addLeadEmitter:AddLeadEmitterService) { }
 
   ngOnInit(): void {
+    this.popoverController.dismiss();
     this.id=localStorage.getItem('user_id')
     this.initForm()
   }
@@ -48,9 +49,6 @@ export class CheckoutComponent  implements OnInit {
         this.close()
       }
       else{
-        this._addLeadEmitter.triggerGet$.subscribe((res:any) => {
-          this.logOut()
-        })
         this.logOut()
       }
       }
@@ -60,18 +58,18 @@ export class CheckoutComponent  implements OnInit {
         (resp:any)=>{
           this.logoutForm.reset()
           this.close()
-          localStorage.clear()
+          //localStorage.clear()
           this.api.showSuccess(resp.message)
-          window.location.reload();
-          this.router.navigate(['../outer'])
+          // window.location.reload();
+          // this.router.navigate(['../outer'])
           this.api.loaderDismiss()
         },
         (error:any)=>{
           this.api.loaderDismiss()
           this.api.showError(error.error.message)
-          localStorage.clear()
           // localStorage.clear()
-          this.router.navigate(['../outer'])
+          // // localStorage.clear()
+          // this.router.navigate(['../outer'])
         }
         )
       }

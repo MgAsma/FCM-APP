@@ -55,7 +55,7 @@ export class InnerPage implements OnInit {
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       this.currentUrl = event.urlAfterRedirects;
-      console.log(this.currentUrl); // Do something with the URL
+      //console.log(this.currentUrl); // Do something with the URL
     });
   }
  
