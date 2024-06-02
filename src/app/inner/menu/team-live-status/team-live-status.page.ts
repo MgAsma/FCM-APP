@@ -246,7 +246,8 @@ export class TeamLiveStatusPage implements OnInit {
     this.allocate.tlsStatus.next("");
     this.addEmit.tlsCounsellor.next([]);
     this.allocate.tlsSearchBar.next(false);
-    this.counsellor_ids = []
+    this.counsellor_ids = [];
+    this.statusFilter = false;
     this.searchTerm = '';
   }
   handleRefresh(event: any) {

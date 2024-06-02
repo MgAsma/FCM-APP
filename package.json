@@ -45,13 +45,17 @@
     "@ionic-native/call-log": "^5.36.0",
     "@ionic-native/call-number": "^5.22.0-beta-1",
     "@ionic-native/device": "^5.36.0",
+    "@ionic-native/file": "^5.36.0",
+    "@ionic-native/media": "^5.36.0",
     "@ionic/angular": "^7.0.0",
     "@ionic/storage-angular": "^4.0.0",
     "bootstrap": "^5.3.2",
     "capacitor-native-settings": "^5.0.1",
     "cordova": "^12.0.0",
     "cordova-android": "^12.0.1",
+    "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-inappbrowser": "5.0.0",
+    "cordova-plugin-media": "^6.0.0",
     "core-js": "^3.6.4",
     "io.gvox.plugin.phonecalltrap": "^0.1.2",
     "jwt-decode": "^4.0.0",
@@ -115,7 +119,9 @@
       "mx.ferreyra.callnumber": {},
       "cordova-plugin-calllog": {},
       "cordova-plugin-android-permissions": {},
-      "io.gvox.plugin.phonecalltrap": {}
+      "io.gvox.plugin.phonecalltrap": {},
+      "cordova-plugin-media": {},
+      "cordova-plugin-file": {}
     }
   }
 }
