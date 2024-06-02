@@ -36,7 +36,9 @@ export class AllocationToolbarTopComponent implements OnInit {
 
   ngOnInit() {
 
-
+this.callPermissionService.isToggleddataSubject.subscribe((res:any)=>{
+  this.isToggled=res;
+})
     this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe((res:any)=>{
      
       if(res=='close'||res=='cancel'){
@@ -118,6 +120,7 @@ evValue:boolean;
     return new Promise(async (resolve) => {
       const confirm = await this.alertController.create({
       header: 'Begin Auto Dialler',
+      backdropDismiss:false,
     
       message: this.isToggled? 'Do you want to disable Auto Dialling ? ':'Do you want to enable Auto Dialling ?',
         buttons: [

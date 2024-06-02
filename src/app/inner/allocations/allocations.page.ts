@@ -30,6 +30,7 @@ import {
 import { Router } from "@angular/router";
 import { App as CapacitorApp } from "@capacitor/app";
 import { CallPermissionsService } from "../../service/api/call-permissions.service";
+
 // declare var PhoneCallTrap: any;
 @Component({
   selector: "app-allocations",
@@ -109,9 +110,12 @@ export class AllocationsPage implements OnInit {
       this.callPermissionService?.initiateCallStatus(
         this.getContacktAndPostHistory.bind(this)
       );
+      // console.log("callstatus should call");
+      
     }, 1000);
 
     this.callPermissionService?.isToggleddataSubject.subscribe((res: any) => {
+      
       this.isToggledEnabled = res;
 
       if (res == true) {
@@ -128,6 +132,7 @@ export class AllocationsPage implements OnInit {
   }
   allocateItem: any;
   ngOnInit() {
+    
     this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe(
       (res: any) => {
         this.cancelCloseEditRes = res;
@@ -268,12 +273,15 @@ export class AllocationsPage implements OnInit {
         "This app requires the following permissions to function properly ";
       if (!phoneStateResult.hasPermission) {
         message += " Make Phone Calls";
+        this.callPermissionService.isToggleddataSubject.next(false)
       }
       if (!readContacts.hasPermission) {
         message += " Read Phone Contacts";
+        this.callPermissionService.isToggleddataSubject.next(false)
       }
       if (!readCallLogs.hasPermission) {
         message += " Access Call Logs";
+        this.callPermissionService.isToggleddataSubject.next(false)
       }
       message += "Would you like to grant these permissions?";
       const confirmation = await this.warn(message);
@@ -943,13 +951,14 @@ export class AllocationsPage implements OnInit {
     return new Promise(async (resolve) => {
       const confirm = await this.alertController.create({
         header: "Permissions Required",
-
+        backdropDismiss:false,
         message: message,
         buttons: [
           {
             text: "Cancel",
             role: "cancel",
             handler: () => {
+              this.callPermissionService.isToggleddataSubject.next(false)
               return resolve(false);
             },
           },
@@ -965,8 +974,10 @@ export class AllocationsPage implements OnInit {
           },
         ],
       });
+    
 
       await confirm.present();
+      
     });
   }
 }
