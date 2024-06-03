@@ -18,7 +18,7 @@ export class MeetingComponent implements OnInit {
   id: any;
   lastLoginDate: any;
 
-  breakTime = new Date();
+  breakTime:any;
 
   constructor(
     private popoverController: PopoverController,
@@ -31,6 +31,7 @@ export class MeetingComponent implements OnInit {
   ngOnInit() {
     this.id = localStorage.getItem('user_id');
     this.initForm();
+    this.breakTime=localStorage.getItem('storedDate')
   }
   initForm() {
     this.meetingForm = this._fb.group({
@@ -56,6 +57,7 @@ export class MeetingComponent implements OnInit {
           this.api.loaderDismiss();
           this.close();
           Storage.remove({ key: 'meeting' });
+          localStorage.removeItem('storedDate')
           this.api.showToast('Meeting Ended Sucessfully!');
         },
         (error: any) => {
