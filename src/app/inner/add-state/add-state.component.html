@@ -1,0 +1,45 @@
+<ion-title>Add State</ion-title>
+
+<form [formGroup]="addForm">
+  <ion-row>
+    <ion-col size="12">
+      <ion-label class="ps-3 py-3" position="stacked">State</ion-label><b class="star-symbol">*</b>
+      <ion-item>
+        <ion-input appFormSpace type="text" placeholder="Enter State Name" formControlName="name" required></ion-input>
+      </ion-item>
+      <ion-error class="p-2" *ngIf="f['name'].touched && f['name']?.hasError('required')">
+        <ion-label color="danger">State Name Is Required.</ion-label>
+      </ion-error>
+      <ion-error class="p-2" *ngIf="f['name']?.hasError('pattern')">
+        <ion-label color="danger">Invalid State Name Format. Please Enter Characters.</ion-label>
+      </ion-error>
+    </ion-col>
+  </ion-row>
+
+
+  <ion-row>
+    <ion-col size="12">
+      <ion-label class="ps-3 py-3" position="stacked">Country</ion-label><b class="star-symbol">*</b>
+      <ion-item class="p-0">
+        <ion-select formControlName="country_id" placeholder="Select The Country">
+          <ion-select-option *ngFor="let option of allCountry" [value]="option.id">{{ option.name }}</ion-select-option>
+        </ion-select>
+        <ion-button fill="clear" (click)="clearSelectField('country_id')" *ngIf="f['country_id']?.value">
+          <ion-icon name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <ion-error class="p-2" *ngIf="f['country_id'].touched && f['country_id']?.hasError('required')">
+        <ion-label color="danger">Country Name Is Required.</ion-label>
+      </ion-error>
+
+    </ion-col>
+  </ion-row>
+
+</form>
+<div class="py-4 text-center">
+
+  <ion-button shape="round" class="toolbar-btn" fill="outline" color="secondary">CANCEL</ion-button>
+  <ion-button shape="round" class="toolbar-btn" color="secondary" (click)="submit()">ADD</ion-button>
+
+</div>

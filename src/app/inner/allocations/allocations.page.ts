@@ -30,7 +30,7 @@ import {
 import { Router } from "@angular/router";
 import { App as CapacitorApp } from "@capacitor/app";
 import { CallPermissionsService } from "../../service/api/call-permissions.service";
-
+import { Location } from "@angular/common";
 // declare var PhoneCallTrap: any;
 @Component({
   selector: "app-allocations",
@@ -99,6 +99,7 @@ export class AllocationsPage implements OnInit {
     private alertController: AlertController,
     private router: Router,
     private callPermissionService: CallPermissionsService,
+    private location :Location
 
   ) {
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
@@ -600,7 +601,7 @@ export class AllocationsPage implements OnInit {
       this.leadCards = [];
       this.data = [];
       this.getAllAllocation();
-      window.location.reload()
+      this.location.isCurrentPathEqualTo('/inner/allocations')
       event.target.complete();
       // },100);
     } else {

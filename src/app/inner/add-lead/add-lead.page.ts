@@ -1,13 +1,16 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
 import { ApiService } from '../../service/api/api.service';
 import { BaseServiceService } from '../../service/base-service.service';
 import { CommonServiceService } from '../../service/common-service.service';
 import { AddLeadEmitterService } from '../../service/add-lead-emitter.service';
 import { IonModal } from '@ionic/angular';
+import { AddCountryComponent } from '../add-country/add-country.component';
+import { AddStateComponent } from '../add-state/add-state.component';
+import { AddCityComponent } from '../add-city/add-city.component';
 @Component({
   selector: 'app-add-lead',
   templateUrl: './add-lead.page.html',
@@ -76,7 +79,8 @@ export class AddLeadPage implements OnInit {
     private _commonService:CommonServiceService,
     private _datePipe:DatePipe,
     private modalController:ModalController,
-    private _addLeadEmitter:AddLeadEmitterService
+    private _addLeadEmitter:AddLeadEmitterService,
+    private popoverController:PopoverController
    ) {
     this.user_id = localStorage.getItem('user_id')
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
@@ -307,6 +311,19 @@ export class AddLeadPage implements OnInit {
       
     })
   }
+  getAllState(){
+    this.api.getAllState().subscribe((res:any)=>{
+      if(res.results){
+        this.stateOptions = res.results.map((item: any) => ({
+          ...item,
+          name: this.toTitleCase(item.name)
+        })).sort((a: any, b: any) => a.name.localeCompare(b.name));
+      }
+    },(error:any)=>{
+       this.api.showToast(error?.error?.message)
+      
+    })
+  }
   getCity(event,stateOptions){
     let selectedStateName:any;
     if(event && stateOptions.length >0){
@@ -317,6 +334,19 @@ export class AddLeadPage implements OnInit {
       let params = `?state_name=${state}`
    
     this.api.getAllCity(params).subscribe((res:any)=>{
+      if(res.results){
+        this.cityOptions = res.results.map((item: any) => ({
+          ...item,
+          name: this.toTitleCase(item.name)
+        })).sort((a: any, b: any) => a.name.localeCompare(b.name));
+      }
+      },(error:any)=>{
+         this.api.showToast(error?.error?.message)
+        
+      })
+  }
+  getAllCity(){
+    this.api.getAllCity().subscribe((res:any)=>{
       if(res.results){
         this.cityOptions = res.results.map((item: any) => ({
           ...item,
@@ -537,29 +567,51 @@ export class AddLeadPage implements OnInit {
     this.modalController.dismiss()
     this._addLeadEmitter.triggerGet();
   }
-  onTagSelect(event: any,controlName:any) {
-    if(controlName == 'countryId'){
-      this.selectedCountry = event.id
-    }else if(controlName == 'state'){
-      this.selectedState = event.id
-    }else if(controlName == 'cityName'){
-      this.selectedCity = event.id
-    }
-   
-    // this.f['tags'].markAsUntouched()
-    //console.log(controlName,"controlName.value")
-  }
   
-
-  onItemDeSelect(item: any,controlName:any) {
-    if(controlName == 'countryId'){
-      this.selectedCountry = null
-    }else if(controlName == 'state'){
-      this.selectedState =  null
-    }else if(controlName == 'cityName'){
-      this.selectedCity =  null
+  async addCountry() {
+    const modal = await this.popoverController.create({
+      component: AddCountryComponent, // Replace with your modal content page
+      componentProps: {
+        // You can pass data to the modal using componentProps
+        // key: "value",
+        // data: allocate,
+      },
+    });
+    await modal.present();
+    const data  = await modal.onDidDismiss();
+    if(data){
+      this.getCountry()
     }
-   
+  }
+  async addCity() {
+    const modal = await this.popoverController.create({
+      component: AddCityComponent, // Replace with your modal content page
+      componentProps: {
+        // You can pass data to the modal using componentProps
+        // key: "value",
+        // data: allocate,
+      },
+    });
+    await modal.present();
+    const data  = await modal.onDidDismiss();
+    if(data){
+      this.getAllCity()
+    }
+  }
+  async addState() {
+    const modal = await this.popoverController.create({
+      component: AddStateComponent, // Replace with your modal content page
+      componentProps: {
+        // You can pass data to the modal using componentProps
+        // key: "value",
+        // data: allocate,
+      },
+    });
+    await modal.present();
+    const data  = await modal.onDidDismiss();
+    if(data){
+      this.getAllState()
+    }
   }
   onSubmit(){
     let f = this.addNewLead.value;

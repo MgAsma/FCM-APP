@@ -13,6 +13,11 @@ import { ToolbarCustomerComponent } from './toolbar-customer/toolbar-customer.co
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { CounsellorSearchBarComponent } from './toolbar-customer/counsellor-search-bar/counsellor-search-bar.component';
 import { AllocationToolbarTopComponent } from './allocation-toolbar-top/allocation-toolbar-top.component';
+import { AddCityComponent } from '../add-city/add-city.component';
+import { AddCountryComponent } from '../add-country/add-country.component';
+import { AddStateComponent } from '../add-state/add-state.component';
+import { AddCourseLookingForComponent } from '../add-course-looking-for/add-course-looking-for.component';
+import { AddStreamComponent } from '../add-stream/add-stream.component';
 
 @NgModule({
   imports: [
@@ -27,7 +32,12 @@ import { AllocationToolbarTopComponent } from './allocation-toolbar-top/allocati
     ToolbarCustomerComponent,
     FilterComponent,
     CounsellorSearchBarComponent,
-    AllocationToolbarTopComponent
+    AllocationToolbarTopComponent,
+    AddCityComponent,
+    AddCountryComponent,
+    AddStateComponent,
+    AddCourseLookingForComponent,
+    AddStreamComponent
   ],
     providers:[CallNumber,CallLog,Device,AndroidPermissions]
   
