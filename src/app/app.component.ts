@@ -131,7 +131,7 @@ else{
       toast
         .onDidDismiss()
         .then(() => this.swUpdate.activateUpdate())
-        .then(() => window.location.reload());
+        
     });
     // this.idleDetectionService.userActivity.subscribe(isActive => {
     //   this.router.events.pipe(

@@ -77,7 +77,7 @@ export class StartBreakComponent implements OnInit{
           this.close();
           Storage.set({ key: "break", value: "on_break" });
           this.openOnBreak();
-          this.api.showToast("Break started Successfully!");
+          this.api.showToast("Break started Successfully!"); 
         },
         (error: any) => {
           this.api.loaderDismiss();

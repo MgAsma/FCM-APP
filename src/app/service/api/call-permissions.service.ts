@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { Platform } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
 declare var PhoneCallTrap: any;
 
@@ -11,7 +12,10 @@ export class CallPermissionsService {
   isCallInitiationCalled:boolean=false;
 
 
-  constructor() { }
+  constructor() {
+    
+
+   }
 
  
   initiateCallStatus(callBack:any) {
@@ -22,7 +26,7 @@ export class CallPermissionsService {
 
     PhoneCallTrap?.onCall(function (state: string) {
     that.isCallInitiationCalled=true
-    //  console.log("phone call trap called");
+     console.log("phone call trap called");
      
 
     //  console.log("CHANGE STATE: " + state);

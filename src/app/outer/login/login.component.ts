@@ -118,7 +118,7 @@ export class LoginComponent  implements OnInit {
           
           this.navCtrl.navigateForward(['/inner'])
           this.api.showSuccess(resp.message)
-          window.location.reload()
+          // window.location.reload()
           this.api.loaderDismiss()
         }
       
