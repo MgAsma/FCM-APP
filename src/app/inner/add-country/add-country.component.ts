@@ -32,7 +32,7 @@ addCountryForm!:FormGroup;
 }
 submit(){
   if(this.addCountryForm.invalid){
-
+   this.addCountryForm.markAllAsTouched()
   }
   else{
     this.api.postCountry(this.addCountryForm.value).subscribe(

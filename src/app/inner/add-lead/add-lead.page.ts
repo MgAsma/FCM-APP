@@ -11,6 +11,8 @@ import { IonModal } from '@ionic/angular';
 import { AddCountryComponent } from '../add-country/add-country.component';
 import { AddStateComponent } from '../add-state/add-state.component';
 import { AddCityComponent } from '../add-city/add-city.component';
+import { AddStreamComponent } from '../add-stream/add-stream.component';
+import { AddCourseLookingForComponent } from '../add-course-looking-for/add-course-looking-for.component';
 @Component({
   selector: 'app-add-lead',
   templateUrl: './add-lead.page.html',
@@ -311,19 +313,7 @@ export class AddLeadPage implements OnInit {
       
     })
   }
-  getAllState(){
-    this.api.getAllState().subscribe((res:any)=>{
-      if(res.results){
-        this.stateOptions = res.results.map((item: any) => ({
-          ...item,
-          name: this.toTitleCase(item.name)
-        })).sort((a: any, b: any) => a.name.localeCompare(b.name));
-      }
-    },(error:any)=>{
-       this.api.showToast(error?.error?.message)
-      
-    })
-  }
+ 
   getCity(event,stateOptions){
     let selectedStateName:any;
     if(event && stateOptions.length >0){
@@ -345,19 +335,7 @@ export class AddLeadPage implements OnInit {
         
       })
   }
-  getAllCity(){
-    this.api.getAllCity().subscribe((res:any)=>{
-      if(res.results){
-        this.cityOptions = res.results.map((item: any) => ({
-          ...item,
-          name: this.toTitleCase(item.name)
-        })).sort((a: any, b: any) => a.name.localeCompare(b.name));
-      }
-      },(error:any)=>{
-         this.api.showToast(error?.error?.message)
-        
-      })
-  }
+ 
   getChannel(){
     this.api.getAllChannel().subscribe((resp:any)=>{
       if(resp.results){
@@ -589,13 +567,13 @@ export class AddLeadPage implements OnInit {
       componentProps: {
         // You can pass data to the modal using componentProps
         // key: "value",
-        // data: allocate,
+        data: this.selectedStateId,
       },
     });
     await modal.present();
     const data  = await modal.onDidDismiss();
     if(data){
-      this.getAllCity()
+      this.getCity(this.selectedStateName,this.stateOptions)
     }
   }
   async addState() {
@@ -603,14 +581,44 @@ export class AddLeadPage implements OnInit {
       component: AddStateComponent, // Replace with your modal content page
       componentProps: {
         // You can pass data to the modal using componentProps
-        // key: "value",
-        // data: allocate,
+        //key: "value",
+        data: this.selectedCountryId,
       },
     });
     await modal.present();
     const data  = await modal.onDidDismiss();
     if(data){
-      this.getAllState()
+      this.getState(this.selectedCountryName,this.countryOptions)
+    }
+  }
+  async addStream() {
+    const modal = await this.popoverController.create({
+      component: AddStreamComponent, // Replace with your modal content page
+      componentProps: {
+        // You can pass data to the modal using componentProps
+        //key: "value",
+        //data: '',
+      },
+    });
+    await modal.present();
+    const data  = await modal.onDidDismiss();
+    if(data){
+      this.getStream()
+    }
+  }
+  async addCourseLookingFor(){
+    const modal = await this.popoverController.create({
+      component: AddCourseLookingForComponent, // Replace with your modal content page
+      componentProps: {
+        // You can pass data to the modal using componentProps
+        //key: "value",
+        //data: '',
+      },
+    });
+    await modal.present();
+    const data  = await modal.onDidDismiss();
+    if(data){
+      this.getCourse();
     }
   }
   onSubmit(){

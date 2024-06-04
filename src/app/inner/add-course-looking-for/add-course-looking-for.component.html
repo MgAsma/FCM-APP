@@ -1,3 +1,28 @@
-<p>
-  add-course-looking-for works!
-</p>
+
+
+<ion-title>Add Course Looking For</ion-title>
+
+  <form [formGroup]="addForm" >
+  <ion-label class="ps-3 py-3" position="stacked">Course Looking For</ion-label><b class="star-symbol">*</b>
+<ion-item>
+  <ion-input appFormSpace type="text" placeholder="Enter Course Looking For" formControlName="course_name"
+    required></ion-input>
+</ion-item>
+<ion-error *ngIf="f['course_name'].touched && f['course_name']?.hasError('required')">
+  <ion-label color="danger">Course Looking For Is Required.</ion-label>
+</ion-error>
+<ion-error *ngIf="f['course_name']?.hasError('pattern')">
+  <ion-label color="danger">Invalid Course Looking For Format. Please Enter Characters.</ion-label>
+</ion-error>
+</form>
+<div class="py-4 text-center">
+ 
+  <ion-button shape="round" class="toolbar-btn" fill="outline" color="secondary" (click)="close()">CANCEL</ion-button>
+  <ion-button shape="round" class="toolbar-btn" color="secondary" (click)="submit()">ADD</ion-button>
+
+</div>
+
+
+
+
+

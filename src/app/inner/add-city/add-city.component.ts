@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PopoverController } from '@ionic/angular';
 import { ApiService } from '../../service/api/api.service';
@@ -9,9 +9,11 @@ import { CommonServiceService } from '../../service/common-service.service';
   templateUrl: './add-city.component.html',
   styleUrls: ['./add-city.component.scss'],
 })
-export class AddCityComponent implements OnInit {
+export class AddCityComponent implements  OnInit {
+  @Input()data:any;
   addForm!:FormGroup;
   allState: any = [];
+  state_id: any;
   constructor( private fb:FormBuilder,
               private _commonService:CommonServiceService,
               private api:ApiService,
@@ -19,14 +21,14 @@ export class AddCityComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.state_id = this.data
     this.getState()
     this.initForm();
   }
  initForm(){
   this.addForm = this.fb.group({
     name:['',[Validators.required,Validators.pattern(this._commonService.namePattern)]],
-    state_id:['',[Validators.required]],
-    is_metro_politan:[false,[Validators.required]],
+    state_id:[this.state_id,[Validators.required]],
   })
  }
  get f() {
@@ -45,7 +47,7 @@ getState(){
 }
 submit(){
   if(this.addForm.invalid){
-
+    this.addForm.markAllAsTouched()
   }
   else{
     this.api.postCity(this.addForm.value).subscribe(

@@ -96,4 +96,7 @@ ion-select{
   .bg-color{
     opacity: 0.7;
   }
-  
+  .add-icon-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }

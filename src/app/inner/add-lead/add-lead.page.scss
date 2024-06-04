@@ -99,3 +99,7 @@ ion-select{
   .add-icon{
     font-size: 19px;
   }
+  .add-icon-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }

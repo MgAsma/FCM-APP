@@ -134,8 +134,8 @@
                     </ng-template>
                   </ion-modal>
                 </ion-col>
-                <ion-col size="0.5" class="m-auto" (click)="addState()">
-                  <ion-icon name="add-outline" class="add-icon" color="secondary"></ion-icon>
+                <ion-col size="0.5" class="m-auto" (click)="addState()" [class.add-icon-disabled]="!addNewLead.value['countryId']">
+                  <ion-icon name="add-outline" class="add-icon" color="secondary" ></ion-icon>
                 </ion-col>
               </ion-row>
               
@@ -165,8 +165,8 @@
                     </ng-template>
                   </ion-modal>
                 </ion-col>
-                <ion-col size="0.5" class="m-auto" (click)="addCity()">
-                  <ion-icon name="add-outline" class="add-icon" color="secondary"></ion-icon>
+                <ion-col size="0.5" class="m-auto" (click)="addCity()"  [class.add-icon-disabled]="!addNewLead.value['state']">
+                  <ion-icon name="add-outline" class="add-icon" color="secondary" ></ion-icon>
                 </ion-col>
               </ion-row>
              
@@ -339,7 +339,7 @@
                   </ion-button>
                 </ion-item>
               </ion-col>
-              <ion-col size="0.5" class="m-auto">
+              <ion-col size="0.5" class="m-auto" (click)="addStream()">
                 <ion-icon name="add-outline" class="add-icon" color="secondary"></ion-icon>
               </ion-col>
             </ion-row>
@@ -368,7 +368,7 @@
                     </ion-button>
                   </ion-item>
                 </ion-col>
-                <ion-col size="0.5" class="m-auto">
+                <ion-col size="0.5" class="m-auto" (click)="addCourseLookingFor()">
                   <ion-icon name="add-outline" class="add-icon" color="secondary"></ion-icon>
                 </ion-col>
                </ion-row>
