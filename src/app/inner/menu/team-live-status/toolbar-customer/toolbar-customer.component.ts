@@ -57,12 +57,11 @@ export class ToolbarCustomerComponent  implements OnInit {
     })
   }
   reset(event:any) {
-   this.selectedCounselorIds = []
-    this.addEmit.tlsCounsellor.next([])
     this.filteredData.forEach((chip: any) => {
       chip.selected = false;
     });
-    
+    this.selectedCounselorIds = []
+    this.addEmit.tlsCounsellor.next([])
   }
   close(){
     let selectedIds = [];
@@ -137,7 +136,7 @@ onSubmit(){
    this.addEmit.tlsCounsellor.next(this.selectedCounselorIds)
    this.modalController.dismiss(this.selectedCounselorIds);
   }else{
-    this.api.showError('Please select at least one counselor')
+    this.api.showError('Please select at least one user')
   }
   
 }

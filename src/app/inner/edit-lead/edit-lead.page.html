@@ -293,10 +293,10 @@
             <ion-label>Student Studying Stream</ion-label>
           </ion-item>
           <div slot="content" class="p-3">
+            <!-- Stream -->
+            <ion-label position="stacked">Stream</ion-label>
             <ion-row>
               <ion-col size="11.5">
-                 <!-- Stream -->
-            <ion-label position="stacked">Stream</ion-label>
             <ion-item>
               <ion-select formControlName="course" placeholder="Select The Stream">
                 <ion-select-option *ngFor="let option of streamList" [value]="option.id">{{ option.stream_name
@@ -307,7 +307,7 @@
               </ion-button>
             </ion-item>
               </ion-col>
-              <ion-col size="0.5" (click)="addStream()">
+              <ion-col size="0.5" class="m-auto" (click)="addStream()">
                 <ion-icon name="add-outline" class="add-icon" color="secondary"></ion-icon>
               </ion-col>
             </ion-row>
@@ -322,11 +322,10 @@
             <ion-error *ngIf="f['entranceExam'].hasError('pattern')">
               <ion-label color="danger">Invalid Entrance Exam.Please Enter Characters.</ion-label>
             </ion-error>
-
+       <!-- Course Looking For -->
+       <ion-label position="stacked">Course Looking For</ion-label>
             <ion-row>
-              <ion-col size="11.5">
-                  <!-- Course Looking For -->
-            <ion-label position="stacked">Course Looking For</ion-label>
+              <ion-col size="11.5"> 
             <ion-item>
               <ion-select formControlName="courseLookingfor" placeholder="Select Course Looking For" multiple>
                 <ion-select-option *ngFor="let option of courseOptions" [value]="option.id">{{ option.course_name
@@ -338,7 +337,7 @@
               </ion-button>
             </ion-item>
               </ion-col>
-              <ion-col size="0.5" (click)="addCourseLookingFor()">
+              <ion-col size="0.5" class="m-auto" (click)="addCourseLookingFor()">
                 <ion-icon name="add-outline" class="add-icon" color="secondary"></ion-icon>
               </ion-col>
             </ion-row>
@@ -419,7 +418,7 @@
             <ion-item>
               <ion-select formControlName="counsellorAdmin" placeholder="Select Counselled By">
                 <ion-select-option *ngFor="let option of adminList" [value]="option.id">{{ option?.first_name
-                  }}</ion-select-option>
+                  }} {{ option?.last_name }}</ion-select-option>
               </ion-select>
               <ion-button fill="clear" (click)="clearSelectField('counsellorAdmin')"
                 *ngIf="f['counsellorAdmin']?.value">

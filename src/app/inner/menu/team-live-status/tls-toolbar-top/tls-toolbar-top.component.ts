@@ -33,6 +33,7 @@ export class TlsToolbarTopComponent implements OnInit {
 
   ngOnInit() {
     this.addEmit.tlsCounsellor.subscribe((res) => {
+      this.counsellor_ids = [];
       if (res.length > 0) {
         this.counsellor_ids = res;
       }else{

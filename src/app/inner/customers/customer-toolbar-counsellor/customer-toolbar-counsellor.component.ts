@@ -114,7 +114,7 @@ export class CustomerToolbarCounsellorComponent implements OnInit {
       this.modalController.dismiss(this.selectedCounselorIds);
       this.addEmit.customerCounsellor.next(this.selectedCounselorIds)
     }else{
-      this.api.showError('Please select at least one counselor')
+      this.api.showError('Please select at least one user.')
     }
   }
  // Filter function to update the displayed list based on search term

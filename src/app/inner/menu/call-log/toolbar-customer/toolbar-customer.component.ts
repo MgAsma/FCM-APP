@@ -121,7 +121,7 @@ export class ToolbarCustomerComponent  implements OnInit {
       this.addEmit.callLogCounsellor.next(this.selectedCounselorIds)
       this.modalController.dismiss(this.selectedCounselorIds);
     }else{
-      this.api.showError('Please select at least one counselor')
+      this.api.showError('Please select at least one user.')
     }
    
   }

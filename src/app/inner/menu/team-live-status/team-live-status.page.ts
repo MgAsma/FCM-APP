@@ -6,7 +6,8 @@ import { ApiService } from "../../../service/api/api.service";
 import { BaseServiceService } from "../../../service/base-service.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { AddLeadEmitterService } from "../../../service/add-lead-emitter.service";
-import { IntervalService } from "../../../service/interval.service";
+import { Subscription } from "rxjs";
+import { TlsIntervalService } from "../../../service/tls-interval.service";
 
 @Component({
   selector: "app-team-live-status",
@@ -44,13 +45,14 @@ export class TeamLiveStatusPage implements OnInit {
   searchTerm: any;
   defaultData: boolean = false;
   refresh: boolean = false;
+  private intervalSubscription: Subscription;
   constructor(
     private allocate: AllocationEmittersService,
     private modalController: ModalController,
     private api: ApiService,
     private baseService: BaseServiceService,
     private addEmit: AddLeadEmitterService,
-    private intervalService: IntervalService
+    private intervalService: TlsIntervalService
   ) {
     this.user_id = localStorage.getItem("user_id");
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
@@ -78,29 +80,20 @@ export class TeamLiveStatusPage implements OnInit {
         this.searchBar = false;
       }
     });
-    if(this.refresh){
-      this.resetAll()
-      let query = `?page=1&page_size=10`;
-
-      if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
-        query += `&user_id=${this.user_id}`;
-      } else {
-        if (
-          ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
-        ) {
-          query += `&user_id=${this.user_id}`;
-        }
-      }
-      this.getLiveStatus(query);
-    }else{
-      this.initComponent();
-      this.intervalService.startInterval(() => {
-        this.initComponent();
-      }, 50000);
-    }
-   
-   
+    
+    this.initComponent();
+      
+    
+    //this.startPeriodicUpdate()
+    
   }
+   startPeriodicUpdate(){
+    // Assuming intervalService.startInterval returns an observable
+    this.intervalSubscription = this.intervalService.startInterval(() => {
+      this.initComponent();
+    }, 50000);
+  }
+
   initComponent() {
     let query: any;
     this.addEmit.tlsCounsellor.subscribe((res) => {
@@ -110,48 +103,70 @@ export class TeamLiveStatusPage implements OnInit {
     });
     this.allocate.tlsStatus.subscribe(
       (res: any) => {
-        query = `?page=1&page_size=10`;
+        if(res.length >0 || this.counsellor_ids.length >0){
+          query = `?page=1&page_size=10`;
 
-        if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
-          query += `&user_id=${this.user_id}`;
-        } else {
-          if (
-            ["SUPERADMIN", "SUPER ADMIN"].includes(this.user_role) === false
-          ) {
+          if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
             query += `&user_id=${this.user_id}`;
+          } 
+            if (
+              ["ADMIN"].includes(this.user_role)
+            ) {
+              query += `&user_id=${this.user_id}`;
+            }
+  
+         
+          if (res.length > 0) {
+            this.statusFilter = true;
+            query += `&status_id=${res}`;
           }
-        }
+          if (this.counsellor_ids.length > 0) {
+            query += `&counsellor_ids=${this.counsellor_ids}`;
+          }
+          if(this.searchTerm){
+            query += `&key=${this.searchTerm}`
+          }
+          
+          this.followupDetails = [];
+          this.data = [];
+          this.totalNumberOfRecords = [];
+         
+          this.api.getTeamLiveStatus(query).subscribe(
+            (resp: any) => {
+              this.followupDetails = resp.results;
+              this.data = new MatTableDataSource<any>(this.followupDetails);
+              this.totalNumberOfRecords = resp.total_no_of_record;
+            },
+            (error: any) => {
+              this.api.showError(error?.error.message);
+            }
+          );
+        
+        }else{
+        
+          let query = `?page=1&page_size=10`;
 
+          if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
+            query += `&user_id=${this.user_id}`;
+          } 
+           else if (
+              ["ADMIN"].includes(this.user_role) 
+            ) {
+              query += `&user_id=${this.user_id}`;
+            }
+          
+            this.api.getTeamLiveStatus(query).subscribe(
+              (resp: any) => {
+                this.followupDetails = resp.results;
+                this.data = new MatTableDataSource<any>(this.followupDetails);
+                this.totalNumberOfRecords = resp.total_no_of_record;
+              },
+              (error: any) => {
+                this.api.showError(error?.error.message);
+              }
+            );
+        }
        
-        if (res.length > 0) {
-          this.statusFilter = true;
-          query += `&status_id=${res}`;
-        }
-        if (this.counsellor_ids.length > 0) {
-          query += `&counsellor_ids=${this.counsellor_ids}`;
-        }
-        if(this.searchTerm){
-          query += `&key=${this.searchTerm}`
-        }
-        // alert(query);
-        this.followupDetails = [];
-        this.data = [];
-        this.totalNumberOfRecords = [];
-
-        //let query2 = this.user_role == 'COUNSELLOR' ? `?counsellor_ids=${this.user_id}&${query}`:`?${query}`
-        this.api.getTeamLiveStatus(query).subscribe(
-          (resp: any) => {
-            this.followupDetails = resp.results;
-            this.data = new MatTableDataSource<any>(this.followupDetails);
-            this.totalNumberOfRecords = resp.total_no_of_record;
-          },
-          (error: any) => {
-            this.api.showError(error?.error.message);
-          }
-        );
-      },
-      (error: any) => {
-        this.api.showToast(error.error.message);
       }
     );
   }
@@ -163,7 +178,7 @@ export class TeamLiveStatusPage implements OnInit {
     if (event) {
       this.currentPage = event.pageIndex + 1;
       query =
-        this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
+        this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR" || this.user_role == "ADMIN" 
           ? `?user_id=${this.user_id}&page=${this.currentPage}&page_size=${event.pageSize}`
           : this.user_role == "SUPERADMIN" || this.user_role == "SUPER ADMIN"
           ? `?page=${this.currentPage}&page_size=${event.pageSize}`
@@ -205,10 +220,11 @@ export class TeamLiveStatusPage implements OnInit {
     );
   }
   onEmit(event: any) {
+    if(event){
     let query: any;
-      this.addEmit.tlsCounsellor.next(this.counsellor_ids);
+    
       query =
-        this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
+        this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR" || this.user_role == "ADMIN"
           ? `?user_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`
           : this.user_role == "SUPERADMIN" || this.user_role == "SUPER ADMIN"
           ? `?page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`
@@ -238,9 +254,9 @@ export class TeamLiveStatusPage implements OnInit {
           this.api.showError(error?.error.message);
         }
       );
-   
+    }
   }
-  resetAll(){
+  async resetAll(){
     this.followupDetails = [];
     this.data = [];
     this.allocate.tlsStatus.next("");
@@ -250,13 +266,13 @@ export class TeamLiveStatusPage implements OnInit {
     this.statusFilter = false;
     this.searchTerm = '';
   }
-  handleRefresh(event: any) {
+  async handleRefresh(event: any) {
     if(event && event.target){
+    await this.resetAll()
     setTimeout(() => {
-    this.refresh = true
     this.ngOnInit()
     event.target.complete();
-    }, 2000);
+    }, 100);
   }else{
     this.refresh = false
   }
@@ -276,6 +292,7 @@ export class TeamLiveStatusPage implements OnInit {
   }
 
   searchTermChanged(event: any) {
+    if(event){
     let query: any;
     query =
       this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
@@ -296,8 +313,11 @@ export class TeamLiveStatusPage implements OnInit {
     }
     this.getLiveStatus(query);
   }
-  ngOnDestroy(): void {
-    // Stop the interval when the component is destroyed
-    this.intervalService.stopInterval();
+  }
+  ionViewWillLeave() {
+    // Unsubscribe to prevent memory leaks when the component is destroyed
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
+    }
   }
 }

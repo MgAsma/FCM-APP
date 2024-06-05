@@ -454,7 +454,7 @@
             <ion-item>
               <ion-select formControlName="counsellorAdmin" placeholder="Select Counselled By">
                 <ion-select-option *ngFor="let option of adminList" [value]="option.id">
-                  {{ option?.first_name }}
+                  {{ option?.first_name }} {{ option?.last_name }}
                 </ion-select-option>
               </ion-select>
               <ion-button fill="clear" (click)="clearSelectField('counsellorAdmin')"
