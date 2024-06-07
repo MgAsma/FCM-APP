@@ -126,6 +126,7 @@ export class CallLogPage implements OnInit {
     // Subscribe to the callLogStatus event
     this.allocate.callLogStatus.subscribe((res: any) => {
       if(res){
+        this.statusFilter = true;
         // Reset query
         let query = `?page=1&page_size=10`;
 
@@ -175,6 +176,7 @@ export class CallLogPage implements OnInit {
         this.api.showError(error?.error.message);
       }));
       }else{
+        this.statusFilter = false;
         let query = `?page=1&page_size=10`;
 
         if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
