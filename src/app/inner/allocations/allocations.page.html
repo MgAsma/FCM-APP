@@ -42,13 +42,13 @@
           Filter by Status Applied - {{ totalNumberOfRecords || 0 }}
         </ng-container>
         <ng-container *ngIf="!statusFilter && counsellor_ids.length && !searchTerm">
-          Filter By Counsellor Applied - {{ totalNumberOfRecords || 0 }}
+          Filter By User Applied - {{ totalNumberOfRecords || 0 }}
         </ng-container>
         <ng-container *ngIf="statusFilter && counsellor_ids.length && !searchTerm">
-          Filter By Counsellor and Filter by Status Applied - {{ totalNumberOfRecords || 0 }}
+          Filter By User and Filter by Status Applied - {{ totalNumberOfRecords || 0 }}
         </ng-container>
         <ng-container *ngIf="statusFilter && counsellor_ids.length && searchTerm">
-          Filter By Counsellor, Filter by Status, and Search Applied - {{ totalNumberOfRecords || 0 }}
+          Filter By User, Filter by Status, and Search Applied - {{ totalNumberOfRecords || 0 }}
         </ng-container>
         <ng-container *ngIf="!statusFilter && !counsellor_ids.length && searchTerm">
           Filter by Search Applied - {{ totalNumberOfRecords || 0 }}
