@@ -577,7 +577,7 @@
               <!-- Status -->
               <ion-label position="stacked">Status</ion-label><b class="star-symbol">*</b>
               <ion-item>
-                <ion-select formControlName="leadStatus" placeholder="Select Status" >
+                <ion-select formControlName="leadStatus" placeholder="Select Status"[(ngModel)]="selectedStatus"  (ionChange)='selectionChanged($event)'>
                   <ion-select-option *ngFor="let option of stat_us" [value]="option.id">{{ option?.name }}</ion-select-option>
                 </ion-select>
                 <ion-button

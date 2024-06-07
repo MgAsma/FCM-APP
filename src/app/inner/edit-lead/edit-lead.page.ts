@@ -87,6 +87,8 @@ export class EditLeadPage implements OnInit {
     this.min = this._datePipe.transform(minimum,'yyyy-MM-dd')
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
     this.user_id = localStorage.getItem("user_id");
+    console.log('edit lead component loaded');
+    
     this.getCountry();
     // this.getState();
     this.getChannel();
@@ -786,7 +788,9 @@ export class EditLeadPage implements OnInit {
         if(res){
           this.addLead.emit('ADD')
           this.api.showSuccess(res.message);
-          this.callPermissionService.closeCancelEditLeadPagedataSubject.next('submit')
+          this.callPermissionService.setStatus({'statusValue':formData.leadStatus,'submit':'submit'})
+          // this.callPermissionService.closeCancelEditLeadPagedataSubject.next('submit');
+          // this.callPermissionService.notUpdatingStatusSubject.next(formData.leadStatus)
           this._addLeadEmitter.triggerGet();
           this.initForm()
           this.modalController.dismiss()
@@ -797,5 +801,19 @@ export class EditLeadPage implements OnInit {
       }))
     }
   }
+  selectedStatus:any;
+  newSelection:any;
+  selectionChanged(data:any){
+    console.log(data);
+    
+   
+    if(data.detail.value!=''){
+       this.newSelection = data.detail.value;
+      
+    }
+   
+    // add your code logic here
+    }
+
   
 }

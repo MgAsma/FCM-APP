@@ -84,6 +84,8 @@ export class AllocationsPage implements OnInit {
   triggerGet: boolean = false;
   selectedFilter_ids: any = [];
   selectedCounsellor: boolean = false;
+  startingIndex: any = 0;
+  currentIndex: any = 0;
   // closeEditRes:any;
 
   constructor(
@@ -104,59 +106,99 @@ export class AllocationsPage implements OnInit {
 
     this.user_id = localStorage.getItem("user_id");
     this.resCounsellors = localStorage.getItem("counsellor_ids");
-    this.platform.ready().then(() => {
-      setTimeout(() => {
-        this.callPermissionService?.initiateCallStatus(
-          this.getContacktAndPostHistory.bind(this)
-        );
-        // console.log("callstatus should call");
-      }, 1000);
-    });
+    this.afterUpdatinggetPhoneNumbers();
+
+    setTimeout(() => {
+      this.callPermissionService?.initiateCallStatus(
+        this.getContacktAndPostHistory.bind(this)
+      );
+      // console.log("callstatus should call");
+    }, 1000);
 
     this.callPermissionService?.isToggleddataSubject.subscribe((res: any) => {
       this.isToggledEnabled = res;
+      this.startingIndex = 0;
+      this.currentIndex = 0;
 
       if (res == true) {
-        this.phoneNumberIndex = 0;
         this.callContact(
-          this.phoneNumbers[0],
+          this.afterUpadtingPhoneNumbers[this.startingIndex],
           this.allocateItem.user_data.id,
           this.allocateItem,
-          this.phoneNumberIndex
+          this.startingIndex
         );
       }
       // console.log(this.isToggledEnabled,"  this.isToggledEnabled from toggle");
     });
   }
   allocateItem: any;
+  notUpdatingStatus: any;
   ngOnInit() {
-    this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe(
-      (res: any) => {
-        this.cancelCloseEditRes = res;
+    //refreshing phonenumbers array,after updating the allocation status
 
-        if (this.isToggledEnabled == true) {
-          if (
-            this.cancelCloseEditRes == "close" ||
-            this.cancelCloseEditRes == "cancel"
-          ) {
-            return;
-          } else {
-            setTimeout(() => {
-              this.allocateItem = this.data.data[this.phoneNumberIndex + 1];
-              //
-              // console.log(this.data.data[this.phoneNumberIndex+1],"this.data.data[this.phoneNumberIndex+1]");
+    // this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe(
+    //   (res: any) => {
+    //     this.cancelCloseEditRes = res;
+    //     if (this.isToggledEnabled == true) {
+    //       if (
+    //         this.cancelCloseEditRes == "close" ||
+    //         this.cancelCloseEditRes == "cancel"
+    //       ) {
+    //         console.log(res, "closed edit form");
+    //         return;
+    //       } else {
+    //         console.log(res, "submitted");
 
+    //       }
+    //     }
+    //   }
+    // );
+
+    this.callPermissionService.getStatus().subscribe((res: any) => {
+      console.log(res, "res from edit afetr pressing submit");
+      if (res && res.submit == "submit" && this.isToggledEnabled == true) {
+        if (res.statusValue == 9 && res.submit === "submit") {
+          console.log(res, this.currentIndex, "without updating satus");
+
+          setTimeout(() => {
+            this.currentIndex = this.currentIndex + 1;
+            this.startingIndex = this.currentIndex;
+            this.allocateItem = this.data.data[this.currentIndex];
+            console.log(
+              this.allocateItem,
+              this.currentIndex,
+              "this.allocateItem inside if without udating status"
+            );
+            this.recursiveCall(
+              this.afterUpadtingPhoneNumbers[this.currentIndex],
+              this.allocateItem.user_data.id,
+              this.allocateItem,
+              this.currentIndex
+            );
+          }, 5000);
+        } else {
+          this.afterUpdatinggetPhoneNumbers();
+          console.log(res, "after updating satus");
+          setTimeout(() => {
+            {
+              this.allocateItem = this.data.data[this.startingIndex];
+              console.log(
+                this.allocateItem,
+                "this.allocateItem iside else after updating status"
+              );
               this.recursiveCall(
-                this.phoneNumbers[this.phoneNumberIndex + 1],
+                this.afterUpadtingPhoneNumbers[this.startingIndex],
                 this.allocateItem.user_data.id,
                 this.allocateItem,
-                this.phoneNumberIndex + 1
+                this.startingIndex
               );
-            }, 5000);
-          }
+            }
+          }, 5000);
         }
+      } else {
+        return;
       }
-    );
+    });
 
     // this.initiateCallStatus();
 
@@ -216,7 +258,12 @@ export class AllocationsPage implements OnInit {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
+        console.log(
+          JSON.stringify(results[0]),
+          "latest call log in allocations"
+        );
         const calculateTime = Number(results[0].date) - Number(this.calledTime);
+        console.log(calculateTime, "calculate time in allocations");
 
         this.callDuration = results[0].duration;
         if (this.callDuration > 0) {
@@ -298,42 +345,37 @@ export class AllocationsPage implements OnInit {
   }
 
   phoneNumberIndex: any;
-
   recursiveCall(number: string, id: any, item, index: any) {
-    if (index >= this.phoneNumbers.length) {
+    console.log(number, id, item, index, "item in recursive");
+    if (index >= this.phoneNumbers.length - 1) {
       return;
-    }
-    this.phoneNumberIndex = index;
-    this.leadItem = item;
-    this.lead_id = id;
-    try {
-      this.leadId = id;
-      this.leadPhoneNumber = number;
-      this.callStartTime = new Date();
-      this.selectedLead = item;
-      // console.log( this.callStartTime," this.callStartTime");
-
-      let data = {
-        user: this.user_id,
-        status: 3,
-      };
-
-      this.postTLStatus(data);
-      this.calledTime = new Date().getTime();
-      // console.log(this.calledTime,"this.calledTime in allocation ");
-
-      setTimeout(async () => {
+    } else {
+      this.leadItem = item;
+      this.lead_id = id;
+      try {
+        this.leadId = id;
+        this.leadPhoneNumber = number;
         this.callStartTime = new Date();
-        await this.callNumber.callNumber(number, true);
-
-        const that = this;
-        this.callInitiated = true;
-
-        this.editLead(this.selectedLead);
-        // this.initiateCallStatus();
-      }, 100);
-    } catch (error) {
-      // console.log(error);
+        this.selectedLead = item;
+        // console.log( this.callStartTime," this.callStartTime");
+        let data = {
+          user: this.user_id,
+          status: 3,
+        };
+        this.postTLStatus(data);
+        this.calledTime = new Date().getTime();
+        // console.log(this.calledTime,"this.calledTime in allocation ");
+        setTimeout(async () => {
+          this.callStartTime = new Date();
+          await this.callNumber.callNumber(number, true);
+          const that = this;
+          this.callInitiated = true;
+          this.editLead(item);
+          // this.initiateCallStatus();
+        }, 100);
+      } catch (error) {
+        // console.log(error);
+      }
     }
   }
 
@@ -362,7 +404,7 @@ export class AllocationsPage implements OnInit {
     };
     this.api.sendingCallHistory(data).subscribe(
       (res: any) => {
-        //console.log(res, "sending call history");
+        console.log(res, "sending call history in alloactions");
         let tlsData = {
           user: this.user_id,
           status: 3,
@@ -419,13 +461,10 @@ export class AllocationsPage implements OnInit {
     this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
       (res: any) => {
         if (res.results) {
-          this.leadData = res.results.data;
-
           this.leadCards = res.results.data;
           this.allocateItem = res.results.data[0];
           this.data = new MatTableDataSource<any>(this.leadCards);
           this.totalNumberOfRecords = res.total_no_of_record;
-          this.getPhoneNumbers(this.leadCards);
         }
       },
       (error: any) => {
@@ -479,12 +518,10 @@ export class AllocationsPage implements OnInit {
         .getData(`${environment.lead_list}${query}`)
         .subscribe((res: any) => {
           if (res.results) {
-            this.leadData = res.results.data;
             this.leadCards = res.results.data;
             this.allocateItem = res.results.data[0];
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
-            this.getPhoneNumbers(this.leadCards);
           }
         });
     }
@@ -552,12 +589,10 @@ export class AllocationsPage implements OnInit {
         this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
           (res: any) => {
             if (res.results) {
-              this.leadData = res.results.data;
               this.leadCards = res.results.data;
               this.allocateItem = res.results.data[0];
               this.data = new MatTableDataSource<any>(this.leadCards);
               this.totalNumberOfRecords = res.total_no_of_record;
-              this.getPhoneNumbers(this.leadCards);
             }
           },
           (error: any) => {
@@ -569,17 +604,32 @@ export class AllocationsPage implements OnInit {
       }
     });
   }
-  getPhoneNumbers(leadData) {
-    if (leadData?.length > 0) {
-      this.phoneNumbers = leadData
-        ?.filter((ele: any) => ele.user_data?.mobile_number)
-        .map((ele: any) => ele.user_data?.mobile_number);
-    }
+  afterUpadtingPhoneNumbers: any;
+  afterUpdatinggetPhoneNumbers() {
+    this.callPermissionService
+      .getAllocationsPhoneNumbers()
+      .subscribe((res: any) => {
+        this.leadData = res.results.data;
+        if (this.leadData?.length > 0) {
+          this.phoneNumbers = this.leadData
+            ?.filter((ele: any) => ele.user_data?.mobile_number)
+            .map((ele: any) => ele.user_data?.mobile_number);
+          console.log(this.phoneNumbers, "initial phone numbers");
+
+          this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
+          console.log(
+            this.afterUpadtingPhoneNumbers,
+            "this.afterUpadtingPhoneNumbers"
+          );
+        }
+        // console.log(res, "resssssssss");
+      });
   }
 
   handleRefresh(event: any) {
     if (event && event.target) {
       this.refresh = true;
+      // this.afterUpdatinggetPhoneNumbers();
       // setTimeout(() => {
       this.totalNumberOfRecords = 0;
       this.allocate.allocationStatus.next([]);
@@ -591,6 +641,7 @@ export class AllocationsPage implements OnInit {
       this.leadCards = [];
       this.data = [];
       this.getAllAllocation();
+
       // window.location.reload()
       event.target.complete();
       // },100);
@@ -660,7 +711,6 @@ export class AllocationsPage implements OnInit {
     this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
       (res: any) => {
         if (res.results) {
-          this.leadData = res.results.data;
           this.leadCards = res.results.data;
           this.allocateItem = res.results.data[0];
           this.data = new MatTableDataSource<any>(this.leadCards);
@@ -756,7 +806,7 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
-            this.leadData = res.results.data;
+
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
           }
@@ -826,7 +876,7 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
-            this.leadData = res.results.data;
+
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
           }
@@ -892,7 +942,6 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
-            this.leadData = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
           }
@@ -913,6 +962,7 @@ export class AllocationsPage implements OnInit {
         data: allocate,
       },
     });
+
     return await modal.present();
   }
 

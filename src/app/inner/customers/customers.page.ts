@@ -151,9 +151,9 @@ export class CustomersPage implements  OnInit {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        //console.log(JSON.stringify(results[0]), "latest call log");
+        console.log(JSON.stringify(results[0]), "latest call log in customers");
         const calculateTime=Number(results[0].date)-Number(this.calledTime)
-       // console.log(calculateTime,"calulatedTime");
+       console.log(calculateTime,"calulatedTime in customers");
         
         this.callDuration = results[0].duration;
         //console.log(JSON.stringify(this.callDuration), "latest call duration");
@@ -186,7 +186,7 @@ export class CustomersPage implements  OnInit {
 
   }
 
-  async callContact(number: string, id: any,item) {
+  async callContact(number: string, id: any,item, index: any) {
 
     const phoneStateResult= await this.androidPermissions.checkPermission(
       this.androidPermissions.PERMISSION.READ_PHONE_STATE
@@ -287,6 +287,8 @@ export class CustomersPage implements  OnInit {
     };
     this.api.sendingCallHistory(data).subscribe(
       (res: any) => {
+        console.log(res,"sending call history in customers");
+        
         let tlsData = {
           user: this.user_id,
           status: 3
