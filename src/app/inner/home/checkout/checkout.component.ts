@@ -42,11 +42,6 @@ export class CheckoutComponent  implements OnInit {
       this.logoutForm.patchValue({logged_in_from:"mobile"})
       if(this.logoutForm.invalid){
         //console.log("Invalid");	
-        localStorage.clear()
-        this.api.showSuccess('Logout successful')
-        window.location.reload();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-        this.router.navigate(['../outer'])
-        this.close()
       }
       else{
         this.logOut()
@@ -58,18 +53,14 @@ export class CheckoutComponent  implements OnInit {
         (resp:any)=>{
           this.logoutForm.reset()
           this.close()
-          //localStorage.clear()
+          localStorage.clear()
           this.api.showSuccess(resp.message)
-          // window.location.reload();
-          // this.router.navigate(['../outer'])
+          this.router.navigate(['../outer'])
           this.api.loaderDismiss()
         },
         (error:any)=>{
           this.api.loaderDismiss()
           this.api.showError(error.error.message)
-          // localStorage.clear()
-          // // localStorage.clear()
-          // this.router.navigate(['../outer'])
         }
         )
       }

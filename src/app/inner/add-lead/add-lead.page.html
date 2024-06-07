@@ -80,72 +80,96 @@
               </ng-container>
 
               <ion-label>Country</ion-label>
-              <ion-item [button]="true" [detail]="false" id="select-country">
-                <ion-label   style="color: gray;" *ngIf="!selectedCountryName">Select The Country</ion-label>
-                <div *ngIf="selectedCountryName"  id="selected-country">{{ selectedCountryName }}</div>
-                <ion-icon slot="end" name="caret-down-outline" *ngIf="!selectedCountryName"></ion-icon>
-                
-                <ion-button slot="end" fill="clear" *ngIf="selectedCountryName" (click)="modelClose()">
-                  <ion-icon  name="close-outline" ></ion-icon>
-                </ion-button>
-              </ion-item>
-              <ion-modal trigger="select-country" #modal >
-                <ng-template>
-                  <app-select-searchable
-                    class="ion-page"
-                    title="Country"
-                    [items]="countryOptions"
-                    [selectedItems]="selectedCountryId"
-                    (selectionChange)="countrySelectionChanged($event);"
-                    (selectionCancel)="modelClose()"
-                  ></app-select-searchable>
-                </ng-template>
-              </ion-modal>
-
+              <ion-row>
+              <ion-col size="11.5">
+                <ion-item [button]="true" [detail]="false" id="select-country">
+                  <ion-label   style="color: gray;" *ngIf="!selectedCountryName">Select The Country</ion-label>
+                  <div *ngIf="selectedCountryName"  id="selected-country">{{ selectedCountryName }}</div>
+                  <ion-icon slot="end" name="caret-down-outline" *ngIf="!selectedCountryName"></ion-icon>
+                  
+                  <ion-button slot="end" fill="clear" *ngIf="selectedCountryName" (click)="modelClose()">
+                    <ion-icon  name="close-outline" ></ion-icon>
+                  </ion-button>
+                </ion-item>
+                <ion-modal trigger="select-country" #modal >
+                  <ng-template>
+                    <app-select-searchable
+                      class="ion-page"
+                      title="Country"
+                      [items]="countryOptions"
+                      [selectedItems]="selectedCountryId"
+                      (selectionChange)="countrySelectionChanged($event);"
+                      (selectionCancel)="modelClose()"
+                    ></app-select-searchable>
+                  </ng-template>
+                </ion-modal>
+  
+              </ion-col>
+              <ion-col size="0.5" class="m-auto" (click)="addCountry()">
+                <ion-icon name="add-outline" class="add-icon" color="secondary"></ion-icon>
+              </ion-col>
+              </ion-row>
+            
               <ion-label>State</ion-label>
-              <ion-item [button]="true" [detail]="false" id="select-state" [ngClass]="!addNewLead.value['countryId'] ? 'bg-color':''" [disabled]="!addNewLead.value['countryId']">
-                <ion-label   style="color: gray;" *ngIf="!selectedStateName">Select The State</ion-label>
-                <div *ngIf="selectedStateName"  id="selected-state">{{selectedStateName }}</div>
-                <ion-icon slot="end" name="caret-down-outline" *ngIf="!selectedStateName"></ion-icon>
-                <ion-button slot="end" fill="clear" *ngIf="selectedStateName" (click)="model2Close()">
-                  <ion-icon slot="end" name="close-outline"></ion-icon>
-                </ion-button>
-              </ion-item>
-              <ion-modal trigger="select-state" #modal2 >
-                <ng-template>
-                  <app-select-searchable
-                    class="ion-page"
-                    title="State"
-                    [items]="stateOptions"
-                    [selectedItems]="selectedStateId"
-                    (selectionChange)="stateSelectionChanged($event)"
-                    (selectionCancel)="model2Close()"
-                  ></app-select-searchable>
-                </ng-template>
-              </ion-modal>
+              <ion-row>
+                <ion-col size="11.5">
+                  <ion-item [button]="true" [detail]="false" id="select-state" [ngClass]="!addNewLead.value['countryId'] ? 'bg-color':''" [disabled]="!addNewLead.value['countryId']">
+                    <ion-label   style="color: gray;" *ngIf="!selectedStateName">Select The State</ion-label>
+                    <div *ngIf="selectedStateName"  id="selected-state">{{selectedStateName }}</div>
+                    <ion-icon slot="end" name="caret-down-outline" *ngIf="!selectedStateName"></ion-icon>
+                    <ion-button slot="end" fill="clear" *ngIf="selectedStateName" (click)="model2Close()">
+                      <ion-icon slot="end" name="close-outline"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                  <ion-modal trigger="select-state" #modal2 >
+                    <ng-template>
+                      <app-select-searchable
+                        class="ion-page"
+                        title="State"
+                        [items]="stateOptions"
+                        [selectedItems]="selectedStateId"
+                        (selectionChange)="stateSelectionChanged($event)"
+                        (selectionCancel)="model2Close()"
+                      ></app-select-searchable>
+                    </ng-template>
+                  </ion-modal>
+                </ion-col>
+                <ion-col size="0.5" class="m-auto" (click)="addState()" [class.add-icon-disabled]="!addNewLead.value['countryId']">
+                  <ion-icon name="add-outline" class="add-icon" color="secondary" ></ion-icon>
+                </ion-col>
+              </ion-row>
+              
 
               <ion-label>City</ion-label>
-              <ion-item [button]="true" [detail]="false" id="select-city" [ngClass]="!addNewLead.value['state'] ? 'bg-color':''" [disabled]="!addNewLead.value['state']">
-                <ion-label   style="color: gray;" *ngIf="!selectedCityName">Select The City</ion-label>
-                <div *ngIf="selectedCityName"  id="selected-city">{{selectedCityName }}</div>
-                <ion-icon slot="end" name="caret-down-outline" *ngIf="!selectedCityName"></ion-icon>
-                <ion-button slot="end" fill="clear" *ngIf="selectedCityName" (click)="model3Close()">
-                  <ion-icon  name="close-outline" ></ion-icon>
-                </ion-button>
-               
-              </ion-item>
-              <ion-modal trigger="select-city" #modal3 >
-                <ng-template>
-                  <app-select-searchable
-                    class="ion-page"
-                    title="City"
-                    [items]="cityOptions"
-                    [selectedItems]="selectedCityId"
-                    (selectionChange)="citySelectionChanged($event)"
-                    (selectionCancel)="model3Close()"
-                  ></app-select-searchable>
-                </ng-template>
-              </ion-modal>
+              <ion-row>
+                <ion-col size="11.5">
+                  <ion-item [button]="true" [detail]="false" id="select-city" [ngClass]="!addNewLead.value['state'] ? 'bg-color':''" [disabled]="!addNewLead.value['state']">
+                    <ion-label   style="color: gray;" *ngIf="!selectedCityName">Select The City</ion-label>
+                    <div *ngIf="selectedCityName"  id="selected-city">{{selectedCityName }}</div>
+                    <ion-icon slot="end" name="caret-down-outline" *ngIf="!selectedCityName"></ion-icon>
+                    <ion-button slot="end" fill="clear" *ngIf="selectedCityName" (click)="model3Close()">
+                      <ion-icon  name="close-outline" ></ion-icon>
+                    </ion-button>
+                   
+                  </ion-item>
+                  <ion-modal trigger="select-city" #modal3 >
+                    <ng-template>
+                      <app-select-searchable
+                        class="ion-page"
+                        title="City"
+                        [items]="cityOptions"
+                        [selectedItems]="selectedCityId"
+                        (selectionChange)="citySelectionChanged($event)"
+                        (selectionCancel)="model3Close()"
+                      ></app-select-searchable>
+                    </ng-template>
+                  </ion-modal>
+                </ion-col>
+                <ion-col size="0.5" class="m-auto" (click)="addCity()"  [class.add-icon-disabled]="!addNewLead.value['state']">
+                  <ion-icon name="add-outline" class="add-icon" color="secondary" ></ion-icon>
+                </ion-col>
+              </ion-row>
+             
 
               
               <!-- Country -->
@@ -296,94 +320,113 @@
           </div>
         </ion-accordion>
         <ion-accordion value="fourth">
-
+          
           <ion-item slot="header" color="light">
             <ion-label>Student Studying Stream</ion-label>
           </ion-item>
           <div slot="content" class="p-3">
-            <!-- Stream -->
-            <ion-label position="stacked">Stream</ion-label>
-            <ion-item>
-              <ion-select formControlName="course" placeholder="Select The Stream">
-                <ion-select-option *ngFor="let option of streamList" [value]="option.id">{{ option.stream_name
-                  }}</ion-select-option>
-              </ion-select>
-              <ion-button fill="clear" (click)="clearSelectField('course')" *ngIf="f['course']?.value">
-                <ion-icon name="close-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-
-            <!----Entrance Exam -->
-            <ion-label position="stacked">Entrance Exam</ion-label>
-            <ion-item>
-              <ion-input appFormSpace type="text" placeholder="Enter Entrance Exam"
-                formControlName="entranceExam"></ion-input>
-            </ion-item>
-            <ion-error *ngIf="f['entranceExam'].hasError('pattern')">
-              <ion-label color="danger">Invalid Entrance Exam.Please Enter Characters.</ion-label>
-            </ion-error>
-            <!-- Course Looking For -->
-            <ion-label position="stacked">Course Looking For</ion-label>
-            <ion-item>
-              <ion-select formControlName="courseLookingfor" placeholder="Select Course Looking For" multiple>
-                <ion-select-option *ngFor="let option of courseOptions" [value]="option.id">{{ option.course_name
-                  }}</ion-select-option>
-              </ion-select>
-              <ion-button fill="clear" (click)="clearSelectField('courseLookingfor')"
-                *ngIf="f['courseLookingfor']?.value">
-                <ion-icon name="close-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-
-            <!-- Level Of Program -->
-            <ion-label position="stacked">Level Of Program</ion-label>
-            <ion-item>
-              <ion-select formControlName="levelOfProgram" placeholder="Select Level Of Program">
-                <ion-select-option *ngFor="let option of levelofProgram" [value]="option?.id">{{ option?.name
-                  }}</ion-select-option>
-              </ion-select>
-              <ion-button fill="clear" (click)="clearSelectField('levelOfProgram')" *ngIf="f['levelOfProgram']?.value">
-                <ion-icon name="close-outline"></ion-icon>
-              </ion-button>
-            </ion-item>
-
-            <!----Preferred College 1 -->
-            <ion-label position="stacked">Preferred College 1</ion-label>
-            <ion-item>
-              <ion-input appFormSpace type="text" placeholder="Enter Preferred College 1"
-                formControlName="preferredCollege1"></ion-input>
-            </ion-item>
-            <ion-error *ngIf="f['preferredCollege1'].hasError('pattern')">
-              <ion-label color="danger">Invalid Preferred College 1 Name.Please Enter Characters.</ion-label>
-            </ion-error>
-            <!----Preferred College 2 -->
-            <ion-label position="stacked">Preferred College 2</ion-label>
-            <ion-item>
-              <ion-input appFormSpace type="text" placeholder="Enter Preferred College 2"
-                formControlName="preferredCollege2"></ion-input>
-            </ion-item>
-            <ion-error *ngIf="f['preferredCollege2'].hasError('pattern')">
-              <ion-label color="danger">Invalid Preferred College 2 Name.Please Enter Characters.</ion-label>
-            </ion-error>
-            <!----Preferred Location 1 -->
-            <ion-label position="stacked">Preferred Location 1</ion-label>
-            <ion-item>
-              <ion-input appFormSpace type="text" placeholder="Enter Preferred Location 1"
-                formControlName="preferredLocation1"></ion-input>
-            </ion-item>
-            <ion-error *ngIf="f['preferredLocation1'].hasError('pattern')">
-              <ion-label color="danger">Invalid Preferred Location 1 Name.Please Enter Characters.</ion-label>
-            </ion-error>
-            <!----Preferred Location 2 -->
-            <ion-label position="stacked">Preferred Location 2</ion-label>
-            <ion-item>
-              <ion-input appFormSpace type="text" placeholder="Enter Preferred Location 2"
-                formControlName="preferredLocation2"></ion-input>
-            </ion-item>
-            <ion-error *ngIf="f['preferredLocation2'].hasError('pattern')">
-              <ion-label color="danger">Invalid Preferred Location 2 Name.Please Enter Characters.</ion-label>
-            </ion-error>
+             <!-- Stream -->
+             <ion-label position="stacked">Stream</ion-label>
+          <ion-row>
+            <ion-col size="11.5">
+                <ion-item>
+                  <ion-select formControlName="course" placeholder="Select The Stream">
+                    <ion-select-option *ngFor="let option of streamList" [value]="option.id">{{ option.stream_name
+                      }}</ion-select-option>
+                  </ion-select>
+                  <ion-button fill="clear" (click)="clearSelectField('course')" *ngIf="f['course']?.value">
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </ion-col>
+              <ion-col size="0.5" class="m-auto" (click)="addStream()">
+                <ion-icon name="add-outline" class="add-icon" color="secondary"></ion-icon>
+              </ion-col>
+            </ion-row>
+                <!----Entrance Exam -->
+                <ion-label position="stacked">Entrance Exam</ion-label>
+                <ion-item>
+                  <ion-input appFormSpace type="text" placeholder="Enter Entrance Exam"
+                    formControlName="entranceExam"></ion-input>
+                </ion-item>
+                <ion-error *ngIf="f['entranceExam'].hasError('pattern')">
+                  <ion-label color="danger">Invalid Entrance Exam.Please Enter Characters.</ion-label>
+                </ion-error>
+             
+                <!-- Course Looking For -->
+                <ion-label position="stacked">Course Looking For</ion-label>
+               <ion-row>
+                <ion-col size="11.5">
+                  <ion-item>
+                    <ion-select formControlName="courseLookingfor" placeholder="Select Course Looking For" multiple>
+                      <ion-select-option *ngFor="let option of courseOptions" [value]="option.id">{{ option.course_name
+                        }}</ion-select-option>
+                    </ion-select>
+                    <ion-button fill="clear" (click)="clearSelectField('courseLookingfor')"
+                      *ngIf="f['courseLookingfor']?.value">
+                      <ion-icon name="close-outline"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="0.5" class="m-auto" (click)="addCourseLookingFor()">
+                  <ion-icon name="add-outline" class="add-icon" color="secondary"></ion-icon>
+                </ion-col>
+               </ion-row>
+                
+    
+                <!-- Level Of Program -->
+                <ion-label position="stacked">Level Of Program</ion-label>
+                <ion-item>
+                  <ion-select formControlName="levelOfProgram" placeholder="Select Level Of Program">
+                    <ion-select-option *ngFor="let option of levelofProgram" [value]="option?.id">{{ option?.name
+                      }}</ion-select-option>
+                  </ion-select>
+                  <ion-button fill="clear" (click)="clearSelectField('levelOfProgram')" *ngIf="f['levelOfProgram']?.value">
+                    <ion-icon name="close-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+    
+                <!----Preferred College 1 -->
+                <ion-label position="stacked">Preferred College 1</ion-label>
+                <ion-item>
+                  <ion-input appFormSpace type="text" placeholder="Enter Preferred College 1"
+                    formControlName="preferredCollege1"></ion-input>
+                </ion-item>
+                <ion-error *ngIf="f['preferredCollege1'].hasError('pattern')">
+                  <ion-label color="danger">Invalid Preferred College 1 Name.Please Enter Characters.</ion-label>
+                </ion-error>
+                <!----Preferred College 2 -->
+                <ion-label position="stacked">Preferred College 2</ion-label>
+                <ion-item>
+                  <ion-input appFormSpace type="text" placeholder="Enter Preferred College 2"
+                    formControlName="preferredCollege2"></ion-input>
+                </ion-item>
+                <ion-error *ngIf="f['preferredCollege2'].hasError('pattern')">
+                  <ion-label color="danger">Invalid Preferred College 2 Name.Please Enter Characters.</ion-label>
+                </ion-error>
+                <!----Preferred Location 1 -->
+                <ion-label position="stacked">Preferred Location 1</ion-label>
+                <ion-item>
+                  <ion-input appFormSpace type="text" placeholder="Enter Preferred Location 1"
+                    formControlName="preferredLocation1"></ion-input>
+                </ion-item>
+                <ion-error *ngIf="f['preferredLocation1'].hasError('pattern')">
+                  <ion-label color="danger">Invalid Preferred Location 1 Name.Please Enter Characters.</ion-label>
+                </ion-error>
+                <!----Preferred Location 2 -->
+                <ion-label position="stacked">Preferred Location 2</ion-label>
+                <ion-item>
+                  <ion-input appFormSpace type="text" placeholder="Enter Preferred Location 2"
+                    formControlName="preferredLocation2"></ion-input>
+                </ion-item>
+                <ion-error *ngIf="f['preferredLocation2'].hasError('pattern')">
+                  <ion-label color="danger">Invalid Preferred Location 2 Name.Please Enter Characters.</ion-label>
+                </ion-error>
+              
+           
           </div>
+         
+        
         </ion-accordion>
         <ion-accordion value="fifth">
           <ion-item slot="header" color="light">
@@ -411,7 +454,7 @@
             <ion-item>
               <ion-select formControlName="counsellorAdmin" placeholder="Select Counselled By">
                 <ion-select-option *ngFor="let option of adminList" [value]="option.id">
-                  {{ option?.first_name }}
+                  {{ option?.first_name }} {{ option?.last_name }}
                 </ion-select-option>
               </ion-select>
               <ion-button fill="clear" (click)="clearSelectField('counsellorAdmin')"

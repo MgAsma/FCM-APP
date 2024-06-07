@@ -30,7 +30,7 @@ import {
 import { Router } from "@angular/router";
 import { App as CapacitorApp } from "@capacitor/app";
 import { CallPermissionsService } from "../../service/api/call-permissions.service";
-
+import { Location } from "@angular/common";
 // declare var PhoneCallTrap: any;
 @Component({
   selector: "app-allocations",
@@ -98,7 +98,9 @@ export class AllocationsPage implements OnInit {
     private androidPermissions: AndroidPermissions,
     private alertController: AlertController,
     private router: Router,
-    private callPermissionService: CallPermissionsService
+    private callPermissionService: CallPermissionsService,
+    private location :Location
+
   ) {
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
 
@@ -152,9 +154,11 @@ export class AllocationsPage implements OnInit {
                 this.allocateItem,
                 this.phoneNumberIndex + 1
               );
+              this.postCallHistory()
             }, 5000);
           }
         }
+        
       }
     );
 
@@ -498,13 +502,21 @@ export class AllocationsPage implements OnInit {
     });
 
     this.allocate.allocationStatus.subscribe((res: any) => {
-      if (res.length > 0 || this.counsellor_ids.length > 0) {
+      if(res.length > 0 ){
+        this.statusFilter = true;
+      }else{
+        this.statusFilter = false;
+      }
+      
+      if(res.length > 0 ||  this.counsellor_ids.length >0){
         this.selectedFilter = res;
 
-        let query: string;
-        const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
-        const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
-        const adminRoles = ["ADMIN"];
+      let query: string;
+      const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
+      const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
+      const adminRoles = ["ADMIN"];
+
+       
 
         // Base query setup
         query = `?user_type=allocation&page=1&page_size=10`;
@@ -527,8 +539,7 @@ export class AllocationsPage implements OnInit {
         }
 
         // Add status filter
-        if (!adminRoles.includes(this.user_role) && res.length > 0) {
-          this.statusFilter = true;
+        if ( !adminRoles.includes(this.user_role) && res.length > 0 ) {
           query += `&status=${res}`;
         }
         // For roles other than admin, add counsellor filter if filtering by counsellor
@@ -538,36 +549,15 @@ export class AllocationsPage implements OnInit {
         ) {
           query += `&counsellor_id=${this.counsellor_ids}`;
         }
-
-        // Add search term filter
-        if (this.searchTerm) {
-          query += `&key=${this.searchTerm}`;
-        }
-
-        // Clear previous data
-        this.leadCards = [];
-        this.data = [];
-
-        // API call
-        this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
-          (res: any) => {
-            if (res.results) {
-              this.leadData = res.results.data;
-              this.leadCards = res.results.data;
-              this.allocateItem = res.results.data[0];
-              this.data = new MatTableDataSource<any>(this.leadCards);
-              this.totalNumberOfRecords = res.total_no_of_record;
-              this.getPhoneNumbers(this.leadCards);
-            }
-          },
-          (error: any) => {
-            this.api.showError(error.error.message);
-          }
-        );
-      } else {
-        this.getAllAllocation();
       }
-    });
+      else{
+        this.statusFilter = false;
+        this.counsellor_ids = []
+        this.getAllAllocation()
+      }
+    } 
+      );
+    
   }
   getPhoneNumbers(leadData) {
     if (leadData?.length > 0) {
@@ -591,7 +581,7 @@ export class AllocationsPage implements OnInit {
       this.leadCards = [];
       this.data = [];
       this.getAllAllocation();
-      // window.location.reload()
+      this.location.isCurrentPathEqualTo('/inner/allocations')
       event.target.complete();
       // },100);
     } else {

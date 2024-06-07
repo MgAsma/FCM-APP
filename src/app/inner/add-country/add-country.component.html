@@ -1,0 +1,28 @@
+
+
+<ion-title>Add Country</ion-title>
+
+  <form [formGroup]="addCountryForm" >
+  <ion-label class="ps-3 py-3" position="stacked">Country</ion-label><b class="star-symbol">*</b>
+<ion-item>
+  <ion-input appFormSpace type="text" placeholder="Enter Country Name" formControlName="name"
+    required></ion-input>
+</ion-item>
+<ion-error *ngIf="f['name'].touched && f['name']?.hasError('required')">
+  <ion-label color="danger">Country Name Is Required.</ion-label>
+</ion-error>
+<ion-error *ngIf="f['name']?.hasError('pattern')">
+  <ion-label color="danger">Invalid Country Name Format. Please Enter Characters.</ion-label>
+</ion-error>
+</form>
+<div class="py-4 text-center">
+ 
+  <ion-button shape="round" class="toolbar-btn" fill="outline" color="secondary" (click)="close()">CANCEL</ion-button>
+  <ion-button shape="round" class="toolbar-btn" color="secondary" (click)="submit()">ADD</ion-button>
+
+</div>
+
+
+
+
+
