@@ -402,6 +402,11 @@ export class CustomersPage implements  OnInit {
     
       this._customer.customerStatus.subscribe(
         (res: any) => {
+          if(res.length > 0 ){
+            this.statusFilter = true;
+          }else{
+            this.statusFilter = false;
+          }
          if(res.length > 0 || this.counsellor_ids.length > 0){
         // Base query setup
         query = `?user_type=customers&page=1&page_size=10`;
@@ -429,7 +434,6 @@ export class CustomersPage implements  OnInit {
 
        // Add status filter
       if ( !adminRoles.includes(this.user_role) && res.length > 0 ) {
-        this.statusFilter = true;
         query += `&status=${res}`;
       }
       
@@ -461,6 +465,8 @@ export class CustomersPage implements  OnInit {
               }
             );
           }else{
+            this.statusFilter = false;
+            this.counsellor_ids = []
             this.getAllCustomers()
           }
         }

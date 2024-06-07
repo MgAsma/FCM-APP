@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 })
 export class ActivateChildGuard implements CanActivateChild {
   newDeviceToken: string;
+  isLoggedIn: boolean = false;
   
   constructor(
     private _router: Router,
@@ -18,11 +19,11 @@ export class ActivateChildGuard implements CanActivateChild {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    const isLoggedIn: boolean = localStorage.getItem('token') !== null;
+    this.isLoggedIn = localStorage.getItem('token') !== null;
     const device_token = localStorage.getItem('device_token')
     const user_id = localStorage.getItem('user_id')
     
-      if(isLoggedIn){
+      if(this.isLoggedIn){
         this.baseService.getData(`${environment.device_token}${user_id}/`).subscribe((res:any)=>{
           if(res){
            this.newDeviceToken = res.device_token
@@ -35,7 +36,7 @@ export class ActivateChildGuard implements CanActivateChild {
           }
         })
       }
-      if (!isLoggedIn) {
+      if (!this.isLoggedIn) {
         this._router.navigate(['/outer']);
         return false;
       }

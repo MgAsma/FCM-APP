@@ -47,13 +47,20 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     ) { 
       this.counsellor_id = localStorage.getItem('user_id');
      
-
+      setTimeout(() => {
+        this.callPermissionService?.initiateCallStatus(
+          this.getContacktAndPostHistory.bind(this)
+        );
+        // console.log("callstatus should call");
+        
+      }, 1000);
     }
     ngOnChanges(){
     
     }
 
   ngOnInit() {
+    
   this.callPermissionService.initiateCallStatus(this.getContacktAndPostHistory.bind(this))
   
     this.allocate.callhistoryList.subscribe((res:any)=>{
@@ -204,18 +211,7 @@ async  initializeCall(event) {
       user: this.counsellor_id,
       status: 3,
     };
-    this._baseService
-      .postData(`${environment.counsellor_status}`, data)
-      .subscribe(
-        (res: any) => {
-          if (res) {
-            // this.api.showToast(res.message)
-          }
-        },
-        (error: any) => {
-          this.api.showToast(error?.error?.message);
-        }
-      );
+     this.postTLStatus(data)
       this.calledTime = new Date().getTime();
 
     try {
@@ -234,25 +230,38 @@ async  initializeCall(event) {
      // console.log(error);
     }
 
-    let data2 = {
-      user: this.counsellor_id,
-      status: 6,
-    };
+    // let data2 = {
+    //   user: this.counsellor_id,
+    //   status: 6,
+    // };
+    // this._baseService
+    //   .postData(`${environment.counsellor_status}`, data2)
+    //   .subscribe(
+    //     (res: any) => {
+    //       if (res) {
+    //         // this.api.showToast(res.message)
+    //       }
+    //     },
+    //     (error: any) => {
+    //       this.api.showToast(error?.error?.message);
+    //     }
+    //   );
+  }
+
+  postTLStatus(data) {
     this._baseService
-      .postData(`${environment.counsellor_status}`, data2)
+      .postData(`${environment.counsellor_status}`, data)
       .subscribe(
         (res: any) => {
           if (res) {
-            // this.api.showToast(res.message)
+            // this.api.showError(res.message);
           }
         },
         (error: any) => {
-          this.api.showToast(error?.error?.message);
+          this.api.showError(error?.error?.message);
         }
       );
   }
-
-  
  
   postCallHistory() {
     let data = {
@@ -263,7 +272,12 @@ async  initializeCall(event) {
       call_start_time: this.callStartTime,
     };
     this.api.sendingCallHistory(data).subscribe((res: any) => {
-      ////console.log(res, 'sending call history');
+      let tlsData = {
+        user: this.counsellor_id,
+        status: 3,
+      };
+      this.postTLStatus(tlsData);
+
     },(error:any)=>{
       // this.api.showToast(error.error.message);
     });

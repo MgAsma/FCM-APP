@@ -33,22 +33,56 @@
     <ion-row>
       <ion-col size="12" class="text-center p-3">
         <ion-label *ngIf="data?.data?.length === 0">
-          <ng-container *ngIf="statusFilter && counsellor_ids.length === 0 && !searchTerm">
+          <ng-container *ngIf="statusFilter && dateForm.invalid && counsellor_ids.length === 0 && !searchTerm">
             Filter by Status Applied - {{ totalNumberOfRecords || 0 }}
           </ng-container>
-          <ng-container *ngIf="counsellor_ids.length > 0 && !statusFilter && !searchTerm">
-            Filter By Counsellor Applied - {{ totalNumberOfRecords || 0 }}
+          <ng-container *ngIf="statusFilter && dateForm.valid && counsellor_ids.length === 0 && !searchTerm">
+            Filter by Status and Start Date & End Date Filter Applied - {{ totalNumberOfRecords || 0 }}
           </ng-container>
-          <ng-container *ngIf="statusFilter && counsellor_ids.length > 0 && !searchTerm">
-            Filter By Counsellor and Filter by Status Applied - {{ totalNumberOfRecords || 0 }}
+
+          <ng-container *ngIf="counsellor_ids.length > 0 && dateForm.invalid && !statusFilter && !searchTerm">
+            Filter By User Applied - {{ totalNumberOfRecords || 0 }}
           </ng-container>
-          <ng-container *ngIf="statusFilter && counsellor_ids.length > 0 && searchTerm">
-            Filter By Counsellor, Filter by Status, and Search Applied - {{ totalNumberOfRecords || 0 }}
+          <ng-container *ngIf="counsellor_ids.length > 0 &&  dateForm.valid && !statusFilter && !searchTerm">
+            Filter By User Applied and Start Date & End Date Filter Applied - {{ totalNumberOfRecords || 0 }}
           </ng-container>
-          <ng-container *ngIf="!statusFilter && counsellor_ids.length === 0 && searchTerm">
+
+          <ng-container *ngIf="statusFilter && dateForm.invalid && counsellor_ids.length > 0 && !searchTerm">
+            Filter By User and Filter by Status Applied - {{ totalNumberOfRecords || 0 }}
+          </ng-container>
+          <ng-container *ngIf="statusFilter && dateForm.valid && counsellor_ids.length > 0 && !searchTerm">
+            Filter By User,Filter by Status and Start Date & End Date Filter Applied - {{ totalNumberOfRecords || 0 }}
+          </ng-container>
+
+          <ng-container *ngIf="statusFilter && dateForm.invalid && counsellor_ids.length > 0 && searchTerm">
+            Filter By User, Filter by Status, and Search Applied - {{ totalNumberOfRecords || 0 }}
+          </ng-container>
+          <ng-container *ngIf="statusFilter && dateForm.valid && counsellor_ids.length > 0 && searchTerm">
+            Filter By User, Filter by Status,Search and Start Date & End Date Filter Applied - {{ totalNumberOfRecords || 0 }}
+          </ng-container>
+
+          <ng-container *ngIf="!statusFilter && dateForm.invalid && counsellor_ids.length === 0 && searchTerm">
             Filter by Search Applied - {{ totalNumberOfRecords || 0 }}
           </ng-container>
-          <ng-container *ngIf="!statusFilter && !counsellor_ids.length && !searchTerm">
+          <ng-container *ngIf="!statusFilter && dateForm.valid && counsellor_ids.length === 0 && searchTerm">
+            Filter by Search and Start Date & End Date Filter Applied - {{ totalNumberOfRecords || 0 }}
+          </ng-container>
+
+          <ng-container *ngIf="!statusFilter && dateForm.invalid && counsellor_ids.length > 0 && searchTerm">
+            Filter by User and Search Applied - {{ totalNumberOfRecords || 0 }}
+          </ng-container>
+          <ng-container *ngIf="!statusFilter && dateForm.valid && counsellor_ids.length > 0 && searchTerm">
+            Filter by User,Start Date & End Date Filter and Search Applied - {{ totalNumberOfRecords || 0 }}
+          </ng-container>
+
+          <ng-container *ngIf="statusFilter && dateForm.invalid && searchTerm && counsellor_ids.length === 0">
+            Filter by Status and Search Applied - {{ totalNumberOfRecords || 0 }}
+          </ng-container>
+          <ng-container *ngIf="statusFilter && dateForm.valid && searchTerm && counsellor_ids.length === 0">
+            Filter by Status,Start Date & End Date Filter and Search Applied - {{ totalNumberOfRecords || 0 }}
+          </ng-container>
+
+          <ng-container *ngIf="!statusFilter && !counsellor_ids.length && !searchTerm && dateForm.invalid">
             No data found.
           </ng-container>
         </ion-label>
