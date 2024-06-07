@@ -156,9 +156,11 @@ export class AllocationsPage implements OnInit {
                 this.allocateItem,
                 this.phoneNumberIndex + 1
               );
+              this.postCallHistory()
             }, 5000);
           }
         }
+        
       }
     );
 
@@ -507,10 +509,15 @@ export class AllocationsPage implements OnInit {
     });
 
     this.allocate.allocationStatus.subscribe((res: any) => {
+      if(res.length > 0 ){
+        this.statusFilter = true;
+      }else{
+        this.statusFilter = false;
+      }
+      
       if(res.length > 0 ||  this.counsellor_ids.length >0){
         this.selectedFilter = res;
-      
-   
+
       let query: string;
       const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
       const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
@@ -538,7 +545,6 @@ export class AllocationsPage implements OnInit {
      
         // Add status filter
         if ( !adminRoles.includes(this.user_role) && res.length > 0 ) {
-          this.statusFilter = true;
           query += `&status=${res}`;
         }
       // For roles other than admin, add counsellor filter if filtering by counsellor
@@ -575,6 +581,8 @@ export class AllocationsPage implements OnInit {
         }
       );
     }else{
+      this.statusFilter = false;
+      this.counsellor_ids = []
       this.getAllAllocation()
     }
     });
