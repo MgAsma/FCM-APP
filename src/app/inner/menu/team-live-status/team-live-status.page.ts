@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ModalController } from "@ionic/angular";
 import { environment } from "../../../../environments/environment";
 import { AllocationEmittersService } from "../../../service/allocation-emitters.service";
@@ -6,15 +6,20 @@ import { ApiService } from "../../../service/api/api.service";
 import { BaseServiceService } from "../../../service/base-service.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { AddLeadEmitterService } from "../../../service/add-lead-emitter.service";
-import { Subscription } from "rxjs";
+import { Subscription, filter } from "rxjs";
+import { NavigationEnd, Router } from "@angular/router";
 import { TlsIntervalService } from "../../../service/tls-interval.service";
+import { Location } from "@angular/common";
+import { AuthService } from "../../../service/auth.service";
+import { ActivateChildGuard } from "../../../service/activate-child.guard";
+
 
 @Component({
   selector: "app-team-live-status",
   templateUrl: "./team-live-status.page.html",
   styleUrls: ["./team-live-status.page.scss"],
 })
-export class TeamLiveStatusPage implements OnInit {
+export class TeamLiveStatusPage implements OnInit,OnDestroy {
   searchBar: boolean = false;
   followupDetails: any = [];
   placeholderText = "Search by Name/Status";
@@ -40,23 +45,29 @@ export class TeamLiveStatusPage implements OnInit {
   user_role: any;
   counsellor_ids: any = [];
   pageSize: any = 10;
-  user_id: string;
+  user_id: string = '';
   statusFilter: boolean = false;
   searchTerm: any;
   defaultData: boolean = false;
   refresh: boolean = false;
-  private intervalSubscription: Subscription;
+  intervalSubscription: Subscription;
+  currentUrl: string = `/inner/menu/team-live-status`;
+  intervalId:any;
   constructor(
     private allocate: AllocationEmittersService,
     private modalController: ModalController,
     private api: ApiService,
     private baseService: BaseServiceService,
     private addEmit: AddLeadEmitterService,
-    private intervalService: TlsIntervalService
+    private router: Router,
+    private intervalService:TlsIntervalService,
+    private authService:ActivateChildGuard,
+    private location:Location
   ) {
     this.user_id = localStorage.getItem("user_id");
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
   }
+  
 
   getStatus() {
     this.baseService.getData(environment.tls_counsellor).subscribe(
@@ -82,27 +93,48 @@ export class TeamLiveStatusPage implements OnInit {
     });
     
     this.initComponent();
-      
-    
-    //this.startPeriodicUpdate()
-    
-  }
-   startPeriodicUpdate(){
-    // Assuming intervalService.startInterval returns an observable
-    this.intervalSubscription = this.intervalService.startInterval(() => {
+  
+    this.intervalId = setInterval(() => {
       this.initComponent();
-    }, 50000);
-  }
+    },30000);
 
+     // Listen to route changes to clear interval if needed
+     this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      if (this.currentUrl !== this.router.url) {
+        clearInterval(this.intervalId);
+      }
+      this.currentUrl = this.router.url;
+    });
+ 
+  }
+  
+  
+  ionViewWillLeave(){
+    clearInterval(this.intervalId)
+   }
+  
+  ngOnDestroy(): void {
+    clearInterval(this.intervalId)
+  }
   initComponent() {
     let query: any;
     this.addEmit.tlsCounsellor.subscribe((res) => {
       if (res.length > 0) {
         this.counsellor_ids = res;
+      }else{
+        this.counsellor_ids = []
       }
     });
     this.allocate.tlsStatus.subscribe(
+     
       (res: any) => {
+        if (res.length > 0) {
+          this.statusFilter = true;
+        }else{
+          this.statusFilter = false;
+        }
         if(res.length >0 || this.counsellor_ids.length >0){
           query = `?page=1&page_size=10`;
 
@@ -143,6 +175,8 @@ export class TeamLiveStatusPage implements OnInit {
           );
         
         }else{
+          this.statusFilter = false;
+          this.counsellor_ids = []
         
           let query = `?page=1&page_size=10`;
 
@@ -300,24 +334,22 @@ export class TeamLiveStatusPage implements OnInit {
         : this.user_role == "SUPERADMIN" || this.user_role == "SUPER ADMIN"
         ? `?key=${event}&page=1&page_size=10`
         : `?user_id=${this.user_id}&key=${event}&page=1&page_size=10`;
-    this.searchTerm = event;
-    if (this.statusFilter) {
-      this.allocate.tlsStatus.subscribe((res: any) => {
-        if (res.length > 0) {
-          query += `&status_id=${res}`;
-        }
-      });
+        this.searchTerm = event;
+        if (this.statusFilter) {
+          this.allocate.tlsStatus.subscribe((res: any) => {
+            if (res.length > 0) {
+              query += `&status_id=${res}`;
+            }
+          });
     }
     if (this.counsellor_ids.length > 0) {
       query += `&counsellor_ids=${this.counsellor_ids}`;
     }
     this.getLiveStatus(query);
+  }else{
+    this.searchTerm = ''
   }
   }
-  ionViewWillLeave() {
-    // Unsubscribe to prevent memory leaks when the component is destroyed
-    if (this.intervalSubscription) {
-      this.intervalSubscription.unsubscribe();
-    }
-  }
+  
+  
 }
