@@ -81,7 +81,7 @@ export class EditLeadPage implements OnInit {
   adminList: any = [];
   leadStage: any = [];
   user_id: any;
- 
+
   constructor(
     private fb: FormBuilder,
     private _baseService: BaseServiceService,
@@ -99,8 +99,8 @@ export class EditLeadPage implements OnInit {
     this.min = this._datePipe.transform(minimum, "yyyy-MM-dd");
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
     this.user_id = localStorage.getItem("user_id");
-    console.log('edit lead component loaded');
-    
+    // console.log("edit lead component loaded");
+
     this.getCountry();
     // this.getState();
     this.getChannel();
@@ -765,12 +765,12 @@ export class EditLeadPage implements OnInit {
       },
     });
     await modal.present();
-    const data  = await modal.onDidDismiss();
-    if(data){
-      this.getStream()
+    const data = await modal.onDidDismiss();
+    if (data) {
+      this.getStream();
     }
   }
-  async addCourseLookingFor(){
+  async addCourseLookingFor() {
     const modal = await this.popoverController.create({
       component: AddCourseLookingForComponent, // Replace with your modal content page
       componentProps: {
@@ -780,8 +780,8 @@ export class EditLeadPage implements OnInit {
       },
     });
     await modal.present();
-    const data  = await modal.onDidDismiss();
-    if(data){
+    const data = await modal.onDidDismiss();
+    if (data) {
       this.getCourse();
     }
   }
@@ -836,6 +836,26 @@ export class EditLeadPage implements OnInit {
       },
     };
 
+    // data = JSON.parse(JSON.stringify(data));
+    // if (this.editLead.invalid) {
+    //   let mandatoryFieldsEmpty = false;
+    //   let nonMandatoryFieldsInvalid = false;
+
+    //   // Check if any mandatory fields are empty
+    //   const mandatoryFields = [
+    //     "firstName",
+    //     "mobile",
+    //     "counsellor",
+    //     "leadStatus",
+    //     "notes",
+    //   ];
+    //   mandatoryFields.forEach((field) => {
+    //     if (!this.editLead.get(field).value) {
+    //       mandatoryFieldsEmpty = true;
+    //       this.editLead.markAllAsTouched();
+    //     }
+    //   });
+
     data = JSON.parse(JSON.stringify(data));
     if (this.editLead.invalid) {
       let mandatoryFieldsEmpty = false;
@@ -856,48 +876,15 @@ export class EditLeadPage implements OnInit {
         }
       });
 
-   data = JSON.parse(JSON.stringify(data));
-   if (this.editLead.invalid) {
-    let mandatoryFieldsEmpty = false;
-    let nonMandatoryFieldsInvalid = false;
-  
-    // Check if any mandatory fields are empty
-    const mandatoryFields = ['firstName', 'mobile', 'counsellor','leadStatus','notes'];
-    mandatoryFields.forEach(field => {
-      if (!this.editLead.get(field).value) {
-        mandatoryFieldsEmpty = true;
-        this.editLead.markAllAsTouched()
-      }
-    });
-  
-    // Check if any non-mandatory fields are invalid
-    Object.keys(this.editLead.controls).forEach(key => {
-      const control = this.editLead.get(key);
-      if (control.invalid && !mandatoryFields.includes(key) || control.invalid && mandatoryFields.includes(key)) {
-        nonMandatoryFieldsInvalid = true;
-        this.editLead.markAllAsTouched()
-      }
-    });
-  
-    if (mandatoryFieldsEmpty && nonMandatoryFieldsInvalid) {
-      this.api.showError("Please fill the mandatory fields and correct the invalid inputs.");
-    } else if (mandatoryFieldsEmpty) {
-      this.api.showError("Please fill the mandatory fields.");
-    } else if (nonMandatoryFieldsInvalid) {
-      this.api.showError("Correct the invalid inputs.");
-    }
-  } 
-    else{
-      this._baseService.updateData(`${environment.lead_list}${this._inputData.user_data.id}/`,data).subscribe((res:any)=>{
-        if(res){
-          this.addLead.emit('ADD')
-          this.api.showSuccess(res.message);
-          this.callPermissionService.setStatus({'statusValue':formData.leadStatus,'submit':'submit'})
-          // this.callPermissionService.closeCancelEditLeadPagedataSubject.next('submit');
-          // this.callPermissionService.notUpdatingStatusSubject.next(formData.leadStatus)
-          this._addLeadEmitter.triggerGet();
-          this.initForm()
-          this.modalController.dismiss()
+      // Check if any non-mandatory fields are invalid
+      Object.keys(this.editLead.controls).forEach((key) => {
+        const control = this.editLead.get(key);
+        if (
+          (control.invalid && !mandatoryFields.includes(key)) ||
+          (control.invalid && mandatoryFields.includes(key))
+        ) {
+          nonMandatoryFieldsInvalid = true;
+          this.editLead.markAllAsTouched();
         }
       });
 
@@ -910,6 +897,37 @@ export class EditLeadPage implements OnInit {
       } else if (nonMandatoryFieldsInvalid) {
         this.api.showError("Correct the invalid inputs.");
       }
+    } else {
+      this._baseService
+        .updateData(
+          `${environment.lead_list}${this._inputData.user_data.id}/`,
+          data
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.addLead.emit("ADD");
+            this.api.showSuccess(res.message);
+            this.callPermissionService.setStatus({
+              statusValue: formData.leadStatus,
+              submit: "submit",
+            });
+            // this.callPermissionService.closeCancelEditLeadPagedataSubject.next('submit');
+            // this.callPermissionService.notUpdatingStatusSubject.next(formData.leadStatus)
+            this._addLeadEmitter.triggerGet();
+            this.initForm();
+            this.modalController.dismiss();
+          }
+        });
+
+      // if (mandatoryFieldsEmpty && nonMandatoryFieldsInvalid) {
+      //   this.api.showError(
+      //     "Please fill the mandatory fields and correct the invalid inputs."
+      //   );
+      // } else if (mandatoryFieldsEmpty) {
+      //   this.api.showError("Please fill the mandatory fields.");
+      // } else if (nonMandatoryFieldsInvalid) {
+      //   this.api.showError("Correct the invalid inputs.");
+      // }
     }
     //  else {
     //   this._baseService
@@ -936,11 +954,4 @@ export class EditLeadPage implements OnInit {
     //     );
     // }
   }
-
-   
-    // add your code logic here
-    }
-
-  
-
 }

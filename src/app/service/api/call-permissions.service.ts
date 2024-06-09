@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { EventEmitter, Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { Platform } from "@ionic/angular";
 import { BehaviorSubject } from "rxjs";
 declare var PhoneCallTrap: any;
@@ -11,8 +12,10 @@ export class CallPermissionsService {
   isPhoneHalfHook: boolean = false;
   isPhoneIdle: boolean = false;
   isCallInitiationCalled: boolean = false;
+  allocationscallBackFunction:any;
+  customerCallBackFunction:any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private router:Router) {}
 
   apiUrl = "https://fcmdev.thestorywallcafe.com";
   getAllocationsPhoneNumbers() {
@@ -28,7 +31,7 @@ export class CallPermissionsService {
     PhoneCallTrap?.onCall(
       function (state: string) {
         that.isCallInitiationCalled = true;
-        console.log("phone call trap called");
+        // console.log("phone call trap called");
 
         //  console.log("CHANGE STATE: " + state);
         // alert(state);
@@ -50,7 +53,15 @@ export class CallPermissionsService {
 
             if (that.isPhoneHalfHook == true) {
               setTimeout(() => {
-                callBack();
+                if(that.router.url.includes('allocations')){
+                  that.allocationscallBackFunction()
+                }
+                else{
+                  that.customerCallBackFunction()
+                }
+               
+               
+                
               }, 2000);
             }
             that.isPhoneHalfHook = false;
@@ -62,7 +73,7 @@ export class CallPermissionsService {
         }
       },
       function (event: any) {
-        console.log(event, "event in calltrap");
+        // console.log(event, "event in calltrap");
       }
     );
   }

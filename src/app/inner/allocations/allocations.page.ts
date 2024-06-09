@@ -101,8 +101,7 @@ export class AllocationsPage implements OnInit {
     private alertController: AlertController,
     private router: Router,
     private callPermissionService: CallPermissionsService,
-    private location :Location
-
+    private location: Location
   ) {
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
 
@@ -111,6 +110,7 @@ export class AllocationsPage implements OnInit {
     this.afterUpdatinggetPhoneNumbers();
 
     setTimeout(() => {
+      this.callPermissionService.allocationscallBackFunction=this.getContacktAndPostHistory.bind(this)
       this.callPermissionService?.initiateCallStatus(
         this.getContacktAndPostHistory.bind(this)
       );
@@ -157,20 +157,20 @@ export class AllocationsPage implements OnInit {
     // );
 
     this.callPermissionService.getStatus().subscribe((res: any) => {
-      console.log(res, "res from edit afetr pressing submit");
+      // console.log(res, "res from edit afetr pressing submit");
       if (res && res.submit == "submit" && this.isToggledEnabled == true) {
         if (res.statusValue == 9 && res.submit === "submit") {
-          console.log(res, this.currentIndex, "without updating satus");
+          // console.log(res, this.currentIndex, "without updating satus");
 
           setTimeout(() => {
             this.currentIndex = this.currentIndex + 1;
             this.startingIndex = this.currentIndex;
             this.allocateItem = this.data.data[this.currentIndex];
-            console.log(
-              this.allocateItem,
-              this.currentIndex,
-              "this.allocateItem inside if without udating status"
-            );
+            // console.log(
+            //   this.allocateItem,
+            //   this.currentIndex,
+            //   "this.allocateItem inside if without udating status"
+            // );
             this.recursiveCall(
               this.afterUpadtingPhoneNumbers[this.currentIndex],
               this.allocateItem.user_data.id,
@@ -180,14 +180,14 @@ export class AllocationsPage implements OnInit {
           }, 5000);
         } else {
           this.afterUpdatinggetPhoneNumbers();
-          console.log(res, "after updating satus");
+          // console.log(res, "after updating satus");
           setTimeout(() => {
             {
               this.allocateItem = this.data.data[this.startingIndex];
-              console.log(
-                this.allocateItem,
-                "this.allocateItem iside else after updating status"
-              );
+              // console.log(
+              //   this.allocateItem,
+              //   "this.allocateItem iside else after updating status"
+              // );
               this.recursiveCall(
                 this.afterUpadtingPhoneNumbers[this.startingIndex],
                 this.allocateItem.user_data.id,
@@ -260,12 +260,12 @@ export class AllocationsPage implements OnInit {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        console.log(
-          JSON.stringify(results[0]),
-          "latest call log in allocations"
-        );
+        // console.log(
+        //   JSON.stringify(results[0]),
+        //   "latest call log in allocations"
+        // );
         const calculateTime = Number(results[0].date) - Number(this.calledTime);
-        console.log(calculateTime, "calculate time in allocations");
+        // console.log(calculateTime, "calculate time in allocations");
 
         this.callDuration = results[0].duration;
         if (this.callDuration > 0) {
@@ -291,7 +291,10 @@ export class AllocationsPage implements OnInit {
   calledTime: any;
 
   getContacktAndPostHistory() {
-    this.getContacts("type", "2", "==");
+    if(this.router.url.includes('allocations')){
+      this.getContacts("type", "2", "==");
+    }
+   
   }
 
   leadItem: any;
@@ -342,13 +345,15 @@ export class AllocationsPage implements OnInit {
       this.api.showToast("Please restart your application!", 5000);
       return;
     }
+    // console.log("call function called in allocation");
+    
 
     this.recursiveCall(number, id, item, index);
   }
 
   phoneNumberIndex: any;
   recursiveCall(number: string, id: any, item, index: any) {
-    console.log(number, id, item, index, "item in recursive");
+    // console.log(number, id, item, index, "item in recursive");
     if (index >= this.phoneNumbers.length - 1) {
       return;
     } else {
@@ -406,7 +411,8 @@ export class AllocationsPage implements OnInit {
     };
     this.api.sendingCallHistory(data).subscribe(
       (res: any) => {
-        console.log(res, "sending call history in alloactions");
+        // alert("sending call history is called afetr call made in customer")
+        // console.log(res, "sending call history in alloactions");
         let tlsData = {
           user: this.user_id,
           status: 3,
@@ -537,21 +543,19 @@ export class AllocationsPage implements OnInit {
     });
 
     this.allocate.allocationStatus.subscribe((res: any) => {
-      if(res.length > 0 ){
+      if (res.length > 0) {
         this.statusFilter = true;
-      }else{
+      } else {
         this.statusFilter = false;
       }
-      
-      if(res.length > 0 ||  this.counsellor_ids.length >0){
+
+      if (res.length > 0 || this.counsellor_ids.length > 0) {
         this.selectedFilter = res;
 
-      let query: string;
-      const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
-      const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
-      const adminRoles = ["ADMIN"];
-
-       
+        let query: string;
+        const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
+        const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
+        const adminRoles = ["ADMIN"];
 
         // Base query setup
         query = `?user_type=allocation&page=1&page_size=10`;
@@ -574,7 +578,7 @@ export class AllocationsPage implements OnInit {
         }
 
         // Add status filter
-        if ( !adminRoles.includes(this.user_role) && res.length > 0 ) {
+        if (!adminRoles.includes(this.user_role) && res.length > 0) {
           query += `&status=${res}`;
         }
         // For roles other than admin, add counsellor filter if filtering by counsellor
@@ -584,15 +588,12 @@ export class AllocationsPage implements OnInit {
         ) {
           query += `&counsellor_id=${this.counsellor_ids}`;
         }
-      }
-      else{
+      } else {
         this.statusFilter = false;
-        this.counsellor_ids = []
-        this.getAllAllocation()
+        this.counsellor_ids = [];
+        this.getAllAllocation();
       }
-    } 
-      );
-    
+    });
   }
   afterUpadtingPhoneNumbers: any;
   afterUpdatinggetPhoneNumbers() {
@@ -604,13 +605,13 @@ export class AllocationsPage implements OnInit {
           this.phoneNumbers = this.leadData
             ?.filter((ele: any) => ele.user_data?.mobile_number)
             .map((ele: any) => ele.user_data?.mobile_number);
-          console.log(this.phoneNumbers, "initial phone numbers");
+          // console.log(this.phoneNumbers, "initial phone numbers");
 
           this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
-          console.log(
-            this.afterUpadtingPhoneNumbers,
-            "this.afterUpadtingPhoneNumbers"
-          );
+          // console.log(
+          //   this.afterUpadtingPhoneNumbers,
+          //   "this.afterUpadtingPhoneNumbers"
+          // );
         }
         // console.log(res, "resssssssss");
       });
@@ -631,7 +632,7 @@ export class AllocationsPage implements OnInit {
       this.leadCards = [];
       this.data = [];
       this.getAllAllocation();
-      this.location.isCurrentPathEqualTo('/inner/allocations')
+      this.location.isCurrentPathEqualTo("/inner/allocations");
       event.target.complete();
       // },100);
     } else {

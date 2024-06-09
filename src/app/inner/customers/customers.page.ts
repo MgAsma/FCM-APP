@@ -97,6 +97,7 @@ export class CustomersPage implements  OnInit {
     this.user_id = localStorage.getItem("user_id");
     this.resCounsellors = localStorage.getItem("counsellor_ids")
     setTimeout(() => {  
+      this.callPermissionService.customerCallBackFunction=this.getContacktAndPostHistory.bind(this)
       this.callPermissionService?.initiateCallStatus(this.getContacktAndPostHistory.bind(this));
 
     }, 1000);
@@ -151,9 +152,9 @@ export class CustomersPage implements  OnInit {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        console.log(JSON.stringify(results[0]), "latest call log in customers");
+        // console.log(JSON.stringify(results[0]), "latest call log in customers");
         const calculateTime=Number(results[0].date)-Number(this.calledTime)
-       console.log(calculateTime,"calulatedTime in customers");
+      //  console.log(calculateTime,"calulatedTime in customers");
         
         this.callDuration = results[0].duration;
         //console.log(JSON.stringify(this.callDuration), "latest call duration");
@@ -182,7 +183,10 @@ export class CustomersPage implements  OnInit {
   calledTime:any;
 
   getContacktAndPostHistory() {
-    this.getContacts("type", "2", "==");
+    if(this.router.url.includes('customers')){
+      this.getContacts("type", "2", "==");
+    }
+  
 
   }
 
@@ -287,13 +291,17 @@ export class CustomersPage implements  OnInit {
     };
     this.api.sendingCallHistory(data).subscribe(
       (res: any) => {
-        console.log(res,"sending call history in customers");
+        // alert("sending call history is called afetr call made in customer in cutsomer pageeeee")
+        // console.log(res,"sending call history in customers");
         
         let tlsData = {
           user: this.user_id,
           status: 3
         };
         this.postTLStatus(tlsData)
+        this.leadId=null;
+        this.leadPhoneNumber=null;
+
       },
       (error: any) => {
         this.api.showError(error.error.message);
