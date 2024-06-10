@@ -129,7 +129,7 @@ export class AllocationsPage implements OnInit {
           this.allocateItem,
           this.startingIndex
         );
-        // this.postCallHistory()
+        this.postCallHistory()
       }
       // console.log(this.isToggledEnabled,"  this.isToggledEnabled from toggle");
     });
@@ -179,7 +179,7 @@ export class AllocationsPage implements OnInit {
               this.allocateItem,
               this.currentIndex
             );
-            // this.postCallHistory()
+            this.postCallHistory()
           }, 5000);
         } else {
           this.afterUpdatinggetPhoneNumbers();
@@ -197,7 +197,7 @@ export class AllocationsPage implements OnInit {
                 this.allocateItem,
                 this.startingIndex
               );
-              // this.postCallHistory()
+              this.postCallHistory()
             }
           }, 5000);
         }
