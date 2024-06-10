@@ -21,11 +21,10 @@ export class AddStateComponent implements OnChanges,OnInit {
   ) { }
  ngOnChanges(){
   this.country_id = this.data
-  console.log(this.country_id)
+  
  }
   ngOnInit() {
     this.country_id = this.data
-     console.log(this.country_id)
     this.initForm()
   }
  initForm(){

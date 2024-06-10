@@ -129,6 +129,7 @@ export class AllocationsPage implements OnInit {
           this.allocateItem,
           this.startingIndex
         );
+        // this.postCallHistory()
       }
       // console.log(this.isToggledEnabled,"  this.isToggledEnabled from toggle");
     });
@@ -159,6 +160,7 @@ export class AllocationsPage implements OnInit {
     this.callPermissionService.getStatus().subscribe((res: any) => {
       // console.log(res, "res from edit afetr pressing submit");
       if (res && res.submit == "submit" && this.isToggledEnabled == true) {
+       
         if (res.statusValue == 9 && res.submit === "submit") {
           // console.log(res, this.currentIndex, "without updating satus");
 
@@ -177,6 +179,7 @@ export class AllocationsPage implements OnInit {
               this.allocateItem,
               this.currentIndex
             );
+            // this.postCallHistory()
           }, 5000);
         } else {
           this.afterUpdatinggetPhoneNumbers();
@@ -194,9 +197,11 @@ export class AllocationsPage implements OnInit {
                 this.allocateItem,
                 this.startingIndex
               );
+              // this.postCallHistory()
             }
           }, 5000);
         }
+        
       } else {
         return;
       }
