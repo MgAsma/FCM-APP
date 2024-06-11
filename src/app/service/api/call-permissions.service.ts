@@ -3,6 +3,7 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Platform } from "@ionic/angular";
 import { BehaviorSubject } from "rxjs";
+import { environment } from "../../../environments/environment";
 declare var PhoneCallTrap: any;
 
 @Injectable({
@@ -12,15 +13,17 @@ export class CallPermissionsService {
   isPhoneHalfHook: boolean = false;
   isPhoneIdle: boolean = false;
   isCallInitiationCalled: boolean = false;
+  // allocationscallBackFunction:boolean=false;
+  // customerCallBackFunction:boolean=false;
   allocationscallBackFunction:any;
   customerCallBackFunction:any;
 
   constructor(private http: HttpClient,private router:Router) {}
 
-  apiUrl = "https://fcmdev.thestorywallcafe.com";
+  apiUrl = environment.lead_list;
   getAllocationsPhoneNumbers() {
     return this.http.get(
-      `${this.apiUrl}/api/lead-list/?user_type=allocation&page=1&page_size=10`
+      `${this.apiUrl}/?user_type=allocation&page=1&page_size=10`
     );
   }
   initiateCallStatus(callBack: any) {
@@ -56,7 +59,7 @@ export class CallPermissionsService {
                 if(that.router.url.includes('allocations')){
                   that.allocationscallBackFunction()
                 }
-                else{
+                if(that.router.url.includes('customers')){
                   that.customerCallBackFunction()
                 }
                
