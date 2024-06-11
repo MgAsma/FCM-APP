@@ -110,15 +110,17 @@ export class AllocationsPage implements OnInit {
     this.afterUpdatinggetPhoneNumbers();
 
     setTimeout(() => {
-      this.callPermissionService.allocationscallBackFunction=this.getContacktAndPostHistory.bind(this)
       this.callPermissionService?.initiateCallStatus(
         this.getContacktAndPostHistory.bind(this)
       );
-      // console.log("callstatus should call");
+      this.callPermissionService.allocationscallBackFunction =
+        this.getContacktAndPostHistory.bind(this);
     }, 1000);
 
     this.callPermissionService?.isToggleddataSubject.subscribe((res: any) => {
       this.isToggledEnabled = res;
+ 
+
       this.startingIndex = 0;
       this.currentIndex = 0;
 
@@ -130,7 +132,7 @@ export class AllocationsPage implements OnInit {
           this.startingIndex
         );
       }
-      // console.log(this.isToggledEnabled,"  this.isToggledEnabled from toggle");
+    
     });
   }
   allocateItem: any;
@@ -157,20 +159,13 @@ export class AllocationsPage implements OnInit {
     // );
 
     this.callPermissionService.getStatus().subscribe((res: any) => {
-      // console.log(res, "res from edit afetr pressing submit");
       if (res && res.submit == "submit" && this.isToggledEnabled == true) {
         if (res.statusValue == 9 && res.submit === "submit") {
-          // console.log(res, this.currentIndex, "without updating satus");
-
           setTimeout(() => {
             this.currentIndex = this.currentIndex + 1;
             this.startingIndex = this.currentIndex;
             this.allocateItem = this.data.data[this.currentIndex];
-            // console.log(
-            //   this.allocateItem,
-            //   this.currentIndex,
-            //   "this.allocateItem inside if without udating status"
-            // );
+
             this.recursiveCall(
               this.afterUpadtingPhoneNumbers[this.currentIndex],
               this.allocateItem.user_data.id,
@@ -180,14 +175,11 @@ export class AllocationsPage implements OnInit {
           }, 5000);
         } else {
           this.afterUpdatinggetPhoneNumbers();
-          // console.log(res, "after updating satus");
+
           setTimeout(() => {
             {
               this.allocateItem = this.data.data[this.startingIndex];
-              // console.log(
-              //   this.allocateItem,
-              //   "this.allocateItem iside else after updating status"
-              // );
+
               this.recursiveCall(
                 this.afterUpadtingPhoneNumbers[this.startingIndex],
                 this.allocateItem.user_data.id,
@@ -291,16 +283,16 @@ export class AllocationsPage implements OnInit {
   calledTime: any;
 
   getContacktAndPostHistory() {
-    if(this.router.url.includes('allocations')){
+    if (this.router.url.includes("allocations")) {
       this.getContacts("type", "2", "==");
     }
-   
   }
 
   leadItem: any;
   lead_id: any;
 
   async callContact(number: string, id: any, item, index: any) {
+  
     const phoneStateResult = await this.androidPermissions.checkPermission(
       this.androidPermissions.PERMISSION.READ_PHONE_STATE
     );
@@ -345,39 +337,43 @@ export class AllocationsPage implements OnInit {
       this.api.showToast("Please restart your application!", 5000);
       return;
     }
-    // console.log("call function called in allocation");
-    
 
     this.recursiveCall(number, id, item, index);
   }
 
   phoneNumberIndex: any;
   recursiveCall(number: string, id: any, item, index: any) {
-    // console.log(number, id, item, index, "item in recursive");
-    if (index >= this.phoneNumbers.length - 1) {
+    console.log(number, id, item, index, "item in recursive");
+    if (index >= this.phoneNumbers.length) {
       return;
     } else {
       this.leadItem = item;
       this.lead_id = id;
+
       try {
         this.leadId = id;
         this.leadPhoneNumber = number;
         this.callStartTime = new Date();
         this.selectedLead = item;
         // console.log( this.callStartTime," this.callStartTime");
+
         let data = {
           user: this.user_id,
           status: 3,
         };
+
         this.postTLStatus(data);
         this.calledTime = new Date().getTime();
         // console.log(this.calledTime,"this.calledTime in allocation ");
+
         setTimeout(async () => {
           this.callStartTime = new Date();
           await this.callNumber.callNumber(number, true);
+
           const that = this;
           this.callInitiated = true;
-          this.editLead(item);
+
+          this.editLead(this.selectedLead);
           // this.initiateCallStatus();
         }, 100);
       } catch (error) {
@@ -601,6 +597,8 @@ export class AllocationsPage implements OnInit {
       .getAllocationsPhoneNumbers()
       .subscribe((res: any) => {
         this.leadData = res.results.data;
+        // console.log(res.results.data,"res.results.data");
+
         if (this.leadData?.length > 0) {
           this.phoneNumbers = this.leadData
             ?.filter((ele: any) => ele.user_data?.mobile_number)
