@@ -32,7 +32,8 @@ addCountryForm!:FormGroup;
 }
 submit(){
   if(this.addCountryForm.invalid){
-   this.addCountryForm.markAllAsTouched()
+   this.addCountryForm.markAllAsTouched();
+   this.api.showError('Please select any one country');
   }
   else{
     this.api.postCountry(this.addCountryForm.value).subscribe(

@@ -94,9 +94,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     
     this.initComponent();
   
-    this.intervalId = setInterval(() => {
-      this.initComponent();
-    },30000);
+   
 
      // Listen to route changes to clear interval if needed
      this.router.events.pipe(
@@ -104,6 +102,10 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     ).subscribe(() => {
       if (this.currentUrl !== this.router.url) {
         clearInterval(this.intervalId);
+      }else{
+        this.intervalId = setInterval(() => {
+          this.initComponent();
+        },30000);
       }
       this.currentUrl = this.router.url;
     });

@@ -117,6 +117,7 @@ export class ToolbarCustomerComponent  implements OnInit {
       })
       this.searchTerm = ''
       this.searchTermChanged(this.searchTerm)
+      this.resetModal()
       event.target.complete();
     }, 2000);
   }

@@ -41,6 +41,7 @@ export class AddStateComponent implements OnChanges,OnInit {
 submit(){
   if(this.addForm.invalid){
     this.addForm.markAllAsTouched()
+    this.api.showError('Please select any one state');
   }
   else{
     this.api.postState(this.addForm.value).subscribe(

@@ -131,7 +131,6 @@ export class AllocationsPage implements OnInit {
           this.allocateItem,
           this.startingIndex
         );
-        this.postCallHistory()
       }
     
     });
@@ -174,7 +173,7 @@ export class AllocationsPage implements OnInit {
               this.allocateItem,
               this.currentIndex
             );
-            this.postCallHistory()
+            this.getContacktAndPostHistory()
           }, 5000);
         } else {
           this.afterUpdatinggetPhoneNumbers();
@@ -189,7 +188,7 @@ export class AllocationsPage implements OnInit {
                 this.allocateItem,
                 this.startingIndex
               );
-              this.postCallHistory()
+              this.getContacktAndPostHistory()
             }
           }, 5000);
         }

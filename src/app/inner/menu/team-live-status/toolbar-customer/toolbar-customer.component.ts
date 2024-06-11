@@ -118,14 +118,15 @@ handleRefresh(event: any) {
     })
     this.searchTerm = ''
     this.searchTermChanged(this.searchTerm)
+    this.reset('event')
     event.target.complete();
   }, 2000);
 }
 // This function will be called when the search term changes
 searchTermChanged(event:any) {
    // Remove trailing spaces from the search term
-   const searchTerm = event.trim();
-   this.updateFilteredData(searchTerm);
+  this.searchTerm = event.trim();
+   this.updateFilteredData(this.searchTerm);
 }
 getSelectedListLength(): number {
   return this.selectedCounselorIds.length;

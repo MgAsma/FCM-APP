@@ -65,6 +65,7 @@ export class CustomerToolbarCounsellorComponent implements OnInit {
       })
       this.searchTerm = '';
       this.searchTermChanged(this.searchTerm = '')
+      this.resetModal()
       event.target.complete();
     }, 2000);
   }

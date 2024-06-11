@@ -83,6 +83,7 @@ export class ToolbarCustomerComponent  implements OnInit {
       })
       this.searchTerm = ''
       this.searchTermChanged(this.searchTerm)
+      this.resetModel()
       event.target.complete();
     }, 2000);
   }
@@ -140,8 +141,8 @@ export class ToolbarCustomerComponent  implements OnInit {
 // This function will be called when the search term changes
 searchTermChanged(event:any) {
    // Remove trailing spaces from the search term
-   const searchTerm = event.trim();
-   this.updateFilteredData(searchTerm);
+    this.searchTerm = event.trim();
+   this.updateFilteredData(this.searchTerm);
 }
 
 getSelectedListLength(): number {
