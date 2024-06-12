@@ -157,45 +157,13 @@ export class AddLeadPage implements OnInit {
 
   ngOnInit(): void {
     this.user_id = localStorage.getItem('user_id').toUpperCase()
-    // this.dropdownSettings1 = {
-    //   singleSelection: true,
-    //   idField: "id",
-    //   textField: "name",
-    //   selectAllText: "Select All",
-    //   unSelectAllText: "UnSelect All",
-    //   itemsShowLimit: 1,
-    //   closeDropDownOnSelection:true,
-    //   closeDropDownOnClick:true,
-    //   allowSearchFilter: true
-    // };
-    // this.dropdownSettings2 = {
-    //   singleSelection: true,
-    //   idField: "id",
-    //   textField: "name",
-    //   selectAllText: "Select All",
-    //   unSelectAllText: "UnSelect All",
-    //   itemsShowLimit: 1,
-    //   allowSearchFilter: true
-    // };
-    // this.dropdownSettings3 = {
-    //   singleSelection: true,
-    //   idField: "id",
-    //   textField: "name",
-    //   selectAllText: "Select All",
-    //   unSelectAllText: "UnSelect All",
-    //   itemsShowLimit: 1,
-    //   allowSearchFilter: true
-    // };
     this.getCountry();
-    //this.getState();
     this.getChannel();
     this.getSource();
-    //this.getCity();
     this.getCampign();
     this.getNewChannel();
     this.getDepartment();
     this.getCourse();
-    //this.getLocation();
     this.getMedium();
     this.getLevelOfProgram();
     this.getPriority();

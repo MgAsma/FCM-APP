@@ -579,6 +579,7 @@ export class AllocationsPage implements OnInit {
 
         // Add status filter
         if (!adminRoles.includes(this.user_role) && res.length > 0) {
+          debugger;
           query += `&status=${res}`;
         }
         // For roles other than admin, add counsellor filter if filtering by counsellor
@@ -588,6 +589,20 @@ export class AllocationsPage implements OnInit {
         ) {
           query += `&counsellor_id=${this.counsellor_ids}`;
         }
+        // API call
+        this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
+          (res: any) => {
+            if (res.results) {
+              this.leadCards = res.results.data;
+              // this.allocateItem = res.results.data[0];
+              this.data = new MatTableDataSource<any>(this.leadCards);
+              this.totalNumberOfRecords = res.total_no_of_record;
+            }
+          },
+          (error: any) => {
+            this.api.showError(error.error.message);
+          }
+        );
       } else {
         this.statusFilter = false;
         this.counsellor_ids = [];

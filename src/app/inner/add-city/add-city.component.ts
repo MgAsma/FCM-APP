@@ -48,7 +48,6 @@ getState(){
 submit(){
   if(this.addForm.invalid){
     this.addForm.markAllAsTouched();
-    this.api.showError('Please select any one city')
   }
   else{
     this.api.postCity(this.addForm.value).subscribe(

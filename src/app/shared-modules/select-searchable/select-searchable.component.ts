@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ApiService } from '../../service/api/api.service';
 
 @Component({
   selector: 'app-select-searchable',
@@ -12,7 +13,9 @@ export class SelectSearchableComponent implements OnInit {
 
   @Output() selectionCancel = new EventEmitter<void>();
   @Output() selectionChange = new EventEmitter<string[]>();
- constructor(){}
+ constructor(
+  private api:ApiService
+ ){}
   filteredItems = [];
   workingSelectedValues: string[] = [];
 
@@ -30,7 +33,12 @@ export class SelectSearchableComponent implements OnInit {
   }
 
   confirmChanges() {
-    this.selectionChange.emit(this.workingSelectedValues);
+    if(this.workingSelectedValues.length === 0){
+      this.api.showError(`Please Select Any One ${this.title} `)
+    }else{
+      this.selectionChange.emit(this.workingSelectedValues);
+    }
+  
   }
 
   searchbarInput(ev) {

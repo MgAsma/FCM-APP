@@ -9,11 +9,16 @@
 
 <ion-content color="light" class="p-2">
   <ion-list id="modal-list" [inset]="true">
-    <ion-item *ngFor="let item of filteredItems; trackBy: trackItems">
-      <ion-checkbox [value]="item"  [checked]="isChecked(item)" (ionChange)="checkboxChange($event)"
-        >{{ item.name }}</ion-checkbox
-      >
-    </ion-item>
+    <ng-container *ngIf="filteredItems.length >0">
+      <ion-item *ngFor="let item of filteredItems; trackBy: trackItems">
+        <ion-checkbox [value]="item"  [checked]="isChecked(item)" (ionChange)="checkboxChange($event)"
+          >{{ item.name }}</ion-checkbox
+        >
+      </ion-item>
+    </ng-container>
+    <ng-container *ngIf="filteredItems.length === 0">
+      <div class="text-center">No Records Found</div>
+    </ng-container>
   </ion-list>
 
   
