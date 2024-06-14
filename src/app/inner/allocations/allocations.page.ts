@@ -661,7 +661,7 @@ export class AllocationsPage implements OnInit {
     if (event) {
       this.currentPage = event.pageIndex + 1;
       this.pageSize = event.pageSize;
-    }
+   
 
     let query: string;
     const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
@@ -728,6 +728,7 @@ export class AllocationsPage implements OnInit {
         this.api.showError(error.error.message);
       }
     );
+  }
   }
 
   getCounselor() {

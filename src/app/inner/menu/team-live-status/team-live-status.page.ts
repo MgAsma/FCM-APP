@@ -94,20 +94,20 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     
     this.initComponent();
   
-   
+  
 
      // Listen to route changes to clear interval if needed
      this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      if (this.currentUrl !== this.router.url) {
-        clearInterval(this.intervalId);
-      }else{
+      if (this.router.url === '/inner/menu/team-live-status') {
         this.intervalId = setInterval(() => {
           this.initComponent();
         },30000);
+       
+      }else{
+        clearInterval(this.intervalId);
       }
-      this.currentUrl = this.router.url;
     });
  
   }

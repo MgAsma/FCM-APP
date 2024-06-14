@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
   ) // private platform: Platform,
   {
     this.initializeApp();
-
+    this.id = localStorage.getItem('user_id');
     //  this.platform.ready().then(() => {
     //     this.callLog
     //       .hasReadPermission()
@@ -118,7 +118,7 @@ export class AppComponent implements OnInit {
     });
   }
   async ngOnInit() {
-    this.id = localStorage.getItem("user_id");
+   
     this.appVersion();
     this.checkPermissions();
     await this.storage.create();
@@ -167,22 +167,32 @@ export class AppComponent implements OnInit {
     //   });
 
     // Combine the router events and user activity observables
-    const routerEvents$ = this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd)
-    );
-    const userActivity$ = this.idleDetectionService.userActivity;
+    // const routerEvents$ = this.router.events.pipe(
+    //   filter((event) => event instanceof NavigationEnd)
+    // );
+     const userActivity$ = this.idleDetectionService.userActivity;
 
-    this.subscriptions.add(
-      combineLatest([routerEvents$, userActivity$]).subscribe(
-        ([event, isActive]) => {
-          this.currentUrl = (event as NavigationEnd).urlAfterRedirects;
-          if (!isActive && this.currentUrl !== "/outer/login") {
-            this.logOut();
-          }
+    // this.subscriptions.add(
+    //   combineLatest([routerEvents$, userActivity$]).subscribe(
+    //     ([event, isActive]) => {
+    //       this.currentUrl = (event as NavigationEnd).urlAfterRedirects;
+    //       if (!isActive && this.currentUrl !== "/outer/login") {
+    //         this.logOut();
+    //       }
+    //     }
+    //   )
+    // );
+    this.idleDetectionService.userActivity.subscribe(isActive => {
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd)
+      ).subscribe(() => {
+        if (this.router.url !== '/outer/login' && !isActive) {
+          this.logOut()
         }
-      )
-    );
+      })
+      
 
+    });
     this.subscriptions.add(
       userActivity$.subscribe((isActive) => {
         if (isActive && this.currentUrl !== undefined) {
@@ -200,10 +210,12 @@ export class AppComponent implements OnInit {
 
     this.api.logout(data).subscribe(
       (resp: any) => {
+        if(resp){
         localStorage.clear();
         this.api.showSuccess(resp.message);
-        // window.location.reload();
         this.router.navigate(["../outer"]);
+        localStorage.clear();
+        }
       },
       (error: any) => {
         this.api.showError(error.error.message);
@@ -282,7 +294,7 @@ export class AppComponent implements OnInit {
 
   appVersion() {
     // Define your current application version
-    const currentVersion = "1.0.28";
+    const currentVersion = "1.0.30";
 
     // Check if local storage contains a version number
     const storedVersion = localStorage.getItem("appVersion");

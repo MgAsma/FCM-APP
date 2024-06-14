@@ -105,7 +105,7 @@ export class LoginComponent  implements OnInit {
           localStorage.setItem('lastLoginDate', formattedDate);
           localStorage.setItem('token',resp.token.token)
           localStorage.setItem('counsellor_ids',resp.counsellor_ids);
-          let appVersion = '1.0.28'
+          let appVersion = '1.0.30'
           localStorage.setItem('appVersion',appVersion);
           let decodedToken:any = ''
           localStorage.setItem('device_token',resp.device_token)
@@ -126,6 +126,7 @@ export class LoginComponent  implements OnInit {
 			(error:any)=>{
         this.api.loaderDismiss()
         this.api.showError(error.error.message)
+        alert(error.error.message)
        // this.api.showToast(error.error.error.message)
 			}
 		  )
