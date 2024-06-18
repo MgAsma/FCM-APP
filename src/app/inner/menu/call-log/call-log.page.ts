@@ -353,10 +353,14 @@ export class CallLogPage implements OnInit {
       component: GotoViewCustomerDetailsCallCustomerComponent,
       translucent: true,
       backdropDismiss: false,
+     
+    
       componentProps: {
         // Pass data to the component
         data: event
       }
+    
+      
       });
       
   

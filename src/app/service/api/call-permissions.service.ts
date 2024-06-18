@@ -15,10 +15,10 @@ export class CallPermissionsService {
   isCallInitiationCalled: boolean = false;
   // allocationscallBackFunction:boolean=false;
   // customerCallBackFunction:boolean=false;
-  allocationscallBackFunction:any;
-  customerCallBackFunction:any;
-
-  constructor(private http: HttpClient,private router:Router) {}
+  allocationscallBackFunction: any;
+  customerCallBackFunction: any;
+  callLogsCallBackFunction: any;
+  constructor(private http: HttpClient, private router: Router) {}
 
   apiUrl = environment.lead_list;
   getAllocationsPhoneNumbers() {
@@ -56,15 +56,15 @@ export class CallPermissionsService {
 
             if (that.isPhoneHalfHook == true) {
               setTimeout(() => {
-                if(that.router.url.includes('allocations')){
-                  that.allocationscallBackFunction()
+                if (that.router.url.includes("allocations")) {
+                  that.allocationscallBackFunction();
                 }
-                if(that.router.url.includes('customers')){
-                  that.customerCallBackFunction()
+                if (that.router.url.includes("customers")) {
+                  that.customerCallBackFunction();
                 }
-               
-               
-                
+                if(that.router.url.includes('call-log')){
+                  that.callLogsCallBackFunction();
+                }
               }, 2000);
             }
             that.isPhoneHalfHook = false;
@@ -85,7 +85,7 @@ export class CallPermissionsService {
   dataSubject = new BehaviorSubject<any>(false);
   isToggleddataSubject = new BehaviorSubject<any>(false);
   closeCancelEditLeadPagedataSubject = new BehaviorSubject<any>(false);
- notUpdatingStatusSubject = new BehaviorSubject<any>('');
+  notUpdatingStatusSubject = new BehaviorSubject<any>("");
 
   breakTime: Date;
   setBreakTime(date: Date) {
@@ -97,12 +97,41 @@ export class CallPermissionsService {
   }
   selectedStatusdataSubject = new BehaviorSubject<any>({});
   public data$ = this.selectedStatusdataSubject.asObservable();
-  setStatus(data:any){
-    this.selectedStatusdataSubject.next(data)
-
+  setStatus(data: any) {
+    this.selectedStatusdataSubject.next(data);
   }
-  getStatus(){
+  getStatus() {
     return this.data$;
   }
-  
+
+
+
+  calledNumber: any;
+  setCalledNumber(number: any) {
+    console.log(number,"called number");
+    
+    this.calledNumber = number;
+  }
+
+  getCalledNumber() {
+    console.log(this.calledNumber,"this.calledNumbe");
+    
+    return this.calledNumber;
+
+  }
+
+
+  indexNum: any;
+  setIndex(index: any) {
+    console.log(index,"inddex number");
+    
+    this.indexNum = index;
+  }
+
+  getIndex() {
+    console.log(this.indexNum,"this.indexnum");
+    
+    return this.indexNum;
+
+  }
 }

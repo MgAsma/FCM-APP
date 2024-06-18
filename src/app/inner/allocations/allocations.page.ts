@@ -86,6 +86,9 @@ export class AllocationsPage implements OnInit {
   selectedCounsellor: boolean = false;
   startingIndex: any = 0;
   currentIndex: any = 0;
+  contains: any;
+  initialIndex = 0;
+  presentIndex = 0;
   // closeEditRes:any;
 
   constructor(
@@ -119,25 +122,71 @@ export class AllocationsPage implements OnInit {
 
     this.callPermissionService?.isToggleddataSubject.subscribe((res: any) => {
       this.isToggledEnabled = res;
- 
 
-      this.startingIndex = 0;
-      this.currentIndex = 0;
+      // this.startingIndex = 0;
+      // this.currentIndex = 0;
+      // this.initialIndex = 0;
+      // this.presentIndex = 0;
 
       if (res == true) {
-        this.callContact(
-          this.afterUpadtingPhoneNumbers[this.startingIndex],
-          this.allocateItem.user_data.id,
-          this.allocateItem,
-          this.startingIndex
-        );
+        // console.log(this.afterUpadtingPhoneNumbers, this.contains, "before if");
+
+        this.contains = this.callPermissionService.getCalledNumber();
+
+        // console.log(
+        //   this.afterUpadtingPhoneNumbers,
+        //   this.contains,
+        //   "before loop"
+        // );
+        // let res=(this.contains))
+        // console.log(this.contains, "this.contains");
+
+        if (
+          this.afterUpadtingPhoneNumbers.some(
+            (num) => JSON.stringify(num) === this.contains
+          ) &&
+          this.isToggledEnabled == true
+        ) {
+          // console.log(this.afterUpadtingPhoneNumbers,  "after if");
+          // console.log(
+          //   this.afterUpadtingPhoneNumbers,
+          //   this.contains,
+          //   "after loop"
+          // );
+          // console.log(this.initialIndex, "before the call");
+
+          // this.initialIndex + 1;
+          this.initialIndex = this.callPermissionService.getIndex() + 1;
+          // console.log(this.initialIndex, "after the call");
+
+          this.presentIndex = this.initialIndex;
+          this.allocateItem = this.data.data[this.initialIndex];
+          this.callPermissionService.setIndex(this.initialIndex);
+
+          this.callContact(
+            this.afterUpadtingPhoneNumbers[this.initialIndex],
+            this.allocateItem.user_data.id,
+            this.allocateItem,
+            this.initialIndex
+          );
+        } else {
+          this.allocateItem = this.data.data[this.presentIndex];
+          this.callPermissionService.setIndex(this.presentIndex);
+
+          this.callContact(
+            this.afterUpadtingPhoneNumbers[this.presentIndex],
+            this.allocateItem.user_data.id,
+            this.allocateItem,
+            this.presentIndex
+          );
+        }
       }
-    
     });
   }
   allocateItem: any;
   notUpdatingStatus: any;
   ngOnInit() {
+    this.checkPermissions();
     //refreshing phonenumbers array,after updating the allocation status
 
     // this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe(
@@ -160,12 +209,12 @@ export class AllocationsPage implements OnInit {
 
     this.callPermissionService.getStatus().subscribe((res: any) => {
       if (res && res.submit == "submit" && this.isToggledEnabled == true) {
-       
         if (res.statusValue == 9 && res.submit === "submit") {
           setTimeout(() => {
-            this.currentIndex = this.currentIndex + 1;
+            this.currentIndex = this.callPermissionService.getIndex() + 1;
             this.startingIndex = this.currentIndex;
             this.allocateItem = this.data.data[this.currentIndex];
+            this.callPermissionService.setIndex(this.currentIndex);
 
             this.recursiveCall(
               this.afterUpadtingPhoneNumbers[this.currentIndex],
@@ -173,26 +222,26 @@ export class AllocationsPage implements OnInit {
               this.allocateItem,
               this.currentIndex
             );
-            this.getContacktAndPostHistory()
+            this.getContacktAndPostHistory();
           }, 5000);
         } else {
           this.afterUpdatinggetPhoneNumbers();
 
           setTimeout(() => {
             {
+              this.startingIndex = this.callPermissionService.getIndex();
               this.allocateItem = this.data.data[this.startingIndex];
-
+              this.callPermissionService.setIndex(this.startingIndex);
               this.recursiveCall(
                 this.afterUpadtingPhoneNumbers[this.startingIndex],
                 this.allocateItem.user_data.id,
                 this.allocateItem,
                 this.startingIndex
               );
-              this.getContacktAndPostHistory()
+              this.getContacktAndPostHistory();
             }
           }, 5000);
         }
-        
       } else {
         return;
       }
@@ -226,6 +275,8 @@ export class AllocationsPage implements OnInit {
     this.data = [];
   }
 
+  calledPhoneNumbers: any = [];
+  calledPhoneNumbersArray: any = [];
   getContacts(name, value, operator) {
     if (value == "1") {
       this.listTyle = "Incoming Calls from yesterday";
@@ -256,10 +307,14 @@ export class AllocationsPage implements OnInit {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        // console.log(
-        //   JSON.stringify(results[0]),
-        //   "latest call log in allocations"
-        // );
+        // console.log(JSON.stringify(results), "latest call log in allocations");
+        // this.calledPhoneNumbers = results[0];
+        this.callPermissionService.setCalledNumber(
+          JSON.stringify(results[0].number)
+        );
+
+        // console.log(this.calledPhoneNumbers, " this.calledPhoneNumbersArray");
+
         const calculateTime = Number(results[0].date) - Number(this.calledTime);
         // console.log(calculateTime, "calculate time in allocations");
 
@@ -296,7 +351,6 @@ export class AllocationsPage implements OnInit {
   lead_id: any;
 
   async callContact(number: string, id: any, item, index: any) {
-  
     const phoneStateResult = await this.androidPermissions.checkPermission(
       this.androidPermissions.PERMISSION.READ_PHONE_STATE
     );
@@ -596,12 +650,25 @@ export class AllocationsPage implements OnInit {
     });
   }
   afterUpadtingPhoneNumbers: any;
+  query = "";
   afterUpdatinggetPhoneNumbers() {
-    this.callPermissionService
-      .getAllocationsPhoneNumbers()
+    this.query = `?user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
+    if (this.user_role === "Admin" || this.user_role === "ADMIN") {
+      this.query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `;
+    } else if (
+      this.user_role === "counsellor" ||
+      this.user_role === "COUNSELLOR"
+    ) {
+      this.query += `&counsellor_id=${this.user_id}`;
+    } else {
+      this.query = `?user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
+    }
+
+    this._baseService
+      .getData(`${environment.lead_list}${this.query}`)
       .subscribe((res: any) => {
         this.leadData = res.results.data;
-        // console.log(res.results.data,"res.results.data");
+        // console.log(res.results.data, "res.results.data");
 
         if (this.leadData?.length > 0) {
           this.phoneNumbers = this.leadData
@@ -610,13 +677,28 @@ export class AllocationsPage implements OnInit {
           // console.log(this.phoneNumbers, "initial phone numbers");
 
           this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
-          // console.log(
-          //   this.afterUpadtingPhoneNumbers,
-          //   "this.afterUpadtingPhoneNumbers"
-          // );
         }
-        // console.log(res, "resssssssss");
       });
+    // this.callPermissionService
+    //   .getAllocationsPhoneNumbers()
+    //   .subscribe((res: any) => {
+    //     this.leadData = res.results.data;
+    //     console.log(res.results.data,"res.results.data");
+
+    //     if (this.leadData?.length > 0) {
+    //       this.phoneNumbers = this.leadData
+    //         ?.filter((ele: any) => ele.user_data?.mobile_number)
+    //         .map((ele: any) => ele.user_data?.mobile_number);
+    //       console.log(this.phoneNumbers, "initial phone numbers");
+
+    //       this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
+    //       // console.log(
+    //       //   this.afterUpadtingPhoneNumbers,
+    //       //   "this.afterUpadtingPhoneNumbers"
+    //       // );
+    //     }
+    //     // console.log(res, "resssssssss");
+    //   });
   }
 
   handleRefresh(event: any) {
@@ -636,6 +718,7 @@ export class AllocationsPage implements OnInit {
       this.getAllAllocation();
       this.location.isCurrentPathEqualTo("/inner/allocations");
       event.target.complete();
+      this.callPermissionService.setCalledNumber("");
       // },100);
     } else {
       this.refresh = false;
@@ -988,5 +1071,19 @@ export class AllocationsPage implements OnInit {
 
       await confirm.present();
     });
+  }
+
+  async checkPermissions() {
+    try {
+      const phoneStateResult = await this.androidPermissions.requestPermissions(
+        [
+          this.androidPermissions.PERMISSION.READ_CONTACTS,
+          this.androidPermissions.PERMISSION.READ_PHONE_STATE,
+          this.androidPermissions.PERMISSION.READ_CALL_LOG,
+        ]
+      );
+    } catch (error) {
+      //console.log("Error!", error);
+    }
   }
 }
