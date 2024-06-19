@@ -86,6 +86,9 @@ export class AllocationsPage implements OnInit {
   selectedCounsellor: boolean = false;
   startingIndex: any = 0;
   currentIndex: any = 0;
+  contains: any;
+  initialIndex = 0;
+  presentIndex = 0;
   // closeEditRes:any;
 
   constructor(
@@ -119,53 +122,65 @@ export class AllocationsPage implements OnInit {
 
     this.callPermissionService?.isToggleddataSubject.subscribe((res: any) => {
       this.isToggledEnabled = res;
- 
 
-      this.startingIndex = 0;
-      this.currentIndex = 0;
+    
 
       if (res == true) {
-        this.callContact(
-          this.afterUpadtingPhoneNumbers[this.startingIndex],
-          this.allocateItem.user_data.id,
-          this.allocateItem,
-          this.startingIndex
-        );
-      }
+      
+
+        this.contains = this.callPermissionService.getCalledNumber();
+
+     
+
+        if (
+          this.afterUpadtingPhoneNumbers.some(
+            (num) => JSON.stringify(num) === this.contains
+          ) &&
+          this.isToggledEnabled == true
+        ) {
+         
+
+         
+          this.initialIndex = this.callPermissionService.getIndex() + 1;
     
+
+          this.presentIndex = this.initialIndex;
+          this.allocateItem = this.data.data[this.initialIndex];
+          this.callPermissionService.setIndex(this.initialIndex);
+
+          this.callContact(
+            this.afterUpadtingPhoneNumbers[this.initialIndex],
+            this.allocateItem.user_data.id,
+            this.allocateItem,
+            this.initialIndex
+          );
+        } else {
+          this.allocateItem = this.data.data[this.presentIndex];
+          this.callPermissionService.setIndex(this.presentIndex);
+
+          this.callContact(
+            this.afterUpadtingPhoneNumbers[this.presentIndex],
+            this.allocateItem.user_data.id,
+            this.allocateItem,
+            this.presentIndex
+          );
+        }
+      }
     });
   }
   allocateItem: any;
   notUpdatingStatus: any;
   ngOnInit() {
-    //refreshing phonenumbers array,after updating the allocation status
-
-    // this.callPermissionService.closeCancelEditLeadPagedataSubject.subscribe(
-    //   (res: any) => {
-    //     this.cancelCloseEditRes = res;
-    //     if (this.isToggledEnabled == true) {
-    //       if (
-    //         this.cancelCloseEditRes == "close" ||
-    //         this.cancelCloseEditRes == "cancel"
-    //       ) {
-    //         console.log(res, "closed edit form");
-    //         return;
-    //       } else {
-    //         console.log(res, "submitted");
-
-    //       }
-    //     }
-    //   }
-    // );
+    
 
     this.callPermissionService.getStatus().subscribe((res: any) => {
       if (res && res.submit == "submit" && this.isToggledEnabled == true) {
-       
         if (res.statusValue == 9 && res.submit === "submit") {
           setTimeout(() => {
-            this.currentIndex = this.currentIndex + 1;
+            this.currentIndex = this.callPermissionService.getIndex() + 1;
             this.startingIndex = this.currentIndex;
             this.allocateItem = this.data.data[this.currentIndex];
+            this.callPermissionService.setIndex(this.currentIndex);
 
             this.recursiveCall(
               this.afterUpadtingPhoneNumbers[this.currentIndex],
@@ -173,32 +188,32 @@ export class AllocationsPage implements OnInit {
               this.allocateItem,
               this.currentIndex
             );
-            this.getContacktAndPostHistory()
+            this.getContacktAndPostHistory();
           }, 5000);
         } else {
           this.afterUpdatinggetPhoneNumbers();
 
           setTimeout(() => {
             {
+              this.startingIndex = this.callPermissionService.getIndex();
               this.allocateItem = this.data.data[this.startingIndex];
-
+              this.callPermissionService.setIndex(this.startingIndex);
               this.recursiveCall(
                 this.afterUpadtingPhoneNumbers[this.startingIndex],
                 this.allocateItem.user_data.id,
                 this.allocateItem,
                 this.startingIndex
               );
-              this.getContacktAndPostHistory()
+              this.getContacktAndPostHistory();
             }
           }, 5000);
         }
-        
       } else {
         return;
       }
     });
 
-    // this.initiateCallStatus();
+   
 
     this.pageIndex = 0;
     this.user_id = localStorage.getItem("user_id");
@@ -260,6 +275,10 @@ export class AllocationsPage implements OnInit {
         //   JSON.stringify(results[0]),
         //   "latest call log in allocations"
         // );
+
+        this.callPermissionService.setCalledNumber(
+          JSON.stringify(results[0].number)
+        );
         const calculateTime = Number(results[0].date) - Number(this.calledTime);
         // console.log(calculateTime, "calculate time in allocations");
 
@@ -296,7 +315,6 @@ export class AllocationsPage implements OnInit {
   lead_id: any;
 
   async callContact(number: string, id: any, item, index: any) {
-  
     const phoneStateResult = await this.androidPermissions.checkPermission(
       this.androidPermissions.PERMISSION.READ_PHONE_STATE
     );
@@ -661,74 +679,73 @@ export class AllocationsPage implements OnInit {
     if (event) {
       this.currentPage = event.pageIndex + 1;
       this.pageSize = event.pageSize;
-   
 
-    let query: string;
-    const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
-    const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
-    const adminRoles = ["ADMIN"];
+      let query: string;
+      const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
+      const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
+      const adminRoles = ["ADMIN"];
 
-    // Base query setup
-    query = `?user_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`;
+      // Base query setup
+      query = `?user_type=allocation&page=${this.currentPage}&page_size=${event.pageSize}`;
 
-    if (counsellorRoles.includes(this.user_role)) {
-      query += `&counsellor_id=${this.user_id}`;
-    } else if (adminRoles.includes(this.user_role)) {
-      this.allocate.allocationStatus.subscribe((res: any) => {
-        if (res) {
-          // Add status filter
-          if (res.length > 0 && this.counsellor_ids.length === 0) {
-            query += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors}  `;
+      if (counsellorRoles.includes(this.user_role)) {
+        query += `&counsellor_id=${this.user_id}`;
+      } else if (adminRoles.includes(this.user_role)) {
+        this.allocate.allocationStatus.subscribe((res: any) => {
+          if (res) {
+            // Add status filter
+            if (res.length > 0 && this.counsellor_ids.length === 0) {
+              query += `&admin_id=${this.user_id}&status=${res}&counsellor_id=${this.resCounsellors}  `;
+            }
+            if (res.length > 0 && this.counsellor_ids.length > 0) {
+              query += `&status=${res}&counsellor_id=${this.counsellor_ids}`;
+            }
+            if (res.length === 0 && this.counsellor_ids.length > 0) {
+              query += `&counsellor_id=${this.counsellor_ids} `;
+            }
+            if (res.length === 0 && this.counsellor_ids.length === 0) {
+              query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `;
+            }
           }
-          if (res.length > 0 && this.counsellor_ids.length > 0) {
-            query += `&status=${res}&counsellor_id=${this.counsellor_ids}`;
-          }
-          if (res.length === 0 && this.counsellor_ids.length > 0) {
-            query += `&counsellor_id=${this.counsellor_ids} `;
-          }
-          if (res.length === 0 && this.counsellor_ids.length === 0) {
-            query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `;
-          }
-        }
-      });
-    }
-    // Add search term filter
-    if (this.searchTerm) {
-      query += `&key=${this.searchTerm}`;
-    }
-
-    // Add status filter
-    if (!adminRoles.includes(this.user_role) && this.statusFilter) {
-      this.allocate.allocationStatus.subscribe((res: any) => {
-        if (res) {
-          query += `&status=${res}`;
-        }
-      });
-    }
-
-    // For roles other than admin, add counsellor filter if filtering by counsellor
-    if (
-      !adminRoles.includes(this.user_role) &&
-      this.counsellor_ids.length > 0
-    ) {
-      query += `&counsellor_id=${this.counsellor_ids}`;
-    }
-
-    // API call
-    this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
-      (res: any) => {
-        if (res.results) {
-          this.leadCards = res.results.data;
-          this.allocateItem = res.results.data[0];
-          this.data = new MatTableDataSource<any>(this.leadCards);
-          this.totalNumberOfRecords = res.total_no_of_record;
-        }
-      },
-      (error: any) => {
-        this.api.showError(error.error.message);
+        });
       }
-    );
-  }
+      // Add search term filter
+      if (this.searchTerm) {
+        query += `&key=${this.searchTerm}`;
+      }
+
+      // Add status filter
+      if (!adminRoles.includes(this.user_role) && this.statusFilter) {
+        this.allocate.allocationStatus.subscribe((res: any) => {
+          if (res) {
+            query += `&status=${res}`;
+          }
+        });
+      }
+
+      // For roles other than admin, add counsellor filter if filtering by counsellor
+      if (
+        !adminRoles.includes(this.user_role) &&
+        this.counsellor_ids.length > 0
+      ) {
+        query += `&counsellor_id=${this.counsellor_ids}`;
+      }
+
+      // API call
+      this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
+        (res: any) => {
+          if (res.results) {
+            this.leadCards = res.results.data;
+            this.allocateItem = res.results.data[0];
+            this.data = new MatTableDataSource<any>(this.leadCards);
+            this.totalNumberOfRecords = res.total_no_of_record;
+          }
+        },
+        (error: any) => {
+          this.api.showError(error.error.message);
+        }
+      );
+    }
   }
 
   getCounselor() {
@@ -1005,4 +1022,7 @@ export class AllocationsPage implements OnInit {
       await confirm.present();
     });
   }
+
+
+ 
 }

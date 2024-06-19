@@ -46,7 +46,8 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     private callPermissionService:CallPermissionsService
     ) { 
       this.counsellor_id = localStorage.getItem('user_id');
-     
+      this.callPermissionService.callLogsCallBackFunction =
+      this.getContacktAndPostHistory.bind(this);
       setTimeout(() => {
         this.callPermissionService?.initiateCallStatus(
           this.getContacktAndPostHistory.bind(this)
