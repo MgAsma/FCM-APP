@@ -123,14 +123,8 @@ export class AllocationsPage implements OnInit {
     this.callPermissionService?.isToggleddataSubject.subscribe((res: any) => {
       this.isToggledEnabled = res;
 
-    
-
       if (res == true) {
-      
-
         this.contains = this.callPermissionService.getCalledNumber();
-
-     
 
         if (
           this.afterUpadtingPhoneNumbers.some(
@@ -138,11 +132,7 @@ export class AllocationsPage implements OnInit {
           ) &&
           this.isToggledEnabled == true
         ) {
-         
-
-         
           this.initialIndex = this.callPermissionService.getIndex() + 1;
-    
 
           this.presentIndex = this.initialIndex;
           this.allocateItem = this.data.data[this.initialIndex];
@@ -171,8 +161,6 @@ export class AllocationsPage implements OnInit {
   allocateItem: any;
   notUpdatingStatus: any;
   ngOnInit() {
-    
-
     this.callPermissionService.getStatus().subscribe((res: any) => {
       if (res && res.submit == "submit" && this.isToggledEnabled == true) {
         if (res.statusValue == 9 && res.submit === "submit") {
@@ -212,8 +200,6 @@ export class AllocationsPage implements OnInit {
         return;
       }
     });
-
-   
 
     this.pageIndex = 0;
     this.user_id = localStorage.getItem("user_id");
@@ -1022,7 +1008,4 @@ export class AllocationsPage implements OnInit {
       await confirm.present();
     });
   }
-
-
- 
 }
