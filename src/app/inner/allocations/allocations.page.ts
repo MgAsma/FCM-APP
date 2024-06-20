@@ -615,12 +615,49 @@ export class AllocationsPage implements OnInit {
     });
   }
   afterUpadtingPhoneNumbers: any;
+  // afterUpdatinggetPhoneNumbers() {
+  //   this.callPermissionService
+  //     .getAllocationsPhoneNumbers()
+  //     .subscribe((res: any) => {
+  //       this.leadData = res.results.data;
+  //       // console.log(res.results.data,"res.results.data");
+
+  //       if (this.leadData?.length > 0) {
+  //         this.phoneNumbers = this.leadData
+  //           ?.filter((ele: any) => ele.user_data?.mobile_number)
+  //           .map((ele: any) => ele.user_data?.mobile_number);
+  //         // console.log(this.phoneNumbers, "initial phone numbers");
+
+  //         this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
+  //         // console.log(
+  //         //   this.afterUpadtingPhoneNumbers,
+  //         //   "this.afterUpadtingPhoneNumbers"
+  //         // );
+  //       }
+  //       // console.log(res, "resssssssss");
+  //     });
+  // }
+
+ 
+  query = "";
   afterUpdatinggetPhoneNumbers() {
-    this.callPermissionService
-      .getAllocationsPhoneNumbers()
+    this.query = `?user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
+    if (this.user_role === "Admin" || this.user_role === "ADMIN") {
+      this.query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `;
+    } else if (
+      this.user_role === "counsellor" ||
+      this.user_role === "COUNSELLOR"
+    ) {
+      this.query += `&counsellor_id=${this.user_id}`;
+    } else {
+      this.query = `?user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
+    }
+
+    this._baseService
+      .getData(`${environment.lead_list}${this.query}`)
       .subscribe((res: any) => {
         this.leadData = res.results.data;
-        // console.log(res.results.data,"res.results.data");
+        // console.log(res.results.data, "res.results.data");
 
         if (this.leadData?.length > 0) {
           this.phoneNumbers = this.leadData
@@ -629,13 +666,28 @@ export class AllocationsPage implements OnInit {
           // console.log(this.phoneNumbers, "initial phone numbers");
 
           this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
-          // console.log(
-          //   this.afterUpadtingPhoneNumbers,
-          //   "this.afterUpadtingPhoneNumbers"
-          // );
         }
-        // console.log(res, "resssssssss");
       });
+    // this.callPermissionService
+    //   .getAllocationsPhoneNumbers()
+    //   .subscribe((res: any) => {
+    //     this.leadData = res.results.data;
+    //     console.log(res.results.data,"res.results.data");
+
+    //     if (this.leadData?.length > 0) {
+    //       this.phoneNumbers = this.leadData
+    //         ?.filter((ele: any) => ele.user_data?.mobile_number)
+    //         .map((ele: any) => ele.user_data?.mobile_number);
+    //       console.log(this.phoneNumbers, "initial phone numbers");
+
+    //       this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
+    //       // console.log(
+    //       //   this.afterUpadtingPhoneNumbers,
+    //       //   "this.afterUpadtingPhoneNumbers"
+    //       // );
+    //     }
+    //     // console.log(res, "resssssssss");
+    //   });
   }
 
   handleRefresh(event: any) {
