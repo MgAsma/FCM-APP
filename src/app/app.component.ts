@@ -22,6 +22,8 @@ import { IdleDetectionService } from "./service/idle-detection.service";
 import { ApiService } from "./service/api/api.service";
 import { filter } from "rxjs/operators";
 import { Subscription, combineLatest } from "rxjs";
+import { BaseServiceService } from "./service/base-service.service";
+import { jwtDecode } from "jwt-decode";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -45,38 +47,17 @@ export class AppComponent implements OnInit {
     private androidPermissions: AndroidPermissions,
     private callLog: CallLog,
     private idleDetectionService: IdleDetectionService,
-    private api: ApiService
+    private api: ApiService,
+    private baseService:BaseServiceService
   ) // private platform: Platform,
   {
+
     this.initializeApp();
-    this.id = localStorage.getItem('user_id');
-    //  this.platform.ready().then(() => {
-    //     this.callLog
-    //       .hasReadPermission()
-    //       .then((hasPermission) => {
-    //         if (!hasPermission) {
-    //           this.callLog
-    //             .requestReadPermission()
-    //             .then((results) => {})
-    //             .catch((e) =>{
-
-    //             }
-    //               // alert(' requestReadPermission ' + JSON.stringify(e))
-    //             );
-    //         } else {
-    //         }
-    //       })
-    //       .catch((e) =>{
-    //         // alert(' hasReadPermission ' + JSON.stringify(e)
-    //       })
-    //   });
-
-    let token = localStorage.getItem("token");
-    if (token) {
-      this.navCtrl.navigateRoot("/inner");
-    } else {
-      this.navCtrl.navigateRoot("/outer/login");
-    }
+  
+ 
+  }
+  ionViewWillEnter(){
+    this.id = localStorage.getItem('user_id')
   }
 
   async checkPermissions() {
@@ -121,77 +102,18 @@ export class AppComponent implements OnInit {
    
     this.appVersion();
     this.checkPermissions();
+ 
     await this.storage.create();
-    this.checkLoginStatus();
-    this.listenForLoginEvents();
-
-    // this.swUpdate.available.subscribe(async res => {
-    //   const toast = await this.toastCtrl.create({
-    //     message: 'Update available!',
-    //     position: 'bottom',
-    //     buttons: [
-    //       {
-    //         role: 'cancel',
-    //         text: 'Reload'
-    //       }
-    //     ]
-    //   });
-
-    //   await toast.present();
-
-    //   toast
-    //     .onDidDismiss()
-    //     .then(() => this.swUpdate.activateUpdate())
-    //     .then(() => window.location.reload());
-    // });
-    // this.idleDetectionService.userActivity.subscribe(isActive => {
-    //   this.router.events.pipe(
-    //     filter(event => event instanceof NavigationEnd)
-    //   ).subscribe((event: NavigationEnd) => {
-    //     this.currentUrl = event.urlAfterRedirects;
-    //     alert(this.currentUrl); // Do something with the URL
-    //     if (!isActive && this.currentUrl !== '/outer/login') {
-    //       alert(this.currentUrl);
-    //       debugger;
-    //       this.logOut()
-    //     }
-    //   });
-
-    // });
-
-    //   this.idleDetectionService.userActivity.subscribe(isActive => {
-    //     if(isActive && this.currentUrl !== undefined){
-    //       this.idleDetectionService.resetTimer();
-    //     }
-
-    //   });
-
-    // Combine the router events and user activity observables
-    // const routerEvents$ = this.router.events.pipe(
-    //   filter((event) => event instanceof NavigationEnd)
-    // );
+    
      const userActivity$ = this.idleDetectionService.userActivity;
 
-    // this.subscriptions.add(
-    //   combineLatest([routerEvents$, userActivity$]).subscribe(
-    //     ([event, isActive]) => {
-    //       this.currentUrl = (event as NavigationEnd).urlAfterRedirects;
-    //       if (!isActive && this.currentUrl !== "/outer/login") {
-    //         this.logOut();
-    //       }
-    //     }
-    //   )
-    // );
+    
     this.idleDetectionService.userActivity.subscribe(isActive => {
-      this.router.events.pipe(
-        filter(event => event instanceof NavigationEnd)
-      ).subscribe(() => {
+    
         if (this.router.url !== '/outer/login' && !isActive) {
           this.logOut()
         }
-      })
       
-
     });
     this.subscriptions.add(
       userActivity$.subscribe((isActive) => {
@@ -222,31 +144,7 @@ export class AppComponent implements OnInit {
       }
     );
   }
-  checkLoginStatus() {
-    return this.userData.isLoggedIn().then((loggedIn) => {
-      return this.updateLoggedInStatus(loggedIn);
-    });
-  }
-
-  updateLoggedInStatus(loggedIn: boolean) {
-    setTimeout(() => {
-      this.loggedIn = loggedIn;
-    }, 300);
-  }
-
-  listenForLoginEvents() {
-    window.addEventListener("user:login", () => {
-      this.updateLoggedInStatus(true);
-    });
-
-    window.addEventListener("user:signup", () => {
-      this.updateLoggedInStatus(true);
-    });
-
-    window.addEventListener("user:logout", () => {
-      this.updateLoggedInStatus(false);
-    });
-  }
+  
 
   currentUrl: any;
   backbuttonEvent: any;
@@ -322,6 +220,6 @@ export class AppComponent implements OnInit {
 
     // Trigger the update event when the application is updated
     // Example: When a new version of the application is installed
-    window.dispatchEvent(new Event("appUpdated"));
+   // window.dispatchEvent(new Event("appUpdated"));
   }
 }

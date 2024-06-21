@@ -94,10 +94,7 @@ export class CustomersPage implements OnInit {
     private callPermissionService: CallPermissionsService,
     private location: Location
   ) {
-    this.user_role = localStorage.getItem("user_role")?.toUpperCase();
 
-    this.user_id = localStorage.getItem("user_id");
-    this.resCounsellors = localStorage.getItem("counsellor_ids");
     setTimeout(() => {
       this.callPermissionService.customerCallBackFunction =
         this.getContacktAndPostHistory.bind(this);
@@ -313,6 +310,9 @@ export class CustomersPage implements OnInit {
     );
   }
   ionViewWillEnter() {
+    this.user_role = localStorage.getItem("user_role")?.toUpperCase();
+    this.user_id = localStorage.getItem("user_id");
+    this.resCounsellors = localStorage.getItem("counsellor_ids");
     this.viewInit();
   }
 
@@ -380,25 +380,29 @@ export class CustomersPage implements OnInit {
     }
   }
 
-  getCustomersWithFilters() {
+   getCustomersWithFilters() {
     let query: string;
     const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
     const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
     const adminRoles = ["ADMIN"];
 
-    this._counsellorEmitter.customerCounsellor.subscribe((res) => {
+     this._counsellorEmitter.customerCounsellor.subscribe((res) => {
       if (res) {
         this.counsellor_ids = res;
+      }else{
+        this.counsellor_ids = []
       }
     });
 
-    this._customer.customerStatus.subscribe((res: any) => {
+     this._customer.customerStatus.subscribe((res: any) => {
+   
       if (res.length > 0) {
         this.statusFilter = true;
       } else {
         this.statusFilter = false;
       }
-      if (res.length > 0 || this.counsellor_ids.length > 0) {
+      if(res){
+   if (res.length > 0 || this.counsellor_ids.length > 0) {
         // Base query setup
         query = `?user_type=customers&page=1&page_size=10`;
 
@@ -451,7 +455,8 @@ export class CustomersPage implements OnInit {
             this.api.showError(error.error.message);
           }
         );
-      } else {
+      }} else {
+
         this.statusFilter = false;
         this.counsellor_ids = [];
         this.getAllCustomers();
@@ -504,7 +509,7 @@ export class CustomersPage implements OnInit {
     this.searchTerm = "";
     this._customer.customerSearchBar.next(false);
   }
-  handleRefresh(event: any) {
+  async handleRefresh(event: any) {
     if (event && event.target) {
       this.refresh = true;
       // setTimeout(() => {
@@ -513,21 +518,19 @@ export class CustomersPage implements OnInit {
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = 0;
-      this._customer.customerStatus.next("");
-      this._counsellorEmitter.customerCounsellor.next([]);
+      await this._customer.customerStatus.next("");
+      await this._counsellorEmitter.customerCounsellor.next([]);
+      await this._customer.customerSearchBar.next(false);
       this.counsellor_ids = [];
       this.selectedCounsellor = false;
       this.statusFilter = false;
       this.searchTerm = "";
-      this._customer.customerSearchBar.next(false);
       this.getAllCustomers();
 
       this.location.isCurrentPathEqualTo("/inner/customers");
       event.target.complete();
       // }, 2000);
-    } else {
-      this.refresh = false;
-    }
+    } 
   }
 
   onPageChange(event: any, dataSource: MatTableDataSource<any>, type?: any) {

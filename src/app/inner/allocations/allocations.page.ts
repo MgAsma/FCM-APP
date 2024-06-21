@@ -103,10 +103,7 @@ export class AllocationsPage implements OnInit {
     private callPermissionService: CallPermissionsService,
     private location: Location
   ) {
-    this.user_role = localStorage.getItem("user_role")?.toUpperCase();
 
-    this.user_id = localStorage.getItem("user_id");
-    this.resCounsellors = localStorage.getItem("counsellor_ids");
     this.afterUpdatinggetPhoneNumbers();
 
     setTimeout(() => {
@@ -438,13 +435,38 @@ export class AllocationsPage implements OnInit {
     );
   }
   viewInit() {
-    this._addLeadEmitter.triggerGet$.subscribe((res: any) => {
-      this.triggerGet = true;
-      this.getEmitters();
-    });
-    this.getAllocationWithFilters();
+     
+      this._addLeadEmitter.triggerGet$.subscribe((res: any) => {
+        this.triggerGet = true;
+        this.getEmitters();
+      });
+     
+       // this.getAllocationWithFilters();
+      
   }
-  ionViewWillEnter() {
+ async ionViewWillEnter() {
+    this.user_role = localStorage.getItem("user_role")?.toUpperCase();
+    this.user_id = localStorage.getItem("user_id");
+    this.resCounsellors = localStorage.getItem("counsellor_ids");
+    if(this.refresh){
+      this.totalNumberOfRecords = 0;
+      await this.allocate.allocationStatus.next([]);
+      await this._addLeadEmitter.selectedCounsellor.next([]);
+      await this.allocate.searchBar.next(false);
+      this.counsellor_ids = [];
+      this.statusFilter = false;
+      this.searchTerm = "";
+     
+      this.leadCards = [];
+      this.data = [];
+     
+        this.statusFilter = false;
+        this.counsellor_ids = [];
+        this.getAllAllocation();
+     
+    }else{
+     this.getAllocationWithFilters()
+    }
     this.viewInit();
   }
 
@@ -535,23 +557,26 @@ export class AllocationsPage implements OnInit {
     }
   }
 
-  getAllocationWithFilters() {
-    this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
+ async getAllocationWithFilters() {
+  
+  this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
       if (res) {
         this.counsellor_ids = res;
       }
+      else{
+        this.counsellor_ids = []
+      }
     });
 
-    this.allocate.allocationStatus.subscribe((res: any) => {
+   this.allocate.allocationStatus.subscribe((res: any) => {
       if (res.length > 0) {
         this.statusFilter = true;
       } else {
         this.statusFilter = false;
       }
-
       if (res.length > 0 || this.counsellor_ids.length > 0) {
         this.selectedFilter = res;
-
+        
         let query: string;
         const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
         const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
@@ -579,7 +604,6 @@ export class AllocationsPage implements OnInit {
 
         // Add status filter
         if (!adminRoles.includes(this.user_role) && res.length > 0) {
-          debugger;
           query += `&status=${res}`;
         }
         // For roles other than admin, add counsellor filter if filtering by counsellor
@@ -603,12 +627,14 @@ export class AllocationsPage implements OnInit {
             this.api.showError(error.error.message);
           }
         );
-      } else {
+     }
+    else {
         this.statusFilter = false;
         this.counsellor_ids = [];
         this.getAllAllocation();
       }
     });
+  
   }
   afterUpadtingPhoneNumbers: any;
   afterUpdatinggetPhoneNumbers() {
@@ -637,22 +663,9 @@ export class AllocationsPage implements OnInit {
   handleRefresh(event: any) {
     if (event && event.target) {
       this.refresh = true;
-      // this.afterUpdatinggetPhoneNumbers();
-      // setTimeout(() => {
-      this.totalNumberOfRecords = 0;
-      this.allocate.allocationStatus.next([]);
-      this._addLeadEmitter.selectedCounsellor.next([]);
-      this.counsellor_ids = [];
-      this.statusFilter = false;
-      this.searchTerm = "";
-      this.allocate.searchBar.next(false);
-      this.leadCards = [];
-      this.data = [];
-      this.getAllAllocation();
-      this.location.isCurrentPathEqualTo("/inner/allocations");
+      this.ionViewWillEnter()
       event.target.complete();
-      // },100);
-    } else {
+    }else{
       this.refresh = false;
     }
   }

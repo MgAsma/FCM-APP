@@ -7,6 +7,8 @@ import { DatePipe } from '@angular/common';
 import { CommonServiceService } from '../../service/common-service.service';
 import { ApiService } from '../../service/api/api.service';
 import { NavController } from '@ionic/angular';
+import { BaseServiceService } from '../../service/base-service.service';
+import { Storage } from "@capacitor/storage";
 
 @Component({
   selector: 'app-login',
@@ -17,7 +19,7 @@ export class LoginComponent  implements OnInit {
 
   hidePassword = true;
   loginForm!:FormGroup;
-
+  decodedToken:any = ''
 
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;
@@ -28,12 +30,14 @@ export class LoginComponent  implements OnInit {
   private api:ApiService,
   private datePipe: DatePipe,
   private commonService:CommonServiceService,
-  private navCtrl:NavController
+  private navCtrl:NavController,
+  private baseService:BaseServiceService
   
   ){}
  
   ngOnInit(): void {
     this.initForm()
+    this.decodedToken = ''
   }
   initForm(){
     this.loginForm = this._fb.group({
@@ -90,6 +94,7 @@ export class LoginComponent  implements OnInit {
     this.loginForm.patchValue({device_type:"mobile"})
 		if(this.loginForm.invalid){
 			this.loginForm.markAllAsTouched()
+      this.decodedToken = ''
 		}
 		else{
       this.api.showLoading()
@@ -100,25 +105,26 @@ export class LoginComponent  implements OnInit {
           //console.log(resp,"RESP")
           const currentDate = new Date();
           // window.location.reload();
+          this.decodedToken = ''
           this.api.showSuccess(resp.message)
           const formattedDate :any = this.datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss.SSSZ');
           localStorage.setItem('lastLoginDate', formattedDate);
           localStorage.setItem('token',resp.token.token)
-          localStorage.setItem('counsellor_ids',resp.counsellor_ids);
           let appVersion = '1.0.30'
           localStorage.setItem('appVersion',appVersion);
-          let decodedToken:any = ''
           localStorage.setItem('device_token',resp.device_token)
-          decodedToken = jwtDecode(resp.token.token);
-          localStorage.setItem('user_role',decodedToken.user_role)
-          localStorage.setItem('user_id',decodedToken.user_id)
-          localStorage.setItem('username',decodedToken.username)
-          // localStorage.setItem('device_token',decodedToken.device_token)
+          localStorage.setItem('counsellor_ids',resp.counsellor_ids);
+          
+          this.decodedToken = jwtDecode(resp.token.token)
+        
+          localStorage.setItem('user_role',this.decodedToken.user_role)
+          localStorage.setItem('user_id',this.decodedToken.user_id)
+          localStorage.setItem('username',this.decodedToken.username)
+
           this.loginForm.reset()
           
-          this.navCtrl.navigateForward(['/inner'])
+         this.navCtrl.navigateForward(['/inner'])
           this.api.showSuccess(resp.message)
-          // window.location.reload()
           this.api.loaderDismiss()
         }
       

@@ -8,6 +8,7 @@ import { timer, Subject } from "rxjs";
 import { map, takeUntil, takeWhile } from "rxjs/operators";
 import { ApiService } from "../../service/api/api.service";
 import { CallPermissionsService } from "../../service/api/call-permissions.service";
+import { BaseServiceService } from "../../service/base-service.service";
 @Component({
   selector: "app-on-break",
   templateUrl: "./on-break.component.html",
@@ -25,7 +26,8 @@ export class OnBreakComponent implements OnInit {
     private _fb: FormBuilder,
     private router: Router,
     private datePipe: DatePipe,
-    private callPermissionService: CallPermissionsService
+    private callPermissionService: CallPermissionsService,
+    private baseService:BaseServiceService
   ) {
     // this.breakTime=this.callPermissionService.getBreakTime();
     this.breakTime = localStorage.getItem("storedDate");
@@ -33,6 +35,7 @@ export class OnBreakComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     this.id = localStorage.getItem("user_id");
     this.initForm();
   }
@@ -62,7 +65,7 @@ export class OnBreakComponent implements OnInit {
 
           Storage.remove({ key: "break" });
           localStorage.removeItem("storedDate");
-          this.api.showToast("Break Ended Sucessfully!");
+          this.api.showToast("Break Ended Successfully!");
         },
         (error: any) => {
           this.api.loaderDismiss();

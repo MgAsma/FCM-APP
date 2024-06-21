@@ -52,8 +52,9 @@ export class HomeCallLogsPage implements OnInit {
     private fb:FormBuilder,
     private addEmiter:AddLeadEmitterService,
   ) {
-    this.user_role = localStorage.getItem('user_role')?.toUpperCase()
-    this.user_id = localStorage.getItem('user_id')
+    
+    // this.user_role = localStorage.getItem('user_role')?.toUpperCase()
+    // this.user_id = localStorage.getItem('user_id')
     let today = new Date()
     this.maxStartDate = this.datepipe.transform(today,'YYYY-MM-dd')
     
