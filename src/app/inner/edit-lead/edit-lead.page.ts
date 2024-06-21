@@ -27,6 +27,7 @@ import { AddCountryComponent } from "../add-country/add-country.component";
 import { AddStateComponent } from "../add-state/add-state.component";
 import { AddCourseLookingForComponent } from "../add-course-looking-for/add-course-looking-for.component";
 import { AddStreamComponent } from "../add-stream/add-stream.component";
+import { Router } from "@angular/router";
 @Component({
   selector: "app-edit-lead",
   templateUrl: "./edit-lead.page.html",
@@ -51,9 +52,13 @@ export class EditLeadPage implements OnInit {
 
   selectedCityId: any;
   selectedCityName: any;
+  page: any;
 
   @Input() set data(value: any) {
     this._inputData = value;
+  }
+  @Input() set title(value: any) {
+    this.page = value;
   }
   editLead!: FormGroup;
 
@@ -91,12 +96,15 @@ export class EditLeadPage implements OnInit {
     private modalController: ModalController,
     private _addLeadEmitter: AddLeadEmitterService,
     private callPermissionService: CallPermissionsService,
-    private popoverController: PopoverController
+    private popoverController: PopoverController,
+    private router:Router,
+    private baseService:BaseServiceService
   ) {
     let dob = new Date();
     let minimum = new Date("1900-01-01");
     this.minDateAdapter = this._datePipe.transform(dob, "yyyy-MM-dd");
     this.min = this._datePipe.transform(minimum, "yyyy-MM-dd");
+    
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
     this.user_id = localStorage.getItem("user_id");
     // console.log("edit lead component loaded");
@@ -217,24 +225,9 @@ export class EditLeadPage implements OnInit {
   }
   initForm() {
     this.editLead = this.fb.group({
-      firstName: [
-        "",
-        [
-          Validators.required,
-          Validators.pattern(this._commonService.namePattern),
-        ],
-      ],
-      mobile: [
-        "",
-        [
-          Validators.required,
-          Validators.pattern(this._commonService.mobilePattern),
-        ],
-      ],
-      alternateNumber: [
-        "",
-        [Validators.pattern(this._commonService.mobilePattern)],
-      ],
+      firstName: [ "",[ Validators.required, Validators.pattern(this._commonService.namePattern)]],
+      mobile: [ "",[ Validators.required,Validators.pattern(this._commonService.mobilePattern)]],
+      alternateNumber: ["",[Validators.pattern(this._commonService.mobilePattern)]],
       email: ["", [Validators.pattern(this._commonService.emailPattern)]],
       dateOfBirth: [""],
       state: [""],
@@ -243,63 +236,30 @@ export class EditLeadPage implements OnInit {
       countryId: [""],
       pincode: ["", Validators.pattern(this._commonService.pincode)],
       referenceName: ["", Validators.pattern(this._commonService.namePattern)],
-      referencePhoneNumber: [
-        "",
-        Validators.pattern(this._commonService.mobilePattern),
-      ],
+      referencePhoneNumber: ["",Validators.pattern(this._commonService.mobilePattern)],
       fatherName: ["", Validators.pattern(this._commonService.namePattern)],
-      fatherOccupation: [
-        "",
-        Validators.pattern(this._commonService.namePattern),
-      ],
-      fatherPhoneNumber: [
-        "",
-        Validators.pattern(this._commonService.mobilePattern),
-      ],
-      tenthPercentage: [
-        "",
-        Validators.pattern(this._commonService.nonNegativeValidator),
-      ],
-      twelthPercentage: [
-        "",
-        Validators.pattern(this._commonService.nonNegativeValidator),
-      ],
-      degree: [
-        "",
-        Validators.pattern(this._commonService.nonNegativeValidator),
-      ],
+      fatherOccupation: ["",Validators.pattern(this._commonService.namePattern)],
+      fatherPhoneNumber: ["",Validators.pattern(this._commonService.mobilePattern)],
+      tenthPercentage: ["",Validators.pattern(this._commonService.nonNegativeValidator)],
+      twelthPercentage: [ "",Validators.pattern(this._commonService.nonNegativeValidator)],
+      degree: ["",Validators.pattern(this._commonService.nonNegativeValidator)],
       course: [""],
       otherCourse: [""],
       entranceExam: ["", Validators.pattern(this._commonService.namePattern)],
       courseLookingfor: [""],
       levelOfProgram: [""],
-      preferredCollege1: [
-        "",
-        Validators.pattern(this._commonService.namePattern),
+      preferredCollege1: ["", Validators.pattern(this._commonService.namePattern),
       ],
-      preferredCollege2: [
-        "",
-        Validators.pattern(this._commonService.namePattern),
+      preferredCollege2: ["",Validators.pattern(this._commonService.namePattern)
       ],
-      preferredLocation1: [
-        "",
-        Validators.pattern(this._commonService.namePattern),
-      ],
-      preferredLocation2: [
-        "",
-        Validators.pattern(this._commonService.namePattern),
-      ],
+      preferredLocation1: ["",Validators.pattern(this._commonService.namePattern)],
+      preferredLocation2: ["",Validators.pattern(this._commonService.namePattern)],
       counsellor: ["", [Validators.required]],
       counsellorAdmin: [""],
       leadSource: [""],
       leadStages: [""],
       leadStatus: ["", [Validators.required]],
-      notes: [
-        "",
-        [
-          Validators.required,
-          Validators.pattern(this._commonService.namePattern),
-        ],
+      notes: ["",[ Validators.required, Validators.pattern(this._commonService.namePattern)],
       ],
       // remarks:['',Validators.pattern(this._commonService.namePattern)]
     });
@@ -415,6 +375,7 @@ export class EditLeadPage implements OnInit {
       }
     );
   }
+  
   getState(event, countryOptions) {
     let selectedCountryName: any;
     if (event && countryOptions.length > 0) {
@@ -596,7 +557,17 @@ export class EditLeadPage implements OnInit {
     this._baseService.getData(`${environment.lead_status}`).subscribe(
       (res: any) => {
         if (res.results) {
-          this.stat_us = res.results;
+          if (this.page === 'customers') {
+            this.stat_us = res.results.filter((f: any) => {
+              if (f.name && typeof f.name === 'string') {
+                return !f.name.toLowerCase().includes('inactive');
+              }
+              return true;  
+            });
+            
+          }else{
+            this.stat_us = res.results
+          }
         }
       },
       (error: any) => {
@@ -646,7 +617,7 @@ export class EditLeadPage implements OnInit {
     this._baseService.getData(`${environment._user}${query}`).subscribe(
       (res: any) => {
         if (res.results) {
-          this.referredTo = res.results;
+          this.referredTo = res.results
         }
       },
       (error: any) => {
@@ -836,27 +807,13 @@ export class EditLeadPage implements OnInit {
       },
     };
 
-    // data = JSON.parse(JSON.stringify(data));
-    // if (this.editLead.invalid) {
-    //   let mandatoryFieldsEmpty = false;
-    //   let nonMandatoryFieldsInvalid = false;
-
-    //   // Check if any mandatory fields are empty
-    //   const mandatoryFields = [
-    //     "firstName",
-    //     "mobile",
-    //     "counsellor",
-    //     "leadStatus",
-    //     "notes",
-    //   ];
-    //   mandatoryFields.forEach((field) => {
-    //     if (!this.editLead.get(field).value) {
-    //       mandatoryFieldsEmpty = true;
-    //       this.editLead.markAllAsTouched();
-    //     }
-    //   });
+   
 
     data = JSON.parse(JSON.stringify(data));
+    if (this.editLead.get('mobile').value === this.editLead.get('alternateNumber').value) {
+      this.api.showError("Mobile number and alternate number cannot be the same.");
+      return; // Prevent form submission
+    }
     if (this.editLead.invalid) {
       let mandatoryFieldsEmpty = false;
       let nonMandatoryFieldsInvalid = false;
@@ -874,14 +831,14 @@ export class EditLeadPage implements OnInit {
           mandatoryFieldsEmpty = true;
           this.editLead.markAllAsTouched();
         }
+        
       });
-
+     
       // Check if any non-mandatory fields are invalid
       Object.keys(this.editLead.controls).forEach((key) => {
         const control = this.editLead.get(key);
         if (
-          (control.invalid && !mandatoryFields.includes(key)) ||
-          (control.invalid && mandatoryFields.includes(key))
+           (control.invalid && mandatoryFields.includes(key))
         ) {
           nonMandatoryFieldsInvalid = true;
           this.editLead.markAllAsTouched();
@@ -892,12 +849,14 @@ export class EditLeadPage implements OnInit {
         this.api.showError(
           "Please fill the mandatory fields and correct the invalid inputs."
         );
-      } else if (mandatoryFieldsEmpty) {
+      }
+       else if (mandatoryFieldsEmpty) {
         this.api.showError("Please fill the mandatory fields.");
       } else if (nonMandatoryFieldsInvalid) {
         this.api.showError("Correct the invalid inputs.");
       }
-    } else {
+    } 
+    else {
       this._baseService
         .updateData(
           `${environment.lead_list}${this._inputData.user_data.id}/`,
@@ -906,7 +865,12 @@ export class EditLeadPage implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.addLead.emit("ADD");
-            this.api.showSuccess(res.message);
+            if(this.page === 'customers'){
+              this.api.showSuccess("Customer details updated successfully");
+            }else{
+              this.api.showSuccess("Allocation details updated successfully");
+            }
+           
             this.callPermissionService.setStatus({
               statusValue: formData.leadStatus,
               submit: "submit",
@@ -919,39 +883,8 @@ export class EditLeadPage implements OnInit {
           }
         });
 
-      // if (mandatoryFieldsEmpty && nonMandatoryFieldsInvalid) {
-      //   this.api.showError(
-      //     "Please fill the mandatory fields and correct the invalid inputs."
-      //   );
-      // } else if (mandatoryFieldsEmpty) {
-      //   this.api.showError("Please fill the mandatory fields.");
-      // } else if (nonMandatoryFieldsInvalid) {
-      //   this.api.showError("Correct the invalid inputs.");
-      // }
+     
     }
-    //  else {
-    //   this._baseService
-    //     .updateData(
-    //       `${environment.lead_list}${this._inputData.user_data.id}/`,
-    //       data
-    //     )
-    //     .subscribe(
-    //       (res: any) => {
-    //         if (res) {
-    //           this.addLead.emit("ADD");
-    //           this.api.showSuccess(res.message);
-    //           this.callPermissionService.closeCancelEditLeadPagedataSubject.next(
-    //             "submit"
-    //           );
-    //           this._addLeadEmitter.triggerGet();
-    //           this.initForm();
-    //           this.modalController.dismiss();
-    //         }
-    //       },
-    //       (error: any) => {
-    //         this.api.showError(error?.error?.message);
-    //       }
-    //     );
-    // }
+   
   }
 }
