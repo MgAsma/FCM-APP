@@ -53,12 +53,10 @@ export class AppComponent implements OnInit {
   {
 
     this.initializeApp();
-  
+    this.id = localStorage.getItem('user_id')
  
   }
-  ionViewWillEnter(){
-    this.id = localStorage.getItem('user_id')
-  }
+  
 
   async checkPermissions() {
     try {
