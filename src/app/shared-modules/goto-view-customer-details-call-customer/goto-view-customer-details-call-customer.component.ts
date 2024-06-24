@@ -21,7 +21,7 @@ import { CallPermissionsService } from '../../service/api/call-permissions.servi
 export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
   @Input()data:any;
   selectedDetails: any = [];
-  user_id: any;
+  
   leadId: any;
   leadPhoneNumber: string;
   recordsFoundText: string;
@@ -43,8 +43,10 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
     private platform: Platform,
     private androidPermissions:AndroidPermissions,
     private alertController:AlertController,
-    private callPermissionService:CallPermissionsService
+    private callPermissionService:CallPermissionsService,
+    private baseService:BaseServiceService
     ) { 
+   
       this.counsellor_id = localStorage.getItem('user_id');
       this.callPermissionService.callLogsCallBackFunction =
       this.getContacktAndPostHistory.bind(this);
@@ -132,6 +134,12 @@ export class GotoViewCustomerDetailsCallCustomerComponent  implements OnInit {
 
         if (calculateTime > 0) {
           this.postCallHistory();
+        }else{
+          let data = {
+            user: this.counsellor_id,
+            status: 3,
+          };
+           this.postTLStatus(data)
         }
       })
       .catch((e) => {

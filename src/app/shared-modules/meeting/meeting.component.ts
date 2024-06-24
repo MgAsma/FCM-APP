@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { timer, Subject } from 'rxjs';
 import { map, takeUntil, takeWhile } from 'rxjs/operators';
 import { ApiService } from '../../service/api/api.service';
+import { BaseServiceService } from '../../service/base-service.service';
 
 @Component({
   selector: 'app-meeting',
@@ -25,10 +26,12 @@ export class MeetingComponent implements OnInit {
     private api: ApiService,
     private _fb: FormBuilder,
     private router: Router,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private baseService:BaseServiceService
   ) {}
 
   ngOnInit() {
+    
     this.id = localStorage.getItem('user_id');
     this.initForm();
     this.breakTime=localStorage.getItem('storedDate')
@@ -58,7 +61,7 @@ export class MeetingComponent implements OnInit {
           this.close();
           Storage.remove({ key: 'meeting' });
           localStorage.removeItem('storedDate')
-          this.api.showToast('Meeting Ended Sucessfully!');
+          this.api.showToast('Meeting Ended Successfully!');
         },
         (error: any) => {
           this.api.loaderDismiss();
