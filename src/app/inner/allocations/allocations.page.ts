@@ -701,7 +701,7 @@ export class AllocationsPage implements OnInit {
   }
 
   async handleRefresh(event: any) {
-    if (event && event.target) {
+    if (event && event.target && !this.refresh) {
      this.refresh = true;
      await this.allocate.allocationStatus.next([]);
      await this._addLeadEmitter.selectedCounsellor.next([]);
