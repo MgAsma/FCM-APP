@@ -265,6 +265,7 @@ export class AllocationsPage implements OnInit {
         this.callPermissionService.setCalledNumber(
           JSON.stringify(results[0].number)
         );
+        localStorage.setItem('results[0].number',JSON.stringify(results[0].number))
         const calculateTime = Number(results[0].date) - Number(this.calledTime);
         // console.log(calculateTime, "calculate time in allocations");
 
