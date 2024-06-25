@@ -106,8 +106,7 @@ export class AllocationsPage implements OnInit {
     private callPermissionService: CallPermissionsService,
     private location: Location
   ) {
-
-    this.afterUpdatinggetPhoneNumbers();
+    // this.afterUpdatinggetPhoneNumbers();
 
     setTimeout(() => {
       this.callPermissionService?.initiateCallStatus(
@@ -262,7 +261,10 @@ export class AllocationsPage implements OnInit {
         this.callPermissionService.setCalledNumber(
           JSON.stringify(results[0].number)
         );
-        localStorage.setItem('results[0].number',JSON.stringify(results[0].number))
+        localStorage.setItem(
+          "results[0].number",
+          JSON.stringify(results[0].number)
+        );
         const calculateTime = Number(results[0].date) - Number(this.calledTime);
         // console.log(calculateTime, "calculate time in allocations");
 
@@ -440,23 +442,22 @@ export class AllocationsPage implements OnInit {
     );
   }
   viewInit() {
-     
-      this._addLeadEmitter.triggerGet$.subscribe((res: any) => {
-        this.triggerGet = true;
-        this.getEmitters();
-      });
-     
-       // this.getAllocationWithFilters();
-      
+    this._addLeadEmitter.triggerGet$.subscribe((res: any) => {
+      this.triggerGet = true;
+      this.getEmitters();
+    });
+
+    // this.getAllocationWithFilters();
   }
- async ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
     this.user_id = localStorage.getItem("user_id");
     this.resCounsellors = localStorage.getItem("counsellor_ids");
-    
-     this.getAllocationWithFilters()
-    
+
+    this.getAllocationWithFilters();
+
     this.viewInit();
+    this.afterUpdatinggetPhoneNumbers();
   }
 
   getAllAllocation() {
@@ -480,6 +481,8 @@ export class AllocationsPage implements OnInit {
     this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
       (res: any) => {
         if (res.results) {
+          // console.log(res.results, "res.results  ");
+
           this.leadCards = res.results.data;
           this.allocateItem = res.results.data[0];
           this.data = new MatTableDataSource<any>(this.leadCards);
@@ -546,18 +549,16 @@ export class AllocationsPage implements OnInit {
     }
   }
 
- async getAllocationWithFilters() {
-  
-  this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
-      if (res.length >0 && !this.refresh) {
+  async getAllocationWithFilters() {
+    this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
+      if (res.length > 0 && !this.refresh) {
         this.counsellor_ids = res;
-      }else{
+      } else {
         this.counsellor_ids = [];
       }
-      
     });
 
-   this.allocate.allocationStatus.subscribe((res: any) => {
+    this.allocate.allocationStatus.subscribe((res: any) => {
       if (res.length > 0) {
         this.statusFilter = true;
       } else {
@@ -565,7 +566,7 @@ export class AllocationsPage implements OnInit {
       }
       if (!this.refresh && (res.length > 0 || this.counsellor_ids.length > 0)) {
         this.selectedFilter = res;
-        
+
         let query: string;
         const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
         const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
@@ -616,14 +617,12 @@ export class AllocationsPage implements OnInit {
             this.api.showError(error.error.message);
           }
         );
-     }
-    else {
+      } else {
         this.statusFilter = false;
         this.counsellor_ids = [];
         this.getAllAllocation();
       }
     });
-  
   }
   afterUpadtingPhoneNumbers: any;
   // afterUpdatinggetPhoneNumbers() {
@@ -649,9 +648,10 @@ export class AllocationsPage implements OnInit {
   //     });
   // }
 
- 
   query = "";
+
   afterUpdatinggetPhoneNumbers() {
+    this.leadData = [];
     this.query = `?user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
     if (this.user_role === "Admin" || this.user_role === "ADMIN") {
       this.query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `;
@@ -674,7 +674,7 @@ export class AllocationsPage implements OnInit {
           this.phoneNumbers = this.leadData
             ?.filter((ele: any) => ele.user_data?.mobile_number)
             .map((ele: any) => ele.user_data?.mobile_number);
-          // console.log(this.phoneNumbers, "initial phone numbers");
+          console.log(this.phoneNumbers, "initial phone numbers");
 
           this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
         }
@@ -703,13 +703,13 @@ export class AllocationsPage implements OnInit {
 
   async handleRefresh(event: any) {
     if (event && event.target && !this.refresh) {
-     this.refresh = true;
-     await this.allocate.allocationStatus.next([]);
-     await this._addLeadEmitter.selectedCounsellor.next([]);
-     await this.allocate.searchBar.next(false);
-     this.counsellor_ids = []
+      this.refresh = true;
+      await this.allocate.allocationStatus.next([]);
+      await this._addLeadEmitter.selectedCounsellor.next([]);
+      await this.allocate.searchBar.next(false);
+      this.counsellor_ids = [];
       event.target.complete();
-    }else{
+    } else {
       this.refresh = false;
     }
   }
