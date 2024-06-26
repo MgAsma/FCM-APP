@@ -53,10 +53,11 @@ export class AppComponent implements OnInit {
   {
 
     this.initializeApp();
-    this.id = localStorage.getItem('user_id')
- 
+
   }
-  
+  ionViewWillEnter(){
+    this.id = localStorage.getItem('user_id')
+  }
 
   async checkPermissions() {
     try {
@@ -123,6 +124,7 @@ export class AppComponent implements OnInit {
   }
 
   logOut() {
+    this.id = localStorage.getItem('user_id')
     let data = {
       user_id: this.id,
       logged_in_from: "mobile",
@@ -190,7 +192,7 @@ export class AppComponent implements OnInit {
 
   appVersion() {
     // Define your current application version
-    const currentVersion = "1.0.30";
+    const currentVersion = "1.0.31";
 
     // Check if local storage contains a version number
     const storedVersion = localStorage.getItem("appVersion");
