@@ -115,7 +115,7 @@ export class CustomersPage implements OnInit {
         this.searchBar = false;
       }
     });
-    this.getCounselor();
+   
   }
 
   getContacts(name, value, operator) {
@@ -313,6 +313,7 @@ export class CustomersPage implements OnInit {
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
     this.user_id = localStorage.getItem("user_id");
     this.resCounsellors = localStorage.getItem("counsellor_ids");
+    this.getCounselor();
     this.viewInit();
   }
 
@@ -381,6 +382,7 @@ export class CustomersPage implements OnInit {
   }
 
    getCustomersWithFilters() {
+    if(!this.refresh){
     let query: string;
     const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
     const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
@@ -401,8 +403,9 @@ export class CustomersPage implements OnInit {
       } else {
         this.statusFilter = false;
       }
-      if(res){
+      
    if (res.length > 0 || this.counsellor_ids.length > 0) {
+    
         // Base query setup
         query = `?user_type=customers&page=1&page_size=10`;
 
@@ -455,13 +458,19 @@ export class CustomersPage implements OnInit {
             this.api.showError(error.error.message);
           }
         );
-      }} else {
+      } else {
 
         this.statusFilter = false;
         this.counsellor_ids = [];
         this.getAllCustomers();
       }
     });
+  }else {
+    this.statusFilter = false;
+    this.counsellor_ids = [];
+    this.getAllCustomers();
+  }
+
   }
 
   getAllCustomers() {
@@ -518,16 +527,16 @@ export class CustomersPage implements OnInit {
       this.leadCards = [];
       this.data = [];
       this.totalNumberOfRecords = 0;
-      await this._customer.customerStatus.next("");
       await this._counsellorEmitter.customerCounsellor.next([]);
+      await this._customer.customerStatus.next("");
       await this._customer.customerSearchBar.next(false);
       this.counsellor_ids = [];
       this.selectedCounsellor = false;
       this.statusFilter = false;
       this.searchTerm = "";
-      this.getAllCustomers();
+      // this.getAllCustomers();
 
-      this.location.isCurrentPathEqualTo("/inner/customers");
+      // this.location.isCurrentPathEqualTo("/inner/customers");
       event.target.complete();
       // }, 2000);
     } 
@@ -823,6 +832,7 @@ export class CustomersPage implements OnInit {
       componentProps: {
         key: "value",
         data: _customer,
+        title:'customers'
       },
     });
     return await modal.present();

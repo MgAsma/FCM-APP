@@ -209,7 +209,7 @@ export class AllocationsPage implements OnInit {
       }
     });
 
-    this.getCounselor();
+    
   }
 
   resetFilters() {
@@ -452,7 +452,7 @@ export class AllocationsPage implements OnInit {
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
     this.user_id = localStorage.getItem("user_id");
     this.resCounsellors = localStorage.getItem("counsellor_ids");
-    
+    this.getCounselor();
      this.getAllocationWithFilters()
     
     this.viewInit();
@@ -546,9 +546,10 @@ export class AllocationsPage implements OnInit {
   }
 
  async getAllocationWithFilters() {
+  if(!this.refresh){
   
   this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
-      if (res.length >0 && !this.refresh) {
+      if (res.length >0) {
         this.counsellor_ids = res;
       }else{
         this.counsellor_ids = [];
@@ -562,7 +563,7 @@ export class AllocationsPage implements OnInit {
       } else {
         this.statusFilter = false;
       }
-      if (!this.refresh && (res.length > 0 || this.counsellor_ids.length > 0)) {
+      if (res.length > 0 || this.counsellor_ids.length > 0) {
         this.selectedFilter = res;
         
         let query: string;
@@ -602,6 +603,7 @@ export class AllocationsPage implements OnInit {
           query += `&counsellor_id=${this.counsellor_ids}`;
         }
         // API call
+        // if(!this.refresh){
         this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
           (res: any) => {
             if (res.results) {
@@ -615,6 +617,7 @@ export class AllocationsPage implements OnInit {
             this.api.showError(error.error.message);
           }
         );
+      //}
      }
     else {
         this.statusFilter = false;
@@ -622,7 +625,11 @@ export class AllocationsPage implements OnInit {
         this.getAllAllocation();
       }
     });
-  
+  }else{
+    this.statusFilter = false;
+    this.counsellor_ids = [];
+    this.getAllAllocation();
+  }
   }
   afterUpadtingPhoneNumbers: any;
   // afterUpdatinggetPhoneNumbers() {
@@ -701,15 +708,15 @@ export class AllocationsPage implements OnInit {
   }
 
   async handleRefresh(event: any) {
-    if (event && event.target && !this.refresh) {
+    if (event && event.target) {
      this.refresh = true;
-     await this.allocate.allocationStatus.next([]);
      await this._addLeadEmitter.selectedCounsellor.next([]);
+     await this.allocate.allocationStatus.next([]);
      await this.allocate.searchBar.next(false);
      this.counsellor_ids = []
-      event.target.complete();
-    }else{
-      this.refresh = false;
+     this.searchTerm = ""
+     this.statusFilter = false;
+     event.target.complete();
     }
   }
 
