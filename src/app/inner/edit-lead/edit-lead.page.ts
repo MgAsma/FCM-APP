@@ -846,11 +846,13 @@ export class EditLeadPage implements OnInit {
       });
 
       if (mandatoryFieldsEmpty && nonMandatoryFieldsInvalid) {
+        this.editLead.markAllAsTouched();
         this.api.showError(
           "Please fill the mandatory fields and correct the invalid inputs."
         );
       }
        else if (mandatoryFieldsEmpty) {
+        this.editLead.markAllAsTouched();
         this.api.showError("Please fill the mandatory fields.");
       } else if (nonMandatoryFieldsInvalid) {
         this.api.showError("Correct the invalid inputs.");
@@ -879,6 +881,9 @@ export class EditLeadPage implements OnInit {
             // this.callPermissionService.notUpdatingStatusSubject.next(formData.leadStatus)
             this._addLeadEmitter.triggerGet();
             this.initForm();
+            this.selectedCountryName = ''
+            this.selectedStateName = ''
+            this.selectedCityName = ''
             this.modalController.dismiss();
           }
         });
