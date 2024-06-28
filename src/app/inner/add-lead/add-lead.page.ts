@@ -670,6 +670,9 @@ export class AddLeadPage implements OnInit {
             this.addLead.emit('ADD')
             this.api.showSuccess(res.message)
             this._addLeadEmitter.triggerGet();
+            this.selectedCountryName = ''
+            this.selectedStateName = ''
+            this.selectedCityName = ''
             this.addNewLead.reset()
             this.initForm()
           }

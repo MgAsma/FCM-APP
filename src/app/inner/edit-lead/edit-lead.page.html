@@ -474,13 +474,15 @@
                   <ion-icon name="close-outline"></ion-icon>
                 </ion-button>
               </ion-item>
- 
+              <ion-error *ngIf="f['leadStatus'].touched && f['leadStatus']?.hasError('required')">
+                <ion-label color="danger">Status Is Required.</ion-label>
+              </ion-error>
                <!----Notes -->
                <ion-label position="stacked">Notes</ion-label><b class="star-symbol">*</b>
                <ion-item>
                  <ion-input appFormSpace
                    type="text"
-                   placeholder="Enter  Notes"
+                   placeholder="Enter Notes"
                    formControlName="notes"
                   required></ion-input>
                </ion-item>
