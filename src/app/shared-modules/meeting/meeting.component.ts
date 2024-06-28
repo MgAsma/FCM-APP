@@ -48,7 +48,7 @@ export class MeetingComponent implements OnInit {
   break() {
     this.meetingForm.patchValue({ user: this.id });
     this.meetingForm.patchValue({ status: 7 });
-
+    let deviceToken = localStorage.getItem('device_token')
     ////console.log(this.meetingForm.value);
 
     if (this.meetingForm.invalid) {
@@ -62,6 +62,10 @@ export class MeetingComponent implements OnInit {
           Storage.remove({ key: 'meeting' });
           localStorage.removeItem('storedDate')
           this.api.showToast('Meeting Ended Successfully!');
+          if((resp.device_token && deviceToken) && resp.device_token !== deviceToken){
+            localStorage.clear()
+            this.router.navigate(['../outer'])
+          }
         },
         (error: any) => {
           this.api.loaderDismiss();

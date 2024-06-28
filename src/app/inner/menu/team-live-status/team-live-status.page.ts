@@ -350,7 +350,27 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     this.getLiveStatus(query);
   }else{
     this.searchTerm = ''
+    let query: any;
+    query =
+      this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
+        ? `?user_id=${this.user_id}&page=1&page_size=10`
+        : this.user_role == "SUPERADMIN" || this.user_role == "SUPER ADMIN"
+        ? `?page=1&page_size=10`
+        : `?user_id=${this.user_id}&page=1&page_size=10`;
+        
+        if (this.statusFilter) {
+          this.allocate.tlsStatus.subscribe((res: any) => {
+            if (res.length > 0) {
+              query += `&status_id=${res}`;
+            }
+          });
+    }
+    if (this.counsellor_ids.length > 0) {
+      query += `&counsellor_ids=${this.counsellor_ids}`;
+    }
+    this.getLiveStatus(query);
   }
+
   }
   
   

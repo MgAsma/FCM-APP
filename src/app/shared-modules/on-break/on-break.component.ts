@@ -51,7 +51,7 @@ export class OnBreakComponent implements OnInit {
   break() {
     this.breakForm.patchValue({ user: this.id });
     this.breakForm.patchValue({ status: 1 });
-
+    let deviceToken = localStorage.getItem('device_token')
     //console.log(this.breakForm.value);
 
     if (this.breakForm.invalid) {
@@ -62,10 +62,15 @@ export class OnBreakComponent implements OnInit {
         (resp: any) => {
           this.api.loaderDismiss();
           this.close();
-
+          console.log(resp,"RESPONSE")
           Storage.remove({ key: "break" });
           localStorage.removeItem("storedDate");
           this.api.showToast("Break Ended Successfully!");
+          if((resp.device_token && deviceToken) && resp.device_token !== deviceToken){
+            localStorage.clear()
+            this.router.navigate(['../outer'])
+          }
+          
         },
         (error: any) => {
           this.api.loaderDismiss();

@@ -8,7 +8,8 @@ import { mapTo, startWith, switchMap } from 'rxjs/operators';
 export class IdleDetectionService {
   private userActivity$: Observable<boolean>;
   private lastActivityTime!: number;
-  private idleTimeout: number = 900000; // 15 minutes in milliseconds
+  private idleTimeout: number = 600000; 
+  //private idleTimeout: number = 900000; // 15 minutes in milliseconds
   private isActiveSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   constructor() {
