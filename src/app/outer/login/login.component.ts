@@ -110,7 +110,7 @@ export class LoginComponent  implements OnInit {
           const formattedDate :any = this.datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss.SSSZ');
           localStorage.setItem('lastLoginDate', formattedDate);
           localStorage.setItem('token',resp.token.token)
-          let appVersion = '1.0.32'
+          let appVersion = '1.0.33'
           localStorage.setItem('appVersion',appVersion);
           localStorage.setItem('device_token',resp.device_token)
           localStorage.setItem('counsellor_ids',resp.counsellor_ids);

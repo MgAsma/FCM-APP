@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
      const userActivity$ = this.idleDetectionService.userActivity;
 
     
-    this.idleDetectionService.userActivity.subscribe(isActive => {
+    await this.idleDetectionService.userActivity.subscribe(isActive => {
     
         if (this.router.url !== '/outer/login' && !isActive) {
           this.logOut()
@@ -136,11 +136,12 @@ export class AppComponent implements OnInit {
     this.api.logout(data).subscribe(
       (resp: any) => {
         if(resp){
+        this.clearState()
         localStorage.clear();
         this.api.showSuccess(resp.message);
-        this.router.navigate(["../outer"]);
+        this.router.navigate(["../outer/login"]);
         localStorage.clear();
-        this.clearState()
+        
         }
       },
       (error: any) => {
@@ -216,7 +217,7 @@ export class AppComponent implements OnInit {
   }
   appVersion() {
     // Define your current application version
-    const currentVersion = "1.0.32";
+    const currentVersion = "1.0.33";
 
     // Check if local storage contains a version number
     const storedVersion = localStorage.getItem("appVersion");
