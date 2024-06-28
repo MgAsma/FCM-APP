@@ -89,6 +89,7 @@ export class AllocationsPage implements OnInit {
   contains: any;
   initialIndex = 0;
   presentIndex = 0;
+  lastestCallData=[]
   // closeEditRes:any;
 
   constructor(
@@ -108,6 +109,8 @@ export class AllocationsPage implements OnInit {
   ) {
     // this.afterUpdatinggetPhoneNumbers();
 
+    
+
     setTimeout(() => {
       this.callPermissionService?.initiateCallStatus(
         this.getContacktAndPostHistory.bind(this)
@@ -120,19 +123,21 @@ export class AllocationsPage implements OnInit {
       this.isToggledEnabled = res;
 
       if (res == true) {
-        this.contains = this.callPermissionService.getCalledNumber();
-
-        if (
+     
+        let result=this.getLocalStorageValue()
+        if (result&&
           this.afterUpadtingPhoneNumbers.some(
-            (num) => JSON.stringify(num) === this.contains
+            (num) => JSON.stringify(num) === result.lastDialedNumber
           ) &&
           this.isToggledEnabled == true
         ) {
-          this.initialIndex = this.callPermissionService.getIndex() + 1;
+          // this.initialIndex = this.callPermissionService.getIndex() + 1;
+          this.initialIndex=result.index.initialIndex+1
 
           this.presentIndex = this.initialIndex;
           this.allocateItem = this.data.data[this.initialIndex];
-          this.callPermissionService.setIndex(this.initialIndex);
+          // this.callPermissionService.setIndex(this.initialIndex);
+          this.setDataToLocalStorage()
 
           this.callContact(
             this.afterUpadtingPhoneNumbers[this.initialIndex],
@@ -142,7 +147,8 @@ export class AllocationsPage implements OnInit {
           );
         } else {
           this.allocateItem = this.data.data[this.presentIndex];
-          this.callPermissionService.setIndex(this.presentIndex);
+          // this.callPermissionService.setIndex(this.presentIndex);
+          this.setDataToLocalStorage()
 
           this.callContact(
             this.afterUpadtingPhoneNumbers[this.presentIndex],
@@ -158,13 +164,18 @@ export class AllocationsPage implements OnInit {
   notUpdatingStatus: any;
   ngOnInit() {
     this.callPermissionService.getStatus().subscribe((res: any) => {
+      let result=this.getLocalStorageValue()
       if (res && res.submit == "submit" && this.isToggledEnabled == true) {
         if (res.statusValue == 9 && res.submit === "submit") {
           setTimeout(() => {
-            this.currentIndex = this.callPermissionService.getIndex() + 1;
+            // this.currentIndex = this.callPermissionService.getIndex() + 1;
+           
+       
+        this.currentIndex=result?result.index.currentIndex+1:0
             this.startingIndex = this.currentIndex;
             this.allocateItem = this.data.data[this.currentIndex];
-            this.callPermissionService.setIndex(this.currentIndex);
+            // this.callPermissionService.setIndex(this.currentIndex);
+            this.setDataToLocalStorage()
 
             this.recursiveCall(
               this.afterUpadtingPhoneNumbers[this.currentIndex],
@@ -179,9 +190,11 @@ export class AllocationsPage implements OnInit {
 
           setTimeout(() => {
             {
-              this.startingIndex = this.callPermissionService.getIndex();
+              // this.startingIndex = this.callPermissionService.getIndex();
+              this.startingIndex=result?result.index.startingIndex:0
               this.allocateItem = this.data.data[this.startingIndex];
-              this.callPermissionService.setIndex(this.startingIndex);
+              // this.callPermissionService.setIndex(this.startingIndex);
+              this.setDataToLocalStorage()
               this.recursiveCall(
                 this.afterUpadtingPhoneNumbers[this.startingIndex],
                 this.allocateItem.user_data.id,
@@ -211,6 +224,13 @@ export class AllocationsPage implements OnInit {
     this.getCounselor();
   }
 
+  getLocalStorageValue(){
+    let data=JSON.parse(localStorage.getItem('latestCalledData'))
+    // console.log(this.contains,"latest called number");
+    
+    let result=data.find((item:any)=>item.userId==this.user_id);
+    return result
+  }
   resetFilters() {
     this.totalNumberOfRecords = 0;
     this.allocate.allocationStatus.next([]);
@@ -258,13 +278,27 @@ export class AllocationsPage implements OnInit {
         //   "latest call log in allocations"
         // );
 
-        this.callPermissionService.setCalledNumber(
-          JSON.stringify(results[0].number)
-        );
-        localStorage.setItem(
-          "results[0].number",
-          JSON.stringify(results[0].number)
-        );
+
+       
+      //  const latestCalledData:any={
+      //   lastDialedNumber:JSON.stringify(results[0]),
+      //   userId:this.user_id
+      //  }
+
+
+        // if(this.user_role==='Admin'||this.user_role==='ADMIN'){
+        //   this.callPermissionService.AdminsetCalledNumber(JSON.stringify(results[0].number))
+        // }
+        // if(this.user_role==='consellor'||this.user_role==='COUNSELLOR'){
+        //   this.callPermissionService.counsellorsetCalledNumber(JSON.stringify(results[0].number))
+        // }
+        // else{
+        //   this.callPermissionService.setCalledNumber(
+        //     JSON.stringify(results[0].number)
+        //   );
+        // }
+      this.setDataToLocalStorage(results[0].number)
+      
         const calculateTime = Number(results[0].date) - Number(this.calledTime);
         // console.log(calculateTime, "calculate time in allocations");
 
@@ -285,6 +319,34 @@ export class AllocationsPage implements OnInit {
       .catch((e) => {
         // alert(" LOG " + JSON.stringify(e))
       });
+  }
+
+
+  setDataToLocalStorage(lastdileddata?){
+    let data=JSON.parse(localStorage.getItem('latestCalledData'))
+    let array=data.findIndex((res:any)=>res.userId==this.user_id);
+    if(array > -1){
+      
+      data[array].lastDialedNumber=lastdileddata?JSON.stringify(lastdileddata): data[array].lastDialedNumber;
+      data[array].index.currentIndex=this.currentIndex;
+      data[array].index.startingIndex=this.startingIndex;
+      data[array].index.initialIndex=this.initialIndex;
+      data[array].inddex.presentIndex=this.presentIndex
+    }
+    else{
+      data.push({
+        lastDialedNumber:JSON.stringify(lastdileddata),
+        userId:this.user_id,
+        index:{
+          currentIndex:this.currentIndex,
+         startingIndex:this.startingIndex,
+         initialIndex:this.initialIndex,
+         presentIndex:this.presentIndex
+        }
+       })
+    }
+
+    localStorage.setItem('latestCalledData',JSON.stringify(data))
   }
 
   isCallInitiationCalled: boolean = false;
@@ -352,7 +414,8 @@ export class AllocationsPage implements OnInit {
   phoneNumberIndex: any;
   recursiveCall(number: string, id: any, item, index: any) {
     console.log(number, id, item, index, "item in recursive");
-    if (index >= this.phoneNumbers.length) {
+    if (index > this.phoneNumbers.length) {
+      this.callPermissionService.isToggleddataSubject.next(false);
       return;
     } else {
       this.leadItem = item;
@@ -484,6 +547,7 @@ export class AllocationsPage implements OnInit {
           // console.log(res.results, "res.results  ");
 
           this.leadCards = res.results.data;
+          this.leadData =res.results.data
           this.allocateItem = res.results.data[0];
           this.data = new MatTableDataSource<any>(this.leadCards);
           this.totalNumberOfRecords = res.total_no_of_record;
@@ -541,6 +605,7 @@ export class AllocationsPage implements OnInit {
         .subscribe((res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData =res.results.data
             this.allocateItem = res.results.data[0];
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
@@ -608,6 +673,7 @@ export class AllocationsPage implements OnInit {
           (res: any) => {
             if (res.results) {
               this.leadCards = res.results.data;
+              this.leadData =res.results.data
               // this.allocateItem = res.results.data[0];
               this.data = new MatTableDataSource<any>(this.leadCards);
               this.totalNumberOfRecords = res.total_no_of_record;
@@ -651,10 +717,16 @@ export class AllocationsPage implements OnInit {
   query = "";
 
   afterUpdatinggetPhoneNumbers() {
+    
     this.leadData = [];
     this.query = `?user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
     if (this.user_role === "Admin" || this.user_role === "ADMIN") {
-      this.query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `;
+      if (this.resCounsellors !== "") {
+        this.query = `?admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}&user_type=allocation&page=1&page_size=10`;
+      } else {
+        this.query = `?admin_id=${this.user_id}&user_type=allocation&page=1&page_size=10`;
+      }
+      // this.query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `;
     } else if (
       this.user_role === "counsellor" ||
       this.user_role === "COUNSELLOR"
@@ -775,6 +847,7 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData =res.results.data
             this.allocateItem = res.results.data[0];
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
@@ -870,6 +943,7 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData =res.results.data
 
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
@@ -940,6 +1014,7 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData =res.results.data
 
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
@@ -1006,6 +1081,7 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData =res.results.data
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
           }

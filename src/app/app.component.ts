@@ -97,6 +97,7 @@ export class AppComponent implements OnInit {
     });
   }
   async ngOnInit() {
+    localStorage.setItem('latestCalledData',JSON.stringify([]))
    
     this.appVersion();
     this.checkPermissions();
