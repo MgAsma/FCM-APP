@@ -24,6 +24,8 @@ import { filter } from "rxjs/operators";
 import { Subscription, combineLatest } from "rxjs";
 import { BaseServiceService } from "./service/base-service.service";
 import { jwtDecode } from "jwt-decode";
+import { AddLeadEmitterService } from "./service/add-lead-emitter.service";
+import { AllocationEmittersService } from "./service/allocation-emitters.service";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -48,7 +50,8 @@ export class AppComponent implements OnInit {
     private callLog: CallLog,
     private idleDetectionService: IdleDetectionService,
     private api: ApiService,
-    private baseService:BaseServiceService
+    private allocation:AllocationEmittersService,
+    private addEmit:AddLeadEmitterService
   ) // private platform: Platform,
   {
 
@@ -137,6 +140,7 @@ export class AppComponent implements OnInit {
         this.api.showSuccess(resp.message);
         this.router.navigate(["../outer"]);
         localStorage.clear();
+        this.clearState()
         }
       },
       (error: any) => {
@@ -189,7 +193,27 @@ export class AppComponent implements OnInit {
       }
     }
   });
+  clearState(){
+    this.allocation.searchBar.next(false) 
+    this.allocation.customerSearchBar.next(false) 
+    this.allocation.callLogSearchBar.next(false) 
+    this.allocation.tlsSearchBar.next(false) 
+    this.allocation.allocationStatus.next([])
+    this.allocation.callLogStatus.next([])
+    this.allocation.tlsStatus.next('')
+    this.allocation.callhistoryList.next([])
+    this.allocation.logMemberDetails.next('')
+    this.allocation.customerStatus.next('')
 
+    this.addEmit.leadFilter.next('')
+    this.addEmit.leadFilterIcon.next('')
+    this.addEmit.filterStatus.next(false)
+    this.addEmit.selectedCounsellor.next([])
+    this.addEmit.callLogCounsellor.next([])
+    this.addEmit.tlsCounsellor.next([])
+    this.addEmit.customerCounsellor.next([])
+    
+  }
   appVersion() {
     // Define your current application version
     const currentVersion = "1.0.31";

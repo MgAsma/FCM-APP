@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { PopoverController } from '@ionic/angular';
 import { ApiService } from '../../../service/api/api.service';
 import { AddLeadEmitterService } from '../../../service/add-lead-emitter.service';
+import { AllocationEmittersService } from '../../../service/allocation-emitters.service';
 
 
 @Component({
@@ -20,7 +21,8 @@ export class CheckoutComponent  implements OnInit {
     private api:ApiService,
     private _fb:FormBuilder,
     private router:Router,
-    private _addLeadEmitter:AddLeadEmitterService) { }
+    private addEmit:AddLeadEmitterService,
+    private allocation:AllocationEmittersService) { }
 
   ngOnInit(): void {
     this.popoverController.dismiss();
@@ -52,13 +54,14 @@ export class CheckoutComponent  implements OnInit {
         this.api.logout(this.logoutForm.value).subscribe(
         (resp:any)=>{
           if(resp){
-          
+          this.clearState()
           localStorage.clear()
           this.logoutForm.reset()
           this.close()
           this.api.showSuccess(resp.message)
           this.router.navigate(['../outer'])
           localStorage.clear()
+          
           this.api.loaderDismiss()
           }
         },
@@ -70,5 +73,26 @@ export class CheckoutComponent  implements OnInit {
           // this.router.navigate(['../outer'])
         }
         )
+      }
+      clearState(){
+        this.allocation.searchBar.next(false) 
+        this.allocation.customerSearchBar.next(false) 
+        this.allocation.callLogSearchBar.next(false) 
+        this.allocation.tlsSearchBar.next(false) 
+        this.allocation.allocationStatus.next([])
+        this.allocation.callLogStatus.next([])
+        this.allocation.tlsStatus.next('')
+        this.allocation.callhistoryList.next([])
+        this.allocation.logMemberDetails.next('')
+        this.allocation.customerStatus.next('')
+    
+        this.addEmit.leadFilter.next('')
+        this.addEmit.leadFilterIcon.next('')
+        this.addEmit.filterStatus.next(false)
+        this.addEmit.selectedCounsellor.next([])
+        this.addEmit.callLogCounsellor.next([])
+        this.addEmit.tlsCounsellor.next([])
+        this.addEmit.customerCounsellor.next([])
+        
       }
 }

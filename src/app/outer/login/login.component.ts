@@ -132,7 +132,6 @@ export class LoginComponent  implements OnInit {
 			(error:any)=>{
         this.api.loaderDismiss()
         this.api.showError(error.error.message)
-        alert(error.error.message)
        // this.api.showToast(error.error.error.message)
 			}
 		  )
