@@ -24,6 +24,7 @@ import { filter } from "rxjs/operators";
 import { Subscription, combineLatest } from "rxjs";
 import { BaseServiceService } from "./service/base-service.service";
 import { jwtDecode } from "jwt-decode";
+import { NgxIndexedDBService } from "ngx-indexed-db";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -48,7 +49,8 @@ export class AppComponent implements OnInit {
     private callLog: CallLog,
     private idleDetectionService: IdleDetectionService,
     private api: ApiService,
-    private baseService:BaseServiceService
+    private baseService:BaseServiceService,
+    private dbService: NgxIndexedDBService
   ) // private platform: Platform,
   {
 
@@ -97,7 +99,7 @@ export class AppComponent implements OnInit {
     });
   }
   async ngOnInit() {
-    localStorage.setItem('latestCalledData',JSON.stringify([]))
+  
    
     this.appVersion();
     this.checkPermissions();
@@ -121,6 +123,9 @@ export class AppComponent implements OnInit {
         }
       })
     );
+
+    // localStorage.setItem('latestCalledData',JSON.stringify([]))
+    
   }
 
   logOut() {

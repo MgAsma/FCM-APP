@@ -102,6 +102,9 @@ export class LoginComponent  implements OnInit {
 			(resp:any)=>{
         if(resp){
           localStorage.clear()
+
+          localStorage.setItem('latestCalledData',JSON.stringify([]))
+
           //console.log(resp,"RESP")
           const currentDate = new Date();
           // window.location.reload();

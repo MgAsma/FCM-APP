@@ -31,6 +31,8 @@ import { Router } from "@angular/router";
 import { App as CapacitorApp } from "@capacitor/app";
 import { CallPermissionsService } from "../../service/api/call-permissions.service";
 import { Location } from "@angular/common";
+import { NgxIndexedDBService } from "ngx-indexed-db";
+import { lastValueFrom } from "rxjs";
 // declare var PhoneCallTrap: any;
 @Component({
   selector: "app-allocations",
@@ -105,7 +107,8 @@ export class AllocationsPage implements OnInit {
     private alertController: AlertController,
     private router: Router,
     private callPermissionService: CallPermissionsService,
-    private location: Location
+    private location: Location,
+    private dbService: NgxIndexedDBService
   ) {
     // this.afterUpdatinggetPhoneNumbers();
 
@@ -119,18 +122,26 @@ export class AllocationsPage implements OnInit {
         this.getContacktAndPostHistory.bind(this);
     }, 1000);
 
-    this.callPermissionService?.isToggleddataSubject.subscribe((res: any) => {
+    this.callPermissionService?.isToggleddataSubject.subscribe(async (res: any) => {
       this.isToggledEnabled = res;
 
       if (res == true) {
      
-        let result=this.getLocalStorageValue()
+        let result:any= await this.getLocalStorageValue()
+        console.log(result,"result");
+        
         if (result&&
           this.afterUpadtingPhoneNumbers.some(
             (num) => JSON.stringify(num) === result.lastDialedNumber
           ) &&
           this.isToggledEnabled == true
         ) {
+          if(result.index.initialIndex>this.afterUpadtingPhoneNumbers.length){
+            this.api.showWarning('You have completed all the numbers');
+            this.callPermissionService.isToggleddataSubject.next(false);
+
+            return
+          }
           // this.initialIndex = this.callPermissionService.getIndex() + 1;
           this.initialIndex=result.index.initialIndex+1
 
@@ -162,16 +173,16 @@ export class AllocationsPage implements OnInit {
   }
   allocateItem: any;
   notUpdatingStatus: any;
-  ngOnInit() {
-    this.callPermissionService.getStatus().subscribe((res: any) => {
-      let result=this.getLocalStorageValue()
+ async ngOnInit() {
+    this.callPermissionService.getStatus().subscribe(async (res: any) => {
+      let result:any= await this.getLocalStorageValue()
       if (res && res.submit == "submit" && this.isToggledEnabled == true) {
         if (res.statusValue == 9 && res.submit === "submit") {
           setTimeout(() => {
             // this.currentIndex = this.callPermissionService.getIndex() + 1;
            
        
-        this.currentIndex=result?result.index.currentIndex+1:0
+        this.currentIndex= result?result.index.currentIndex+1:0
             this.startingIndex = this.currentIndex;
             this.allocateItem = this.data.data[this.currentIndex];
             // this.callPermissionService.setIndex(this.currentIndex);
@@ -224,11 +235,11 @@ export class AllocationsPage implements OnInit {
     this.getCounselor();
   }
 
-  getLocalStorageValue(){
-    let data=JSON.parse(localStorage.getItem('latestCalledData'))
+ async getLocalStorageValue(){
+    let data= await lastValueFrom(this.dbService.getAll('people'))
     // console.log(this.contains,"latest called number");
-    
-    let result=data.find((item:any)=>item.userId==this.user_id);
+    console.log(data,"data from indexdb storage");
+    let result=data?.find((item:any)=>item.userId==this.user_id);
     return result
   }
   resetFilters() {
@@ -297,6 +308,8 @@ export class AllocationsPage implements OnInit {
         //     JSON.stringify(results[0].number)
         //   );
         // }
+        console.log(JSON.stringify(results[0].number),"latest called number");
+        
       this.setDataToLocalStorage(results[0].number)
       
         const calculateTime = Number(results[0].date) - Number(this.calledTime);
@@ -322,32 +335,62 @@ export class AllocationsPage implements OnInit {
   }
 
 
-  setDataToLocalStorage(lastdileddata?){
-    let data=JSON.parse(localStorage.getItem('latestCalledData'))
-    let array=data.findIndex((res:any)=>res.userId==this.user_id);
-    if(array > -1){
+
+ 
+
+ async setDataToLocalStorage(lastdileddata?){
+  console.log(lastdileddata,"last dialed num in set data ");
+  
+    // let data=JSON.parse(localStorage.getItem('latestCalledData'))
+    let res:any=  await lastValueFrom(this.dbService.getAll('people'))
+    console.log(res,"res in setdsts function");
+    
+    let array=res.findIndex((res:any)=>res.userId==this.user_id);
+    let storeData={
+      lastDialedNumber:JSON.stringify(lastdileddata),
+      userId:this.user_id,
       
-      data[array].lastDialedNumber=lastdileddata?JSON.stringify(lastdileddata): data[array].lastDialedNumber;
-      data[array].index.currentIndex=this.currentIndex;
-      data[array].index.startingIndex=this.startingIndex;
-      data[array].index.initialIndex=this.initialIndex;
-      data[array].inddex.presentIndex=this.presentIndex
+      index:{
+        currentIndex:this.currentIndex,
+       startingIndex:this.startingIndex,
+       initialIndex:this.initialIndex,
+       presentIndex:this.presentIndex
+      }
+    }
+    console.log(array,"array in set ");
+    
+    if(array > -1){
+      (storeData as any).id=array.id,
+      this.dbService.update('people',storeData).subscribe((res:any)=>{
+        console.log(res,"data upadated successfully");
+        
+      })
+      // data[array].lastDialedNumber=lastdileddata?lastdileddata: data[array].lastDialedNumber;
+      // data[array].index.currentIndex=this.currentIndex;
+      // data[array].index.startingIndex=this.startingIndex;
+      // data[array].index.initialIndex=this.initialIndex;
+      // data[array].inddex.presentIndex=this.presentIndex
     }
     else{
-      data.push({
-        lastDialedNumber:JSON.stringify(lastdileddata),
-        userId:this.user_id,
-        index:{
-          currentIndex:this.currentIndex,
-         startingIndex:this.startingIndex,
-         initialIndex:this.initialIndex,
-         presentIndex:this.presentIndex
-        }
-       })
+    this.dbService.add('people',storeData).subscribe((res:any)=>{
+      console.log(res,"data added successfully");
+      
+    })
+    
     }
+   
 
-    localStorage.setItem('latestCalledData',JSON.stringify(data))
   }
+
+  addRecord() {
+    const person = { id: 1, name: 'John' };
+    this.dbService.add('people', person).subscribe(() => {
+      console.log('Record added successfully.');
+    });
+  } 
+
+
+
 
   isCallInitiationCalled: boolean = false;
 
@@ -414,8 +457,9 @@ export class AllocationsPage implements OnInit {
   phoneNumberIndex: any;
   recursiveCall(number: string, id: any, item, index: any) {
     console.log(number, id, item, index, "item in recursive");
-    if (index > this.phoneNumbers.length) {
+    if (index > this.afterUpadtingPhoneNumbers.length-1) {
       this.callPermissionService.isToggleddataSubject.next(false);
+      this.api.showWarning('You have completed all the numbers');
       return;
     } else {
       this.leadItem = item;
