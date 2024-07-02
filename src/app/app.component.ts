@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { SwUpdate } from "@angular/service-worker";
 import { App as CapacitorApp } from "@capacitor/app";
-
+import { App } from '@capacitor/app';
 import {
   MenuController,
   NavController,
@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   loggedIn = false;
   dark = false;
   id: string;
+  currentUrl: any;
   private subscriptions: Subscription = new Subscription();
   constructor(
     private menu: MenuController,
@@ -58,8 +59,38 @@ export class AppComponent implements OnInit {
     this.initializeApp();
 
   }
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
     this.id = localStorage.getItem('user_id')
+    await this.appVersion();
+    await this.checkPermissions();
+    await this.storage.create();
+     await this.idleDetectionService.userActivity.subscribe(isActive => {
+     
+         if (this.router.url !== '/outer/login' && !isActive) {
+           this.logOut()
+         }else{
+          // this.router.navigate([this.router.url])
+           this.idleDetectionService.resetTimer();
+         }
+       
+     });
+     const userActivity$ = this.idleDetectionService.userActivity;
+ 
+     await  this.subscriptions.add(
+       userActivity$.subscribe((isActive) => {
+         if (isActive && this.currentUrl !== undefined) {
+           this.idleDetectionService.resetTimer();
+         }
+       })
+     );
+    
+ //    await this.setupAppUrlOpenListener();
+ await App.addListener('appUrlOpen', data => {
+  this.router.navigate([data]);
+  alert(data)
+  //this.router.navigateByUrl(data);
+  // console.log('App opened with URL:', data);
+});
   }
 
   async checkPermissions() {
@@ -101,29 +132,31 @@ export class AppComponent implements OnInit {
     });
   }
   async ngOnInit() {
-   
-    this.appVersion();
-    this.checkPermissions();
  
-    await this.storage.create();
-    
-     const userActivity$ = this.idleDetectionService.userActivity;
-
-    
+   await this.appVersion();
+   await this.checkPermissions();
+   await this.storage.create();
     await this.idleDetectionService.userActivity.subscribe(isActive => {
     
         if (this.router.url !== '/outer/login' && !isActive) {
           this.logOut()
+        }else{
+         // this.router.navigate([this.router.url])
+          this.idleDetectionService.resetTimer();
         }
       
     });
-    this.subscriptions.add(
+    const userActivity$ = this.idleDetectionService.userActivity;
+
+    await  this.subscriptions.add(
       userActivity$.subscribe((isActive) => {
         if (isActive && this.currentUrl !== undefined) {
           this.idleDetectionService.resetTimer();
         }
       })
     );
+   
+    await this.setupAppUrlOpenListener();
   }
 
   logOut() {
@@ -150,8 +183,19 @@ export class AppComponent implements OnInit {
     );
   }
   
+  setupAppUrlOpenListener() {
+    CapacitorApp.addListener('appUrlOpen', (data) => {
+      // Parse the URL to extract any parameters or path
+      alert(data.url)
+      const url = data.url;
+      // Example: handle the URL and navigate to the appropriate page
+      if (url) {
+        const path = new URL(url).pathname;
+        this.router.navigateByUrl(path);
+      }
+    });
+  }
 
-  currentUrl: any;
   backbuttonEvent: any;
   const = CapacitorApp.addListener("backButton", async ({ canGoBack }) => {
     this.currentUrl = this.router.url;
@@ -194,6 +238,7 @@ export class AppComponent implements OnInit {
       }
     }
   });
+
   clearState(){
     this.allocation.searchBar.next(false) 
     this.allocation.customerSearchBar.next(false) 
@@ -247,4 +292,6 @@ export class AppComponent implements OnInit {
     // Example: When a new version of the application is installed
    // window.dispatchEvent(new Event("appUpdated"));
   }
+
+ 
 }
