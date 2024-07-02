@@ -64,6 +64,7 @@
           <ng-container *ngIf="!statusFilter && dateForm.invalid && counsellor_ids.length === 0 && searchTerm">
             Filter by Search Applied - {{ totalNumberOfRecords || 0 }}
           </ng-container>
+
           <ng-container *ngIf="!statusFilter && dateForm.valid && counsellor_ids.length === 0 && searchTerm">
             Filter by Search and Start Date & End Date Filter Applied - {{ totalNumberOfRecords || 0 }}
           </ng-container>
@@ -81,7 +82,9 @@
           <ng-container *ngIf="statusFilter && dateForm.valid && searchTerm && counsellor_ids.length === 0">
             Filter by Status,Start Date & End Date Filter and Search Applied - {{ totalNumberOfRecords || 0 }}
           </ng-container>
-
+          <ng-container *ngIf="!statusFilter && dateForm.valid && !searchTerm && counsellor_ids.length === 0">
+            Start Date & End Date Filter Applied - {{ totalNumberOfRecords || 0 }}
+          </ng-container>
           <ng-container *ngIf="!statusFilter && !counsellor_ids.length && !searchTerm && dateForm.invalid">
             No data found.
           </ng-container>
