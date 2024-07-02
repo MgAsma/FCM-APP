@@ -277,6 +277,13 @@ export class AllocationsPage implements OnInit {
 
         if (calculateTime > 0) {
           this.postCallHistory();
+        }else{
+          let data = {
+            user: this.user_id,
+            status: 3,
+          };
+  
+          this.postTLStatus(data);
         }
       })
       .catch((e) => {
@@ -367,14 +374,16 @@ export class AllocationsPage implements OnInit {
           status: 3,
         };
 
-        this.postTLStatus(data);
+        // this.postTLStatus(data);
         this.calledTime = new Date().getTime();
         // console.log(this.calledTime,"this.calledTime in allocation ");
 
         setTimeout(async () => {
           this.callStartTime = new Date();
           await this.callNumber.callNumber(number, true);
-
+          
+  
+          await this.postTLStatus(data);
           const that = this;
           this.callInitiated = true;
 
