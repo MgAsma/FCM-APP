@@ -28,6 +28,7 @@ import { AddStateComponent } from "../add-state/add-state.component";
 import { AddCourseLookingForComponent } from "../add-course-looking-for/add-course-looking-for.component";
 import { AddStreamComponent } from "../add-stream/add-stream.component";
 import { Router } from "@angular/router";
+
 @Component({
   selector: "app-edit-lead",
   templateUrl: "./edit-lead.page.html",
@@ -886,6 +887,8 @@ export class EditLeadPage implements OnInit {
             this.selectedCityName = ''
             this.modalController.dismiss();
           }
+        },(error:any)=>{
+          this.api.showError(error.error.message)
         });
 
      
