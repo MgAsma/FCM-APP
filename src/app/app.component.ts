@@ -246,7 +246,7 @@ export class AppComponent implements OnInit {
     this.allocation.tlsSearchBar.next(false) 
     this.allocation.allocationStatus.next([])
     this.allocation.callLogStatus.next([])
-    this.allocation.tlsStatus.next('')
+    this.allocation.tlsStatus.next([])
     this.allocation.callhistoryList.next([])
     this.allocation.logMemberDetails.next('')
     this.allocation.customerStatus.next('')
