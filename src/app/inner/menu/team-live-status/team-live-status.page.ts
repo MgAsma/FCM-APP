@@ -100,7 +100,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
      this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      if (this.router.url === '/inner/menu/team-live-status') {
+      if (this.router.url === '/inner/menu/team-live-status' ) {
         this.intervalId = setInterval(() => {
           this.initComponent();
         },30000);
@@ -122,6 +122,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   }
   initComponent() {
     let query: any;
+    if(!this.refresh){
     this.addEmit.tlsCounsellor.subscribe((res) => {
       if (res.length > 0) {
         this.counsellor_ids = res;
@@ -177,34 +178,39 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
           );
         
         }else{
-          this.statusFilter = false;
-          this.counsellor_ids = []
-        
-          let query = `?page=1&page_size=10`;
-
-          if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
-            query += `&user_id=${this.user_id}`;
-          } 
-           else if (
-              ["ADMIN"].includes(this.user_role) 
-            ) {
-              query += `&user_id=${this.user_id}`;
-            }
-          
-            this.api.getTeamLiveStatus(query).subscribe(
-              (resp: any) => {
-                this.followupDetails = resp.results;
-                this.data = new MatTableDataSource<any>(this.followupDetails);
-                this.totalNumberOfRecords = resp.total_no_of_record;
-              },
-              (error: any) => {
-                this.api.showError(error?.error.message);
-              }
-            );
+          this.getAllLiveStatus()
         }
-       
       }
     );
+  }
+  }
+  getAllLiveStatus(){
+   
+      this.statusFilter = false;
+      this.counsellor_ids = []
+    
+      let query = `?page=1&page_size=10`;
+
+      if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
+        query += `&user_id=${this.user_id}`;
+      } 
+       else if (
+          ["ADMIN"].includes(this.user_role) 
+        ) {
+          query += `&user_id=${this.user_id}`;
+        }
+      
+        this.api.getTeamLiveStatus(query).subscribe(
+          (resp: any) => {
+            this.followupDetails = resp.results;
+            this.data = new MatTableDataSource<any>(this.followupDetails);
+            this.totalNumberOfRecords = resp.total_no_of_record;
+          },
+          (error: any) => {
+            this.api.showError(error?.error.message);
+          }
+        );
+    
   }
   goBack() {
     window.history.back();
@@ -295,7 +301,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   async resetAll(){
     this.followupDetails = [];
     this.data = [];
-    this.allocate.tlsStatus.next("");
+    this.allocate.tlsStatus.next([]);
     this.addEmit.tlsCounsellor.next([]);
     this.allocate.tlsSearchBar.next(false);
     this.counsellor_ids = [];
@@ -304,13 +310,16 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   }
   async handleRefresh(event: any) {
     if(event && event.target){
-    await this.resetAll()
-    setTimeout(() => {
-    this.ngOnInit()
+    this.refresh = true
+    await this.addEmit.tlsCounsellor.next([]);
+    await this.allocate.tlsStatus.next([]);
+    
+    await this.allocate.tlsSearchBar.next(false);
+    this.counsellor_ids = [];
+    this.statusFilter = false;
+    this.searchTerm = '';
     event.target.complete();
-    }, 100);
-  }else{
-    this.refresh = false
+   
   }
   }
 
