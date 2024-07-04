@@ -10,13 +10,13 @@ const routes: Routes = [
     path: '',
     component: InnerPage,
     canActivate:[ActivateGuard], 
-    children:[   
+    children:[ 
+      {
+        path:'', redirectTo:'allocations', pathMatch:'full'
+      },
       {
         path: 'allocations',
         loadChildren: () => import('./allocations/allocations.module').then( m => m.AllocationsPageModule)
-      },
-      {
-        path:'', redirectTo:'allocations', pathMatch:'full'
       },
       {
         path: 'home',

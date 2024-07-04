@@ -31,10 +31,8 @@ export class ActivateGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> {
+    this.isLoggedIn = localStorage.getItem('token') !==null;
    
-    this.addEmit.isToken.subscribe((res:any)=>{
-      this.isLoggedIn = res
-    })
     const device_token = localStorage.getItem('device_token');
     const user_id = localStorage.getItem('user_id');
     
@@ -62,7 +60,6 @@ export class ActivateGuard implements CanActivate {
       return this.baseService.getData(`${environment.device_token}${user_id}/`).pipe(
         map((res: any) => {
           if (res && res.device_token !== device_token) {
-            this.addEmit.isToken.next('')
             localStorage.clear();
             this._router.navigate(['/outer']);
             return false;

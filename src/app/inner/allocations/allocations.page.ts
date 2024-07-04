@@ -342,14 +342,14 @@ export class AllocationsPage implements OnInit {
         if (calculateTime > 0) {
           this.postCallHistory();
         }else{
-          if(this.autoDialer){
+        //  if(this.autoDialer){
           let data = {
             user: this.user_id,
             status: 3,
           };
   
           this.postTLStatus(data);
-        }
+       // }
         }
       })
       .catch((e) => {
