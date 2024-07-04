@@ -165,6 +165,13 @@ export class CustomersPage implements OnInit {
 
         if (calculateTime > 0) {
           this.postCallHistory();
+        }else{
+          let data = {
+            user: this.user_id,
+            status: 3,
+          };
+  
+          this.postTLStatus(data);
         }
       })
       .catch((e) => {
@@ -236,7 +243,7 @@ export class CustomersPage implements OnInit {
         status: 3,
       };
 
-      this.postTLStatus(data);
+      
       this.calledTime = new Date().getTime();
       // console.log(this.calledTime,"this.calledTime in allocation ");
 
@@ -246,7 +253,7 @@ export class CustomersPage implements OnInit {
 
         const that = this;
         this.callInitiated = true;
-
+        await this.postTLStatus(data);
         this.editLead(this.selectedLead);
         // this.initiateCallStatus();
       }, 100);

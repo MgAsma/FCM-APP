@@ -89,6 +89,7 @@ export class AllocationsPage implements OnInit {
   contains: any;
   initialIndex = 0;
   presentIndex = 0;
+  autoDialer: boolean;
   // closeEditRes:any;
 
   constructor(
@@ -173,6 +174,7 @@ export class AllocationsPage implements OnInit {
               this.allocateItem,
               this.currentIndex
             );
+            this.autoDialer = true;
             this.getContacktAndPostHistory();
           }, 5000);
         } else {
@@ -189,6 +191,7 @@ export class AllocationsPage implements OnInit {
                 this.allocateItem,
                 this.startingIndex
               );
+              this.autoDialer = true;
               this.getContacktAndPostHistory();
             }
           }, 5000);
@@ -278,12 +281,14 @@ export class AllocationsPage implements OnInit {
         if (calculateTime > 0) {
           this.postCallHistory();
         }else{
+          if(this.autoDialer){
           let data = {
             user: this.user_id,
             status: 3,
           };
   
           this.postTLStatus(data);
+        }
         }
       })
       .catch((e) => {
