@@ -24,8 +24,7 @@ import { filter } from "rxjs/operators";
 import { Subscription, combineLatest } from "rxjs";
 import { BaseServiceService } from "./service/base-service.service";
 import { jwtDecode } from "jwt-decode";
-import { AddLeadEmitterService } from "./service/add-lead-emitter.service";
-import { AllocationEmittersService } from "./service/allocation-emitters.service";
+import { NgxIndexedDBService } from "ngx-indexed-db";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -52,8 +51,8 @@ export class AppComponent implements OnInit {
     private callLog: CallLog,
     private idleDetectionService: IdleDetectionService,
     private api: ApiService,
-    private allocation:AllocationEmittersService,
-    private addEmit:AddLeadEmitterService
+    private baseService:BaseServiceService,
+    private dbService: NgxIndexedDBService
   ) // private platform: Platform,
   {
 
@@ -157,50 +156,7 @@ App.addListener("backButton", async ({ canGoBack }) => {
    
   }
 
-  logOut() {
-    this.id = localStorage.getItem('user_id')
-    let data = {
-      user_id: this.id,
-      logged_in_from: "mobile",
-    };
-
-    this.api.logout(data).subscribe(
-      (resp: any) => {
-        if(resp){
-        this.clearState()
-        localStorage.clear();
-        this.api.showSuccess(resp.message);
-        this.router.navigate(["../outer/login"]);
-        localStorage.clear();
-        
-        }
-      },
-      (error: any) => {
-        this.api.showError(error.error.message);
-      }
-    );
-  }
-  clearState(){
-    this.allocation.searchBar.next(false) 
-    this.allocation.customerSearchBar.next(false) 
-    this.allocation.callLogSearchBar.next(false) 
-    this.allocation.tlsSearchBar.next(false) 
-    this.allocation.allocationStatus.next([])
-    this.allocation.callLogStatus.next([])
-    this.allocation.tlsStatus.next([])
-    this.allocation.callhistoryList.next([])
-    this.allocation.logMemberDetails.next('')
-    this.allocation.customerStatus.next('')
-
-    this.addEmit.leadFilter.next('')
-    this.addEmit.leadFilterIcon.next('')
-    this.addEmit.filterStatus.next(false)
-    this.addEmit.selectedCounsellor.next([])
-    this.addEmit.callLogCounsellor.next([])
-    this.addEmit.tlsCounsellor.next([])
-    this.addEmit.customerCounsellor.next([])
-    
-  }
+  
   
   appVersion() {
     // Define your current application version

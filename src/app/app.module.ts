@@ -18,6 +18,20 @@ import { RouteReuseStrategy } from '@angular/router';
 import { RecFollowupListPage } from './shared-modules/rec-followup-list/rec-followup-list.page';
 import { MaterialModule } from './shared-modules/material/material/material.module';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { DBConfig, NgxIndexedDBModule } from 'ngx-indexed-db';
+const dbConfig: DBConfig  = {
+  name: 'MyDb',
+  version: 3,
+  objectStoresMeta: [{
+    store: 'people',
+    storeConfig: { keyPath: 'userId', autoIncrement: false },
+    storeSchema: [
+      { name: 'lastDialedNumber', keypath: 'lastDialedNumber', options: { unique: false } },
+      // { name: 'userId', keypath: 'userId', options: { unique: true } },
+      { name: 'index', keypath: 'index', options: { unique: false } }
+    ]
+  }]
+};
 
 // import {
 //   NgxUiLoaderHttpModule, NgxUiLoaderModule,
@@ -58,6 +72,7 @@ import { CallLog } from '@ionic-native/call-log/ngx';
       preventDuplicates: true,
       // closeButton:true,
     }),
+    NgxIndexedDBModule.forRoot(dbConfig),
     NgMultiSelectDropDownModule
   ],exports:[
     MaterialModule,

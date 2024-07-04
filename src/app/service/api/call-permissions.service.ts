@@ -107,26 +107,59 @@ export class CallPermissionsService {
 
   calledNumber: any;
   setCalledNumber(number: any) {
-    // console.log(number, "called number");
+    console.log(number, "setting latest superadmin called number");
 
     this.calledNumber = number;
   }
 
   getCalledNumber() {
-    // console.log(this.calledNumber, "this.calledNumbe");
+    console.log(this.calledNumber, "getting latest superadmin called number");
 
     return this.calledNumber;
   }
 
+
+
+counsellorCalledNumber:any
+  counsellorsetCalledNumber(number: any) {
+    console.log(number, "latest counsellor called number");
+
+    this.counsellorCalledNumber = number;
+  }
+
+  counsellorgetCalledNumber() {
+    console.log(this.counsellorCalledNumber, "latest counsellor called number");
+
+    return this.counsellorCalledNumber;
+  }
+
+
+
+
+  adminCalledNumber:any
+  AdminsetCalledNumber(number: any) {
+    console.log(number, "latest admin called number");
+
+    this.adminCalledNumber = number;
+  }
+
+  AdmingetCalledNumber() {
+    console.log(this.adminCalledNumber, "latest admin called number");
+
+    return this.adminCalledNumber;
+  }
+
+
+
   indexNum: any;
   setIndex(index: any) {
-    // console.log(index, "inddex number");
+    console.log(index, "inddex number");
 
     this.indexNum = index;
   }
 
   getIndex() {
-    // console.log(this.indexNum, "this.indexnum in getindex");
+    console.log(this.indexNum, "this.indexnum in getindex");
 
     return this.indexNum;
   }

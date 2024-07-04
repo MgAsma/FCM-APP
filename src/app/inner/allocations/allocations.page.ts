@@ -31,6 +31,8 @@ import { Router } from "@angular/router";
 import { App as CapacitorApp } from "@capacitor/app";
 import { CallPermissionsService } from "../../service/api/call-permissions.service";
 import { Location } from "@angular/common";
+import { NgxIndexedDBService } from "ngx-indexed-db";
+import { lastValueFrom } from "rxjs";
 // declare var PhoneCallTrap: any;
 @Component({
   selector: "app-allocations",
@@ -90,6 +92,7 @@ export class AllocationsPage implements OnInit {
   initialIndex = 0;
   presentIndex = 0;
   autoDialer: boolean;
+  lastestCallData = [];
   // closeEditRes:any;
 
   constructor(
@@ -105,10 +108,10 @@ export class AllocationsPage implements OnInit {
     private alertController: AlertController,
     private router: Router,
     private callPermissionService: CallPermissionsService,
-    private location: Location
+    private location: Location,
+    private dbService: NgxIndexedDBService
   ) {
-
-    this.afterUpdatinggetPhoneNumbers();
+    // this.afterUpdatinggetPhoneNumbers();
 
     setTimeout(() => {
       this.callPermissionService?.initiateCallStatus(
@@ -118,55 +121,87 @@ export class AllocationsPage implements OnInit {
         this.getContacktAndPostHistory.bind(this);
     }, 1000);
 
-    this.callPermissionService?.isToggleddataSubject.subscribe((res: any) => {
-      this.isToggledEnabled = res;
+    this.callPermissionService?.isToggleddataSubject.subscribe(
+      async (res: any) => {
+        this.isToggledEnabled = res;
 
-      if (res == true) {
-        this.contains = this.callPermissionService.getCalledNumber();
+        if (res == true) {
+          let result: any = await this.getLocalStorageValue();
+          console.log(result, "result");
 
-        if (
-          this.afterUpadtingPhoneNumbers.some(
-            (num) => JSON.stringify(num) === this.contains
-          ) &&
-          this.isToggledEnabled == true
-        ) {
-          this.initialIndex = this.callPermissionService.getIndex() + 1;
+          if (
+            result &&
+            this.afterUpadtingPhoneNumbers.some(
+              (num) => JSON.stringify(num) === result.lastDialedNumber
+            ) &&
+            this.isToggledEnabled == true
+          ) {
+            if (
+              result.index.initialIndex > this.afterUpadtingPhoneNumbers.length
+            ) {
+              this.api.showWarning("You have completed all the numbers");
+              this.callPermissionService.isToggleddataSubject.next(false);
 
-          this.presentIndex = this.initialIndex;
-          this.allocateItem = this.data.data[this.initialIndex];
-          this.callPermissionService.setIndex(this.initialIndex);
+              return;
+            }
+            // this.initialIndex = this.callPermissionService.getIndex() + 1;
+            this.initialIndex = result.index.initialIndex + 1;
 
-          this.callContact(
-            this.afterUpadtingPhoneNumbers[this.initialIndex],
-            this.allocateItem.user_data.id,
-            this.allocateItem,
-            this.initialIndex
-          );
-        } else {
-          this.allocateItem = this.data.data[this.presentIndex];
-          this.callPermissionService.setIndex(this.presentIndex);
+            this.presentIndex = this.initialIndex;
+            this.allocateItem = this.data.data[this.initialIndex];
+            // this.callPermissionService.setIndex(this.initialIndex);
+            this.setDataToLocalStorage();
 
-          this.callContact(
-            this.afterUpadtingPhoneNumbers[this.presentIndex],
-            this.allocateItem.user_data.id,
-            this.allocateItem,
-            this.presentIndex
-          );
+            this.callContact(
+              this.afterUpadtingPhoneNumbers[this.initialIndex],
+              this.allocateItem.user_data.id,
+              this.allocateItem,
+              this.initialIndex
+            );
+          } else {
+            this.allocateItem = this.data.data[this.presentIndex];
+            // this.callPermissionService.setIndex(this.presentIndex);
+            this.setDataToLocalStorage();
+
+            this.callContact(
+              this.afterUpadtingPhoneNumbers[this.presentIndex],
+              this.allocateItem.user_data.id,
+              this.allocateItem,
+              this.presentIndex
+            );
+          }
         }
       }
-    });
+    );
   }
   allocateItem: any;
   notUpdatingStatus: any;
-  ngOnInit() {
-    this.callPermissionService.getStatus().subscribe((res: any) => {
+
+  async checkPermissions() {
+    const permission = await this.androidPermissions.requestPermissions([
+      this.androidPermissions.PERMISSION.READ_CONTACTS,
+      this.androidPermissions.PERMISSION.READ_PHONE_STATE,
+      this.androidPermissions.PERMISSION.READ_CALL_LOG,
+    ]);
+  }
+  async ngOnInit() {
+    this.checkPermissions();
+    this.callPermissionService.getStatus().subscribe(async (res: any) => {
+      let result: any = await this.getLocalStorageValue();
       if (res && res.submit == "submit" && this.isToggledEnabled == true) {
-        if (res.statusValue == 9 && res.submit === "submit") {
+        if (
+          res.statusValue == 9 &&
+          res.submit === "submit" &&
+          this.isToggledEnabled == true
+        ) {
           setTimeout(() => {
-            this.currentIndex = this.callPermissionService.getIndex() + 1;
+            // this.currentIndex = this.callPermissionService.getIndex() + 1;
+
+            this.currentIndex = result ? result.index.currentIndex + 1 : 0;
             this.startingIndex = this.currentIndex;
             this.allocateItem = this.data.data[this.currentIndex];
-            this.callPermissionService.setIndex(this.currentIndex);
+            // this.callPermissionService.setIndex(this.currentIndex);
+            this.setDataToLocalStorage();
 
             this.recursiveCall(
               this.afterUpadtingPhoneNumbers[this.currentIndex],
@@ -182,9 +217,11 @@ export class AllocationsPage implements OnInit {
 
           setTimeout(() => {
             {
-              this.startingIndex = this.callPermissionService.getIndex();
+              // this.startingIndex = this.callPermissionService.getIndex();
+              this.startingIndex = result ? result.index.startingIndex : 0;
               this.allocateItem = this.data.data[this.startingIndex];
-              this.callPermissionService.setIndex(this.startingIndex);
+              // this.callPermissionService.setIndex(this.startingIndex);
+              this.setDataToLocalStorage();
               this.recursiveCall(
                 this.afterUpadtingPhoneNumbers[this.startingIndex],
                 this.allocateItem.user_data.id,
@@ -215,6 +252,13 @@ export class AllocationsPage implements OnInit {
     
   }
 
+  async getLocalStorageValue() {
+    let data = await lastValueFrom(this.dbService.getAll("people"));
+    // console.log(this.contains,"latest called number");
+    console.log(data, "data from indexdb storage");
+    let result = data?.find((item: any) => item.userId == this.user_id);
+    return result;
+  }
   resetFilters() {
     this.totalNumberOfRecords = 0;
     this.allocate.allocationStatus.next([]);
@@ -262,9 +306,26 @@ export class AllocationsPage implements OnInit {
         //   "latest call log in allocations"
         // );
 
-        this.callPermissionService.setCalledNumber(
-          JSON.stringify(results[0].number)
-        );
+        //  const latestCalledData:any={
+        //   lastDialedNumber:JSON.stringify(results[0]),
+        //   userId:this.user_id
+        //  }
+
+        // if(this.user_role==='Admin'||this.user_role==='ADMIN'){
+        //   this.callPermissionService.AdminsetCalledNumber(JSON.stringify(results[0].number))
+        // }
+        // if(this.user_role==='consellor'||this.user_role==='COUNSELLOR'){
+        //   this.callPermissionService.counsellorsetCalledNumber(JSON.stringify(results[0].number))
+        // }
+        // else{
+        //   this.callPermissionService.setCalledNumber(
+        //     JSON.stringify(results[0].number)
+        //   );
+        // }
+        // console.log(JSON.stringify(results[0].number),"latest called number");
+
+        this.setDataToLocalStorage(results[0].number);
+
         const calculateTime = Number(results[0].date) - Number(this.calledTime);
         // console.log(calculateTime, "calculate time in allocations");
 
@@ -295,6 +356,51 @@ export class AllocationsPage implements OnInit {
         // alert(" LOG " + JSON.stringify(e))
       });
   }
+
+  async setDataToLocalStorage(lastdileddata?) {
+    console.log(lastdileddata, "last dialed num in set data ");
+
+    // let data=JSON.parse(localStorage.getItem('latestCalledData'))
+    let res: any = await lastValueFrom(this.dbService.getAll("people"));
+    console.log(res, "res in setdsts function");
+
+    let array = res.findIndex((res: any) => res.userId == this.user_id);
+    let storeData = {
+      lastDialedNumber: JSON.stringify(lastdileddata),
+      userId: this.user_id,
+
+      index: {
+        currentIndex: this.currentIndex,
+        startingIndex: this.startingIndex,
+        initialIndex: this.initialIndex,
+        presentIndex: this.presentIndex,
+      },
+    };
+    console.log(array, "array in set ");
+
+    if (array > -1) {
+      ((storeData as any).id = array.id),
+        this.dbService.update("people", storeData).subscribe((res: any) => {
+          // console.log(res,"data upadated successfully");
+        });
+      // data[array].lastDialedNumber=lastdileddata?lastdileddata: data[array].lastDialedNumber;
+      // data[array].index.currentIndex=this.currentIndex;
+      // data[array].index.startingIndex=this.startingIndex;
+      // data[array].index.initialIndex=this.initialIndex;
+      // data[array].inddex.presentIndex=this.presentIndex
+    } else {
+      this.dbService.add("people", storeData).subscribe((res: any) => {
+        console.log(res, "data added successfully");
+      });
+    }
+  }
+
+  // addRecord() {
+  //   const person = { id: 1, name: 'John' };
+  //   this.dbService.add('people', person).subscribe(() => {
+  //     console.log('Record added successfully.');
+  //   });
+  // }
 
   isCallInitiationCalled: boolean = false;
 
@@ -361,7 +467,9 @@ export class AllocationsPage implements OnInit {
   phoneNumberIndex: any;
   recursiveCall(number: string, id: any, item, index: any) {
     console.log(number, id, item, index, "item in recursive");
-    if (index >= this.phoneNumbers.length) {
+    if (index > this.afterUpadtingPhoneNumbers.length - 1) {
+      this.callPermissionService.isToggleddataSubject.next(false);
+      this.api.showWarning("You have completed all the numbers");
       return;
     } else {
       this.leadItem = item;
@@ -453,23 +561,21 @@ export class AllocationsPage implements OnInit {
     );
   }
   viewInit() {
-     
-      this._addLeadEmitter.triggerGet$.subscribe((res: any) => {
-        this.triggerGet = true;
-        this.getEmitters();
-      });
-     
-       // this.getAllocationWithFilters();
-      
+    this._addLeadEmitter.triggerGet$.subscribe((res: any) => {
+      this.triggerGet = true;
+      this.getEmitters();
+    });
+
+    // this.getAllocationWithFilters();
   }
- async ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
     this.user_id = localStorage.getItem("user_id");
     this.resCounsellors = localStorage.getItem("counsellor_ids");
     this.getCounselor();
-     this.getAllocationWithFilters()
-    
+    this.getAllocationWithFilters()
     this.viewInit();
+    this.afterUpdatinggetPhoneNumbers();
   }
 
   getAllAllocation() {
@@ -493,7 +599,10 @@ export class AllocationsPage implements OnInit {
     this._baseService.getData(`${environment.lead_list}${query}`).subscribe(
       (res: any) => {
         if (res.results) {
+          // console.log(res.results, "res.results  ");
+
           this.leadCards = res.results.data;
+          this.leadData = res.results.data;
           this.allocateItem = res.results.data[0];
           this.data = new MatTableDataSource<any>(this.leadCards);
           this.totalNumberOfRecords = res.total_no_of_record;
@@ -551,6 +660,7 @@ export class AllocationsPage implements OnInit {
         .subscribe((res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData = res.results.data;
             this.allocateItem = res.results.data[0];
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
@@ -565,13 +675,12 @@ export class AllocationsPage implements OnInit {
   this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
       if (res.length >0) {
         this.counsellor_ids = res;
-      }else{
+      } else {
         this.counsellor_ids = [];
       }
-      
     });
 
-   this.allocate.allocationStatus.subscribe((res: any) => {
+    this.allocate.allocationStatus.subscribe((res: any) => {
       if (res.length > 0) {
         this.statusFilter = true;
       } else {
@@ -579,7 +688,7 @@ export class AllocationsPage implements OnInit {
       }
       if (res.length > 0 || this.counsellor_ids.length > 0) {
         this.selectedFilter = res;
-        
+
         let query: string;
         const counsellorRoles = ["COUNSELLOR", "COUNSELOR"];
         const superAdminRoles = ["SUPERADMIN", "SUPER ADMIN"];
@@ -622,6 +731,7 @@ export class AllocationsPage implements OnInit {
           (res: any) => {
             if (res.results) {
               this.leadCards = res.results.data;
+              this.leadData = res.results.data;
               // this.allocateItem = res.results.data[0];
               this.data = new MatTableDataSource<any>(this.leadCards);
               this.totalNumberOfRecords = res.total_no_of_record;
@@ -669,12 +779,18 @@ export class AllocationsPage implements OnInit {
   //     });
   // }
 
- 
   query = "";
+
   afterUpdatinggetPhoneNumbers() {
+    this.leadData = [];
     this.query = `?user_type=allocation&page=${this.currentPage}&page_size=${this.pageSize}`;
     if (this.user_role === "Admin" || this.user_role === "ADMIN") {
-      this.query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `;
+      if (this.resCounsellors !== "") {
+        this.query = `?admin_id=${this.user_id}&counsellor_id=${this.resCounsellors}&user_type=allocation&page=1&page_size=10`;
+      } else {
+        this.query = `?admin_id=${this.user_id}&user_type=allocation&page=1&page_size=10`;
+      }
+      // this.query += `&admin_id=${this.user_id}&counsellor_id=${this.resCounsellors} `;
     } else if (
       this.user_role === "counsellor" ||
       this.user_role === "COUNSELLOR"
@@ -694,7 +810,7 @@ export class AllocationsPage implements OnInit {
           this.phoneNumbers = this.leadData
             ?.filter((ele: any) => ele.user_data?.mobile_number)
             .map((ele: any) => ele.user_data?.mobile_number);
-          // console.log(this.phoneNumbers, "initial phone numbers");
+          console.log(this.phoneNumbers, "initial phone numbers");
 
           this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
         }
@@ -795,6 +911,7 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData = res.results.data;
             this.allocateItem = res.results.data[0];
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
@@ -890,6 +1007,7 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData = res.results.data;
 
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
@@ -960,6 +1078,7 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData = res.results.data;
 
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
@@ -1026,6 +1145,7 @@ export class AllocationsPage implements OnInit {
         (res: any) => {
           if (res.results) {
             this.leadCards = res.results.data;
+            this.leadData = res.results.data;
             this.data = new MatTableDataSource<any>(this.leadCards);
             this.totalNumberOfRecords = res.total_no_of_record;
           }
