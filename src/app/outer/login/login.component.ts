@@ -9,6 +9,7 @@ import { ApiService } from '../../service/api/api.service';
 import { NavController } from '@ionic/angular';
 import { BaseServiceService } from '../../service/base-service.service';
 import { Storage } from "@capacitor/storage";
+import { AddLeadEmitterService } from '../../service/add-lead-emitter.service';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +32,7 @@ export class LoginComponent  implements OnInit {
   private datePipe: DatePipe,
   private commonService:CommonServiceService,
   private navCtrl:NavController,
-  private baseService:BaseServiceService
+  private addEmit:AddLeadEmitterService
   
   ){}
  
@@ -114,7 +115,7 @@ export class LoginComponent  implements OnInit {
           localStorage.setItem('appVersion',appVersion);
           localStorage.setItem('device_token',resp.device_token)
           localStorage.setItem('counsellor_ids',resp.counsellor_ids);
-          
+          this.addEmit.isToken.next(resp.device_token)
           this.decodedToken = jwtDecode(resp.token.token)
         
           localStorage.setItem('user_role',this.decodedToken.user_role)

@@ -37,6 +37,7 @@ export class AppComponent implements OnInit {
   dark = false;
   id: string;
   currentUrl: any;
+  backbuttonEvent: any;
   private subscriptions: Subscription = new Subscription();
   constructor(
     private menu: MenuController,
@@ -60,36 +61,53 @@ export class AppComponent implements OnInit {
 
   }
   async ionViewWillEnter(){
-    this.id = localStorage.getItem('user_id')
-    await this.appVersion();
-    await this.checkPermissions();
-    await this.storage.create();
-     await this.idleDetectionService.userActivity.subscribe(isActive => {
-     
-         if (this.router.url !== '/outer/login' && !isActive) {
-           this.logOut()
-         }else{
-          // this.router.navigate([this.router.url])
-           this.idleDetectionService.resetTimer();
-         }
-       
-     });
-     const userActivity$ = this.idleDetectionService.userActivity;
- 
-     await  this.subscriptions.add(
-       userActivity$.subscribe((isActive) => {
-         if (isActive && this.currentUrl !== undefined) {
-           this.idleDetectionService.resetTimer();
-         }
-       })
-     );
     
- //    await this.setupAppUrlOpenListener();
- await App.addListener('appUrlOpen', data => {
-  this.router.navigate([data]);
-  alert(data)
-  //this.router.navigateByUrl(data);
-  // console.log('App opened with URL:', data);
+  await this.appVersion();
+  await this.checkPermissions();
+  await this.storage.create();
+    
+ 
+
+App.addListener("backButton", async ({ canGoBack }) => {
+  this.currentUrl = this.router.url;
+  this.platform.backButton.observers.pop();
+  if (this.currentUrl === "/inner/home") {
+    if (canGoBack) {
+      if (this.backbuttonEvent === 0) {
+        this.backbuttonEvent++;
+        let toast = this.toastCtrl.create({
+          message: "Press back again to exit App",
+          duration: 5000,
+          position: "bottom",
+          cssClass: "toaster",
+        });
+        (await toast).present();
+        setTimeout(() => {
+          this.backbuttonEvent = 0;
+        }, 5000);
+      } else {
+        this.backbuttonEvent = 0;
+        App.exitApp();
+      }
+    } else {
+      if (this.backbuttonEvent === 0) {
+        this.backbuttonEvent++;
+        let toast = this.toastCtrl.create({
+          message: "Press back again to exit App",
+          duration: 5000,
+          position: "bottom",
+          cssClass: "toaster",
+        });
+        (await toast).present();
+        setTimeout(() => {
+          this.backbuttonEvent = 0;
+        }, 5000);
+      } else {
+        this.backbuttonEvent = 0;
+        App.exitApp();
+      }
+    }
+  }
 });
   }
 
@@ -136,27 +154,7 @@ export class AppComponent implements OnInit {
    await this.appVersion();
    await this.checkPermissions();
    await this.storage.create();
-    await this.idleDetectionService.userActivity.subscribe(isActive => {
-    
-        if (this.router.url !== '/outer/login' && !isActive) {
-          this.logOut()
-        }else{
-         // this.router.navigate([this.router.url])
-          this.idleDetectionService.resetTimer();
-        }
-      
-    });
-    const userActivity$ = this.idleDetectionService.userActivity;
-
-    await  this.subscriptions.add(
-      userActivity$.subscribe((isActive) => {
-        if (isActive && this.currentUrl !== undefined) {
-          this.idleDetectionService.resetTimer();
-        }
-      })
-    );
    
-    await this.setupAppUrlOpenListener();
   }
 
   logOut() {
@@ -182,63 +180,6 @@ export class AppComponent implements OnInit {
       }
     );
   }
-  
-  setupAppUrlOpenListener() {
-    CapacitorApp.addListener('appUrlOpen', (data) => {
-      // Parse the URL to extract any parameters or path
-      alert(data.url)
-      const url = data.url;
-      // Example: handle the URL and navigate to the appropriate page
-      if (url) {
-        const path = new URL(url).pathname;
-        this.router.navigateByUrl(path);
-      }
-    });
-  }
-
-  backbuttonEvent: any;
-  const = CapacitorApp.addListener("backButton", async ({ canGoBack }) => {
-    this.currentUrl = this.router.url;
-    this.platform.backButton.observers.pop();
-    if (this.currentUrl === "/inner/home") {
-      if (canGoBack) {
-        if (this.backbuttonEvent === 0) {
-          this.backbuttonEvent++;
-          let toast = this.toastCtrl.create({
-            message: "Press back again to exit App",
-            duration: 5000,
-            position: "bottom",
-            cssClass: "toaster",
-          });
-          (await toast).present();
-          setTimeout(() => {
-            this.backbuttonEvent = 0;
-          }, 5000);
-        } else {
-          this.backbuttonEvent = 0;
-          CapacitorApp.exitApp();
-        }
-      } else {
-        if (this.backbuttonEvent === 0) {
-          this.backbuttonEvent++;
-          let toast = this.toastCtrl.create({
-            message: "Press back again to exit App",
-            duration: 5000,
-            position: "bottom",
-            cssClass: "toaster",
-          });
-          (await toast).present();
-          setTimeout(() => {
-            this.backbuttonEvent = 0;
-          }, 5000);
-        } else {
-          this.backbuttonEvent = 0;
-          CapacitorApp.exitApp();
-        }
-      }
-    }
-  });
-
   clearState(){
     this.allocation.searchBar.next(false) 
     this.allocation.customerSearchBar.next(false) 
@@ -260,6 +201,7 @@ export class AppComponent implements OnInit {
     this.addEmit.customerCounsellor.next([])
     
   }
+  
   appVersion() {
     // Define your current application version
     const currentVersion = "1.0.33";

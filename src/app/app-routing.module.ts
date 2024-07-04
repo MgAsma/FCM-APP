@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { checkTutorialGuard } from './providers/check-tutorial.guard';
 import { ActivateChildGuard } from './service/activate-child.guard';
+import { ActivateGuard } from './service/auth.guard';
 
 const routes: Routes = [
   {
@@ -15,10 +16,10 @@ const routes: Routes = [
   },
   
   {
-    path:'inner',canActivateChild:[ActivateChildGuard], loadChildren:()=>import('./inner/inner.module').then(m=>m.InnerPageModule)
+    path:'inner',loadChildren:()=>import('./inner/inner.module').then(m=>m.InnerPageModule)
   },
   {
-    path: 'rec-followup-list',canActivateChild:[ActivateChildGuard],
+    path: 'rec-followup-list',canActivate:[ActivateGuard],
     loadChildren: () => import('./shared-modules/rec-followup-list/rec-followup-list.module').then( m => m.RecFollowupListPageModule)
   },
   

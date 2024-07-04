@@ -5,7 +5,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class AddLeadEmitterService {
-
+  isToken = new BehaviorSubject('')
   private triggerGetSource = new Subject<void>();
   triggerGet$ = this.triggerGetSource.asObservable();
   private triggerGetFilter = new Subject<void>();

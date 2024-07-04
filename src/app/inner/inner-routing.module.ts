@@ -3,11 +3,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { InnerPage } from './inner.page';
 import { CustomerDetailsComponent } from '../shared-modules/customer-details/customer-details.component';
+import { ActivateGuard } from '../service/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: InnerPage,
+    canActivate:[ActivateGuard], 
     children:[   
       {
         path: 'allocations',
