@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ApiService {
   baseurl= environment.live_url;
 
-
+ 
   private leadData: any[] = [];
 
   constructor(

@@ -187,6 +187,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   getAllLiveStatus(){
    
       this.statusFilter = false;
+      this.refresh = false;
       this.counsellor_ids = []
     
       let query = `?page=1&page_size=10`;
