@@ -1,6 +1,7 @@
 {
   "name": "FCM-App",
   "type": "angular",
+  "experimentalCloseWatcher":true,
   "integrations": {
     "capacitor": {},
     "cordova": {}

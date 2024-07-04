@@ -102,24 +102,24 @@ export class ActivateGuard implements CanActivate {
     );
   }
   clearState(){
-    this.allocation.searchBar.unsubscribe() 
-    this.allocation.customerSearchBar.unsubscribe() 
-    this.allocation.callLogSearchBar.unsubscribe() 
-    this.allocation.tlsSearchBar.unsubscribe() 
-    this.allocation.allocationStatus.unsubscribe()
-    this.allocation.callLogStatus.unsubscribe()
-    this.allocation.tlsStatus.unsubscribe()
-    this.allocation.callhistoryList.unsubscribe()
-    this.allocation.logMemberDetails.unsubscribe()
-    this.allocation.customerStatus.unsubscribe()
+    this.allocation.searchBar.next(false) 
+    this.allocation.customerSearchBar.next(false) 
+    this.allocation.callLogSearchBar.next(false) 
+    this.allocation.tlsSearchBar.next(false) 
+    this.allocation.allocationStatus.next([])
+    this.allocation.callLogStatus.next([])
+    this.allocation.tlsStatus.next([])
+    this.allocation.callhistoryList.next([])
+    this.allocation.logMemberDetails.next('')
+    this.allocation.customerStatus.next('')
 
-    this.addEmit.leadFilter.unsubscribe()
-    this.addEmit.leadFilterIcon.unsubscribe()
-    this.addEmit.filterStatus.unsubscribe()
-    this.addEmit.selectedCounsellor.unsubscribe()
-    this.addEmit.callLogCounsellor.unsubscribe()
-    this.addEmit.tlsCounsellor.unsubscribe()
-    this.addEmit.customerCounsellor.unsubscribe()
+    this.addEmit.leadFilter.next('')
+    this.addEmit.leadFilterIcon.next('')
+    this.addEmit.filterStatus.next(false)
+    this.addEmit.selectedCounsellor.next([])
+    this.addEmit.callLogCounsellor.next([])
+    this.addEmit.tlsCounsellor.next([])
+    this.addEmit.customerCounsellor.next([])
     
   }
 }

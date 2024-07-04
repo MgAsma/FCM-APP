@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, OnInit, Optional, ViewEncapsulation } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { SwUpdate } from "@angular/service-worker";
 import { App as CapacitorApp } from "@capacitor/app";
 import { App } from '@capacitor/app';
 import {
+  AlertController,
   MenuController,
   NavController,
-  Platform,
   ToastController,
 } from "@ionic/angular";
 
@@ -23,7 +23,7 @@ import { ApiService } from "./service/api/api.service";
 import { filter } from "rxjs/operators";
 import { Subscription, combineLatest } from "rxjs";
 import { BaseServiceService } from "./service/base-service.service";
-import { jwtDecode } from "jwt-decode";
+import { IonRouterOutlet, Platform } from '@ionic/angular';
 import { NgxIndexedDBService } from "ngx-indexed-db";
 @Component({
   selector: "app-root",
@@ -47,17 +47,12 @@ export class AppComponent implements OnInit {
     private swUpdate: SwUpdate,
     private toastCtrl: ToastController,
     private navCtrl: NavController,
+    private alertController:AlertController,
     private androidPermissions: AndroidPermissions,
-    private callLog: CallLog,
-    private idleDetectionService: IdleDetectionService,
-    private api: ApiService,
-    private baseService:BaseServiceService,
-    private dbService: NgxIndexedDBService
+    @Optional() private routerOutlet?: IonRouterOutlet
   ) // private platform: Platform,
   {
-
     this.initializeApp();
-
   }
   async ionViewWillEnter(){
     
@@ -66,48 +61,33 @@ export class AppComponent implements OnInit {
   await this.storage.create();
     
  
-
-App.addListener("backButton", async ({ canGoBack }) => {
-  this.currentUrl = this.router.url;
-  this.platform.backButton.observers.pop();
-  if (this.currentUrl === "/inner/home") {
-    if (canGoBack) {
-      if (this.backbuttonEvent === 0) {
-        this.backbuttonEvent++;
-        let toast = this.toastCtrl.create({
-          message: "Press back again to exit App",
-          duration: 5000,
-          position: "bottom",
-          cssClass: "toaster",
+    // this.platform.backButton.subscribeWithPriority(-1, async () => {
+    //   if (!this.routerOutlet.canGoBack()) {
+        const alert = await this.alertController.create({
+          header: 'Confirm Exit',
+          message: 'Do you want to exit the app?',
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+                // Handle Cancel action
+              }
+            },
+            {
+              text: 'Exit',
+              handler: () => {
+                App.exitApp();
+              }
+            }
+          ]
         });
-        (await toast).present();
-        setTimeout(() => {
-          this.backbuttonEvent = 0;
-        }, 5000);
-      } else {
-        this.backbuttonEvent = 0;
-        App.exitApp();
-      }
-    } else {
-      if (this.backbuttonEvent === 0) {
-        this.backbuttonEvent++;
-        let toast = this.toastCtrl.create({
-          message: "Press back again to exit App",
-          duration: 5000,
-          position: "bottom",
-          cssClass: "toaster",
-        });
-        (await toast).present();
-        setTimeout(() => {
-          this.backbuttonEvent = 0;
-        }, 5000);
-      } else {
-        this.backbuttonEvent = 0;
-        App.exitApp();
-      }
-    }
-  }
-});
+  
+        await alert.present();
+    //   }
+    // });
+  
+  
   }
 
   async checkPermissions() {
@@ -140,12 +120,43 @@ App.addListener("backButton", async ({ canGoBack }) => {
     }
   }
 
+  // initializeApp() {
+  //   this.platform.ready().then(() => {
+  //     if (this.platform.is("hybrid")) {
+  //       StatusBar.hide();
+  //       SplashScreen.hide();
+  //     }
+  //   });
+    
+  // }
   initializeApp() {
     this.platform.ready().then(() => {
-      if (this.platform.is("hybrid")) {
-        StatusBar.hide();
-        SplashScreen.hide();
-      }
+      this.platform.backButton.subscribeWithPriority(10, async () => {
+        if (this.router.url === '/inner/home') {
+          const alert = await this.alertController.create({
+            header: 'Confirm Exit',
+            message: 'Do you want to exit the app?',
+            buttons: [
+              {
+                text: 'Cancel',
+                role: 'cancel',
+                handler: () => {
+                  // Handle Cancel action
+                }
+              },
+              {
+                text: 'Exit',
+                handler: () => {
+                  navigator['app'].exitApp();
+                }
+              }
+            ]
+          });
+          await alert.present();
+        } else {
+          window.history.back();
+        }
+      });
     });
   }
   async ngOnInit() {
