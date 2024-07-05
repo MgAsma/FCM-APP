@@ -551,10 +551,13 @@ export class AllocationsPage implements OnInit {
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
     this.user_id = localStorage.getItem("user_id");
     this.resCounsellors = localStorage.getItem("counsellor_ids");
-    this.getCounselor();
-    this.getAllocationWithFilters()
-    this.viewInit();
-    this.afterUpdatinggetPhoneNumbers();
+    if(this.user_id){
+      this.getCounselor();
+      this.getAllocationWithFilters()
+      this.viewInit();
+      this.afterUpdatinggetPhoneNumbers();
+    }
+
   }
 
   getAllAllocation() {

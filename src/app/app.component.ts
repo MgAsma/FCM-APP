@@ -59,35 +59,7 @@ export class AppComponent implements OnInit {
   await this.appVersion();
   await this.checkPermissions();
   await this.storage.create();
-    
- 
-    // this.platform.backButton.subscribeWithPriority(-1, async () => {
-    //   if (!this.routerOutlet.canGoBack()) {
-        const alert = await this.alertController.create({
-          header: 'Confirm Exit',
-          message: 'Do you want to exit the app?',
-          buttons: [
-            {
-              text: 'Cancel',
-              role: 'cancel',
-              handler: () => {
-                // Handle Cancel action
-              }
-            },
-            {
-              text: 'Exit',
-              handler: () => {
-                App.exitApp();
-              }
-            }
-          ]
-        });
-  
-        await alert.present();
-    //   }
-    // });
-  
-  
+   
   }
 
   async checkPermissions() {
@@ -120,14 +92,44 @@ export class AppComponent implements OnInit {
     }
   }
 
+  // initializeApp() {
+  //   this.platform.ready().then(() => {
+  //     if (this.platform.is("hybrid")) {
+  //       StatusBar.hide();
+  //       SplashScreen.hide();
+  //     }
+  //   });
+    
+  // }
   initializeApp() {
     this.platform.ready().then(() => {
-      if (this.platform.is("hybrid")) {
-        StatusBar.hide();
-        SplashScreen.hide();
-      }
+      this.platform.backButton.subscribeWithPriority(10, async () => {
+        if (this.router.url === '/inner/allocations') {
+          const alert = await this.alertController.create({
+            header: 'Confirm Exit',
+            message: 'Do you want to exit the app?',
+            buttons: [
+              {
+                text: 'Cancel',
+                role: 'cancel',
+                handler: () => {
+                  // Handle Cancel action
+                }
+              },
+              {
+                text: 'Exit',
+                handler: () => {
+                  navigator['app'].exitApp();
+                }
+              }
+            ]
+          });
+          await alert.present();
+        } else {
+          window.history.back();
+        }
+      });
     });
-    
   }
   
   async ngOnInit() {
