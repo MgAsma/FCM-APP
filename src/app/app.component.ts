@@ -120,45 +120,16 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // initializeApp() {
-  //   this.platform.ready().then(() => {
-  //     if (this.platform.is("hybrid")) {
-  //       StatusBar.hide();
-  //       SplashScreen.hide();
-  //     }
-  //   });
-    
-  // }
   initializeApp() {
     this.platform.ready().then(() => {
-      this.platform.backButton.subscribeWithPriority(10, async () => {
-        if (this.router.url === '/inner/home') {
-          const alert = await this.alertController.create({
-            header: 'Confirm Exit',
-            message: 'Do you want to exit the app?',
-            buttons: [
-              {
-                text: 'Cancel',
-                role: 'cancel',
-                handler: () => {
-                  // Handle Cancel action
-                }
-              },
-              {
-                text: 'Exit',
-                handler: () => {
-                  navigator['app'].exitApp();
-                }
-              }
-            ]
-          });
-          await alert.present();
-        } else {
-          window.history.back();
-        }
-      });
+      if (this.platform.is("hybrid")) {
+        StatusBar.hide();
+        SplashScreen.hide();
+      }
     });
+    
   }
+  
   async ngOnInit() {
  
    await this.appVersion();

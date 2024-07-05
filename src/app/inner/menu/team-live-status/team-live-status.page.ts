@@ -53,6 +53,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   intervalSubscription: Subscription;
   currentUrl: string = `/inner/menu/team-live-status`;
   intervalId:any;
+  selectedStatus: any = [];
   constructor(
     private allocate: AllocationEmittersService,
     private modalController: ModalController,
@@ -134,6 +135,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
      
       (res: any) => {
         if (res.length > 0) {
+          this.selectedStatus = res
           this.statusFilter = true;
         }else{
           this.statusFilter = false;
@@ -152,7 +154,6 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   
          
           if (res.length > 0) {
-            this.statusFilter = true;
             query += `&status_id=${res}`;
           }
           if (this.counsellor_ids.length > 0) {
@@ -229,12 +230,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     }
 
     if (this.statusFilter) {
-      this.allocate.tlsStatus.subscribe((res: any) => {
-        if (res.length > 0) {
-          this.statusFilter = true;
-          query += `&status_id=${res}`;
-        }
-      });
+     query += `&status_id=${this.selectedStatus}`;
     }
     if (this.counsellor_ids.length > 0) {
       query += `&counsellor_ids=${this.counsellor_ids}`;
@@ -272,17 +268,12 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
           : this.user_role == "SUPERADMIN" || this.user_role == "SUPER ADMIN"
           ? `?page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`
           : `?user_id=${this.user_id}&page=1&page_size=10&counsellor_ids=${this.counsellor_ids}`;
-      if (this.statusFilter) {
-        this.allocate.tlsStatus.subscribe((res: any) => {
-          if (res.length > 0) {
-            this.statusFilter = true;
-            query += `&status_id=${res}`;
+          if (this.statusFilter) {
+            query += `&status_id=${this.selectedStatus}`;
+           }
+          if (this.searchTerm) {
+            query += `&key=${this.searchTerm}`;
           }
-        });
-      }
-      if (this.searchTerm) {
-        query += `&key=${this.searchTerm}`;
-      }
       this.followupDetails = [];
       this.data = [];
       this.totalNumberOfRecords = [];
@@ -318,6 +309,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     await this.allocate.tlsSearchBar.next(false);
     this.counsellor_ids = [];
     this.statusFilter = false;
+    this.selectedStatus = [];
     this.searchTerm = '';
     event.target.complete();
    
@@ -348,15 +340,11 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
         : `?user_id=${this.user_id}&key=${event}&page=1&page_size=10`;
         this.searchTerm = event;
         if (this.statusFilter) {
-          this.allocate.tlsStatus.subscribe((res: any) => {
-            if (res.length > 0) {
-              query += `&status_id=${res}`;
-            }
-          });
-    }
-    if (this.counsellor_ids.length > 0) {
-      query += `&counsellor_ids=${this.counsellor_ids}`;
-    }
+          query += `&status_id=${this.selectedStatus}`;
+         }
+        if (this.counsellor_ids.length > 0) {
+          query += `&counsellor_ids=${this.counsellor_ids}`;
+        }
     this.getLiveStatus(query);
   }else{
     this.searchTerm = ''
@@ -369,17 +357,13 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
         : `?user_id=${this.user_id}&page=1&page_size=10`;
         
         if (this.statusFilter) {
-          this.allocate.tlsStatus.subscribe((res: any) => {
-            if (res.length > 0) {
-              query += `&status_id=${res}`;
-            }
-          });
+          query += `&status_id=${this.selectedStatus}`;
+         }
+        if (this.counsellor_ids.length > 0) {
+          query += `&counsellor_ids=${this.counsellor_ids}`;
+        }
+        this.getLiveStatus(query);
     }
-    if (this.counsellor_ids.length > 0) {
-      query += `&counsellor_ids=${this.counsellor_ids}`;
-    }
-    this.getLiveStatus(query);
-  }
 
   }
   
