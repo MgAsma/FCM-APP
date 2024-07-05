@@ -1,14 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  DoCheck,
-  HostListener,
-  NgZone,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild,
-} from "@angular/core";
+import {Component,OnInit,ViewChild} from "@angular/core";
 import { AlertController, ModalController, Platform } from "@ionic/angular";
 
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
@@ -28,7 +18,6 @@ import {
   IOSSettings,
 } from "capacitor-native-settings";
 import { Router } from "@angular/router";
-import { App as CapacitorApp } from "@capacitor/app";
 import { CallPermissionsService } from "../../service/api/call-permissions.service";
 import { Location } from "@angular/common";
 import { NgxIndexedDBService } from "ngx-indexed-db";
@@ -259,17 +248,7 @@ export class AllocationsPage implements OnInit {
     let result = data?.find((item: any) => item.userId == this.user_id);
     return result;
   }
-  resetFilters() {
-    this.totalNumberOfRecords = 0;
-    this.allocate.allocationStatus.next([]);
-    this._addLeadEmitter.selectedCounsellor.next([]);
-    this.counsellor_ids = [];
-    this.statusFilter = false;
-    this.searchTerm = "";
-    this.allocate.searchBar.next(false);
-    this.leadCards = [];
-    this.data = [];
-  }
+ 
 
   getContacts(name, value, operator) {
     if (value == "1") {
@@ -358,11 +337,11 @@ export class AllocationsPage implements OnInit {
   }
 
   async setDataToLocalStorage(lastdileddata?) {
-    console.log(lastdileddata, "last dialed num in set data ");
+    //console.log(lastdileddata, "last dialed num in set data ");
 
     // let data=JSON.parse(localStorage.getItem('latestCalledData'))
     let res: any = await lastValueFrom(this.dbService.getAll("people"));
-    console.log(res, "res in setdsts function");
+   // console.log(res, "res in setdsts function");
 
     let array = res.findIndex((res: any) => res.userId == this.user_id);
     let storeData = {
@@ -376,7 +355,7 @@ export class AllocationsPage implements OnInit {
         presentIndex: this.presentIndex,
       },
     };
-    console.log(array, "array in set ");
+    //console.log(array, "array in set ");
 
     if (array > -1) {
       ((storeData as any).id = array.id),
@@ -390,7 +369,7 @@ export class AllocationsPage implements OnInit {
       // data[array].inddex.presentIndex=this.presentIndex
     } else {
       this.dbService.add("people", storeData).subscribe((res: any) => {
-        console.log(res, "data added successfully");
+        //console.log(res, "data added successfully");
       });
     }
   }
@@ -466,7 +445,7 @@ export class AllocationsPage implements OnInit {
 
   phoneNumberIndex: any;
   recursiveCall(number: string, id: any, item, index: any) {
-    console.log(number, id, item, index, "item in recursive");
+    //console.log(number, id, item, index, "item in recursive");
     if (index > this.afterUpadtingPhoneNumbers.length - 1) {
       this.callPermissionService.isToggleddataSubject.next(false);
       this.api.showWarning("You have completed all the numbers");
@@ -671,7 +650,6 @@ export class AllocationsPage implements OnInit {
 
  async getAllocationWithFilters() {
   if(!this.refresh){
-  
   this._addLeadEmitter.selectedCounsellor.subscribe((res) => {
       if (res.length >0) {
         this.counsellor_ids = res;
@@ -749,11 +727,12 @@ export class AllocationsPage implements OnInit {
         this.getAllAllocation();
       }
     });
-  }else{
-    this.statusFilter = false;
-    this.counsellor_ids = [];
-    this.getAllAllocation();
   }
+  // }else{
+  //   this.statusFilter = false;
+  //   this.counsellor_ids = [];
+  //   this.getAllAllocation();
+  // }
   }
   afterUpadtingPhoneNumbers: any;
   // afterUpdatinggetPhoneNumbers() {
@@ -810,7 +789,7 @@ export class AllocationsPage implements OnInit {
           this.phoneNumbers = this.leadData
             ?.filter((ele: any) => ele.user_data?.mobile_number)
             .map((ele: any) => ele.user_data?.mobile_number);
-          console.log(this.phoneNumbers, "initial phone numbers");
+          //console.log(this.phoneNumbers, "initial phone numbers");
 
           this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
         }
