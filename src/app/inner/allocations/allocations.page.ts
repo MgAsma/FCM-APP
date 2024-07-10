@@ -117,10 +117,10 @@ export class AllocationsPage implements OnInit {
 
         if (res == true) {
           let result: any = await this.getLocalStorageValue();
-          console.log(
-            result,
-            "getting local storage value before checking wther the number is exist or not in phno array"
-          );
+          // console.log(
+          //   result,
+          //   "getting local storage value before checking wther the number is exist or not in phno array"
+          // );
 
           if (
             result &&
@@ -151,7 +151,7 @@ export class AllocationsPage implements OnInit {
               this.initialIndex = result.index.currentIndex + 1;
             }
 
-            console.log(this.initialIndex, "ii after increment");
+            // console.log(this.initialIndex, "ii after increment");
 
             this.presentIndex = this.initialIndex;
             this.allocateItem = this.data.data[this.initialIndex];
@@ -215,7 +215,7 @@ export class AllocationsPage implements OnInit {
               this.currentIndex = result ? result.index.currentIndex + 1 : 0;
             }
 
-            console.log(this.currentIndex, "ci after increment");
+            // console.log(this.currentIndex, "ci after increment");
 
             this.startingIndex = this.currentIndex;
             this.allocateItem = this.data.data[this.currentIndex];
@@ -272,9 +272,9 @@ export class AllocationsPage implements OnInit {
   async getLocalStorageValue() {
     let data = await lastValueFrom(this.dbService.getAll("people"));
     // console.log(this.contains,"latest called number");
-    console.log(data, "data from indexdb storage");
+    // console.log(data, "data from indexdb storage");
     let result = data?.find((item: any) => item.userId == this.user_id);
-    console.log(result, "as per userid");
+    // console.log(result, "as per userid");
 
     return result;
   }
@@ -330,7 +330,7 @@ export class AllocationsPage implements OnInit {
         //     JSON.stringify(results[0].number)
         //   );
         // }
-        console.log(JSON.stringify(results[0].number), "latest called number");
+        // console.log(JSON.stringify(results[0].number), "latest called number");
 
         this.setDataToLocalStorage(results[0].number);
 
@@ -370,7 +370,7 @@ export class AllocationsPage implements OnInit {
 
     // let data=JSON.parse(localStorage.getItem('latestCalledData'))
     let res: any = await lastValueFrom(this.dbService.getAll("people"));
-    console.log(res, "getting alldata in setdata to localstorage function");
+    // console.log(res, "getting alldata in setdata to localstorage function");
 
     let array = res.findIndex((res: any) => res.userId == this.user_id);
     let storeData = {
@@ -389,7 +389,7 @@ export class AllocationsPage implements OnInit {
     if (array > -1) {
       ((storeData as any).id = array.id),
         this.dbService.update("people", storeData).subscribe((res: any) => {
-          console.log(res, "data upadated successfully");
+          // console.log(res, "data upadated successfully");
         });
       // data[array].lastDialedNumber=lastdileddata?lastdileddata: data[array].lastDialedNumber;
       // data[array].index.currentIndex=this.currentIndex;
@@ -398,7 +398,7 @@ export class AllocationsPage implements OnInit {
       // data[array].inddex.presentIndex=this.presentIndex
     } else {
       this.dbService.add("people", storeData).subscribe((res: any) => {
-        console.log(res, "data added successfully");
+        // console.log(res, "data added successfully");
       });
     }
   }
