@@ -66,7 +66,7 @@ export class OnBreakComponent implements OnInit {
           Storage.remove({ key: "break" });
           localStorage.removeItem("storedDate");
           this.api.showToast("Break Ended Successfully!");
-          if((resp.device_token && deviceToken) && resp.device_token !== deviceToken){
+          if((resp.result[0].device_token && deviceToken) && resp.result[0].device_token !== deviceToken){
             localStorage.clear()
             this.router.navigate(['../outer'])
           }
