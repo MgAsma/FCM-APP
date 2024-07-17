@@ -8,7 +8,7 @@ import { IdleDetectionService } from './idle-detection.service';
 import { AllocationEmittersService } from './allocation-emitters.service';
 import { AddLeadEmitterService } from './add-lead-emitter.service';
 import { ApiService } from './api/api.service';
-
+import { Storage } from "@capacitor/storage";
 @Injectable({
   providedIn: 'root'
 })
@@ -35,31 +35,38 @@ export class ActivateGuard implements CanActivate {
    
     const device_token = localStorage.getItem('device_token');
     const user_id = localStorage.getItem('user_id');
+    //const storedDate = localStorage.getItem('storedDate');
+    
     
       if (this.isLoggedIn) {
+        
+       //  console.log(Storage.get({ key: 'meeting' }))
           this.idleDetectionService.userActivity.subscribe(isActive => {
-          if (this.router.url !== '/outer/login' && !isActive) {
+            // if(!storedDate){
+          if (this.router.url !== '/outer/login' && !isActive ) {
             this.addEmit.isToken.next('')
             this.logOut()
-
+        //  }
           }else{
-            // this.router.navigate([this.router.url])
+           
             this.idleDetectionService.resetTimer();
           }
-        
-      });
-     const userActivity$ = this.idleDetectionService.userActivity;
- 
-       this.subscriptions.add(
-       userActivity$.subscribe((isActive) => {
-         if (isActive && this.currentUrl !== undefined) {
-           this.idleDetectionService.resetTimer();
-         }
-       })
-     );
+           });
+          const userActivity$ = this.idleDetectionService.userActivity;
+      
+            this.subscriptions.add(
+            userActivity$.subscribe((isActive) => {
+              if (isActive && this.currentUrl !== undefined) {
+                
+                this.idleDetectionService.resetTimer();
+              }
+            })
+          );
       return this.baseService.getData(`${environment.device_token}${user_id}/`).pipe(
         map((res: any) => {
-          if (res && res.device_token !== device_token) {
+        //  console.log(res,"DEVICE RESPONSE")
+          if (res && res.result[0].device_token != device_token) {
+            
             localStorage.clear();
             this._router.navigate(['/outer']);
             return false;
@@ -68,6 +75,7 @@ export class ActivateGuard implements CanActivate {
         }),
         catchError(() => {
          this._router.navigate(['/outer']);
+         
           return of(false);
         })
       );
