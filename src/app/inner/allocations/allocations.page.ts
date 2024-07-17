@@ -244,7 +244,7 @@ export class AllocationsPage implements OnInit {
   async getLocalStorageValue() {
     let data = await lastValueFrom(this.dbService.getAll("people"));
     // console.log(this.contains,"latest called number");
-    console.log(data, "data from indexdb storage");
+    //console.log(data, "data from indexdb storage");
     let result = data?.find((item: any) => item.userId == this.user_id);
     return result;
   }
