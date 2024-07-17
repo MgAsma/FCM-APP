@@ -127,7 +127,8 @@ export class LoginComponent  implements OnInit {
 
           this.loginForm.reset()
           
-         this.navCtrl.navigateForward(['/inner'])
+        //  this.navCtrl.navigateForward(['/inner'])
+        this.router.navigate(['/inner/allocations'])
           this.api.showSuccess(resp.message)
           this.api.loaderDismiss()
         }
