@@ -117,10 +117,6 @@ export class AllocationsPage implements OnInit {
 
         if (res == true) {
           let result: any = await this.getLocalStorageValue();
-          // console.log(
-          //   result,
-          //   "getting local storage value before checking wther the number is exist or not in phno array"
-          // );
 
           if (
             result &&
@@ -137,25 +133,16 @@ export class AllocationsPage implements OnInit {
 
               return;
             }
-            // this.initialIndex = this.callPermissionService.getIndex() + 1;
-            // this.initialIndex = result.index.initialIndex + 1;
-            //   if(result.index.initialIndex==0||result.index.initialIndex==undefined){
-            //     this.initialIndex=result ? result.index.initialIndex + 1 : 0;
-            //   }
-            //  else{
 
-            //  }
             if (result.index.currentIndex == 0) {
               this.initialIndex = result.index.initialIndex + 1;
             } else {
               this.initialIndex = result.index.currentIndex + 1;
             }
 
-            // console.log(this.initialIndex, "ii after increment");
-
             this.presentIndex = this.initialIndex;
             this.allocateItem = this.data.data[this.initialIndex];
-            // this.callPermissionService.setIndex(this.initialIndex);
+
             this.setDataToLocalStorage();
 
             this.callContact(
@@ -166,7 +153,7 @@ export class AllocationsPage implements OnInit {
             );
           } else {
             this.allocateItem = this.data.data[this.presentIndex];
-            // this.callPermissionService.setIndex(this.presentIndex);
+
             this.setDataToLocalStorage();
 
             this.callContact(
@@ -201,25 +188,15 @@ export class AllocationsPage implements OnInit {
           this.isToggledEnabled == true
         ) {
           setTimeout(() => {
-            // this.currentIndex = this.callPermissionService.getIndex() + 1;
-            // if(result.index.initialIndex>result.index.currentIndex){
-            //   this.currentIndex= result ? result.index.initialIndex + 1 : 0;
-            // }
-            // else{
-            //   this.currentIndex = result ? result.index.currentIndex + 1 : 0;
-            // }
-
             if (result.index.currentIndex == 0) {
               this.currentIndex = result ? result.index.initialIndex + 1 : 0;
             } else {
               this.currentIndex = result ? result.index.currentIndex + 1 : 0;
             }
 
-            // console.log(this.currentIndex, "ci after increment");
-
             this.startingIndex = this.currentIndex;
             this.allocateItem = this.data.data[this.currentIndex];
-            // this.callPermissionService.setIndex(this.currentIndex);
+
             this.setDataToLocalStorage();
 
             this.recursiveCall(
@@ -236,10 +213,10 @@ export class AllocationsPage implements OnInit {
 
           setTimeout(() => {
             {
-              // this.startingIndex = this.callPermissionService.getIndex();
+             
               this.startingIndex = result ? result.index.startingIndex : 0;
               this.allocateItem = this.data.data[this.startingIndex];
-              // this.callPermissionService.setIndex(this.startingIndex);
+            
               this.setDataToLocalStorage();
               this.recursiveCall(
                 this.afterUpadtingPhoneNumbers[this.startingIndex],
@@ -271,10 +248,8 @@ export class AllocationsPage implements OnInit {
 
   async getLocalStorageValue() {
     let data = await lastValueFrom(this.dbService.getAll("people"));
-    // console.log(this.contains,"latest called number");
-    // console.log(data, "data from indexdb storage");
+
     let result = data?.find((item: any) => item.userId == this.user_id);
-    // console.log(result, "as per userid");
 
     return result;
   }
@@ -309,33 +284,9 @@ export class AllocationsPage implements OnInit {
     this.callLog
       .getCallLog(this.filters)
       .then((results) => {
-        // console.log(
-        //   JSON.stringify(results[0]),
-        //   "latest call log in allocations"
-        // );
-
-        //  const latestCalledData:any={
-        //   lastDialedNumber:JSON.stringify(results[0]),
-        //   userId:this.user_id
-        //  }
-
-        // if(this.user_role==='Admin'||this.user_role==='ADMIN'){
-        //   this.callPermissionService.AdminsetCalledNumber(JSON.stringify(results[0].number))
-        // }
-        // if(this.user_role==='consellor'||this.user_role==='COUNSELLOR'){
-        //   this.callPermissionService.counsellorsetCalledNumber(JSON.stringify(results[0].number))
-        // }
-        // else{
-        //   this.callPermissionService.setCalledNumber(
-        //     JSON.stringify(results[0].number)
-        //   );
-        // }
-        // console.log(JSON.stringify(results[0].number), "latest called number");
-
         this.setDataToLocalStorage(results[0].number);
 
         const calculateTime = Number(results[0].date) - Number(this.calledTime);
-        // console.log(calculateTime, "calculate time in allocations");
 
         this.callDuration = results[0].duration;
         if (this.callDuration > 0) {
@@ -366,11 +317,7 @@ export class AllocationsPage implements OnInit {
   }
 
   async setDataToLocalStorage(lastdileddata?) {
-    //console.log(lastdileddata, "last dialed num in set data ");
-
-    // let data=JSON.parse(localStorage.getItem('latestCalledData'))
     let res: any = await lastValueFrom(this.dbService.getAll("people"));
-    // console.log(res, "getting alldata in setdata to localstorage function");
 
     let array = res.findIndex((res: any) => res.userId == this.user_id);
     let storeData = {
@@ -384,31 +331,14 @@ export class AllocationsPage implements OnInit {
         presentIndex: this.presentIndex,
       },
     };
-    //console.log(array, "array in set ");
 
     if (array > -1) {
       ((storeData as any).id = array.id),
-        this.dbService.update("people", storeData).subscribe((res: any) => {
-          // console.log(res, "data upadated successfully");
-        });
-      // data[array].lastDialedNumber=lastdileddata?lastdileddata: data[array].lastDialedNumber;
-      // data[array].index.currentIndex=this.currentIndex;
-      // data[array].index.startingIndex=this.startingIndex;
-      // data[array].index.initialIndex=this.initialIndex;
-      // data[array].inddex.presentIndex=this.presentIndex
+        this.dbService.update("people", storeData).subscribe((res: any) => {});
     } else {
-      this.dbService.add("people", storeData).subscribe((res: any) => {
-        // console.log(res, "data added successfully");
-      });
+      this.dbService.add("people", storeData).subscribe((res: any) => {});
     }
   }
-
-  // addRecord() {
-  //   const person = { id: 1, name: 'John' };
-  //   this.dbService.add('people', person).subscribe(() => {
-  //     console.log('Record added successfully.');
-  //   });
-  // }
 
   isCallInitiationCalled: boolean = false;
 
@@ -541,8 +471,6 @@ export class AllocationsPage implements OnInit {
     };
     this.api.sendingCallHistory(data).subscribe(
       (res: any) => {
-        // alert("sending call history is called afetr call made in customer")
-        // console.log(res, "sending call history in alloactions");
         let tlsData = {
           user: this.user_id,
           status: 3,
@@ -766,28 +694,6 @@ export class AllocationsPage implements OnInit {
     // }
   }
   afterUpadtingPhoneNumbers: any;
-  // afterUpdatinggetPhoneNumbers() {
-  //   this.callPermissionService
-  //     .getAllocationsPhoneNumbers()
-  //     .subscribe((res: any) => {
-  //       this.leadData = res.results.data;
-  //       // console.log(res.results.data,"res.results.data");
-
-  //       if (this.leadData?.length > 0) {
-  //         this.phoneNumbers = this.leadData
-  //           ?.filter((ele: any) => ele.user_data?.mobile_number)
-  //           .map((ele: any) => ele.user_data?.mobile_number);
-  //         // console.log(this.phoneNumbers, "initial phone numbers");
-
-  //         this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
-  //         // console.log(
-  //         //   this.afterUpadtingPhoneNumbers,
-  //         //   "this.afterUpadtingPhoneNumbers"
-  //         // );
-  //       }
-  //       // console.log(res, "resssssssss");
-  //     });
-  // }
 
   query = "";
 
@@ -825,26 +731,6 @@ export class AllocationsPage implements OnInit {
           this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
         }
       });
-    // this.callPermissionService
-    //   .getAllocationsPhoneNumbers()
-    //   .subscribe((res: any) => {
-    //     this.leadData = res.results.data;
-    //     console.log(res.results.data,"res.results.data");
-
-    //     if (this.leadData?.length > 0) {
-    //       this.phoneNumbers = this.leadData
-    //         ?.filter((ele: any) => ele.user_data?.mobile_number)
-    //         .map((ele: any) => ele.user_data?.mobile_number);
-    //       console.log(this.phoneNumbers, "initial phone numbers");
-
-    //       this.afterUpadtingPhoneNumbers = [...this.phoneNumbers];
-    //       // console.log(
-    //       //   this.afterUpadtingPhoneNumbers,
-    //       //   "this.afterUpadtingPhoneNumbers"
-    //       // );
-    //     }
-    //     // console.log(res, "resssssssss");
-    //   });
   }
 
   async handleRefresh(event: any) {
