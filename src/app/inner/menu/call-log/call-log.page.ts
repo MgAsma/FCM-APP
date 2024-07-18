@@ -481,7 +481,7 @@ export class CallLogPage implements OnInit {
       query += `&key=${this.searchTerm}`;
     }
      
-    if(this.dateForm.dirty && !this.dateForm.invalid){
+    if(this.dateForm.dirty && !this.dateForm.invalid && this.sdate !== undefined && this.edate !== undefined){
       query += `&from_date=${this.sdate}&to_date=${this.edate}`
     }
     if(this.statusFilter){
