@@ -131,6 +131,9 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
         this.counsellor_ids = []
       }
     });
+    if(this.searchTerm){
+      query += `&key=${this.searchTerm}`
+    }
     this.allocate.tlsStatus.subscribe(
      
       (res: any) => {
@@ -159,9 +162,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
           if (this.counsellor_ids.length > 0) {
             query += `&counsellor_ids=${this.counsellor_ids}`;
           }
-          if(this.searchTerm){
-            query += `&key=${this.searchTerm}`
-          }
+         
           
           this.followupDetails = [];
           this.data = [];
