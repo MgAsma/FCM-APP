@@ -123,6 +123,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   }
   initComponent() {
     let query: any;
+    query = `?page=1&page_size=10`;
     if(!this.refresh){
     this.addEmit.tlsCounsellor.subscribe((res) => {
       if (res.length > 0) {
@@ -144,7 +145,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
           this.statusFilter = false;
         }
         if(res.length >0 || this.counsellor_ids.length >0){
-          query = `?page=1&page_size=10`;
+       
 
           if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
             query += `&user_id=${this.user_id}`;
