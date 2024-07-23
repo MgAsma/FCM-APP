@@ -340,6 +340,7 @@ export class CallLogPage implements OnInit {
       this.status = []
       this.counsellor_ids = []
       this.searchTerm = '';
+      this.minEndDate = '';
       this.ngOnInit();
      }
       
