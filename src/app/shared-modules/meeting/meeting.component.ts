@@ -8,6 +8,7 @@ import { timer, Subject } from 'rxjs';
 import { map, takeUntil, takeWhile } from 'rxjs/operators';
 import { ApiService } from '../../service/api/api.service';
 import { BaseServiceService } from '../../service/base-service.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-meeting',
@@ -20,7 +21,11 @@ export class MeetingComponent implements OnInit {
   lastLoginDate: any;
 
   breakTime:any;
-
+  isLoggedIn: boolean;
+  device_token: string;
+  user_id: string;
+  newDeviceToken: any;
+  
   constructor(
     private popoverController: PopoverController,
     private api: ApiService,
@@ -35,6 +40,9 @@ export class MeetingComponent implements OnInit {
     this.id = localStorage.getItem('user_id');
     this.initForm();
     this.breakTime=localStorage.getItem('storedDate')
+    this.isLoggedIn = localStorage.getItem('token') !== null;
+    this.device_token = localStorage.getItem('device_token')
+    this.user_id = localStorage.getItem('user_id')
   }
   initForm() {
     this.meetingForm = this._fb.group({
@@ -54,24 +62,35 @@ export class MeetingComponent implements OnInit {
     if (this.meetingForm.invalid) {
       //console.log('Invalid');
     } else {
-      this.api.showLoading();
-      this.api.break(this.meetingForm.value).subscribe(
-        (resp: any) => {
-          this.api.loaderDismiss();
-          this.close();
-          Storage.remove({ key: 'meeting' });
-          localStorage.removeItem('storedDate')
-          this.api.showToast('Meeting Ended Successfully!');
-          if((resp.result[0].device_token && deviceToken) && resp.result[0].device_token !== deviceToken){
+     
+        this.baseService.getData(`${environment.device_token}${this.user_id}/`).subscribe((res:any)=>{
+          if(res){
+            console.log(res.result[0].device_token,this.device_token)
+           this.newDeviceToken = res.result[0].device_token
+           if(this.newDeviceToken !== this.device_token){
             localStorage.clear()
-            this.router.navigate(['../outer'])
+            debugger;
+            this.router.navigate(['/outer']);
+            
+            this.close();
+           }else{
+        this.api.break(this.meetingForm.value).subscribe(
+          (resp: any) => {
+            this.close();
+            debugger;
+            Storage.remove({ key: 'meeting' });
+            localStorage.removeItem('storedDate')
+            this.api.showToast('Meeting Ended Successfully!');
+          },
+          (error: any) => {
+            this.api.showToast(error.error.message);
           }
-        },
-        (error: any) => {
-          this.api.loaderDismiss();
-          this.api.showToast(error.error.message);
-        }
-      );
+        );
+      }
+      }
+    
+      
     }
-  }
+      )
+  }}
 }

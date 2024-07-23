@@ -9,6 +9,7 @@ import { map, takeUntil, takeWhile } from "rxjs/operators";
 import { ApiService } from "../../service/api/api.service";
 import { CallPermissionsService } from "../../service/api/call-permissions.service";
 import { BaseServiceService } from "../../service/base-service.service";
+import { environment } from "../../../environments/environment";
 @Component({
   selector: "app-on-break",
   templateUrl: "./on-break.component.html",
@@ -19,6 +20,10 @@ export class OnBreakComponent implements OnInit {
   id: any;
   lastLoginDate: any;
   breakTime: any;
+  isLoggedIn: boolean;
+  newDeviceToken: any;
+  device_token: string;
+  user_id: string;
 
   constructor(
     private popoverController: PopoverController,
@@ -38,6 +43,11 @@ export class OnBreakComponent implements OnInit {
     
     this.id = localStorage.getItem("user_id");
     this.initForm();
+    this.isLoggedIn = localStorage.getItem('token') !== null;
+    this.device_token = localStorage.getItem('device_token')
+    this.user_id = localStorage.getItem('user_id')
+    
+     
   }
   initForm() {
     this.breakForm = this._fb.group({
@@ -57,26 +67,36 @@ export class OnBreakComponent implements OnInit {
     if (this.breakForm.invalid) {
       //console.log('Invalid');
     } else {
-      this.api.showLoading();
-      this.api.break(this.breakForm.value).subscribe(
-        (resp: any) => {
-          this.api.loaderDismiss();
-          this.close();
-          console.log(resp,"RESPONSE")
-          Storage.remove({ key: "break" });
-          localStorage.removeItem("storedDate");
-          this.api.showToast("Break Ended Successfully!");
-          if((resp.result[0].device_token && deviceToken) && resp.result[0].device_token !== deviceToken){
+      if(this.isLoggedIn){
+        // this.api.showLoading();
+      
+        this.baseService.getData(`${environment.device_token}${this.user_id}/`).subscribe((res:any)=>{
+          if(res){
+           this.newDeviceToken = res.result[0].device_token
+           if(this.newDeviceToken != this.device_token){
             localStorage.clear()
-            this.router.navigate(['../outer'])
+             this.router.navigate(['/outer']);
+             this.close();
+           }else{
+            this.api.break(this.breakForm.value).subscribe(
+              (resp: any) => {
+                // this.api.loaderDismiss();
+                this.close();
+                Storage.remove({ key: "break" });
+                localStorage.removeItem("storedDate");
+                this.api.showToast("Break Ended Successfully!");
+              },
+              (error: any) => {
+                // this.api.loaderDismiss();
+                this.api.showToast(error.error.message);
+              }
+            );
+           }
           }
-          
-        },
-        (error: any) => {
-          this.api.loaderDismiss();
-          this.api.showToast(error.error.message);
-        }
-      );
+           })
+      }
+      
+    
     }
   }
 }
