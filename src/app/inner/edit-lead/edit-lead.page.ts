@@ -670,17 +670,17 @@ export class EditLeadPage implements OnInit {
   prevStep() {
     this.step--;
   }
-  close() {
+   close() {
     this.callPermissionService.isToggleddataSubject.next(false);
     this.callPermissionService.closeCancelEditLeadPagedataSubject.next("close");
-    this.modalController.dismiss();
+     this.modalController.dismiss();
   }
-  closeModal() {
+   closeModal() {
     this.callPermissionService.isToggleddataSubject.next(false);
     this.callPermissionService.closeCancelEditLeadPagedataSubject.next(
       "cancel"
     );
-    this.modalController.dismiss();
+     this.modalController.dismiss();
   }
   async addCountry() {
     const modal = await this.popoverController.create({
@@ -894,5 +894,8 @@ export class EditLeadPage implements OnInit {
      
     }
    
+  }
+  ionViewWillLeave(){
+    this.modalController.dismiss()
   }
 }
