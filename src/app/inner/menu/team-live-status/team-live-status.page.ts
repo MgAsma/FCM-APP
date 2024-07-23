@@ -95,24 +95,22 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     
     this.initComponent();
   
-  
-
      // Listen to route changes to clear interval if needed
-     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
+    //  this.router.events.pipe(
+    //   filter(event => event instanceof NavigationEnd)
+    // ).subscribe(() => {
       if (this.router.url === '/inner/menu/team-live-status' ) {
         this.intervalId = setInterval(() => {
           this.initComponent();
-        },30000);
+       },10000);
        
-      }else{
+       }
+      else{
         clearInterval(this.intervalId);
       }
-    });
+    // });
  
   }
-  
   
   ionViewWillLeave(){
     clearInterval(this.intervalId)
@@ -123,7 +121,6 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   }
   initComponent() {
     let query: any;
-    query = `?page=1&page_size=10`;
     if(!this.refresh){
     this.addEmit.tlsCounsellor.subscribe((res) => {
       if (res.length > 0) {
@@ -132,11 +129,8 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
         this.counsellor_ids = []
       }
     });
-    if(this.searchTerm){
-      query += `&key=${this.searchTerm}`
-    }
+    
     this.allocate.tlsStatus.subscribe(
-     
       (res: any) => {
         if (res.length > 0) {
           this.selectedStatus = res
@@ -145,7 +139,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
           this.statusFilter = false;
         }
         if(res.length >0 || this.counsellor_ids.length >0){
-       
+          query = `?page=1&page_size=10`;
 
           if (["COUNSELOR", "COUNSELLOR"].includes(this.user_role) === true) {
             query += `&user_id=${this.user_id}`;
@@ -163,7 +157,9 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
           if (this.counsellor_ids.length > 0) {
             query += `&counsellor_ids=${this.counsellor_ids}`;
           }
-         
+          if(this.searchTerm){
+          query += `&key=${this.searchTerm}`
+          }
           
           this.followupDetails = [];
           this.data = [];
@@ -185,7 +181,9 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
         }
       }
     );
-  }
+    }else{
+      this.getAllLiveStatus()
+    }
   }
   getAllLiveStatus(){
    
@@ -203,7 +201,9 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
         ) {
           query += `&user_id=${this.user_id}`;
         }
-      
+        if(this.searchTerm && !this.refresh){
+          query += `&key=${this.searchTerm}`
+        }
         this.api.getTeamLiveStatus(query).subscribe(
           (resp: any) => {
             this.followupDetails = resp.results;
@@ -305,16 +305,17 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   async handleRefresh(event: any) {
     if(event && event.target){
     this.refresh = true
-    await this.addEmit.tlsCounsellor.next([]);
-    await this.allocate.tlsStatus.next([]);
-    
-    await this.allocate.tlsSearchBar.next(false);
+    this.searchTerm = ''
+    this.addEmit.tlsCounsellor.next([]);
+     this.allocate.tlsStatus.next([]);
+     this.allocate.tlsSearchBar.next(false);
     this.counsellor_ids = [];
     this.statusFilter = false;
     this.selectedStatus = [];
-    this.searchTerm = '';
+
+    this.ngOnInit();
+    // await this.searchTermChanged('')
     event.target.complete();
-   
   }
   }
 
@@ -332,7 +333,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   }
 
   searchTermChanged(event: any) {
-    if(event){
+    if(event && !this.refresh){
     let query: any;
     query =
       this.user_role == "COUNSELLOR" || this.user_role == "COUNSELOR"
@@ -347,8 +348,9 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
         if (this.counsellor_ids.length > 0) {
           query += `&counsellor_ids=${this.counsellor_ids}`;
         }
+        
     this.getLiveStatus(query);
-  }else{
+    }else{
     this.searchTerm = ''
     let query: any;
     query =
@@ -364,6 +366,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
         if (this.counsellor_ids.length > 0) {
           query += `&counsellor_ids=${this.counsellor_ids}`;
         }
+        
         this.getLiveStatus(query);
     }
 
