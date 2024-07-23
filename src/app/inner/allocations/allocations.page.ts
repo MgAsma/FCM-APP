@@ -228,8 +228,6 @@ export class AllocationsPage implements OnInit {
               this.allocateItem,
               this.currentIndex
             );
-            this.autoDialer = true;
-            this.getContacktAndPostHistory();
           }, 5000);
         } else {
           this.afterUpdatinggetPhoneNumbers();
@@ -247,8 +245,6 @@ export class AllocationsPage implements OnInit {
                 this.allocateItem,
                 this.startingIndex
               );
-              this.autoDialer = true;
-              this.getContacktAndPostHistory();
             }
           }, 5000);
         }
@@ -346,7 +342,7 @@ export class AllocationsPage implements OnInit {
 
         this.recordsFoundText = JSON.stringify(results);
         this.recordsFound = results; //JSON.stringify(results);
-
+       
         if (calculateTime > 0) {
           this.postCallHistory();
         } else {
