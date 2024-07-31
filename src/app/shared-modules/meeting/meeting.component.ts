@@ -65,11 +65,11 @@ export class MeetingComponent implements OnInit {
      
         this.baseService.getData(`${environment.device_token}${this.user_id}/`).subscribe((res:any)=>{
           if(res){
-            console.log(res.result[0].device_token,this.device_token)
+           // console.log(res.result[0].device_token,this.device_token)
            this.newDeviceToken = res.result[0].device_token
            if(this.newDeviceToken !== this.device_token){
             localStorage.clear()
-            debugger;
+            
             this.router.navigate(['/outer']);
             
             this.close();
@@ -77,7 +77,6 @@ export class MeetingComponent implements OnInit {
         this.api.break(this.meetingForm.value).subscribe(
           (resp: any) => {
             this.close();
-            debugger;
             Storage.remove({ key: 'meeting' });
             localStorage.removeItem('storedDate')
             this.api.showToast('Meeting Ended Successfully!');

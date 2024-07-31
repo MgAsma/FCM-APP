@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { ActivateChildGuard } from './service/activate-child.guard';
 
 const routes: Routes = [
   
   {
     path: '',
     redirectTo: 'inner',
-    pathMatch: 'full'
+    pathMatch: 'full',
+    canActivateChild:[ActivateChildGuard],
   },
   {
     path: 'outer',
