@@ -19,7 +19,7 @@ import { ActivateChildGuard } from "../../../service/activate-child.guard";
   templateUrl: "./team-live-status.page.html",
   styleUrls: ["./team-live-status.page.scss"],
 })
-export class TeamLiveStatusPage implements OnInit,OnDestroy {
+export class TeamLiveStatusPage implements OnInit {
   searchBar: boolean = false;
   followupDetails: any = [];
   placeholderText = "Search by Name/Status";
@@ -54,6 +54,7 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
   currentUrl: string = `/inner/menu/team-live-status`;
   intervalId:any;
   selectedStatus: any = [];
+  tlsStatus: boolean;
   constructor(
     private allocate: AllocationEmittersService,
     private modalController: ModalController,
@@ -65,8 +66,8 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     private authService:ActivateChildGuard,
     private location:Location
   ) {
-    this.user_id = localStorage.getItem("user_id");
-    this.user_role = localStorage.getItem("user_role")?.toUpperCase();
+    // this.user_id = localStorage.getItem("user_id");
+    // this.user_role = localStorage.getItem("user_role")?.toUpperCase();
   }
   
 
@@ -83,6 +84,8 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     );
   }
   ngOnInit() {
+    this.user_id = localStorage.getItem("user_id");
+    this.user_role = localStorage.getItem("user_role")?.toUpperCase();
     this.getStatus();
     this.getCounselor();
     this.allocate.tlsSearchBar.subscribe((res) => {
@@ -94,31 +97,32 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     });
     
     this.initComponent();
-  
-     // Listen to route changes to clear interval if needed
-    //  this.router.events.pipe(
-    //   filter(event => event instanceof NavigationEnd)
-    // ).subscribe(() => {
+     
       if (this.router.url === '/inner/menu/team-live-status' ) {
-        this.intervalId = setInterval(() => {
-          this.initComponent();
-       },10000);
+        this.tlsStatus = true
        
-       }
-      else{
-        clearInterval(this.intervalId);
       }
-    // });
+     
+       // Set interval if on team-live-status page
+    if (this.tlsStatus) {
+      this.intervalId = setInterval(() => {
+        if (this.tlsStatus) {
+          this.initComponent();  // Make the API call
+        }
+      }, 10000); // Call every 10 seconds
+    }
+  
+    
+  }
+  
+   // Clear interval when component is destroyed or user navigates away
+   ngOnDestroy() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+  
  
-  }
-  
-  ionViewWillLeave(){
-    clearInterval(this.intervalId)
-   }
-  
-  ngOnDestroy(): void {
-    clearInterval(this.intervalId)
-  }
   initComponent() {
     let query: any;
     if(!this.refresh){
@@ -181,7 +185,8 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
         }
       }
     );
-    }else{
+    }
+    else{
       this.getAllLiveStatus()
     }
   }
@@ -303,18 +308,20 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     this.searchTerm = '';
   }
   async handleRefresh(event: any) {
+    this.refresh = false
     if(event && event.target){
     this.refresh = true
     this.searchTerm = ''
-    this.addEmit.tlsCounsellor.next([]);
-     this.allocate.tlsStatus.next([]);
-     this.allocate.tlsSearchBar.next(false);
+    await this.addEmit.tlsCounsellor.next([]);
+    await this.allocate.tlsStatus.next([]);
+    await this.allocate.tlsSearchBar.next(false);
     this.counsellor_ids = [];
     this.statusFilter = false;
-    this.selectedStatus = [];
+    this.tlsStatus = false
+   
+   // this.selectedStatus = [];
 
-    this.ngOnInit();
-    // await this.searchTermChanged('')
+    //this.getAllLiveStatus()
     event.target.complete();
   }
   }
@@ -371,6 +378,11 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     }
 
   }
-  
+  ionViewWillLeave(){
+    if(this.router.url !== '/inner/menu/team-live-status'){
+      this.tlsStatus = false
+    }
+    this.tlsStatus = false
+  }
   
 }

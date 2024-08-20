@@ -33,8 +33,7 @@ export class ActivateGuard implements CanActivate {
   ): Observable<boolean> {
     this.isLoggedIn = localStorage.getItem('token') !==null;
    
-    const device_token = localStorage.getItem('device_token');
-    const user_id = localStorage.getItem('user_id');
+  
     //const storedDate = localStorage.getItem('storedDate');
     
     
@@ -62,23 +61,7 @@ export class ActivateGuard implements CanActivate {
               }
             })
           );
-      return this.baseService.getData(`${environment.device_token}${user_id}/`).pipe(
-        map((res: any) => {
-        //  console.log(res,"DEVICE RESPONSE")
-          if (res && res.result[0].device_token != device_token) {
-            
-            localStorage.clear();
-            this._router.navigate(['/outer']);
-            return false;
-          }
-          return true;
-        }),
-        catchError(() => {
-         this._router.navigate(['/outer']);
-         
-          return of(false);
-        })
-      );
+     
     } 
     else {
       this._router.navigate(['/outer']);

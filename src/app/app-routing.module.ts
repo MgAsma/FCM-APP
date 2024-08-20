@@ -7,8 +7,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'inner',
-    pathMatch: 'full',
-    canActivateChild:[ActivateChildGuard],
+    pathMatch: 'full'
   },
   {
     path: 'outer',

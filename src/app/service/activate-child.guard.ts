@@ -48,7 +48,7 @@ export class ActivateChildGuard implements CanActivateChild {
             this.idleDetectionService.userActivity.subscribe(isActive => {
               // const storedDate = Storage.get({key:'break'})
               const storedDate = localStorage.getItem('storedDate')
-              console.log(storedDate)
+              //console.log(storedDate)
             if (this.router.url !== '/outer/login' && !isActive && storedDate == null) {
               this.addEmit.isToken.next('')
               this.logOut()
@@ -64,6 +64,8 @@ export class ActivateChildGuard implements CanActivateChild {
                 if (isActive && this.currentUrl !== undefined) {
                   
                   this.idleDetectionService.resetTimer();
+                }else{
+                  this.idleDetectionService.checkIdleTimeout();
                 }
               })
             );

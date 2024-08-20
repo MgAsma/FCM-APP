@@ -10,7 +10,6 @@ const routes: Routes = [
   {
     path: '',
     component: InnerPage,
-   
     canActivateChild:[ActivateChildGuard],
     children:[ 
       

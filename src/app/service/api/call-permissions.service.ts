@@ -15,18 +15,18 @@ export class CallPermissionsService {
   isCallInitiationCalled: boolean = false;
   // allocationscallBackFunction:boolean=false;
   // customerCallBackFunction:boolean=false;
-  allocationscallBackFunction: any;
-  customerCallBackFunction: any;
-  callLogsCallBackFunction: any;
+  allocationscallBackFunction: any = ()=>{};
+  customerCallBackFunction: any = ()=>{};
+  callLogsCallBackFunction: any = ()=>{};
 
   constructor(private http: HttpClient, private router: Router) {}
 
   apiUrl = environment.lead_list;
-  getAllocationsPhoneNumbers() {
-    return this.http.get(
-      `${this.apiUrl}/?user_type=allocation&page=1&page_size=10`
-    );
-  }
+  // getAllocationsPhoneNumbers() {
+  //   return this.http.get(
+  //     `${this.apiUrl}/?user_type=allocation&page=1&page_size=10`
+  //   );
+  // }
   initiateCallStatus(callBack: any) {
     const that = this;
     //  console.log(that.isCallInitiationCalled, " that.isCallInitiationCalled");
@@ -47,7 +47,6 @@ export class CallPermissionsService {
             break;
           case "OFFHOOK":
             that.isPhoneHalfHook = true;
-
             // alert("Phone is off-hook");
             //  console.log("Phone is off-hook");
             break;
@@ -56,17 +55,27 @@ export class CallPermissionsService {
             that.isPhoneIdle = true;
 
             if (that.isPhoneHalfHook == true) {
-              setTimeout(() => {
-                if (that.router.url.includes("allocations")) {
-                  that.allocationscallBackFunction();
-                }
-                if (that.router.url.includes("customers")) {
-                  that.customerCallBackFunction();
-                }
-                if (that.router.url.includes("call-log")) {
-                  that.callLogsCallBackFunction();
-                }
-              }, 2000);
+              // setTimeout(() => {
+              //   if (that.router.url.includes("allocations")) {
+              //     that.allocationscallBackFunction();
+              //   }
+              //   if (that.router.url.includes("customers")) {
+              //     that.customerCallBackFunction();
+              //   }
+              //   if (that.router.url.includes("call-log")) {
+              //     that.callLogsCallBackFunction();
+              //   }
+              // }, 2000);
+              if (typeof that.allocationscallBackFunction === 'function' && that.router.url.includes("allocations")) {
+                that.allocationscallBackFunction();
+              }
+              if (typeof that.customerCallBackFunction === 'function' && that.router.url.includes("customers")) {
+                that.customerCallBackFunction();
+              }
+              if (typeof that.callLogsCallBackFunction === 'function' && that.router.url.includes("call-log")) {
+                that.callLogsCallBackFunction();
+              }
+              
             }
             that.isPhoneHalfHook = false;
 

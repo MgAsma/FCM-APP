@@ -35,9 +35,10 @@ export class FilterComponent  implements OnInit {
           const matchingChip = this.data.find((chip: any) => chip.id === status);
           if (matchingChip) {
             matchingChip.selected = true;
-            // this.selectedStatus.push(status);
+            let statusArray = []
+            statusArray.push(status)
+            this.selectedStatus = statusArray;
           }
-          this.selectedStatus.push(matchingChip);
         });
       }
     });

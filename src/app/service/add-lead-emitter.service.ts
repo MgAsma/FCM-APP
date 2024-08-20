@@ -17,6 +17,7 @@ export class AddLeadEmitterService {
   callLogCounsellor = new BehaviorSubject([])
   tlsCounsellor = new BehaviorSubject([])
   customerCounsellor = new BehaviorSubject([])
+  autoDialer = new BehaviorSubject(true)
   triggerGet() {
     this.triggerGetSource.next();
   }

@@ -98,8 +98,6 @@ export class EditLeadPage implements OnInit {
     private _addLeadEmitter: AddLeadEmitterService,
     private callPermissionService: CallPermissionsService,
     private popoverController: PopoverController,
-    private router:Router,
-    private baseService:BaseServiceService
   ) {
     let dob = new Date();
     let minimum = new Date("1900-01-01");
@@ -670,17 +668,17 @@ export class EditLeadPage implements OnInit {
   prevStep() {
     this.step--;
   }
-   close() {
+ async close() {
     this.callPermissionService.isToggleddataSubject.next(false);
     this.callPermissionService.closeCancelEditLeadPagedataSubject.next("close");
-     this.modalController.dismiss();
+   await this.modalController.dismiss();
   }
-   closeModal() {
+   async closeModal() {
     this.callPermissionService.isToggleddataSubject.next(false);
     this.callPermissionService.closeCancelEditLeadPagedataSubject.next(
       "cancel"
     );
-     this.modalController.dismiss();
+    await this.modalController.dismiss();
   }
   async addCountry() {
     const modal = await this.popoverController.create({
@@ -757,7 +755,7 @@ export class EditLeadPage implements OnInit {
       this.getCourse();
     }
   }
-  onSubmit() {
+  async onSubmit() {
     let formData = this.editLead.value;
     let data = {
       first_name: formData.firstName,
@@ -865,9 +863,9 @@ export class EditLeadPage implements OnInit {
           `${environment.lead_list}${this._inputData.user_data.id}/`,
           data
         )
-        .subscribe((res: any) => {
+        .subscribe(async (res: any) => {
           if (res) {
-            this.addLead.emit("ADD");
+       //     this.addLead.emit("ADD");
             if(this.page === 'customers'){
               this.api.showSuccess("Customer details updated successfully");
             }else{
@@ -878,14 +876,14 @@ export class EditLeadPage implements OnInit {
               statusValue: formData.leadStatus,
               submit: "submit",
             });
-            // this.callPermissionService.closeCancelEditLeadPagedataSubject.next('submit');
-            // this.callPermissionService.notUpdatingStatusSubject.next(formData.leadStatus)
-            this._addLeadEmitter.triggerGet();
-            this.initForm();
+            await this.callPermissionService.closeCancelEditLeadPagedataSubject.next('submit');
+            await this.callPermissionService.notUpdatingStatusSubject.next(formData.leadStatus);
+            await this._addLeadEmitter.triggerGet();
+            await this.initForm();
             this.selectedCountryName = ''
             this.selectedStateName = ''
             this.selectedCityName = ''
-            this.modalController.dismiss();
+            await this.ionViewWillLeave();
           }
         },(error:any)=>{
           this.api.showError(error.error.message)

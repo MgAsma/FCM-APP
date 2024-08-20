@@ -144,7 +144,7 @@ export class AppComponent implements OnInit {
   
   appVersion() {
     // Define your current application version
-    const currentVersion = "1.0.33";
+    const currentVersion = "1.0.38";
 
     // Check if local storage contains a version number
     const storedVersion = localStorage.getItem("appVersion");

@@ -18,6 +18,7 @@ import {
 import { FilterComponent } from "../filter/filter.component";
 import { ToolbarCustomerComponent } from "../toolbar-customer/toolbar-customer.component";
 import { AddLeadEmitterService } from "../../../service/add-lead-emitter.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-allocation-toolbar-top",
@@ -40,7 +41,8 @@ export class AllocationToolbarTopComponent implements OnInit {
     private modalController: ModalController,
     private callPermissionService: CallPermissionsService,
     private alertController: AlertController,
-    private _addLeadEmitter: AddLeadEmitterService
+    private _addLeadEmitter: AddLeadEmitterService,
+    private router:Router
   ) {
     this.user_role = localStorage.getItem("user_role").toLowerCase();
   }
@@ -67,6 +69,11 @@ export class AllocationToolbarTopComponent implements OnInit {
     this.allocate.allocationStatus.subscribe((res: any) => {
       this.selectedStatus = res;
     });
+    this._addLeadEmitter.autoDialer.subscribe((res:any)=>{
+      if(res == false){
+        this.isToggled = false
+      }
+    })
   }
   enableSearchOption() {
     this.allocate.searchBar.next(true);
@@ -158,4 +165,7 @@ export class AllocationToolbarTopComponent implements OnInit {
       await confirm.present();
     });
   }
+  
+ 
+ 
 }

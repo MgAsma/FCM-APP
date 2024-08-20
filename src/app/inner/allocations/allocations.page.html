@@ -77,7 +77,6 @@
   *ngIf="data?.data?.length > 0"
 >
 
-
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
@@ -90,7 +89,7 @@
     <ion-col size="12" *ngFor="let allocate of data?.data;let i=index">
       <ion-card class="allocate-card">
         <ion-card-content
-          [ngStyle]="allocate.color ? {'border-left': '3px solid ' + allocate.color} : {'border-left':'3px solid rgb(18, 65, 106)'}"
+          [ngStyle]="allocate.callDialed ? {'border-left': '3px solid ' + red} : {'border-left':'3px solid rgb(18, 65, 106)'}"
         >
           <ion-row>
             <ion-col>
