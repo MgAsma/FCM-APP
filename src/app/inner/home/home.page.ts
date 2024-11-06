@@ -3,6 +3,8 @@ import { PopoverController } from '@ionic/angular';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { StartBreakComponent } from './start-break/start-break.component';
 import { BaseServiceService } from '../../service/base-service.service';
+import { Router } from '@angular/router';
+import { CallPermissionsService } from '../../service/api/call-permissions.service';
 
 @Component({
   selector: 'app-home',
@@ -12,12 +14,16 @@ import { BaseServiceService } from '../../service/base-service.service';
 export class HomePage implements OnInit {
 userName:any;
   user_role:any
-  constructor(private popoverController:PopoverController, private baseService:BaseServiceService) {
+  constructor(private popoverController:PopoverController, private baseService:BaseServiceService,private router:Router,private callPermissionService:CallPermissionsService) {
   
   }
  
 
   ngOnInit() {
+    if (this.router.url.includes("home")) {
+      this.callPermissionService.isToggleddataSubject.next(false)
+    }
+
     
   }
   ionViewWillEnter(){

@@ -878,6 +878,8 @@ export class EditLeadPage implements OnInit {
               statusValue: formData.leadStatus,
               submit: "submit",
             });
+            console.log(formData.leadStatus);
+            
             // this.callPermissionService.closeCancelEditLeadPagedataSubject.next('submit');
             // this.callPermissionService.notUpdatingStatusSubject.next(formData.leadStatus)
             this._addLeadEmitter.triggerGet();

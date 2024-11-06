@@ -15,6 +15,8 @@ import { GotoViewCustomerDetailsCallCustomerComponent } from '../../../shared-mo
 import { AddLeadEmitterService } from '../../../service/add-lead-emitter.service';
 import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { Router } from '@angular/router';
+import { CallPermissionsService } from '../../../service/api/call-permissions.service';
 @Component({
   selector: 'app-call-log',
   templateUrl: './call-log.page.html',
@@ -59,7 +61,9 @@ export class CallLogPage implements OnInit {
     private fb:FormBuilder,
     private addEmiter:AddLeadEmitterService,
     private alertController:AlertController,
-    private androidPermissions:AndroidPermissions
+    private androidPermissions:AndroidPermissions,
+    private  router:Router,
+    private callPermissionService:CallPermissionsService
   ) {
     this.user_role = localStorage.getItem('user_role')?.toUpperCase()
     this.user_id = localStorage.getItem('user_id')
@@ -78,6 +82,10 @@ export class CallLogPage implements OnInit {
   
   ngOnInit() {
     // this.checkPermissions();
+
+    if (this.router.url.includes("team-live-status")) {
+      this.callPermissionService.isToggleddataSubject.next(false)
+    }
 
     if(this.refreshAll){
       this.dateForm.reset()

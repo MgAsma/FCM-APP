@@ -115,6 +115,10 @@ export class CustomersPage implements OnInit {
         this.searchBar = false;
       }
     });
+
+    if (this.router.url.includes("customers")) {
+      this.callPermissionService.isToggleddataSubject.next(false)
+    }
    
   }
 

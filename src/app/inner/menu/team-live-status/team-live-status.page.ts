@@ -12,6 +12,7 @@ import { TlsIntervalService } from "../../../service/tls-interval.service";
 import { Location } from "@angular/common";
 import { AuthService } from "../../../service/auth.service";
 import { ActivateChildGuard } from "../../../service/activate-child.guard";
+import { CallPermissionsService } from "../../../service/api/call-permissions.service";
 
 
 @Component({
@@ -63,7 +64,8 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     private router: Router,
     private intervalService:TlsIntervalService,
     private authService:ActivateChildGuard,
-    private location:Location
+    private location:Location,
+    private callPermissionService:CallPermissionsService
   ) {
     this.user_id = localStorage.getItem("user_id");
     this.user_role = localStorage.getItem("user_role")?.toUpperCase();
@@ -83,6 +85,11 @@ export class TeamLiveStatusPage implements OnInit,OnDestroy {
     );
   }
   ngOnInit() {
+    
+
+    if (this.router.url.includes("team-live-status")) {
+      this.callPermissionService.isToggleddataSubject.next(false)
+    }
     this.getStatus();
     this.getCounselor();
     this.allocate.tlsSearchBar.subscribe((res) => {

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { RecFollowupListPage } from '../../shared-modules/rec-followup-list/rec-followup-list.page';
 import { CheckoutComponent } from '../home/checkout/checkout.component';
 import { StartBreakComponent } from '../home/start-break/start-break.component';
+import { CallPermissionsService } from '../../service/api/call-permissions.service';
 
 @Component({
   selector: 'app-menu',
@@ -13,9 +14,12 @@ import { StartBreakComponent } from '../home/start-break/start-break.component';
 })
 export class MenuPage implements OnInit {
 
-  constructor(private modalController:ModalController,private router:Router,private popoverController:PopoverController ) { }
+  constructor(private modalController:ModalController,private router:Router,private popoverController:PopoverController,private  callPermissionService:CallPermissionsService ) { }
 
   ngOnInit() {
+    if (this.router.url.includes("/inner/menu")) {
+      this.callPermissionService.isToggleddataSubject.next(false)
+    }
   }
   
   async recurringFollowupList() {
